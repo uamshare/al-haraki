@@ -5,8 +5,10 @@ Step Install
 -------------------
 
 ```
-1. create database `alharaki`
-2. set db config on common/config/main-loacl.php
+1. composer global require "fxp/composer-asset-plugin:~1.1.1"
+2. php init
+3. create database `alharaki`
+4. set db config on common/config/main-loacl.php
         'components' => [
           'db' => [
               'class' => 'yii\db\Connection',
@@ -16,7 +18,7 @@ Step Install
               'charset' => 'utf8',
           ],
       ],
-3. run db migrate on console :
+5. run db migrate on console :
     yii migrate
     yii migrate --migrationPath=@yii/rbac/migrations/
 
