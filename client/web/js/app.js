@@ -25,9 +25,11 @@ app.config(['$locationProvider', '$routeProvider', '$httpProvider', function ($l
             controller: 'SiteLogin'
         })
 
-        // .when('/pages/kas-masuk', {
-        //     templateUrl: modulesPath + '/pages/kas-masuk.html',
-        // })
+        // AKUNTANSI
+        .when('/akuntansi/coa', {
+            templateUrl: modulesPath + '/views/akuntansi/coa/index.html',
+            resolve: resolveController(modulesPath + '/controllers/coaController.js')
+        })
         // .when('/pages/kas-masuk/kwitansi', {
         //     templateUrl: modulesPath + '/pages/kwitansi-masuk.html',
         // })

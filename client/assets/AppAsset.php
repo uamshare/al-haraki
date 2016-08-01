@@ -12,11 +12,13 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
         'plugins/angular/angular-csp.css',
         'plugins/angular-motion/dist/angular-motion.min.css',
-        'plugins/AngularJS-Toaster/toaster.css'
+        'plugins/AngularJS-Toaster/toaster.css',
+        'plugins/angular-component/angular-ui-grid/ui-grid.min.css',
+        'css/site.css'
     ];
+
     public $js = [
         'plugins/angular/angular.js',
         'plugins/angular-route/angular-route.min.js',
@@ -25,8 +27,11 @@ class AppAsset extends AssetBundle
         'plugins/AngularJS-Toaster/toaster.js',
         'plugins/angular-strap/dist/angular-strap.js',
         'plugins/angular-strap/dist/angular-strap.tpl.min.js',
-        'js/app.js'
+        'plugins/angular-component/angular-ui-bootstrap/angular-ui-bootstrap.js',
+        'plugins/angular-component/angular-ui-grid/ui-grid.min.js',
+        ['js/require.js', 'data-main' => '/al-haraki/client/web/js/main.js']
     ];
+
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',

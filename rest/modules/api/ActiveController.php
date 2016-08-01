@@ -4,7 +4,7 @@ use Yii;
 
 class ActiveController extends \yii\rest\ActiveController
 {
-    public $serializer = 'rest\modules\api\Serializer';
+    // public $serializer = 'rest\modules\api\Serializer';
 	/**
      * @inheritdoc
      */

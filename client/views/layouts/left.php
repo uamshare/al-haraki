@@ -38,7 +38,43 @@
                         'items' => [
                             ['label' => 'Data Siswa', 'icon' => 'fa fa-user-plus', 'url' => ['/#master/siswa']],
                             ['label' => 'Data Karyawan', 'icon' => 'fa fa-user-plus', 'url' => ['/#master/karyawan']],
-                            ['label' => 'Data Jenis Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['#master/jenistagihan']]
+                            ['label' => 'Kelas', 'icon' => 'fa fa-user-plus', 'url' => ['#master/kelas']]
+                        ],
+                    ],
+                    [
+                        'label' => 'KEUANGAN',
+                        'icon' => 'fa fa-cc-visa',
+                        'url' => '$',
+                        'items' => [
+                            ['label' => 'Info Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/info-tagihan']],
+                            ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/kwitansi-pembayaran']],
+                            ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
+                            ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-outstanding-tagihan']],
+                            ['label' => 'Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/pengeluaran']],
+                            ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/kwitansi-pengeluaran']],
+                            ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-pengeluaran']],
+                            ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/rekonsiliasi-autodebet']]
+                        ],
+                    ],
+                    [
+                        'label' => 'AKUNTANSI',
+                        'icon' => 'fa fa-pie-chart',
+                        'url' => '$',
+                        'items' => [
+                            ['label' => 'Master Akun (Chart of Acount)', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/coa']],
+                            ['label' => 'Pemetaan Posting Otomatis', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/pemetaan']],
+                            ['label' => 'Jurnal Harian', 'icon' => 'fa fa-user-plus', 'url' => ['#akuntansi/jurnal-harian']],
+                            ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/gl']]
+                        ],
+                    ],
+                    [
+                        'label' => 'PENGATURAN',
+                        'icon' => 'fa fa-cogs   ',
+                        'url' => '$',
+                        'items' => [
+                            ['label' => 'Pengguna', 'icon' => 'fa fa-user', 'url' => ['/#pengaturan/pengguna']],
+                            ['label' => 'Grup Akses Pengguna', 'icon' => 'fa fa-users', 'url' => ['/#pengaturan/grup-akses-pengguna']],
+                            ['label' => 'Sekolah', 'icon' => 'fa fa-user-plus', 'url' => ['#pengaturan/sekolah']]
                         ],
                     ],
                     [

@@ -45,34 +45,36 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'urlManager' => [
-            'showScriptName' => false, // Disable index.php
-            'enablePrettyUrl' => true, // Disable r= routes
-            'enableStrictParsing' => true,
-            'rules' => [
-                [
-                    'class' => 'yii\rest\UrlRule', 
-                    'controller' => [
-                        'api/user',
-                        'api/auth',
-                        'api/tblcustomer',
-                        'api/gintabbingmap',
-                        'api/site',
-                    ],
-                    // 'extraPatterns' => [
-                    //     'POST save' => 'save',
-                    //     'POST upload' => 'upload',
-                    // ]
-                ],
-                // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-                // 'api/tblcustomer/<action:\w+>' => 'api/tblcustomer/<action>',
-                'api/<controller:\w+>/<action:\w+>' => 'api/<controller>/<action>',
-                // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/save'
-            ],
-        ],
         'response' => [
             'class' => 'yii\web\Response',
             'format' =>  \yii\web\Response::FORMAT_JSON,
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $header = $response->getHeaders();
+                if ($response->data !== null && Yii::$app->request->get('rsp_type')) {
+                    if(Yii::$app->request->get('rsp_type') == 1){
+                        $response->data = [
+                            'success' => $response->isSuccessful,   
+                            'total' => count($response->data), //$header['x-pagination-total-count'],
+                            'rows' => $response->data
+                        ];
+                    }else if(Yii::$app->request->get('rsp_type') == 2){
+                        $response->data = [
+                            'success' => $response->isSuccessful,
+                            'total_items' => count($response->data), //$header['x-pagination-total-count'],
+                            'items' => $response->data
+                        ];
+                    }
+                    
+                    // $response->statusCode = 200;
+                }else{
+                    $response->data = [
+                        'success' => $response->isSuccessful,   
+                        'total' => $header['x-pagination-total-count'],
+                        'rows' => $response->data
+                    ];
+                }
+            }
         ]
     ],
     'params' => $params,

@@ -28,7 +28,7 @@ if (Yii::$app->controller->action->id === 'login') {
     ?>
     <?php $this->beginPage() ?>
     <!DOCTYPE html>
-    <html ng-app="alHaraki" lang="<?= Yii::$app->language ?>" >
+    <html lang="<?= Yii::$app->language ?>" >
     <head>
         <meta charset="<?= Yii::$app->charset ?>"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,6 +61,10 @@ if (Yii::$app->controller->action->id === 'login') {
     </div>
 
     <?php $this->endBody() ?>
+    <!-- <script src="Scripts/require.js" data-main="Scripts/main"></script> -->
+    <?php
+    // $this->registerJsFile('/js/require.js', ['depends' => [\client\assets\AppAsset::className()]]);
+    ?>
     </body>
     </html>
     <?php $this->endPage() ?>
