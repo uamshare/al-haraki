@@ -37,42 +37,22 @@ define(['services/routeResolver'], function () {
             var modulesPath = 'js/modules';
 
             $routeProvider
-                //route.resolve() now accepts the convention to use (name of controller & view) as well as the 
-                //path where the controller or view lives in the controllers or views folder if it's in a sub folder. 
-                //For example, the controllers for customers live in controllers/customers and the views are in views/customers.
-                //The controllers for orders live in controllers/orders and the views are in views/orders
-                //The second parameter allows for putting related controllers/views into subfolders to better organize large projects
-                //Thanks to Ton Yeung for the idea and contribution
-                // .when('/customers', route.resolve('Customers', 'customers/', 'vm'))
-                // .when('/customerorders/:customerId', route.resolve('CustomerOrders', 'customers/', 'vm'))
-                // .when('/customeredit/:customerId', route.resolve('CustomerEdit', 'customers/', 'vm', true))
-                // .when('/orders', route.resolve('Orders', 'orders/', 'vm'))
-                // .when('/about', route.resolve('About', '', 'vm'))
-                // .when('/login/:redirect*?', route.resolve('Login', '', 'vm'))
 
-                .when('/', {
-                    templateUrl: modulesPath + '/views/main.html'
-                })
+                .when('/', 
+                    routeCustome.resolve(
+                        'main', 
+                        'SiswaController'
+                    )
+                )
 
-                // Master
-                // .when('/master/siswa', {
-                //     templateUrl: modulesPath + '/views/master/siswa/index.html',
-                //     resolve: route.resolveController('SiswaController')
-                // })
-
+                // MASTER
                 .when('/master/siswa', 
                     routeCustome.resolve(
                         'master/siswa/index', 
                         'SiswaController'
                     )
                 )
-
-                .when('/master/karyawan', {
-                    templateUrl: modulesPath + '/views/master/karyawan/index.html'
-                })
-                .when('/master/jenistagihan', {
-                    templateUrl: modulesPath + '/views/master/jenistagihan/index.html'
-                })
+        
 
 
                 .when('/login', {
@@ -81,10 +61,6 @@ define(['services/routeResolver'], function () {
                 })
 
                 // AKUNTANSI
-                // .when('/akuntansi/coa', {
-                //     templateUrl: modulesPath + '/views/akuntansi/coa/index.html',
-                //     resolve: route.resolve('coaController.js', '','/coa')
-                // })
                 .when('/akuntansi/coa', 
                     routeCustome.resolve(
                         'akuntansi/coa/index', 

@@ -1,11 +1,5 @@
 'use strict';
 
-// app.controller('CoaController', function ($scope, $http, $window, toaster, ngDialog, $injector, $httpParamSerializer) {
-//     var $validationProvider = $injector.get('$validation');
-//     $http.defaults.headers.patch['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-
-// });
-
 define(['app'], function (app) {
 
     // var injectParams = ['$scope', '$location', '$routeParams'];
@@ -39,7 +33,7 @@ define(['app'], function (app) {
     		paginationPageSize: 20,
     		pageNumber : 1,
 			columnDefs  : [
-				// { name: 'id' },
+				{ name: 'index', displayName : 'No' },
 				{ name: 'mcoadno', displayName: 'No Akun' },
 				{ name: 'mcoadname', displayName: 'Nama Akun'},
 				{ name: 'mcoahno', displayName: 'Akun Msater'}
@@ -51,12 +45,17 @@ define(['app'], function (app) {
 			.success(function(data, status, header) {
 				var header = header();
 				if(data.success){
+					angular.forEach(data.rows, function(dt, index) {
+						console.log(page);
+						var romnum = (page > 1) ? (((page - 1) * $scope.coad.pageSize) + index + 1) : (index + 1);
+		                data.rows[index]["index"] = romnum;
+		            })
 					$scope.coad.data = data.rows;
-					$scope.coad.totalItems = data.total,
-					// $scope.coad.paginationPageSize = 20,
-					// $scope.coad.enablePaginationControls = false,
-					$scope.coad.useExternalPagination = true,
-					$scope.coad.paginationCurrentPage = page
+					$scope.coad.totalItems = data.total;
+					$scope.coad.useExternalPagination = true;
+					$scope.coad.paginationCurrentPage = page;
+
+
 				}
 				
 				// $timeout(function() {

@@ -1,6 +1,7 @@
 ﻿require.config({
     baseUrl: 'js/app',
-    urlArgs: false, //'v=0.0.0.0.1'
+    // urlArgs: false, //'v=0.0.0.0.1'
+    urlArgs: "bust=" + (new Date()).getTime()
 });
 
 require(
