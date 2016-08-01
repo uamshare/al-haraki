@@ -60,7 +60,7 @@ class Mcoad extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getMcoahno0()
+    public function getMcoah()
     {
         return $this->hasOne(Mcoah::className(), ['mcoahno' => 'mcoahno']);
     }
@@ -71,5 +71,21 @@ class Mcoad extends \yii\db\ActiveRecord
     public function getTjmds()
     {
         return $this->hasMany(Tjmd::className(), ['mcoadno' => 'mcoadno']);
+    }
+
+    public function fields(){
+        $fields = parent::fields();
+        // var_dump($this->Mcoah->mcoahname);exit();
+        return array_merge($fields, [
+            'mcoahname' => function($model) {
+                return $model->mcoah->mcoahname; // or anything else from the mission relation
+            },
+            'mcoaclassification' => function($model) {
+                return $model->mcoah->mcoac->mcoaclassification; // or anything else from the mission relation
+            },
+            'mcoagroup' => function($model) {
+                return $model->mcoah->mcoac->mcoag->mcoagroup; // or anything else from the mission relation
+            },
+        ]);
     }
 }

@@ -4,12 +4,14 @@ define(['services/routeResolver'], function () {
 
     var app = angular.module('alHaraki', 
             [
+                'ngTouch',
                 'ngRoute', 
                 'ngAnimate', 
                 'routeResolverServices', 
                 'ui.bootstrap', 
                 'ui.grid',
-                'ui.grid.pagination'
+                'ui.grid.pagination',
+                'ui.grid.resizeColumns'
             ]
         );
 

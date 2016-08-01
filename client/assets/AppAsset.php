@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
 
     public $js = [
         'plugins/angular/angular.js',
+        'plugins/angular/angular-touch.min.js',
         'plugins/angular-route/angular-route.min.js',
         'plugins/angular-sanitize/angular-sanitize.js',
         'plugins/angular-animate/angular-animate.min.js',

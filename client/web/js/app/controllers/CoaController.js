@@ -32,11 +32,16 @@ define(['app'], function (app) {
 			paginationPageSizes: [25, 50, 75],
     		paginationPageSize: 20,
     		pageNumber : 1,
+    		enableMinHeightCheck : true,
+			minRowsToShow : 20,
 			columnDefs  : [
-				{ name: 'index', displayName : 'No' },
-				{ name: 'mcoadno', displayName: 'No Akun' },
+				{ name: 'index', displayName : 'No', width : '50' },
+				{ name: 'mcoadno', displayName: 'No Akun', width : '100' },
 				{ name: 'mcoadname', displayName: 'Nama Akun'},
-				{ name: 'mcoahno', displayName: 'Akun Msater'}
+				{ name: 'mcoahno', displayName: 'Akun Master', width : '100'},
+				{ name: 'mcoahname', displayName: 'Nama Akun Master'},
+				{ name: 'mcoaclassification', displayName: 'Klasifikasi', width : '150'},
+				{ name: 'mcoagroup', displayName: 'Grup', width : '150'}
 			]
 		};
 
@@ -46,7 +51,6 @@ define(['app'], function (app) {
 				var header = header();
 				if(data.success){
 					angular.forEach(data.rows, function(dt, index) {
-						console.log(page);
 						var romnum = (page > 1) ? (((page - 1) * $scope.coad.pageSize) + index + 1) : (index + 1);
 		                data.rows[index]["index"] = romnum;
 		            })
@@ -54,8 +58,6 @@ define(['app'], function (app) {
 					$scope.coad.totalItems = data.total;
 					$scope.coad.useExternalPagination = true;
 					$scope.coad.paginationCurrentPage = page;
-
-
 				}
 				
 				// $timeout(function() {
