@@ -6,6 +6,7 @@ Step Install
 
 ```
 1. composer global require "fxp/composer-asset-plugin:~1.1.1"
+   composer update
 2. php init
 3. create database `alharaki`
 4. set db config on common/config/main-loacl.php
