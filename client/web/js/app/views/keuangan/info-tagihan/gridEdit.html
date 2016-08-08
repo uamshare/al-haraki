@@ -1,0 +1,59 @@
+<div class="box box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title">Tambah Info Tagihan</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="form-group">
+					<label>Kelas</label>
+					<input type="hidden" name="kelasid" class="form-control" ng-model="kelas.options[0].id" />
+					<input type="text" name="nama_kelas" class="form-control" ng-model="kelas.options[0].nama_kelas" />
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Periode</label>
+					<div class="input-group">
+						<select name="month_start" class="form-control" ng-model="month_start.selected">
+							<option ng-repeat="bs in month_start.options" value="{{bs.id}}">
+							{{bs.name}}
+							</option>
+						</select>
+						<div class="input-group-addon">2016</div>
+						<div class="input-group-addon">s/d</div>
+						<select name="month_end" class="form-control" ng-model="month_end.selected">
+							<option ng-repeat="be in month_end.options" value="{{be.id}}" >
+							{{be.name}}
+							</option>
+						</select>
+						<div class="input-group-addon">2017</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2">
+				<label>&nbsp;</label>
+				<div class="form-group">
+					<a class="btn btn-sm btn-primary pull-right	" href="" ng-click="onSearchClick($event)">
+						<i class="fa fa-save"></i> Simpan
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="grid1" ui-grid="gridEdit" 
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-edit 
+		            ui-grid-cellNav
+		            class="grid">
+		        </div>
+			</div>
+		</div>
+	</div>
+</div>

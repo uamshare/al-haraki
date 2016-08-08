@@ -1,0 +1,71 @@
+<div class="box box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-filter"></i> Form Filter</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="form-group">
+					<label>Kelas</label>
+					<select name="kelasid" class="form-control" ng-model="kelas.selected">
+						<option ng-repeat="option in kelas.options" value="{{option.id}}">
+						{{option.kelas}} - {{option.nama_kelas}}
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Periode</label>
+					<div class="input-group">
+						<div class="input-group-addon">Bulan</div>
+						<select name="filter_bln" class="form-control" ng-model="month.selected">
+							<option ng-repeat="bln in month.options" value="{{bln.id}}">
+							{{bln.name}}
+							</option>
+						</select>
+						<div class="input-group-addon">Tahun</div>
+						<input type="number" name="tahun" class="form-control col-sm-6" ng-model="month.year" />
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-2">
+				<label>&nbsp;</label>
+				<div class="form-group">
+					<a class="btn btn-sm btn-default pull-right	" href="" ng-click="onSearchClick($event)">
+						<i class="fa fa-search"></i> Cari Data
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="box box-primary box-solid">
+	<div class="box-footer">
+		<div class="box-tools-left">
+			<a href="" ng-click="onSetInfoClick($event)" class="btn btn-primary btn-sm" data-toggle="tooltip"
+				data-original-title="Tambah Data">
+				<i class="fa fa-plus"></i>
+			</a>
+			<a href="#/keuangan/info-tagihan/log" class="btn btn-primary btn-sm" data-toggle="tooltip"
+				data-original-title="Tambah Data">
+				<i class="fa fa-history"></i>
+			</a>
+			<div class="btn-group">
+			  <button type="button" class="btn btn-primary btn-sm">Export</button>
+			  <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			    <li><a href="#"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+			    <li><a href="#"><i class="fa fa-file-excel-o"></i> Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+</div>
