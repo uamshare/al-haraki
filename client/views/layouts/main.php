@@ -15,14 +15,15 @@ if (Yii::$app->controller->action->id === 'login') {
         ['content' => $content]
     );
 } else {
-
+    dmstr\web\AdminLteAsset::register($this);
+    
     if (class_exists('client\assets\AppAsset')) {
         client\assets\AppAsset::register($this);
     } else {
         app\assets\AppAsset::register($this);
     }
 
-    dmstr\web\AdminLteAsset::register($this);
+    
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     ?>
@@ -61,10 +62,6 @@ if (Yii::$app->controller->action->id === 'login') {
     </div>
 
     <?php $this->endBody() ?>
-    <!-- <script src="Scripts/require.js" data-main="Scripts/main"></script> -->
-    <?php
-    // $this->registerJsFile('/js/require.js', ['depends' => [\client\assets\AppAsset::className()]]);
-    ?>
     </body>
     </html>
     <?php $this->endPage() ?>

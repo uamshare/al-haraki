@@ -3,27 +3,31 @@
 define(['services/routeResolver'], function () {
 
     var app = angular.module('alHaraki', 
-            [
-                'ngTouch',
-                'ngRoute', 
-                'ngAnimate', 
-                'routeResolverServices', 
-                'ui.bootstrap', 
-                'ui.grid',
-                'ui.grid.pagination',
-                'ui.grid.resizeColumns'
-            ]
-        );
+        [
+            'ngTouch',
+            'ngRoute', 
+            'ngAnimate', 
+            'routeResolverServices', 
+            'ui.bootstrap', 
+            'ui.grid',
+            'ui.grid.pagination',
+            'ui.grid.resizeColumns',
+            'ui.grid.exporter',
+            'ui.grid.edit',
+            'ui.grid.cellNav'
+        ]
+    );
+
+    app.constant('$CONST_VAR', {
+        viewsDirectory : 'js/app/views/',
+        restDirectory : 'http://local.project/al-haraki/rest/web/api/'
+    });
 
     app.config(['$routeProvider', 'routeResolverProvider', '$controllerProvider',
                 '$compileProvider', '$filterProvider', '$provide', '$httpProvider',
-
         function ($routeProvider, routeResolverProvider, $controllerProvider,
-                  $compileProvider, $filterProvider, $provide, $httpProvider) {
-
-            //Change default views and controllers directory using the following:
-            //routeResolverProvider.routeConfig.setBaseDirectories('/app/views', '/app/controllers');
-
+                  $compileProvider, $filterProvider, $provide, $httpProvider) 
+        {
             app.register =
             {
                 controller: $controllerProvider.register,
@@ -34,16 +38,14 @@ define(['services/routeResolver'], function () {
             };
 
             //Define routes - controllers will be loaded dynamically
-            var route = routeResolverProvider.route;
+            // var route = routeResolverProvider.route;
             var routeCustome = routeResolverProvider.routeCustome;
-            var modulesPath = 'js/modules';
 
             $routeProvider
-
                 .when('/', 
                     routeCustome.resolve(
-                        'main', 
-                        'SiswaController'
+                        'main',
+                        'PegawaiController'
                     )
                 )
 
@@ -55,12 +57,24 @@ define(['services/routeResolver'], function () {
                     )
                 )
         
+                // KEUANGAN
+                .when('/keuangan/info-tagihan', 
+                    routeCustome.resolve(
+                        'keuangan/info-tagihan/index', 
+                        'InfotagihanController'
+                    )
+                )
+                .when('/keuangan/info-tagihan/:idkelas/:month', 
+                    routeCustome.resolve(
+                        'keuangan/info-tagihan/edit', 
+                        'InfotagihanController'
+                    )
+                )
 
-
-                .when('/login', {
-                    templateUrl: modulesPath + '/site/views/login.html',
-                    controller: 'SiteLogin'
-                })
+                // .when('/login', {
+                //     templateUrl: modulesPath + '/site/views/login.html',
+                //     controller: 'SiteLogin'
+                // })
 
                 // AKUNTANSI
                 .when('/akuntansi/coa', 
@@ -70,16 +84,18 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
-                .when('/404', {
-                    templateUrl: modulesPath + '/views/404.html'
-                })
+                .when('/404', 
+                    routeCustome.resolve(
+                        '404'
+                    )
+                )
 
-                .otherwise({redirectTo: '/404'})
+                // .otherwise({redirectTo: '/404'})
+        }
+    ]);
 
-    }]);
-
-    app.run(['$rootScope', '$location', 'authService',
-        function ($rootScope, $location, authService) {
+    app.run(['$rootScope', '$location', 'authService','$templateCache',
+        function ($rootScope, $location, authService, $templateCache) {
             
             //Client-side security. Server-side framework MUST add it's 
             //own security as well since client-based security is easily hacked
@@ -93,10 +109,10 @@ define(['services/routeResolver'], function () {
                 }
             });
 
-    }]);
+        }
+    ]);
 
     return app;
-
 });
 
 

@@ -37,9 +37,13 @@ define([], function () {
             var resolve = function (baseName, path, controllerAs, secure) {
                 if (!path) path = '';
 
-                var routeDef = {};
-                var baseFileName = baseName.charAt(0).toLowerCase() + baseName.substr(1);
-                routeDef.templateUrl = routeConfig.getViewsDirectory() + path + baseFileName + '.html';
+                var routeDef = {}, baseFileName = '';
+                if(baseName){
+                    baseFileName = baseName.charAt(0).toLowerCase() + baseName.substr(1);
+                    routeDef.templateUrl = routeConfig.getViewsDirectory() + path + baseFileName + '.html';
+                }
+                
+                
                 routeDef.controller = baseName + 'Controller';
                 if (controllerAs) routeDef.controllerAs = controllerAs;
                 routeDef.secure = (secure) ? secure : false;
@@ -56,7 +60,7 @@ define([], function () {
                 var defer = $q.defer();
                 require(dependencies, function () {
                     defer.resolve();
-                    $rootScope.$apply()
+                    $rootScope.$apply();
                 });
 
                 return defer.promise;
@@ -70,27 +74,30 @@ define([], function () {
         this.routeCustome = function (routeConfig) {
 
             var resolve = function (viewName, ControllerName, secure) {
-
                 var routeDef = {};
-                var ctl = ControllerName.split('/');
+                var ctl = ( ControllerName ) ? ControllerName.split('/') : [];
                 var controller = ctl[ctl.length -1];
 
-                routeDef.templateUrl = routeConfig.getViewsDirectory() + viewName + '.html';
-                routeDef.controller = controller;
-                
-                if (ControllerName) routeDef.controllerAs = controller;
-                
-                routeDef.secure = (secure) ? secure : false;
-                routeDef.resolve = {
-                    load: ['$q', '$rootScope', function ($q, $rootScope) {
-                        var dependencies = [routeConfig.getControllersDirectory() + ControllerName + '.js'];
-                        return resolveDependencies($q, $rootScope, dependencies);
-                    }]
-                };
+                if(viewName){
+                    routeDef.templateUrl = routeConfig.getViewsDirectory() + viewName + '.html';
+                }
+                if (ControllerName) {
+                    routeDef.controller = controller;
+                    // routeDef.controllerAs = controller;
+                    routeDef.secure = (secure) ? secure : false;
+                    routeDef.resolve = {
+                        load: ['$q', '$rootScope', function ($q, $rootScope) {
+                            var dependencies = [routeConfig.getControllersDirectory() + ControllerName + '.js'];
+                            return resolveDependencies($q, $rootScope, dependencies);
+                        }]
+                    };
+                }
+
                 return routeDef;
             },
 
             resolveDependencies = function ($q, $rootScope, dependencies) {
+
                 var defer = $q.defer();
                 require(dependencies, function () {
                     defer.resolve();

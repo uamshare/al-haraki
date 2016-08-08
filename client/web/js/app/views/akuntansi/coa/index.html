@@ -1,4 +1,3 @@
-Content Header (Page header) -->
 <section class="content-header" >
   <h1>
     Master Akun (Chart of Acount)
@@ -15,57 +14,6 @@ Content Header (Page header) -->
 <section class="content" >
   <div class="row">
     <div class="col-xs-12">
-      <div class="box box-default collapsed-box box-solid">
-        <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-filter"></i> Pencarian data {{modelTest}}</h3>
-
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-            </button>
-          </div>
-          <!-- /.box-tools -->
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-          <form class="form-horizontal">
-              <div class="col-lg-4">
-                <div class="form-group">
-                  <label class="col-sm-3 control-label input-sm">Dari Tgl</label>
-                  <div class="col-sm-9">
-                    <div class="input-group date">
-                      <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <input type="text" class="form-control pull-right datepicker" id="datefrom">
-                    </div>
-                    <!-- /.input group -->
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-3 control-label input-sm">s/d Tgl</label>
-                  <div class="col-sm-9">
-                    <div class="input-group date">
-                      <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <input type="text" class="form-control pull-right datepicker" id="dateto">
-                    </div>
-                    <!-- /.input group -->
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4">
-                <div class="form-group">
-                  <label class="col-sm-4 control-label input-sm">No Jurnal</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control pull-right" id="no-jurnal">
-                  </div>
-                </div>
-              </div>   
-          </form>
-        </div>
-        <!-- /.box-body -->
-      </div>
       <div class="box">
         <div class="box-header">
           <!-- <h3 class="box-title">Data Table With Full Features</h3> -->
@@ -93,7 +41,7 @@ Content Header (Page header) -->
         <!-- /.box-header -->
         <br/>
         <div class="box-body" > 
-            <div id="grid1" ui-grid="coad" ui-grid-pagination ui-grid-resize-columns class="grid"></div>
+            <div id="grid1" ui-grid="coad" ui-grid-pagination ui-grid-resize-columns ui-grid-selection ui-grid-exporter class="grid"></div>
         </div>
         <!-- /.box-body -->
       </div>

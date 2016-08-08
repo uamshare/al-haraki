@@ -42,14 +42,17 @@ class CreateAction extends \yii\rest\Action
 
 
         $post = Yii::$app->getRequest()->getBodyParams();
-        if(!isset($post[$model->formName()])){
-            throw new \yii\web\HttpException('404','Root Property not set.');
-        }
+        // if(!isset($post[$model->formName()])){
+        //     throw new \yii\web\HttpException('404','Root Property not set.');
+        // }
 
-        $post[$model->formName()] = json_decode($post[$model->formName()], true);
-        // var_dump(Yii::$app->getRequest()->getBodyParams());
-        
-        $model->load($post);
+        // $post[$model->formName()] = json_decode($post[$model->formName()], true);
+        // $post[$model->formName()] = $post;
+        // var_dump($post);exit(); 
+
+        $model->load($post, '');
+        // var_dump(get_object_vars($model));exit(); 
+
         if ($model->save()) {
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);

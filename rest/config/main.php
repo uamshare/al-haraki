@@ -17,11 +17,14 @@ return [
         ]
     ],
     'components' => [
+        // 'cache' => [
+        //     'class' => 'yii\caching\FileCache',
+        // ],
         'request' => [
             'csrfParam' => '_csrf-rest',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
-                'application/xml' => 'yii\web\XMLParser',
+                // 'application/xml' => 'yii\web\XMLParser',
             ]
         ],
         'user' => [
@@ -50,29 +53,34 @@ return [
             'format' =>  \yii\web\Response::FORMAT_JSON,
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $header = $response->getHeaders();
-                if ($response->data !== null && Yii::$app->request->get('rsp_type')) {
-                    if(Yii::$app->request->get('rsp_type') == 1){
+
+                if($response->statusText == 'OK'){
+                    $header = $response->getHeaders();
+                    if ($response->data !== null && Yii::$app->request->get('rsp_type')) {
+                        if(Yii::$app->request->get('rsp_type') == 1){
+                            $response->data = [
+                                'success' => $response->isSuccessful,   
+                                'total' => count($response->data), //$header['x-pagination-total-count'],
+                                'rows' => $response->data
+                            ];
+                        }else if(Yii::$app->request->get('rsp_type') == 2){
+                            $response->data = [
+                                'success' => $response->isSuccessful,
+                                'total_items' => count($response->data), //$header['x-pagination-total-count'],
+                                'items' => $response->data
+                            ];
+                        }
+                        
+                        // $response->statusCode = 200;
+                    }else{
                         $response->data = [
                             'success' => $response->isSuccessful,   
-                            'total' => count($response->data), //$header['x-pagination-total-count'],
+                            'total' => isset($header['x-pagination-total-count']) ? $header['x-pagination-total-count'] : count($response->data),
                             'rows' => $response->data
                         ];
-                    }else if(Yii::$app->request->get('rsp_type') == 2){
-                        $response->data = [
-                            'success' => $response->isSuccessful,
-                            'total_items' => count($response->data), //$header['x-pagination-total-count'],
-                            'items' => $response->data
-                        ];
                     }
-                    
-                    // $response->statusCode = 200;
                 }else{
-                    $response->data = [
-                        'success' => $response->isSuccessful,   
-                        'total' => $header['x-pagination-total-count'],
-                        'rows' => $response->data
-                    ];
+                    $response->data['success'] = false;
                 }
             }
         ]

@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class UserController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController
+class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecord // \rest\modules\api\ActiveController //
 {
     public $modelClass = 'rest\models\User';
 
