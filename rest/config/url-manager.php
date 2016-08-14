@@ -18,7 +18,8 @@ return [
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
                 // 'api/tblcustomer/<action:\w+>' => 'api/tblcustomer/<action>',
                 'api/<controller:\w+>/<action:\w+>' => 'api/<controller>/<action>',
-                // 'api/<controller:\w+>/<action:\w+>/<id:\w+>' => 'api/<controller>/<action>/<id>',
+                'api/<controller:\w+>/<action: put|delete>/<id>' => 'api/<controller>/<action>',
+                // 'api/<controller:\w+>/<action:\w+>/<id:\w+>' => 'api/<controller>/<action>?id=<id>',
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/save'
             ],
         ],

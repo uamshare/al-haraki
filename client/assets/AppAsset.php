@@ -14,8 +14,12 @@ class AppAsset extends AssetBundle
     public $css = [
         'plugins/angular/angular-csp.css',
         'plugins/angular-motion/dist/angular-motion.min.css',
-        'plugins/AngularJS-Toaster/toaster.css',
         'plugins/angular-component/angular-ui-grid/ui-grid.min.css',
+        'plugins/angular-toastr/angular-toastr.min.css',
+        'plugins/angular-loading-bar-master/loading-bar.min.css',
+        'plugins/ng-dialog/css/ngDialog.min.css',
+        'plugins/ng-dialog/css/ngDialog-theme-default.min.css',
+        'plugins/ng-dialog/css/ngDialog-theme-flat.css',
         'css/site.css'
     ];
 
@@ -24,23 +28,19 @@ class AppAsset extends AssetBundle
         'plugins/angular/angular-touch.min.js',
         'plugins/angular-route/angular-route.min.js',
         'plugins/angular-animate/angular-animate.min.js',
-        'plugins/AngularJS-Toaster/toaster.js',
-
-        // 'plugins/angular-sanitize/angular-sanitize.js',
-        // 'plugins/angular-strap/dist/angular-strap.js',
-        // 'plugins/angular-strap/dist/angular-strap.tpl.min.js',
-
-        // 'js/angular.min.js',
-        // 'js/angular-route.min.js',
-        // 'js/angular-animate.min.js',
+        // 'plugins/angular-toastr/toastr.js',
+        'plugins/angular-toastr/angular-toastr.tpls.min.js',
+        'plugins/angular-sanitize/angular-sanitize.js',
+        'plugins/angular-strap/dist/angular-strap.js',
+        'plugins/angular-strap/dist/angular-strap.tpl.min.js',
+        'plugins/angular-loading-bar-master/loading-bar.min.js',
         
         'plugins/pdfmake/pdfmake.min.js',
         'plugins/pdfmake/vfs_fonts.js',
         // 'plugins/angular-component/angular-ui-bootstrap/angular-ui-bootstrap.js',
-        'js/ui-bootstrap-tpls-2.0.1.min.js',
+        // 'js/ui-bootstrap-tpls-2.0.1.min.js',
         'plugins/angular-component/angular-ui-grid/ui-grid.min.js',
-        
-        
+        'plugins/ng-dialog/js/ngDialog.min.js'
     ];
 
     public $depends = [

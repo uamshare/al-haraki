@@ -53,7 +53,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             [['tahun_ajaran'], 'string', 'max' => 6],
             [['no_ref'], 'string', 'max' => 20],
             [['ket_ref'], 'string', 'max' => 50],
-            [['idrombel', 'bulan', 'tahun'], 'unique', 'targetAttribute' => ['idrombel', 'bulan', 'tahun'], 'message' => 'The combination of Idrombel, Bulan and Tahun has already been taken.'],
+            [['idrombel', 'bulan', 'tahun','no_ref'], 'unique', 'targetAttribute' => ['idrombel', 'bulan', 'tahun','no_ref'], 'message' => 'The combination of Idrombel,No Ref, Bulan and Tahun has already been taken.'],
             [['idrombel'], 'exist', 'skipOnError' => true, 'targetClass' => SiswaRombel::className(), 'targetAttribute' => ['idrombel' => 'id']],
         ];
     }
@@ -163,7 +163,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
 
         $sqlCustoms = $this->queryOutstanding($filter);
 
-        $connection = Yii::$app->getDb();
+        $connection = $this->getDb(); //Yii::$app->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $param1]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
@@ -189,13 +189,70 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         } 
 
         // $param1 = $month + (12 * $year);
-        $filter = 'bulan = :param1';
+        $filter = 'bulan = :param1 AND tahun= :param2';
 
         $sqlCustoms = $this->queryOutstanding($filter);
 
-        $connection = Yii::$app->getDb();
-        $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $month]);
+        $connection = $this->getDb(); //Yii::$app->getDb();
+        $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $month, ':param2' => $year]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
+    }
+
+    public function insertBatch($rows, $log, $whereids = null){
+      $DB = $this->getDb();
+      $transaction = $DB->beginTransaction();
+      $column = $this->attributes();
+      unset($column[0]);
+      $columnLog = [
+        'idrombel',
+        'spp',
+        'komite_sekolah',
+        'catering',
+        'keb_siswa',
+        'ekskul',
+        'tahun_ajaran_id',
+        'keterangan',
+        'created_at',
+        'updated_at'
+      ];
+      try {
+        $saved = $DB->createCommand()->batchInsert(
+            self::tableName(), 
+            $column, 
+            $rows
+        );
+        $saved->setSql($saved->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
+        // echo $saved->rawSql . '<br/>';
+        $saved->execute();
+
+        $saveL = $DB->createCommand()->batchInsert(
+            'tagihan_info_input_log', 
+            $columnLog, 
+            $log
+        );
+        $saveL->setSql($saveL->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnLog));
+        // echo $saveL->rawSql;exit();
+        $saveL->execute();
+        
+        $transaction->commit();
+        return true;
+      } catch(\Exception $e) {
+          $msg =  (string)($e) . ' on ' . __METHOD__;
+          \Yii::error(date('Y-m-d H:i:s A') . ' Error during save data. ' . $msg);
+          $transaction->rollBack();
+          return [
+            'name' => 'Error during save data.',
+            'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error'
+          ];
+      }
+    }
+
+    private function setOnDuplicateValue($column){
+      $values = [];
+      foreach($column as $col){
+        $values[]= '`'.$col.'` = VALUES(' . $col .')';
+      }
+      return implode(',', $values);
     }
 }

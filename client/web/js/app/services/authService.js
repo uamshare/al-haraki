@@ -5,26 +5,26 @@ define(['app'], function (app) {
     var injectParams = ['$http', '$rootScope'];
 
     var authFactory = function ($http, $rootScope) {
-        var serviceBase = '/api/dataservice/',
+        var serviceBase = BASEAPIURL,
             factory = {
-                loginPath: '/login',
+                loginPath: 'auth/login',
                 user: {
                     isAuthenticated: false,
                     roles: null
                 }
             };
 
-        factory.login = function (email, password) {
-            return $http.post(serviceBase + 'login', { userLogin: { userName: email, password: password } }).then(
+        factory.login = function (username, password) {
+            return $http.post(serviceBase + 'auth/login', { userLogin: { userName: username, password: password } }).then(
                 function (results) {
-                    var loggedIn = results.data.status;;
+                    var loggedIn = results.data.success;
                     changeAuth(loggedIn);
                     return loggedIn;
                 });
         };
 
         factory.logout = function () {
-            return $http.post(serviceBase + 'logout').then(
+            return $http.post(serviceBase + 'auth/logout').then(
                 function (results) {
                     var loggedIn = !results.data.status;
                     changeAuth(loggedIn);
@@ -38,6 +38,7 @@ define(['app'], function (app) {
 
         function changeAuth(loggedIn) {
             factory.user.isAuthenticated = loggedIn;
+            localStorage.setItem('isAuthValid', loggedIn);
             $rootScope.$broadcast('loginStatusChanged', loggedIn);
         }
 

@@ -8,3 +8,45 @@
 .form-group {
     margin-bottom: 2px;
 }
+
+/*
+ * override the default CSS as an example
+ */
+
+#loading-bar .bar {
+  	background: #F39C12;
+}
+#loading-bar-spinner {
+	margin : auto;
+}
+#loading-bar-spinner .spinner-icon {
+  border-top-color:  #F39C12;
+  border-left-color: #F39C12;
+}
+#loading-bar .peg {
+  -moz-box-shadow: #F39C12 1px 0 6px 1px;
+  -ms-box-shadow: #F39C12 1px 0 6px 1px;
+  -webkit-box-shadow: #F39C12 1px 0 6px 10px;
+  box-shadow: #F39C12 1px 0 6px 1px;
+}
+
+#container-login{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #D2D6DE;
+  top : 0;
+  left : 0;
+  z-index: 99999;
+}
+@media (min-width: 768px){
+  .form-horizontal.form-custome .control-label {
+      padding-top: 7px;
+      margin-bottom: 0;
+      text-align: left;
+  }
+}
+
+.ui-grid-viewport.ng-isolate-scope{
+  background-color: #EEE;
+}

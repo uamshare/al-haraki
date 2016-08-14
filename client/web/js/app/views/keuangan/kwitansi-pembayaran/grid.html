@@ -1,0 +1,44 @@
+<div id="kwitansi-pembayaran-grid" class="box box-primary box-solid">
+	<div class="box-footer with-border">
+		<div class="box-tools-left">
+			<a href="" ng-click="onAddClick($event)" class="btn btn-primary btn-sm" data-toggle="tooltip"
+				data-original-title="Tambah Kwitansi Pembayaran">
+				<i class="fa fa-plus-circle"></i> Tambah Data
+			</a>
+			<a href="#/keuangan/info-tagihan/log" class="btn btn-primary btn-sm" data-toggle="tooltip"
+				data-original-title="Log Data">
+				<i class="fa fa-history"></i> Log
+			</a>
+			<div class="btn-group">
+			  <button type="button" class="btn btn-primary btn-sm">Export</button>
+			  <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			    <li><a href="#"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+			    <li><a href="#"><i class="fa fa-file-excel-o"></i> Excel</a></li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Rekap Kwitansi Pembayaran</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="grid1" ui-grid="grid" 
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-cellNav
+		            class="grid">
+		        </div>
+			</div>
+		</div>
+	</div>
+</div>

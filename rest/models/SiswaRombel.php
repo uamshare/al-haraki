@@ -116,4 +116,69 @@ class SiswaRombel extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TagihanPembayaran::className(), ['idrombel' => 'id']);
     }
+
+    public function getList($params){
+        extract($params);
+        $where = 'WHERE 1=1';
+
+        if($nis){
+            $where .= ' AND nis=' . $nis;
+        }
+
+        if($nisn){
+            $where .= ' AND nisn=' . $nisn;
+        }
+
+        if($nama_siswa){
+            $where .= ' AND nama_siswa=' . $nama_siswa;
+        }
+
+        if($kelas){
+            $where .= ' AND kelas=' . $kelas;
+        }
+
+        if($nama_kelas){
+            $where .= ' AND nama_kelas=' . $nama_kelas;
+        }
+
+        if($tahun_ajaran_id){
+            $where .= ' AND tahun_ajaran_id=' . $tahun_ajaran_id;
+        }
+
+        if($sekolahid){
+            $where .= ' AND b.sekolahid=' . $sekolahid;
+        }
+
+        if($query){
+            $where .= " AND (
+                                nis LIKE '%$query%' OR
+                                nisn LIKE '%$query%' OR
+                                nama_siswa LIKE '%$query%' OR
+                                kelas LIKE '%$query%' OR
+                                nama_kelas LIKE '%$query%' OR
+                            )";
+        }
+
+        $sqlCustoms = "SELECT a.`id`,
+              a.`siswaid`,
+              b.`nis`,
+              b.`nisn`,
+              b.`nama_siswa`,
+              a.`kelasid`,
+              c.kelas,
+              c.`nama_kelas`,
+              b.`sekolahid`,
+              a.`tahun_ajaran_id`,
+              a.`created_at`,
+              a.`updated_at`
+            FROM siswa_rombel a
+            INNER JOIN siswa b ON a.`siswaid` = b.`id`
+            INNER JOIN kelas c ON a.`kelasid` = c.`id` $where
+            ORDER BY b.`sekolahid`, a.`kelasid`, b.`nis`";
+
+        $conn = $this->getDb();
+        $customeQuery = $conn->createCommand($sqlCustoms);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->queryAll();
+    }
 }
