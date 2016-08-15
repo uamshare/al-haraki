@@ -20,7 +20,7 @@ define(['services/routeResolver'], function () {
 
     app.constant('$CONST_VAR', {
         viewsDirectory : 'js/app/views/',
-        restDirectory : 'http://local.project/al-haraki/rest/web/api/'
+        restDirectory : 'http://localhost:8012/al-haraki/rest/web/api/'
     });
 
     app.config(['$routeProvider', 'routeResolverProvider', '$controllerProvider',
@@ -49,11 +49,51 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
-                // MASTER
+                // MASTER SISWA
                 .when('/master/siswa', 
                     routeCustome.resolve(
                         'master/siswa/index', 
                         'SiswaController'
+                    )
+                )
+
+
+                .when('/master/siswa/add', 
+                    routeCustome.resolve(
+                        'master/siswa/form', 
+                        'SiswaController'
+                    )
+                )
+
+                // MASTER PEGAWAI
+                .when('/master/karyawan', 
+                    routeCustome.resolve(
+                        'master/karyawan/index', 
+                        'PegawaiController'
+                    )
+                )
+
+
+                .when('/master/karyawan/add', 
+                    routeCustome.resolve(
+                        'master/karyawan/form', 
+                        'PegawaiController'
+                    )
+                )
+
+                // MASTER KELAS
+                .when('/master/kelas', 
+                    routeCustome.resolve(
+                        'master/kelas/index', 
+                        'KelasController'
+                    )
+                )
+
+
+                .when('/master/kelas/add', 
+                    routeCustome.resolve(
+                        'master/kelas/form', 
+                        'KelasController'
                     )
                 )
         
@@ -90,7 +130,7 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
-                // .otherwise({redirectTo: '/404'})
+                .otherwise({redirectTo: '/404'})
         }
     ]);
 

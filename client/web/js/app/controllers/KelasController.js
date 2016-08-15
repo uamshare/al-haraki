@@ -14,7 +14,7 @@ define(['app'], function (app) {
             '$timeout'
         ];
 
-    var PegawaiController = function (
+    var KelasController = function (
             $CONST_VAR,
             $scope, 
             $location, 
@@ -24,7 +24,7 @@ define(['app'], function (app) {
             $timeout
         ) 
     {
-        $scope.viewdir = $CONST_VAR.viewsDirectory + 'master/karyawan/';
+        $scope.viewdir = $CONST_VAR.viewsDirectory + 'master/kelas/';
 
         //========================Grid Config =======================
 
@@ -32,10 +32,9 @@ define(['app'], function (app) {
             columnDefs : [
                 { name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
                 { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
-                { name: 'nik', displayName: 'NIK', visible: true, width : '100',  enableCellEdit: false},
-                { name: 'nuptk', displayName: 'NUPTK', visible: true, width : '300',  enableCellEdit: false},
-                { name: 'nama', displayName: 'Nama Karyawan', visible: true, width : '400',  enableCellEdit: false},
-                { name: 'sekolahid', displayName: 'Sekolah', width : '200',  enableCellEdit: false}
+                { name: 'kelas', displayName: 'Kelas', visible: true, width : '250',  enableCellEdit: false},
+                { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, width : '380',  enableCellEdit: false},
+                { name: 'sekolahid', displayName: 'Sekolah', visible: true, width : '350',  enableCellEdit: false}
             ]
         }
 
@@ -79,7 +78,7 @@ define(['app'], function (app) {
         };
 
         function getData(data){
-            $http.get($CONST_VAR.restDirectory + 'pegawais',{
+            $http.get($CONST_VAR.restDirectory + 'kelas',{
                 params : data
             })
             .success(function(data, status, header) {
@@ -105,12 +104,12 @@ define(['app'], function (app) {
         
         $scope.onAddClick = function(event){
             // alert('tambah');
-            $location.path( "/master/karyawan/add");
+            $location.path( "/master/kelas/add");
         }
     }
-    PegawaiController.$inject = injectParams;
+    KelasController.$inject = injectParams;
 
 
-    app.register.controller('PegawaiController', PegawaiController);
+    app.register.controller('KelasController', KelasController);
 
 });
