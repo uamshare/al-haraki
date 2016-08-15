@@ -332,6 +332,8 @@ define(['app'], function (app) {
 			.then(function (result) {
                 if(result.success){
                 	$scope.gridDetail.data = [];
+                	if(result.rows.length <= 0 )return false;
+                	
                 	angular.forEach(result.rows, function(dt, index) {
 						var romnum = index + 1;
 		                result.rows[index]["index"] = romnum;

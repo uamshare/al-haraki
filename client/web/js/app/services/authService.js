@@ -14,19 +14,23 @@ define(['app'], function (app) {
                 }
             };
 
-        factory.login = function (username, password) {
-            return $http.post(serviceBase + 'auth/login', { userLogin: { userName: username, password: password } }).then(
+        factory.login = function (usernameOrEmail, passwd) {
+            return $http.post(serviceBase + 'auth/login', {
+                    username : usernameOrEmail,
+                    password : passwd 
+                }).then(
                 function (results) {
                     var loggedIn = results.data.success;
                     changeAuth(loggedIn);
                     return loggedIn;
-                });
+                }
+            );
         };
 
         factory.logout = function () {
             return $http.post(serviceBase + 'auth/logout').then(
                 function (results) {
-                    var loggedIn = !results.data.status;
+                    var loggedIn = !results.data.success;
                     changeAuth(loggedIn);
                     return loggedIn;
                 });
@@ -38,7 +42,8 @@ define(['app'], function (app) {
 
         function changeAuth(loggedIn) {
             factory.user.isAuthenticated = loggedIn;
-            localStorage.setItem('isAuthValid', loggedIn);
+            // localStorage.setItem('isAuthValid', loggedIn);
+            sessionStorage.setItem('isAuthValid', loggedIn);
             $rootScope.$broadcast('loginStatusChanged', loggedIn);
         }
 

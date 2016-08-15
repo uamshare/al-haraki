@@ -18,13 +18,14 @@ define(['services/routeResolver'], function () {
             'ui.grid.edit',
             'ui.grid.cellNav',
             'chieffancypants.loadingBar',
-            'ngDialog'
+            'ngDialog',
+            // 'chart.js'
         ]
     );
 
     app.constant('$CONST_VAR', {
         viewsDirectory : 'js/app/views/',
-        restDirectory : 'http://local.project/al-haraki/rest/web/api/'
+        restDirectory : BASEAPIURL
     });
 
     app.config([
@@ -38,6 +39,7 @@ define(['services/routeResolver'], function () {
         'toastrConfig',
         'cfpLoadingBarProvider',
         '$datepickerProvider',
+        // 'ChartJsProvider',
         function (
             $routeProvider,
             routeResolverProvider, 
@@ -49,6 +51,7 @@ define(['services/routeResolver'], function () {
             toastrConfig,
             cfpLoadingBarProvider,
             $datepickerProvider
+            // ChartJsProvider
         ) 
         {
             app.register =
@@ -77,6 +80,16 @@ define(['services/routeResolver'], function () {
                 startWeek: 1
             });
 
+            // Configure all charts
+            // ChartJsProvider.setOptions({
+            //   chartColors: ['#FF5252', '#FF8A80'],
+            //   responsive: false
+            // });
+            // Configure all line charts
+            // ChartJsProvider.setOptions('line', {
+            //   showLines: false
+            // });
+
             cfpLoadingBarProvider.includeSpinner = true;
             // cfpLoadingBarProvider.spinnerTemplate = '<div><div class="spinner-icon"></div>Custom Loading Message...</div>';
             cfpLoadingBarProvider.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>'; //'<div><span class="fa fa-spinner">Loading...</div>';
@@ -88,8 +101,8 @@ define(['services/routeResolver'], function () {
             $routeProvider
                 .when('/', 
                     routeCustome.resolve(
-                        'main',
-                        'PegawaiController',
+                        'main/index',
+                        'MainController',
                         true
                     )
                 )
@@ -182,7 +195,7 @@ define(['services/routeResolver'], function () {
                 cfpLoadingBar.start();
                 $rootScope.fakeIntro = true;
                 if (next && next.$$route && next.$$route.secure) {
-                    var isLogin = (localStorage.getItem('isAuthValid') == 'true') ? true : false;
+                    var isLogin = (sessionStorage.getItem('isAuthValid') == 'true') ? true : false;
                     if (!isLogin) {
                         $rootScope.$evalAsync(function () {
                             authService.redirectToLogin();

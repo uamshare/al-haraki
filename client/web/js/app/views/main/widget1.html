@@ -1,0 +1,19 @@
+<!-- Small boxes (Stat box) -->
+<div class="row">
+	<div class="col-lg-2 col-xs-3" ng-repeat="info in infoTagihan.rows track by info.name">
+		<div class="small-box {{info.clsBg}}" >
+			<div class="inner">
+				<h3>{{info.value | number}}</h3>
+				<p>Outstanding</p>
+				<p><strong>{{info.label}}</strong></p>
+			</div>
+			<div class="icon">
+				<i class="ion ion-bag"></i>
+			</div>
+			<a href="$" class="small-box-footer">
+				Bulan {{$parent.month}} {{$parent.year}} 
+				<!-- <i class="fa fa-arrow-circle-right"></i> -->
+			</a>
+		</div>
+	</div>
+</div>

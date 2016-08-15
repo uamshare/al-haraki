@@ -7,6 +7,21 @@ class AuthController extends \rest\modules\api\ActiveController
 {
     public $modelClass = 'rest\models\Auth';
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        return array_merge($behaviors, 
+            [
+                'verbs' => [
+                    'class' => \yii\filters\VerbFilter::className(),
+                    'actions' => [
+                        'login' => ['post']
+                    ],
+                ],
+            ]
+        );
+    }
+
     public function actionIndex(){
     	$data['data'] = ['__token' => Yii::$app->getSecurity()->generateRandomString()];
     	return $data;
@@ -15,8 +30,10 @@ class AuthController extends \rest\modules\api\ActiveController
     public function actionLogin()
     {
         $model = $this->modelClass;
-        $username = Yii::$app->getRequest()->post('username', '');
-        $password = Yii::$app->getRequest()->post('password', '');
+        $post = Yii::$app->getRequest()->getBodyParams();
+        $username = isset($post['username']) ? $post['username'] : false;
+        $password = isset($post['password']) ? $post['password'] : false;
+        // var_dump($post);exit();
         $user = $model::findByLogin($username, md5($password));
         
         if($user && Yii::$app->user->login($user)){
@@ -35,6 +52,8 @@ class AuthController extends \rest\modules\api\ActiveController
             $session->set('__ip',\Yii::$app->request->userip);
 
         }else{
+            $this->response = Yii::$app->getResponse();
+            $this->response->setStatusCode(401, 'Unauthorized');
             $data = [
                 '__isLogin' => false,
                 'error_message' => 'Username or password not found'

@@ -9,13 +9,12 @@
             </div>
             <div class="pull-left info">
                 <p>Administrator</p>
-
                 <a href="#"><i class="fa fa-circle text-success"></i> Admin</a>
             </div>
         </div>
 
         <!-- search form -->
-        <form action="#" method="get" class="sidebar-form">
+        <!-- <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search..."/>
               <span class="input-group-btn">
@@ -23,7 +22,7 @@
                 </button>
               </span>
             </div>
-        </form>
+        </form> -->
         <!-- /.search form -->
 
         <?= dmstr\widgets\Menu::widget(

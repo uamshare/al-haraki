@@ -15,19 +15,22 @@ define(['app'], function (app) {
         };
 
         $scope.loginOrOut = function () {
-            setLoginLogoutText();
-            var isAuthenticated = authService.user.isAuthenticated;
+            // setLoginLogoutText();
+            var isAuthenticated = localStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
             if (isAuthenticated) { //logout 
                 authService.logout().then(function () {
-                    $location.path('/');
-                    return;
+                    // $location.path('/#');
+                    // return true;
+                    redirectToLogin();
                 });
+                // $location.path('/');
+                // redirectToLogin();
             }
-            redirectToLogin();
         };
 
         function redirectToLogin() {
-            var path = '/login' + $location.$$path;
+            var lp = ($location.$$path != '/login') ? $location.$$path : '/';
+            var path = '/login'; // + lp;
             $location.replace();
             $location.path(path);
         }

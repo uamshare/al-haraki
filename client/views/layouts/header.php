@@ -38,13 +38,12 @@ use yii\helpers\Html;
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                <a href="#" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a class="btn btn-default btn-flat" 
-                                    href="#" data-method="post" ng-click="loginOrOut()">
-                                    Logout
-                                </a>
+                                <button class="btn btn-danger btn-flat" ng-click="loginOrOut()">
+                                    <i class="fa fa-lock"></i> Logout
+                                </button>
                             </div>
                         </li>
                     </ul>

@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$scope','$location', '$routeParams', 'authService'];
+    var injectParams = ['$scope','$location', '$routeParams', 'authService','toastr'];
 
-    var LoginController = function ($scope, $location, $routeParams, authService) {
+    var LoginController = function ($scope, $location, $routeParams, authService, toastr) {
         var vm = this,
             path = '/';
 
@@ -13,11 +13,11 @@ define(['app'], function (app) {
         $scope.errorMessage = null;
 
         $scope.login = function () {
-            authService.login($scope.username, $scope.password).then(function (status) {
-                //$routeParams.redirect will have the route
-                //they were trying to go to initially
+            authService.login($scope.username, $scope.password)
+            .then(function (status) {
                 if (!status) {
                     $scope.errorMessage = 'Unable to login';
+                    toastr.error($scope.errorMessage, 'Error');
                     return;
                 }
 
@@ -26,6 +26,10 @@ define(['app'], function (app) {
                 }
 
                 $location.path(path);
+            }, function(error){
+                $scope.errorMessage = 'Unable to login';
+                // toastr.error($scope.errorMessage, 'Error');
+                toastr.warning('Untuk demo masukan lgin berikut. Username : demo, Password : demo123', 'Warning');
             });
         };
     };

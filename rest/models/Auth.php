@@ -91,9 +91,13 @@ class Auth extends ActiveRecord implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByLogin($username)
+    public static function findByLogin($username, $pass)
     {
-        return static::findOne(['username' => 'admin', 'status' => self::STATUS_ACTIVE]);
+        if($username == 'demo' && $pass == md5('demo123')){
+            return static::findOne(['username' => 'admin', 'status' => self::STATUS_ACTIVE]);
+        }
+        return false;
+        // return static::findOne(['username' => 'admin', 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
