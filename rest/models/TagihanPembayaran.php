@@ -200,52 +200,62 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
     }
 
     public function insertBatch($rows, $log, $whereids = null){
-      $DB = $this->getDb();
-      $transaction = $DB->beginTransaction();
-      $column = $this->attributes();
-      unset($column[0]);
-      $columnLog = [
-        'idrombel',
-        'spp',
-        'komite_sekolah',
-        'catering',
-        'keb_siswa',
-        'ekskul',
-        'tahun_ajaran_id',
-        'keterangan',
-        'created_at',
-        'updated_at'
-      ];
-      try {
-        $saved = $DB->createCommand()->batchInsert(
-            self::tableName(), 
-            $column, 
-            $rows
-        );
-        $saved->setSql($saved->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
-        // echo $saved->rawSql . '<br/>';
-        $saved->execute();
+        $DB = $this->getDb();
+        $transaction = $DB->beginTransaction();
+        $column = $this->attributes();
+        unset($column[0]);
+        $columnLog = [
+            'idrombel',
+            'spp',
+            'komite_sekolah',
+            'catering',
+            'keb_siswa',
+            'ekskul',
+            'tahun_ajaran_id',
+            'keterangan',
+            'created_at',
+            'updated_at'
+        ];
+        try {
+            $saved = $DB->createCommand()->batchInsert(
+                self::tableName(), 
+                $column, 
+                $rows
+            );
+            $saved->setSql($saved->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
+            // echo $saved->rawSql . '<br/>';
+            $saved->execute();
 
-        $saveL = $DB->createCommand()->batchInsert(
-            'tagihan_info_input_log', 
-            $columnLog, 
-            $log
-        );
-        $saveL->setSql($saveL->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnLog));
-        // echo $saveL->rawSql;exit();
-        $saveL->execute();
-        
-        $transaction->commit();
-        return true;
-      } catch(\Exception $e) {
-          $msg =  (string)($e) . ' on ' . __METHOD__;
-          \Yii::error(date('Y-m-d H:i:s A') . ' Error during save data. ' . $msg);
-          $transaction->rollBack();
-          return [
-            'name' => 'Error during save data.',
-            'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error'
-          ];
-      }
+            // Set flag 0 to old log
+            $updateL = $DB->createCommand()->update(
+                'tagihan_info_input_log', 
+                ['flag' => '0'], 
+                ['id' => $whereids]
+            );
+            $updateL->execute();
+
+            // Save new log
+            $saveL = $DB->createCommand()->batchInsert(
+               'tagihan_info_input_log', 
+                $columnLog, 
+                $log
+            );
+            $saveL->setSql($saveL->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnLog));
+            // echo $saveL->rawSql;exit();
+            $saveL->execute();
+
+            $transaction->commit();
+            return true;
+        } catch(\Exception $e) {
+            $msg =  (string)($e) . ' on ' . __METHOD__;
+            \Yii::error(date('Y-m-d H:i:s A') . ' Error during save data. ' . $msg);
+            $transaction->rollBack();
+            return [
+                'name' => 'Error during save data.',
+                'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error',
+                'log' => $msg
+            ];
+        }
     }
 
     private function setOnDuplicateValue($column){

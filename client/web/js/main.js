@@ -12,10 +12,14 @@ require(
         // 'services/routeResolver',
         // 'directives/comboKelas',
         'services/authService',
+        'services/helperService',
         'services/httpInterceptors',
         'services/kwitansiPemabayaranService',
         'services/SiswaRombelService',
         'services/TagihanInfoService',
+        'services/SiswaService',
+        'services/PegawaiService',
+        'services/KelasService',
         'controllers/NavbarController'
     ],
     function () {

@@ -3,6 +3,7 @@
 define(['app'], function (app) {
 	var injectParams = [
 			'$CONST_VAR',
+			'helperService',
     		'$scope', 
     		'toastr',
     		'toastrConfig',
@@ -18,6 +19,7 @@ define(['app'], function (app) {
 
     var TagihanInfoController = function (
 		$CONST_VAR,
+		helperService,
 		$scope, 
 		toastr,
 		toastrConfig,
@@ -177,88 +179,13 @@ define(['app'], function (app) {
 			selected: null
 		};
 		
-		$scope.month = {
-			options: [
-				{id: 1, name: 'Januari'},
-				{id: 2, name: 'Februari'},
-				{id: 3, name: 'Maret'},
-				{id: 4, name: 'April'},
-				{id: 5, name: 'Mei'},
-				{id: 6, name: 'Juni'},
-				{id: 7, name: 'Juli'},
-				{id: 8, name: 'Agustus'},
-				{id: 9, name: 'September'},
-				{id: 10, name: 'Oktober'},
-				{id: 11, name: 'November'},
-				{id: 12, name: 'Desember'}
-			],
-			selected: null,
-			year : null
-		};
+		$scope.month = helperService.month();
+		$scope.month_start = helperService.month();
+		$scope.month_end = helperService.month();
 
-		$scope.month_start = {
-			options: [
-				{id: 1, name: 'Januari'},
-				{id: 2, name: 'Februari'},
-				{id: 3, name: 'Maret'},
-				{id: 4, name: 'April'},
-				{id: 5, name: 'Mei'},
-				{id: 6, name: 'Juni'},
-				{id: 7, name: 'Juli'},
-				{id: 8, name: 'Agustus'},
-				{id: 9, name: 'September'},
-				{id: 10, name: 'Oktober'},
-				{id: 11, name: 'November'},
-				{id: 12, name: 'Desember'}
-			],
-			selected: null,
-			year : null
-		};
-		$scope.month_end = {
-			options: [
-				{id: 1, name: 'Januari'},
-				{id: 2, name: 'Februari'},
-				{id: 3, name: 'Maret'},
-				{id: 4, name: 'April'},
-				{id: 5, name: 'Mei'},
-				{id: 6, name: 'Juni'},
-				{id: 7, name: 'Juli'},
-				{id: 8, name: 'Agustus'},
-				{id: 9, name: 'September'},
-				{id: 10, name: 'Oktober'},
-				{id: 11, name: 'November'},
-				{id: 12, name: 'Desember'}
-			],
-			selected: null,
-			year : null
-		};
 		/*********************** Action ******************************/
 		var date = new Date();
-		function init(){
-			$http.get($CONST_VAR.restDirectory + 'kelas/list',{
-				params : {
-					sekolahid : 2,
-					kelasid : $routeParams.idkelas
-				}
-			})
-			.success(function(data, status, header) {
-				var header = header();
-				if(data.success){
-					$scope.kelas.options = data.rows;
-				}
-				$scope.month.selected = date.getMonth();
-				$scope.month.year = date.getFullYear();
-			})
-			.error(function (data, status, header, config) {
-				alert('Unable to load data kelas')
-        	});
-        	if($routeParams.idkelas){
-        		$scope.getDataInfo({
-					'kelasid' : $routeParams.idkelas,
-					'month' : $routeParams.month
-        		});
-        	}
-		}
+		
 		
 		function errorHandle(error){
 			var msg = error.data.name;
@@ -270,27 +197,16 @@ define(['app'], function (app) {
 		 * @param gridData Object, all dirty grid data
 		 */
 		function saveAll(params){
-			// $http.post($CONST_VAR.restDirectory + 'tagihaninfoinputs', params)
-			// .success(function(data, status, header) {
-			// 	toastr.success('Data berhasil disimpan', 'Success');
-			// 	$scope.getData({
-	  		//   	'page' : 1,
-			// 		'per-page' : 0,
-			// 		'kelasid' : params.kelasid,
-			// 		'month' : params.month_start.selected
-	  		//	});
-	  		//   		$scope.gridDirtyRows = [];
-			// })
-			// .error(function (data, status, header, config) {
-
-   			// });
-
         	cfpLoadingBar.start();
 			$resourceApi.insert(params)
 			.then(function (result) {
                 if(result.success){
 					toastr.success('Data berhasil disimpan', 'Success');
 		    		$scope.gridDirtyRows = [];
+		    		$scope.getDataInfo({
+						'kelasid' : $routeParams.idkelas,
+						'month' : $routeParams.month
+	        		});
 				}else{
 					toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
 					cfpLoadingBar.complete();
@@ -316,33 +232,7 @@ define(['app'], function (app) {
 		            $scope.grid.data = result.rows;
 				}
 				cfpLoadingBar.complete();
-				console.log(date.getMonth());
             }, errorHandle);
-
-			// cfpLoadingBar.start();
-			// $http.get($CONST_VAR.restDirectory + 'tagihaninfoinput/list',{
-			// 	params : data
-			// })
-			// .success(function(data, status, header) {
-			// 	var header = header();
-			// 	if(data.success){
-			// 		angular.forEach(data.rows, function(dt, index) {
-			// 			var romnum = index + 1;
-		 //                data.rows[index]["index"] = romnum;
-
-		 //                data.rows[index]["spp"] = parseInt(data.rows[index]["spp"]);
-		 //                data.rows[index]["komite_sekolah"] = parseInt(data.rows[index]["komite_sekolah"]);
-		 //                data.rows[index]["catering"] = parseInt(data.rows[index]["catering"]);
-		 //                data.rows[index]["keb_siswa"] = parseInt(data.rows[index]["keb_siswa"]);
-		 //                data.rows[index]["ekskul"] = parseInt(data.rows[index]["ekskul"]);
-		 //            })
-		 //            $scope.grid.data = data.rows;
-			// 	}
-			// 	cfpLoadingBar.complete();
-			// })
-			// .error(function (data, status, header, config) {
-			// 		cfpLoadingBar.complete();
-   			//  });
 		}
 
 		$scope.getDataInfo = function(paramdata){
@@ -362,6 +252,7 @@ define(['app'], function (app) {
 		            })
 		            $scope.gridEdit.data = result.rows;
 		            $scope.kelas.selected = paramdata.kelasid;
+
 		            $scope.month_start.selected = paramdata.month;
 		            $scope.month_start.year = 2016;
 		            $scope.month_end.selected = 6;
@@ -479,15 +370,35 @@ define(['app'], function (app) {
 
 		$scope.print = function(divName){
 			printElement(document.getElementById(divName));
-
-			// var modThis = document.querySelector("#printSection .modifyMe");
-			// modThis.appendChild(document.createTextNode(" new"));
-
 			window.print();
 		}
 
 		
-
+		function init(){
+			$http.get($CONST_VAR.restDirectory + 'kelas/list',{
+				params : {
+					sekolahid : 2,
+					kelasid : $routeParams.idkelas
+				}
+			})
+			.success(function(data, status, header) {
+				var header = header();
+				if(data.success){
+					$scope.kelas.options = data.rows;
+				}
+				$scope.month.selected = helperService.getMonthId(date.getMonth());
+				$scope.month.year = date.getFullYear();
+			})
+			.error(function (data, status, header, config) {
+				alert('Unable to load data kelas')
+        	});
+        	if($routeParams.idkelas){
+        		$scope.getDataInfo({
+					'kelasid' : $routeParams.idkelas,
+					'month' : $routeParams.month
+        		});
+        	}
+		}
 		$scope.$on('$viewContentLoaded', function(){
 			// init();
 		});

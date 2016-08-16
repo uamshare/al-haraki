@@ -98,6 +98,7 @@ define(['services/routeResolver'], function () {
             //Define routes - controllers will be loaded dynamically
             // var route = routeResolverProvider.route;
             var routeCustome = routeResolverProvider.routeCustome;
+
             $routeProvider
                 .when('/', 
                     routeCustome.resolve(
@@ -107,31 +108,77 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
-                // MASTER
+                // MASTER SISWA
                 .when('/master/siswa', 
                     routeCustome.resolve(
                         'master/siswa/index', 
-                        'SiswaController',
-                        true
+                        'SiswaController'
+                    )
+                )
+
+
+                .when('/master/siswa/add', 
+                    routeCustome.resolve(
+                        'master/siswa/form', 
+                        'SiswaController'
+                    )
+                )
+
+                // MASTER PEGAWAI
+                .when('/master/karyawan', 
+                    routeCustome.resolve(
+                        'master/karyawan/index', 
+                        'PegawaiController'
+                    )
+                )
+
+
+                .when('/master/karyawan/add', 
+                    routeCustome.resolve(
+                        'master/karyawan/form', 
+                        'PegawaiController'
+                    )
+                )
+
+                // MASTER KELAS
+                .when('/master/kelas', 
+                    routeCustome.resolve(
+                        'master/kelas/index', 
+                        'KelasController'
+                    )
+                )
+
+                .when('/master/kelas/edit/:id', 
+                    routeCustome.resolve(
+                        'master/kelas/form', 
+                        'KelasController'
+                    )
+                )
+
+
+                .when('/master/kelas/add', 
+                    routeCustome.resolve(
+                        'master/kelas/form', 
+                        'KelasController'
                     )
                 )
         
                 // KEUANGAN
+                // Info Tagihan
                 .when('/keuangan/info-tagihan', 
                     routeCustome.resolve(
                         'keuangan/info-tagihan/index', 
-                        'TagihanInfoController',
-                        true
+                        'TagihanInfoController'
                     )
                 )
                 .when('/keuangan/info-tagihan/:idkelas/:month', 
                     routeCustome.resolve(
                         'keuangan/info-tagihan/edit', 
-                        'TagihanInfoController',
-                        true
+                        'TagihanInfoController'
                     )
                 )
 
+                // Kwitansi Pembayaran
                 .when('/keuangan/kwitansi-pembayaran', 
                     routeCustome.resolve(
                         'keuangan/kwitansi-pembayaran/index', 
@@ -146,7 +193,6 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
-
 
                 // AKUNTANSI
                 .when('/akuntansi/coa', 
@@ -178,11 +224,11 @@ define(['services/routeResolver'], function () {
                 )
 
                 .otherwise({redirectTo: '/404'})
-            
+
             $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/javascript';
             $httpProvider.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
             $httpProvider.defaults.headers.common['access-token'] = '$2y$13$9js4d7rmpbRxZxQngMA';
-            $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] =     $('meta[name="csrf-token"]').attr('content')
+            $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
         }
     ]);
 

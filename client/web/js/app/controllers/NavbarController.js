@@ -16,7 +16,7 @@ define(['app'], function (app) {
 
         $scope.loginOrOut = function () {
             // setLoginLogoutText();
-            var isAuthenticated = localStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
+            var isAuthenticated = sessionStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
             if (isAuthenticated) { //logout 
                 authService.logout().then(function () {
                     // $location.path('/#');

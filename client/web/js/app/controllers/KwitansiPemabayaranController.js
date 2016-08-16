@@ -3,6 +3,7 @@
 define(['app'], function (app) {
 	var injectParams = [
 			'$CONST_VAR',
+			'helperService',
     		'$scope', 
     		'toastr',
     		// 'toastrConfig',
@@ -21,6 +22,7 @@ define(['app'], function (app) {
 
     var KwitansiPemabayaranController = function (
 		$CONST_VAR,
+		helperService,
 		$scope, 
 		toastr,
 		// toastrConfig,
@@ -40,20 +42,7 @@ define(['app'], function (app) {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/';
     	var $resourceApi = kwitansiPemabayaranService;
     	var date = new Date();
-    	$scope.month = [
-			{id: 1, name: 'Januari'},
-			{id: 2, name: 'Februari'},
-			{id: 3, name: 'Maret'},
-			{id: 4, name: 'April'},
-			{id: 5, name: 'Mei'},
-			{id: 6, name: 'Juni'},
-			{id: 7, name: 'Juli'},
-			{id: 8, name: 'Agustus'},
-			{id: 9, name: 'September'},
-			{id: 10, name: 'Oktober'},
-			{id: 11, name: 'November'},
-			{id: 12, name: 'Desember'}
-		];
+    	$scope.month = helperService.month().options;
     	/******************* GRID CONFIG **********************************/
     	var gridOptions = {
     		columnDefs : [
@@ -225,7 +214,7 @@ define(['app'], function (app) {
 			$scope.nis.kelas = '';
 			$scope.nis.select = '';
 			$scope.form.sumber_kwitansi = '';
-			$scope.form.month = date.getMonth() + 1;
+			$scope.form.month = helperService.getMonthId(date.getMonth());
 			$scope.form.year = date.getFullYear();
 
 			$scope.gridDetail.data = [
@@ -567,7 +556,7 @@ define(['app'], function (app) {
 							$scope.row.keb_siswa +
 							$scope.row.ekskul;
 				}
-				$scope.monthPrint = date.getMonth() + 1;
+				$scope.monthPrint = date.getMonth();
 				$scope.monthYear = date.getFullYear();
 
 		        ngDialog.open({
