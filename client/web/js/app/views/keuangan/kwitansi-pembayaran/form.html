@@ -1,0 +1,155 @@
+<div id="kwitansi-pembayaran-form" class="box box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-plus-circle"></i> Form Kwitansi Pembayaran</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<form class="form-horizontal form-custome">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-8">
+					<div class="no-kwitansi">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">No Kwitansi</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" readonly="true" 
+									ng-model="form.no_kwitansi" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Tanggal</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" 
+									ng-model="form.tgl_kwitansi" name="date" bs-datepicker />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-6">
+					<fieldset>
+						<legend>Telah diterima dari</legend>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">Nama Pembayar</label>
+							<div class="col-xs-8 col-md-9">
+								<input type="text" class="form-control input-sm" ng-model="form.nama_pembayar" 
+									placeholder="Nama Pembayar">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">Keterangan</label>
+							<div class="col-xs-8 col-md-9">
+								<textarea class="form-control input-sm" ng-model="form.keterangan"></textarea>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="col-xs-12 col-md-6">
+	                <fieldset>
+	                	<legend>Wali murid dari : </legend>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">NIS</label>
+							<div class="col-xs-8 col-md-9">
+								<input type="text" class="form-control input-sm"
+									bs-typeahead 
+									ng-model="nis.select"
+									bs-options="siswa for siswa in nis.data"
+									ng-blur = "onNISChange(index)"
+									data-animation="am-flip-x"
+									placeholder="NIS">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">Nama</label>
+							<div class="col-xs-8 col-md-9">
+								<input ng-model="nis.nama_siswa" type="text" class="form-control input-sm" placeholder="Nama">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">Kelas</label>
+							<div class="col-xs-8 col-md-9">
+								<input ng-model="nis.kelas" type="text" class="form-control input-sm" placeholder="Kelas">
+							</div>
+						</div>
+	                </fieldset>
+	                <!-- /.box-body -->
+				</div>
+				<div class="col-xs-12 col-md-12" style="margin-top : 20px">
+	                <fieldset>
+	                	<legend>Untuk pembayaran dengan rincian sebagai berikut : </legend>
+	                	<div class="form-group">
+		                	<div class="col-xs-4 col-md-3">
+		                		<a href="" ng-click="onAddDetailClick($event)" class="btn btn-primary btn-sm" >
+									<i class="fa fa-plus-circle"></i>
+								</a>
+		                	</div>
+		                	<div class="col-xs-12 {{form.sumber_kwitansi == 1 ? 'col-md-5' : 'col-md-4 col-md-offset-5'}}">
+		                		<div class="input-group pull-right">
+									<div class="input-group-addon"><b>Sumber Kwitansi</b></div>
+									<select name="source_kwitansi" class="form-control" 
+										ng-model="form.sumber_kwitansi"
+										ng-change="onSKSelect(form.sumber_kwitansi)">
+										<option value="0">0 - None</option>
+										<option value="1">1 - Info Tagihan</option>
+									</select>
+								</div>
+		                	</div>
+		                	<div class="col-xs-12 col-md-4" ng-show="form.sumber_kwitansi == 1">
+		                		<div class="input-group">
+									<div class="input-group-addon"><strong>Bulan</strong></div>
+									<select 
+										name="month" 
+										class="form-control" 
+										ng-model="form.month"
+										ng-change="onSKSelect(form.sumber_kwitansi)"
+									>
+										<option ng-repeat="bln in month track by bln.id" value="{{bln.id}}">
+										{{bln.name}}
+										</option>
+									</select>
+									<div class="input-group-addon">
+										<input type="hidden" name="year_end" ng-model="form.year" />
+										{{form.year}}
+									</div>
+								</div>
+		                	</div>
+	                	</div>
+
+	                	<div id="grid2" ui-grid="gridDetail" 
+							ui-grid-resize-columns
+				            ui-grid-selection
+				            ui-grid-edit
+				            ui-grid-cellNav
+				            class="gridDetail">
+				        </div>
+	                </fieldset>
+	            </div>
+			</div>
+		</form>
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-left">
+			<a href="" ng-click="onAddClick($event)" class="btn btn-primary btn-sm" data-toggle="tooltip"
+				data-original-title="Tambah Kwitansi Pembayaran">
+				<i class="fa fa-plus-circle"></i> Tambah Data
+			</a>
+			<a href="" ng-click="onShowClick($event)" class="btn btn-default btn-sm" data-toggle="tooltip"
+				data-original-title="Rekap Data Kwitansi Pembayaran">
+				<i class="fa fa-th-list"></i> Rekap Data
+			</a>
+		</div>
+		<div class="box-tools pull-right">
+			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm" data-toggle="tooltip"
+				data-original-title="Reset Data">
+				<i class="fa fa-refresh"></i> Batal
+			</a>
+			<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm" data-toggle="tooltip"
+				data-original-title="Simpan Data">
+				<i class="fa fa-save"></i> Simpan
+			</a>
+		</div>
+	</div>
+</div>

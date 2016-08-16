@@ -1,6 +1,7 @@
+
 <div class="box box-primary box-solid">
 	<div class="box-header with-border">
-		<h3 class="box-title">Tambah Info Tagihan</h3>
+		<h3 class="box-title"><i class="fa fa-cogs"></i> Kelola Info Tagihan</h3>
 		<div class="box-tools pull-right">
 		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 		</button>
@@ -24,21 +25,27 @@
 							{{bs.name}}
 							</option>
 						</select>
-						<div class="input-group-addon">2016</div>
+						<div class="input-group-addon">
+							<input type="hidden" name="year_start" ng-model="month_start.year" />
+							{{month_start.year}}
+						</div>
 						<div class="input-group-addon">s/d</div>
 						<select name="month_end" class="form-control" ng-model="month_end.selected">
 							<option ng-repeat="be in month_end.options" value="{{be.id}}" >
 							{{be.name}}
 							</option>
 						</select>
-						<div class="input-group-addon">2017</div>
+						<div class="input-group-addon">
+							<input type="hidden" name="year_end" ng-model="month_end.year" />
+							{{month_end.year}}
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-2">
 				<label>&nbsp;</label>
 				<div class="form-group">
-					<a class="btn btn-sm btn-primary pull-right	" href="" ng-click="onSearchClick($event)">
+					<a class="btn btn-sm btn-primary pull-right	" href="" ng-click="onSaveClick($event)">
 						<i class="fa fa-save"></i> Simpan
 					</a>
 				</div>
@@ -49,7 +56,7 @@
 				<div id="grid1" ui-grid="gridEdit" 
 					ui-grid-resize-columns 
 		            ui-grid-selection 
-		            ui-grid-edit 
+		            ui-grid-edit
 		            ui-grid-cellNav
 		            class="grid">
 		        </div>

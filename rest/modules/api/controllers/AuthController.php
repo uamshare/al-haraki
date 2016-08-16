@@ -3,9 +3,9 @@ namespace rest\modules\api\controllers;
 use Yii;
 use rest\modules\api\BaseApiController;
 
-class AuthController extends BaseApiController
+class AuthController extends \rest\modules\api\ActiveController
 {
-    public $modelClass = 'rest\models\User';
+    public $modelClass = 'rest\models\Auth';
 
     public function actionIndex(){
     	$data['data'] = ['__token' => Yii::$app->getSecurity()->generateRandomString()];
@@ -24,14 +24,14 @@ class AuthController extends BaseApiController
             $user = \Yii::$app->user->identity;
             $data = [
                 '__id' => \Yii::$app->getSecurity()->generateRandomString(),
-                '__accessToken' => Yii::$app->getSecurity()->generatePasswordHash($user->pswd), // $user->accessToken, //'100-token',
+                '__accessToken' =>  $user->access_token, //Yii::$app->getSecurity()->generatePasswordHash($user->access_token),
                 '__isLogin' => true,
             ];
 
             $session = \Yii::$app->getSession();
             $session->set('__token', $data['__accessToken']);
             $session->set('__token_id', $data['__id']);
-            $session->set('__expired', time() + \Yii::$app->params['user.tokenExpire']);
+            $session->set('__expired', time() + \Yii::$app->params['user.passwordResetTokenExpire']);
             $session->set('__ip',\Yii::$app->request->userip);
 
         }else{

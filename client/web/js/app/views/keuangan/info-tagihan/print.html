@@ -1,0 +1,95 @@
+
+<div id="print-info-tagihan" >
+<link rel="stylesheet" type="text/css" href="css/print-style-2.css" />
+  <div class="printStyle-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title" style="text-align : center;">
+                                <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
+                                <h2>Informasi Tagihan</h2>
+                                <h4>Kelas {{kelas.options[0].kelas}} {{kelas.options[0].nama_kelas}}</h4>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr/>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr><td>Nama</td><td>:</td><td>{{row.nama_siswa}}</td></tr>
+                        <tr><td>Bulan</td><td>:</td>
+                            <td>{{month.options[month.selected].name}} {{month.year}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr class="heading">
+                <td>Yang harus dibayar : </td>
+            </tr>
+        </table>
+        <table>
+            <tr class="item">
+                <td>SPP</td><td>:</td><td style="text-align : right;">{{row.spp | number:0}}</td>
+            </tr>
+            <tr class="item">
+                <td>KS</td><td>:</td><td style="text-align : right;">{{row.komite_sekolah | number:0}}</td>
+            </tr>
+            <tr class="item">
+                <td>Catering</td><td>:</td><td style="text-align : right;">{{row.catering | number:0}}</td>
+            </tr>
+            <tr class="item">
+                <td>Keb. Siswa</td><td>:</td><td style="text-align : right;">{{row.keb_siswa | number:0}}</td>
+            </tr>
+            <tr class="item">
+                <td>Eksul</td><td>:</td><td style="text-align : right;">{{row.ekskul | number:0}}</td>
+            </tr>
+            <tr class="total">
+                <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{row.total() | number:0}}</b></td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td></td>
+                            <td>
+                                Depok, {{month.options[monthPrint].name}} {{monthYear}}<br>
+                                <br>
+                                <br/>
+                                <br>
+                                <br/>
+                                Adm. Keuangan
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <div class="note">
+            <i>Note :</i><br/>
+            <span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 {{month.options[month.selected].name}} {{month.year}}</strong></span>
+            <ol>
+                <li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>
+                <li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>
+                <li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>
+                <li>Mohon maaf jika ada kekeliruan pada informasi ini</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row no-print pull-right">
+      <a href="" class="btn btn-default btn-sm" ng-click="print('print-info-tagihan')" >
+        <i class="fa fa-print"></i> Cetak
+      </a>
+    </div>
+</div>
+

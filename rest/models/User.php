@@ -1,4 +1,5 @@
 <?php
+
 namespace rest\models;
 
 use Yii;
@@ -13,6 +14,7 @@ use Yii;
  * @property string $password_reset_token
  * @property string $email
  * @property integer $status
+ * @property string $access_token
  * @property string $created_at
  * @property string $updated_at
  *
@@ -34,40 +36,13 @@ class User extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            [
-            'class' => \yii\behaviors\TimestampBehavior::className(),
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-                'value' => new \yii\db\Expression('NOW()'),
-            ]
-        ];
-    }
-
-    public function fields()
-    {
-        return [
-            'id',
-            'username',
-            'email',
-            'status',
-            'created_at',
-            'updated_at'
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email'], 'required'],
+            [['username', 'auth_key', 'password_hash', 'email', 'access_token', 'created_at', 'updated_at'], 'required'],
             [['status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'access_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
@@ -88,6 +63,7 @@ class User extends \yii\db\ActiveRecord
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
             'email' => Yii::t('app', 'Email'),
             'status' => Yii::t('app', 'Status'),
+            'access_token' => Yii::t('app', 'Access Token'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];

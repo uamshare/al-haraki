@@ -7,7 +7,7 @@ use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;
-use app\components\filters\auth\HttpHeaderAuth;
+use rest\modules\api\auth\HttpHeaderAuth;
 
 class Api extends \yii\base\Module
 {
@@ -26,15 +26,15 @@ class Api extends \yii\base\Module
 			return $behaviors;
 		}
 
-		// $behaviors['authenticator'] = [
-		// 	'class' => CompositeAuth::className(),
-		// 	'authMethods' => [
-		// 		HttpBasicAuth::className(),
-		// 		HttpBearerAuth::className(),
-		// 		QueryParamAuth::className(),
-		// 		HttpHeaderAuth::className()
-		// 	]
-		// ];
+		$behaviors['authenticator'] = [
+			'class' => CompositeAuth::className(),
+			'authMethods' => [
+				HttpBasicAuth::className(),
+				HttpBearerAuth::className(),
+				QueryParamAuth::className(),
+				HttpHeaderAuth::className()
+			]
+		];
 	    // $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_HTML;
 		return $behaviors;
 	}

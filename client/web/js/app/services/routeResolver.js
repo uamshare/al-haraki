@@ -9,8 +9,8 @@ define([], function () {
         };
 
         this.routeConfig = function () {
-            var viewsDirectory = 'js/app/views/',
-                controllersDirectory = 'js/app/controllers/',
+            var viewsDirectory = BASEURL + 'js/app/views/',
+                controllersDirectory = BASEURL + 'js/app/controllers/',
 
             setBaseDirectories = function (viewsDir, controllersDir) {
                 viewsDirectory = viewsDir;
@@ -83,7 +83,7 @@ define([], function () {
                 }
                 if (ControllerName) {
                     routeDef.controller = controller;
-                    // routeDef.controllerAs = controller;
+                    routeDef.controllerAs = controller;
                     routeDef.secure = (secure) ? secure : false;
                     routeDef.resolve = {
                         load: ['$q', '$rootScope', function ($q, $rootScope) {

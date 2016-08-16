@@ -28,7 +28,7 @@ return [
             ]
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'rest\models\Auth',
             'enableAutoLogin' => false,
             // 'identityCookie' => ['name' => '_identity-rest', 'httpOnly' => true],
         ],
@@ -54,7 +54,7 @@ return [
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
 
-                if($response->statusText == 'OK'){
+                if(in_array($response->statusCode, [200,201,202])){
                     $header = $response->getHeaders();
                     if ($response->data !== null && Yii::$app->request->get('rsp_type')) {
                         if(Yii::$app->request->get('rsp_type') == 1){

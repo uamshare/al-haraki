@@ -1,29 +1,13 @@
 <?php
 use yii\helpers\Html;
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-
-
-if (Yii::$app->controller->action->id === 'login') { 
-/**
- * Do not use this code in your template. Remove it. 
- * Instead, use the code  $this->layout = '//main-login'; in your controller.
- */
-    echo $this->render(
-        'main-login',
-        ['content' => $content]
-    );
-} else {
-    dmstr\web\AdminLteAsset::register($this);
+dmstr\web\AdminLteAsset::register($this);
     
     if (class_exists('client\assets\AppAsset')) {
         client\assets\AppAsset::register($this);
     } else {
         app\assets\AppAsset::register($this);
     }
-
-    
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
     ?>
@@ -35,6 +19,11 @@ if (Yii::$app->controller->action->id === 'login') {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
+
+        <script type="text/javascript">
+            var BASEURL = 'http://local.project/al-haraki/client/web/';
+            var BASEAPIURL = 'http://local.project/al-haraki/rest/web/api/';
+        </script>
         <?php $this->head() ?>
     </head>
     <body class="ng-cloak hold-transition sidebar-mini <?= \dmstr\helpers\AdminLteHelper::skinClass() ?>"> 
@@ -65,4 +54,3 @@ if (Yii::$app->controller->action->id === 'login') {
     </body>
     </html>
     <?php $this->endPage() ?>
-<?php } ?>

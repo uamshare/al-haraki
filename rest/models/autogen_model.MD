@@ -25,3 +25,7 @@ yii gii/model --tableName=pegawai --modelClass=Pegawai --ns=rest\models --enable
 yii gii/model --tableName=pengaturan --modelClass=Pengaturan --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
 
 yii gii/model --tableName=tagihan_pembayaran --modelClass=TagihanPembayaran --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=kwitansi_pembayaran_h --modelClass=KwitansiPembayaranH --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=kwitansi_pembayaran_d --modelClass=KwitansiPembayaranD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1

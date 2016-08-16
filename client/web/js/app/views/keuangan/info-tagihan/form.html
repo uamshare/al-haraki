@@ -11,9 +11,13 @@
 			<div class="col-lg-4">
 				<div class="form-group">
 					<label>Kelas</label>
-					<select name="kelasid" class="form-control" ng-model="kelas.selected">
-						<option ng-repeat="option in kelas.options" value="{{option.id}}">
-						{{option.kelas}} - {{option.nama_kelas}}
+					<select name="kelasid" class="form-control" 
+						ng-model="kelas.selected"
+						required="Silahkan pilih kelas"
+						ng-change="onSearchClick($event)"
+					>
+						<option ng-repeat="item in kelas.options track by item.id" value="{{item.id}}">
+						{{item.kelas}} - {{item.nama_kelas}}
 						</option>
 					</select>
 				</div>
@@ -23,22 +27,19 @@
 					<label>Periode</label>
 					<div class="input-group">
 						<div class="input-group-addon">Bulan</div>
-						<select name="filter_bln" class="form-control" ng-model="month.selected">
-							<option ng-repeat="bln in month.options" value="{{bln.id}}">
+						<select 
+							name="filter_bln" 
+							class="form-control" 
+							ng-model="month.selected"
+							ng-change="onSearchClick($event)"
+						>
+							<option ng-repeat="bln in month.options track by bln.id" value="{{bln.id}}">
 							{{bln.name}}
 							</option>
 						</select>
 						<div class="input-group-addon">Tahun</div>
-						<input type="number" name="tahun" class="form-control col-sm-6" ng-model="month.year" />
+						<div class="input-group-addon">{{month.year}}</div>
 					</div>
-				</div>
-			</div>
-			<div class="col-lg-2">
-				<label>&nbsp;</label>
-				<div class="form-group">
-					<a class="btn btn-sm btn-default pull-right	" href="" ng-click="onSearchClick($event)">
-						<i class="fa fa-search"></i> Cari Data
-					</a>
 				</div>
 			</div>
 		</div>
@@ -48,11 +49,11 @@
 	<div class="box-footer">
 		<div class="box-tools-left">
 			<a href="" ng-click="onSetInfoClick($event)" class="btn btn-primary btn-sm" data-toggle="tooltip"
-				data-original-title="Tambah Data">
-				<i class="fa fa-plus"></i>
+				data-original-title="Kelola Info Tagihan">
+				<i class="fa fa-cogs"></i>
 			</a>
 			<a href="#/keuangan/info-tagihan/log" class="btn btn-primary btn-sm" data-toggle="tooltip"
-				data-original-title="Tambah Data">
+				data-original-title="Log Data">
 				<i class="fa fa-history"></i>
 			</a>
 			<div class="btn-group">
