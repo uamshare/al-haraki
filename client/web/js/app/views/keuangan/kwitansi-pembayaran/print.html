@@ -9,8 +9,17 @@
                         <tr>
                             <td class="title" style="text-align : center;">
                                 <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
-                                <h2>Informasi Tagihan</h2>
-                                <h4>Kelas {{kelas.options[0].kelas}} {{kelas.options[0].nama_kelas}}</h4>
+                                <h1>BUKTI PENERIMAAN</h1>
+                            </td>
+                        </tr>
+                        <tr class="information">
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td> </td>
+                                        <td>Nomor : {{rowHeader.no_kwitansi}}</td>
+                                    </tr>
+                                </table>
                             </td>
                         </tr>
                     </table>
@@ -18,41 +27,31 @@
                 </td>
             </tr>
         </table>
+        <br/>
+
         <table>
-            <tr class="information">
-                <td colspan="2">
-                    <table>
-                        <tr><td>Nama</td><td>:</td><td>{{row.nama_siswa}}</td></tr>
-                        <tr><td>Bulan</td><td>:</td>
-                            <td>{{month.options[month.selected].name}} {{month.year}}</td>
-                        </tr>
-                    </table>
-                </td>
+            <tr class="item">
+                <td style="width : 150px">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_pembayar}}</td>
             </tr>
         </table>
+        <br/>
         <table>
             <tr class="heading">
-                <td>Yang harus dibayar : </td>
+                <td>Untuk Pembayaran dengan perincian sebagai berikut :</td>
             </tr>
         </table>
+        <br/>
         <table>
-            <tr class="item">
-                <td>SPP</td><td>:</td><td style="text-align : right;">{{row.spp | number:0}}</td>
-            </tr>
-            <tr class="item">
-                <td>KS</td><td>:</td><td style="text-align : right;">{{row.komite_sekolah | number:0}}</td>
-            </tr>
-            <tr class="item">
-                <td>Catering</td><td>:</td><td style="text-align : right;">{{row.catering | number:0}}</td>
-            </tr>
-            <tr class="item">
-                <td>Keb. Siswa</td><td>:</td><td style="text-align : right;">{{row.keb_siswa | number:0}}</td>
-            </tr>
-            <tr class="item">
-                <td>Eksul</td><td>:</td><td style="text-align : right;">{{row.ekskul | number:0}}</td>
+            <tr class="item" ng-repeat="row in rowDetail track by row.id">
+                <td style="width : 150px">{{row.rincian}}</td>
+                <td style="width : 10px">:</td>
+                <td style="text-align : right;">{{row.jumlah | number:0}}</td>
             </tr>
             <tr class="total">
-                <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{row.total() | number:0}}</b></td>
+                <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
+            </tr>
+            <tr class="total">
+                <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;"><b>{{rowTerbilang}}</b></td>
             </tr>
         </table>
         <br>
@@ -86,7 +85,7 @@
             </ol>
         </div>
     </div>
-    <div class="row no-print pull-right">
+    <div class="rowPrint no-print pull-right">
       <a href="" class="btn btn-default btn-sm" ng-click="print('print-info-tagihan')" >
         <i class="fa fa-print"></i> Cetak
       </a>

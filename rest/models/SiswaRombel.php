@@ -117,36 +117,51 @@ class SiswaRombel extends \yii\db\ActiveRecord
         return $this->hasMany(TagihanPembayaran::className(), ['idrombel' => 'id']);
     }
 
+    private function where($data){
+        $commaData = explode(",", $data);
+        $impl = array();
+        for($i=0; $i<count($commaData); $i++){
+            $impl[$i] = "'{$commaData[$i]}'";
+        }
+
+        $implode = implode(",", $impl);
+
+        if(count($impl) > 1)
+            return " IN ($implode) ";
+        else
+            return " = $implode";
+    }
+
     public function getList($params){
         extract($params);
         $where = 'WHERE 1=1';
 
         if($nis){
-            $where .= ' AND nis=' . $nis;
+            $where .= ' AND nis ' . $this->where($nis);
         }
 
         if($nisn){
-            $where .= ' AND nisn=' . $nisn;
+            $where .= ' AND nisn ' . $this->where($nisn);
         }
 
         if($nama_siswa){
-            $where .= ' AND nama_siswa=' . $nama_siswa;
+            $where .= ' AND nama_siswa ' . $this->where($nama_siswa);
         }
 
         if($kelas){
-            $where .= ' AND kelas=' . $kelas;
+            $where .= ' AND kelas ' . $this->where($kelas);
         }
 
         if($nama_kelas){
-            $where .= ' AND nama_kelas=' . $nama_kelas;
+            $where .= ' AND nama_kelas ' . $this->where($nama_kelas);
         }
 
         if($tahun_ajaran_id){
-            $where .= ' AND tahun_ajaran_id=' . $tahun_ajaran_id;
+            $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
         }
 
         if($sekolahid){
-            $where .= ' AND b.sekolahid=' . $sekolahid;
+            $where .= ' AND b.sekolahid ' . $this->where($sekolahid);
         }
 
         if($query){

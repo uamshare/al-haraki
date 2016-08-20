@@ -54,3 +54,13 @@
 .errorMessage{
   color: red;
 }
+
+.grid-align-right{
+  text-align: right;
+}
+.grid-align-left{
+  text-align: left;
+}
+.grid-align-center{
+  text-align: center;
+}

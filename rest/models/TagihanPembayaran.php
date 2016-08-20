@@ -95,25 +95,50 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         return $this->hasOne(SiswaRombel::className(), ['id' => 'idrombel']);
     }
 
-    private function queryOutstanding($filter){
+    private function where($data){
+        $commaData = explode(",", $data);
+        $impl = array();
+        for($i=0; $i<count($commaData); $i++){
+            $impl[$i] = "'{$commaData[$i]}'";
+        }
+
+        $implode = implode(",", $impl);
+
+        if(count($impl) > 1)
+            return " IN ($implode) ";
+        else
+            return " = $implode";
+    }
+
+    private function queryOutstanding($filter, $status = 'all'){
+        if($status == 'all'){
+            $join = 'LEFT JOIN';
+        }else{
+            $join = 'INNER JOIN';
+        }
         $sqlCustoms = " SELECT * FROM
               (SELECT    b.`id`
                   , a.id AS `idrombel`
                   , a.`siswaid`
                   , s.`nama_siswa` 
                   , a.`kelasid`
+                  , k.kelas
+                  , k.nama_kelas
                   , a.`tahun_ajaran_id`
                   , b.`spp`
                   , b.`komite_sekolah`
                   , b.`catering`
                   , b.`keb_siswa`
                   , b.`ekskul`
+                  , b.`bulan`
+                  , b.`tahun`
                   , b.`keterangan`
                   , b.`created_at`
                   , b.`updated_at`
               FROM siswa_rombel a
               INNER JOIN siswa s ON a.`siswaid`=s.`id`
-              LEFT JOIN 
+              INNER JOIN kelas k ON a.`kelasid`=k.`id`
+              $join
                 (SELECT 
                   `id`,
                   `idrombel`,
@@ -139,19 +164,70 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         return $sqlCustoms;
     }
 
+    private function queryPembayaran($filter, $status = 'all'){
+        if($status == 'all'){
+            $join = 'LEFT JOIN';
+        }else{
+            $join = 'INNER JOIN';
+        }
+        $sqlCustoms = "SELECT * FROM
+              (SELECT    b.`id`
+                          , a.id AS `idrombel`
+                          , a.`siswaid`
+                          , s.`nama_siswa` 
+                          , a.`kelasid`
+                          , k.kelas
+                          , k.nama_kelas
+                          , a.`tahun_ajaran_id`
+                          , b.`spp`
+                          , b.`komite_sekolah`
+                          , b.`catering`
+                          , b.`keb_siswa`
+                          , b.`ekskul`
+                          , b.`bulan`
+                          , b.`tahun`
+                          , b.`keterangan`
+                          , b.`created_at`
+                          , b.`updated_at`
+                      FROM siswa_rombel a
+                      INNER JOIN siswa s ON a.`siswaid`=s.`id`
+                      INNER JOIN kelas k ON a.`kelasid`=k.`id`
+                      $join
+                        (SELECT 
+                          `id`,
+                          `idrombel`,
+                          IFNULL(`spp_debet`,0) AS spp,
+                          IFNULL(`komite_sekolah_debet`,0) AS komite_sekolah,
+                          IFNULL(`catering_debet`,0) AS catering,
+                          IFNULL(`keb_siswa_debet`,0) AS keb_siswa,
+                          IFNULL(`ekskul_debet`,0) AS ekskul,
+                          `bulan`,
+                          `tahun`,
+                          `tahun_ajaran`,
+                          `no_ref`,
+                          `ket_ref`,
+                          `keterangan`,
+                          `created_at`,
+                          `updated_at` 
+                        FROM
+                          `tagihan_pembayaran`
+                        WHERE $filter) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
+        return $sqlCustoms;
+    }
+
     public function getListOutstanding($param){
         extract($param);
         $where = 'WHERE 1=1';
         if($idrombel){
-            $where .= ' AND idrombel=' . $idrombel;
+            $where .= ' AND idrombel ' . $this->where($idrombel);
         }
 
         if($kelasid){
-            $where .= ' AND kelasid=' . $kelasid;
+            $where .= ' AND kelasid ' . $this->where($kelasid);
         }
 
         if($tahun_ajaran_id){
-            $where .= ' AND tahun_ajaran_id=' . $tahun_ajaran_id;
+            $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
         }
 
         if($query){
@@ -161,7 +237,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         $param1 = $month + (12 * $year);
         $filter = '(bulan + (12 * tahun)) <= :param1';
 
-        $sqlCustoms = $this->queryOutstanding($filter);
+        $sqlCustoms = $this->queryOutstanding($filter, $status);
 
         $connection = $this->getDb(); //Yii::$app->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $param1]);
@@ -173,15 +249,15 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         extract($param);
         $where = 'WHERE 1=1';
         if($idrombel){
-            $where .= ' AND idrombel=' . $idrombel;
+            $where .= ' AND idrombel ' . $this->where($idrombel);
         }
 
         if($kelasid){
-            $where .= ' AND kelasid=' . $kelasid;
+            $where .= ' AND kelasid ' . $this->where($kelasid);
         }
 
         if($tahun_ajaran_id){
-            $where .= ' AND tahun_ajaran_id=' . $tahun_ajaran_id;
+            $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
         }
 
         if($query){
@@ -195,6 +271,35 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
 
         $connection = $this->getDb(); //Yii::$app->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $month, ':param2' => $year]);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->query();
+    }
+
+    public function getListPembayaran($param){
+        extract($param);
+        $where = 'WHERE 1=1';
+        if($idrombel){
+            $where .= ' AND idrombel ' . $this->where($idrombel);
+        }
+
+        if($kelasid){
+            $where .= ' AND kelasid ' . $this->where($kelasid);
+        }
+
+        if($tahun_ajaran_id){
+            $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
+        }
+
+        if($query){
+            $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
+        } 
+
+        $filter = '(bulan = :param1 AND tahun = :param2)';
+
+        $sqlCustoms = $this->queryPembayaran($filter, $status);
+
+        $conn = $this->getDb(); //Yii::$app->getDb();
+        $customeQuery = $conn->createCommand($sqlCustoms . $where, [':param1' => $month, ':param2' => $year]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
@@ -261,7 +366,9 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
     private function setOnDuplicateValue($column){
       $values = [];
       foreach($column as $col){
-        $values[]= '`'.$col.'` = VALUES(' . $col .')';
+        if($col != 'cretaed_at'){
+              $values[]= '`'.$col.'` = VALUES(' . $col .')';
+          }
       }
       return implode(',', $values);
     }

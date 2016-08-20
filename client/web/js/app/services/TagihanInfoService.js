@@ -12,8 +12,24 @@ define(['app'], function (app) {
             return getResource('tagihaninfoinputs', pageIndex, pageSize);
         };
 
+        /**
+         * Get list Outstanding
+         *
+         */
         factory.getList = function(paramdata) {
             return $http.get(serviceBase + 'tagihaninfoinput/list',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
+        /**
+         * Get list Pembayaran
+         *
+         */
+        factory.getListPembayaran = function(paramdata) {
+            return $http.get(serviceBase + 'tagihanpembayaran/listbayar',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

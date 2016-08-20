@@ -250,7 +250,9 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
     private function setOnDuplicateValue($column){
         $values = [];
         foreach($column as $col){
-            $values[]= '`'.$col.'` = VALUES(' . $col .')';
+            if($col != 'cretaed_at'){
+                $values[]= '`'.$col.'` = VALUES(' . $col .')';
+            }
         }
         return implode(',', $values);
     }

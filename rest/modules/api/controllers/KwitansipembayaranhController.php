@@ -30,7 +30,7 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
                         'newnokwitansi'   => ['get'],
                         'create' => ['put', 'post'],
                         // 'update' => ['get', 'put', 'post'],
-                        // 'delete' => ['delete'],
+                        'delete' => ['delete'],
                     ],
                 ],
             ]
@@ -118,7 +118,7 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
 
     public function actionDelete($id){
         $this->response = Yii::$app->getResponse();
-        if($id){
+        if($id && !empty($id) && $id != 'undefined'){
             $model = new $this->modelClass;
             $result = $model->deleteAndRemoveAll($id);
             if($result !== true){

@@ -17,6 +17,7 @@ define(['services/routeResolver'], function () {
             'ui.grid.exporter',
             'ui.grid.edit',
             'ui.grid.cellNav',
+            'ui.grid.grouping',
             'chieffancypants.loadingBar',
             'ngDialog',
             // 'chart.js'
@@ -112,7 +113,8 @@ define(['services/routeResolver'], function () {
                 .when('/master/siswa', 
                     routeCustome.resolve(
                         'master/siswa/index', 
-                        'SiswaController'
+                        'SiswaController',
+                        true
                     )
                 )
 
@@ -120,7 +122,8 @@ define(['services/routeResolver'], function () {
                 .when('/master/siswa/add', 
                     routeCustome.resolve(
                         'master/siswa/form', 
-                        'SiswaController'
+                        'SiswaController',
+                        true
                     )
                 )
 
@@ -128,7 +131,8 @@ define(['services/routeResolver'], function () {
                 .when('/master/karyawan', 
                     routeCustome.resolve(
                         'master/karyawan/index', 
-                        'PegawaiController'
+                        'PegawaiController',
+                        true
                     )
                 )
 
@@ -136,7 +140,8 @@ define(['services/routeResolver'], function () {
                 .when('/master/karyawan/add', 
                     routeCustome.resolve(
                         'master/karyawan/form', 
-                        'PegawaiController'
+                        'PegawaiController',
+                        true
                     )
                 )
 
@@ -144,14 +149,16 @@ define(['services/routeResolver'], function () {
                 .when('/master/kelas', 
                     routeCustome.resolve(
                         'master/kelas/index', 
-                        'KelasController'
+                        'KelasController',
+                        true
                     )
                 )
 
                 .when('/master/kelas/edit/:id', 
                     routeCustome.resolve(
                         'master/kelas/form', 
-                        'KelasController'
+                        'KelasController',
+                        true
                     )
                 )
 
@@ -159,7 +166,8 @@ define(['services/routeResolver'], function () {
                 .when('/master/kelas/add', 
                     routeCustome.resolve(
                         'master/kelas/form', 
-                        'KelasController'
+                        'KelasController',
+                        true
                     )
                 )
         
@@ -168,13 +176,15 @@ define(['services/routeResolver'], function () {
                 .when('/keuangan/info-tagihan', 
                     routeCustome.resolve(
                         'keuangan/info-tagihan/index', 
-                        'TagihanInfoController'
+                        'TagihanInfoController',
+                        true
                     )
                 )
                 .when('/keuangan/info-tagihan/:idkelas/:month', 
                     routeCustome.resolve(
                         'keuangan/info-tagihan/edit', 
-                        'TagihanInfoController'
+                        'TagihanInfoController',
+                        true
                     )
                 )
 
@@ -186,13 +196,58 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
-                .when('/keuangan/kwitansi-pembayaran/:id', 
+
+                // Kwitansi Pembayaran
+                .when('/keuangan/kwitansi-pembayaran/add', 
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/edit', 
+                        'keuangan/kwitansi-pembayaran/add', 
                         'KwitansiPemabayaranController',
                         true
                     )
                 )
+                .when('/keuangan/kwitansi-pembayaran/edit/:id', 
+                    routeCustome.resolve(
+                        'keuangan/kwitansi-pembayaran/add', 
+                        'KwitansiPemabayaranController',
+                        true
+                    )
+                )
+                .when('/keuangan/rekap-pembayaran-tagihan', 
+                    routeCustome.resolve(
+                        'keuangan/rekap-tagihan/index', 
+                        'RekapTagihanController',
+                        true
+                    )
+                )
+                .when('/keuangan/rekap-outstanding-tagihan', 
+                    routeCustome.resolve(
+                        'keuangan/rekap-outstanding-tagihan/index', 
+                        'RekapOutstandingTagihanController',
+                        true
+                    )
+                )
+                .when('/keuangan/rekonsiliasi-autodebet', 
+                    routeCustome.resolve(
+                        'keuangan/rekonsiliasi-autodebet/index', 
+                        'TagihanAutodebetController',
+                        true
+                    )
+                )
+                .when('/keuangan/rekonsiliasi-autodebet/add', 
+                    routeCustome.resolve(
+                        'keuangan/rekonsiliasi-autodebet/add', 
+                        'TagihanAutodebetController',
+                        true
+                    )
+                )
+                .when('/keuangan/rekonsiliasi-autodebet/edit/:id', 
+                    routeCustome.resolve(
+                        'keuangan/rekonsiliasi-autodebet/add', 
+                        'TagihanAutodebetController',
+                        true
+                    )
+                )
+                
 
                 // AKUNTANSI
                 .when('/akuntansi/coa', 

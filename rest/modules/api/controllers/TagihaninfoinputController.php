@@ -110,8 +110,8 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
                 'bulan'                 => $month, 
                 'tahun'                 => $year,
                 'tahun_ajaran'          => '201617',    
-                'no_ref'                => 'tagihan_info_' . isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] 
-                                                : '201617',  
+                'no_ref'                => 'tagihan_info_' . (isset($row['tahun_ajaran_id']) ? 
+                                                $row['tahun_ajaran_id'] : '201617'),  
                 'ket_ref'               => 'Tagihan Info idrombel = ' . $row['idrombel'],
                 'keterangan'            => '',   
                 'created_at'            => $date,   
@@ -133,13 +133,16 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
     public function actionList(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
+        
+        // $kls = $request->getQueryParam('kelasid', false);
         return $model->getListOutstanding([
             'kelasid' => $request->getQueryParam('kelasid', false),
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
             'idrombel' => $request->getQueryParam('idrombel', false),
             'query' => $request->getQueryParam('query', false),
             'month' => $request->getQueryParam('month', -1),
-            'year' => $request->getQueryParam('year', -1)
+            'year' => $request->getQueryParam('year', -1),
+            'status' => $request->getQueryParam('status', 'all')
         ]);
     }
 

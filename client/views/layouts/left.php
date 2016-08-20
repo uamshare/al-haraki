@@ -45,14 +45,14 @@
                         'icon' => 'fa fa-cc-visa',
                         'url' => '$',
                         'items' => [
-                            ['label' => 'Info Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/info-tagihan']],
-                            ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/kwitansi-pembayaran']],
-                            ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
-                            ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-outstanding-tagihan']],
-                            ['label' => 'Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/pengeluaran']],
-                            ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/kwitansi-pengeluaran']],
-                            ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['/#keuangan/rekap-pengeluaran']],
-                            ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/rekonsiliasi-autodebet']]
+                            ['label' => 'Info Tagihan', 'icon' => 'fa fa-info-circle', 'url' => ['/#keuangan/info-tagihan']],
+                            ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-edit', 'url' => ['#keuangan/kwitansi-pembayaran/add']],
+                            ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
+                            ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-outstanding-tagihan']],
+                            // ['label' => 'Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/pengeluaran']],
+                            ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'url' => ['/#keuangan/kwitansi-pengeluaran']],
+                            ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-pengeluaran']],
+                            ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-cc-mastercard', 'url' => ['#keuangan/rekonsiliasi-autodebet/add']]
                         ],
                     ],
                     [
@@ -62,8 +62,8 @@
                         'items' => [
                             ['label' => 'Master Akun (Chart of Acount)', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/coa']],
                             ['label' => 'Pemetaan Posting Otomatis', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/pemetaan']],
-                            ['label' => 'Jurnal Harian', 'icon' => 'fa fa-user-plus', 'url' => ['#akuntansi/jurnal-harian']],
-                            ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/gl']]
+                            ['label' => 'Jurnal Harian', 'icon' => 'fa fa-table', 'url' => ['#akuntansi/jurnal-harian']],
+                            ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-print', 'url' => ['/#akuntansi/gl']]
                         ],
                     ],
                     [

@@ -12,8 +12,10 @@ define(['app'], function (app) {
             return getResource('kelas', pageIndex, pageSize);
         };
 
-        factory.getList = function() {
-            return $http.get(serviceBase + 'kelas/list').then(function (results) {
+        factory.getList = function(paramdata) {
+            return $http.get(serviceBase + 'kelas/list',{
+                params : paramdata
+            }).then(function (results) {
                 return results.data;
             });
         };

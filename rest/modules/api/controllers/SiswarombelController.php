@@ -16,8 +16,8 @@ class SiswarombelController extends \yii\rest\ActiveController // \rest\modules\
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'index'  => ['get'],
-                        'newnokwitansi'   => ['get'],
-                        'create' => ['put', 'post'],
+                        'list'   => ['get'],
+                        // 'create' => ['put', 'post'],
                         // 'update' => ['get', 'put', 'post'],
                         // 'delete' => ['delete'],
                     ],
@@ -25,6 +25,7 @@ class SiswarombelController extends \yii\rest\ActiveController // \rest\modules\
             ]
         );
     }
+    
     /**
      * Get List input Info Tagihan
      *

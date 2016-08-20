@@ -37,12 +37,25 @@ class AppAsset extends AssetBundle
         'plugins/chartjs/Chart.min.js',
         // 'plugins/angular-chart/Chart.min.js',
         // 'plugins/angular-chart/angular-chart.js',
-        
-        
         'plugins/pdfmake/pdfmake.min.js',
         'plugins/pdfmake/vfs_fonts.js',
         'plugins/angular-component/angular-ui-grid/ui-grid.min.js',
-        'plugins/ng-dialog/js/ngDialog.min.js'
+        'plugins/ng-dialog/js/ngDialog.min.js',
+
+        // Excel Builder
+        // 'plugins/excel-builder/lodash.js',
+        // 'plugins/excel-builder/jszip.js',
+        // 'plugins/excel-builder/excel-builder.dist.js',
+        // 'plugins/excel-builder/downloadify/js/swfobject.js',
+        // 'plugins/excel-builder/downloadify/js/downloadify.min.js',
+
+        // 'plugins/js-xlsx-master/shim.js',
+        // 'plugins/js-xlsx-master/jszip.js',
+        // 'plugins/js-xlsx-master/xlsx.js',
+
+        'plugins/ExcelPlus-master-2.4.1/sheetjs.all.min.js',
+        'plugins/ExcelPlus-master-2.4.1/ExcelPlus-2.4.1.min.js'
+        
     ];
 
     public $depends = [
@@ -55,7 +68,8 @@ class AppAsset extends AssetBundle
             [
                 'js/require.js', 
                 'data-main' => '/al-haraki/client/web/js/main.js?v=' . date('Ymdhis')
-            ]
+            ],
+            
         ]);
 
         parent::init();
