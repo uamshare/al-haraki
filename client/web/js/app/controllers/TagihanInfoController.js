@@ -311,8 +311,8 @@ define(['app'], function (app) {
 		}
 
 		$scope.onSaveClick = function(event){
-			console.log($scope.gridDirtyRows);
-			return;
+			// console.log($scope.gridDirtyRows);
+			// return;
 			if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length > 0){
 				var params ={
 					rows : $scope.gridDirtyRows,
