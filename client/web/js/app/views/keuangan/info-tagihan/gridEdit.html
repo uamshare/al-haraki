@@ -9,7 +9,7 @@
 	</div>
 	<div class="box-body">
 		<div class="row">
-			<div class="col-lg-4">
+			<div class="col-lg-2">
 				<div class="form-group">
 					<label>Kelas</label>
 					<input type="hidden" name="kelasid" class="form-control" ng-model="kelas.options[0].id" />
@@ -40,6 +40,17 @@
 							{{month_end.year}}
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="col-lg-2">
+				<div class="form-group">
+					<label>Jenis Tagihan {{jenisTagihan}}</label>
+					<select name="jenis_tagihan" class="form-control" 
+						ng-model="jenisTagihan"
+						ng-change="onJenisTagihanChange(jenisTagihan)">
+						<option value="1">Bulanan</option>
+						<option value="2">Tahunan</option>
+					</select>
 				</div>
 			</div>
 			<div class="col-lg-2">

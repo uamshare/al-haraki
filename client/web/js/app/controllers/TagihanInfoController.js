@@ -14,7 +14,9 @@ define(['app'], function (app) {
     		'ngDialog',
     		'cfpLoadingBar',
     		'$timeout',
-    		'TagihanInfoService'
+    		'uiGridConstants',
+    		'TagihanInfoService',
+    		'authService'
     	];
 
     var TagihanInfoController = function (
@@ -30,7 +32,9 @@ define(['app'], function (app) {
 		ngDialog,
 		cfpLoadingBar,
 		$timeout,
-		TagihanInfoService
+		uiGridConstants,
+		TagihanInfoService,
+		authService
 	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/info-tagihan/';
@@ -182,7 +186,7 @@ define(['app'], function (app) {
 		$scope.month = helperService.month();
 		$scope.month_start = helperService.month();
 		$scope.month_end = helperService.month();
-
+		$scope.jenisTagihan = 1;
 		/*********************** Action ******************************/
 		var date = new Date();
 		
@@ -219,17 +223,21 @@ define(['app'], function (app) {
 			$resourceApi.getList(paramdata)
 			.then(function (result) {
                 if(result.success){
-					angular.forEach(result.rows, function(dt, index) {
-						var romnum = index + 1;
-		                result.rows[index]["index"] = romnum;
+                	if(result.rows.length > 0){
+						angular.forEach(result.rows, function(dt, index) {
+							var romnum = index + 1;
+			                result.rows[index]["index"] = romnum;
 
-		                result.rows[index]["spp"] = parseInt(result.rows[index]["spp"]);
-		                result.rows[index]["komite_sekolah"] = parseInt(result.rows[index]["komite_sekolah"]);
-		                result.rows[index]["catering"] = parseInt(result.rows[index]["catering"]);
-		                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
-		                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
-		            })
-		            $scope.grid.data = result.rows;
+			                result.rows[index]["spp"] = parseInt(result.rows[index]["spp"]);
+			                result.rows[index]["komite_sekolah"] = parseInt(result.rows[index]["komite_sekolah"]);
+			                result.rows[index]["catering"] = parseInt(result.rows[index]["catering"]);
+			                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
+			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
+			            })
+			            $scope.grid.data = result.rows;
+			        }else{
+			        	toastr.info('Data kosong', 'Info');
+			        }
 				}
 				cfpLoadingBar.complete();
             }, errorHandle);
@@ -240,23 +248,28 @@ define(['app'], function (app) {
 			$resourceApi.getListActive(paramdata)
 			.then(function (result) {
                 if(result.success){
-					angular.forEach(result.rows, function(dt, index) {
-						var romnum = index + 1;
-		                result.rows[index]["index"] = romnum;
+                	if(result.rows.length > 0){
+                		angular.forEach(result.rows, function(dt, index) {
+							var romnum = index + 1;
+			                result.rows[index]["index"] = romnum;
 
-		                result.rows[index]["spp"] = parseInt(result.rows[index]["spp"]);
-		                result.rows[index]["komite_sekolah"] = parseInt(result.rows[index]["komite_sekolah"]);
-		                result.rows[index]["catering"] = parseInt(result.rows[index]["catering"]);
-		                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
-		                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
-		            })
-		            $scope.gridEdit.data = result.rows;
-		            $scope.kelas.selected = paramdata.kelasid;
+			                result.rows[index]["spp"] = parseInt(result.rows[index]["spp"]);
+			                result.rows[index]["komite_sekolah"] = parseInt(result.rows[index]["komite_sekolah"]);
+			                result.rows[index]["catering"] = parseInt(result.rows[index]["catering"]);
+			                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
+			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
+			            })
+			            $scope.gridEdit.data = result.rows;
+			            $scope.kelas.selected = paramdata.kelasid;
 
-		            $scope.month_start.selected = paramdata.month;
-		            $scope.month_start.year = 2016;
-		            $scope.month_end.selected = 6;
-		            $scope.month_end.year = 2017;
+			            $scope.month_start.selected = paramdata.month;
+			            $scope.month_start.year = 2016;
+			            $scope.month_end.selected = 6;
+			            $scope.month_end.year = 2017;
+                	}else{
+                		toastr.info('Data kosong', 'Info');
+                	}
+					
 				}
 				cfpLoadingBar.complete();
             }, errorHandle);
@@ -298,7 +311,8 @@ define(['app'], function (app) {
 		}
 
 		$scope.onSaveClick = function(event){
-			// console.log($scope.gridDirtyRows);
+			console.log($scope.gridDirtyRows);
+			return;
 			if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length > 0){
 				var params ={
 					rows : $scope.gridDirtyRows,
@@ -373,12 +387,30 @@ define(['app'], function (app) {
 			window.print();
 		}
 
-		
+		$scope.onJenisTagihanChange = function(value){
+			$scope.jenisTagihan = value;
+			if($scope.jenisTagihan == 1){
+				$scope.gridEdit.columnDefs[10].visible = false;
+				$scope.gridEdit.columnDefs[11].visible = false;
+				$scope.gridEdit.columnDefs[7].visible = true;
+				$scope.gridEdit.columnDefs[8].visible = true;
+				$scope.gridEdit.columnDefs[9].visible = true;
+			}else{
+				$scope.gridEdit.columnDefs[7].visible = false;
+				$scope.gridEdit.columnDefs[8].visible = false;
+				$scope.gridEdit.columnDefs[9].visible = false;
+				$scope.gridEdit.columnDefs[10].visible = true;
+				$scope.gridEdit.columnDefs[11].visible = true;
+			}
+			$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+		}
+
 		function init(){
 			$http.get($CONST_VAR.restDirectory + 'kelas/list',{
 				params : {
-					sekolahid : 2,
-					kelasid : $routeParams.idkelas
+					sekolahid : authService.getProfile().sekolahid,
+					kelasid : $routeParams.idkelas,
+					'per-page' : 0,
 				}
 			})
 			.success(function(data, status, header) {
@@ -397,6 +429,12 @@ define(['app'], function (app) {
 					'kelasid' : $routeParams.idkelas,
 					'month' : $routeParams.month
         		});
+        		$scope.gridEdit.columnDefs[10].visible = false;
+				$scope.gridEdit.columnDefs[11].visible = false;
+				$scope.gridEdit.columnDefs[7].visible = true;
+				$scope.gridEdit.columnDefs[8].visible = true;
+				$scope.gridEdit.columnDefs[9].visible = true;
+				$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         	}
 		}
 		$scope.$on('$viewContentLoaded', function(){

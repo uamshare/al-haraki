@@ -28,8 +28,8 @@ define(['app'], function (app) {
                 $location.path(path);
             }, function(error){
                 $scope.errorMessage = 'Unable to login';
-                // toastr.error($scope.errorMessage, 'Error');
-                toastr.warning('Untuk demo masukan lgin berikut. Username : demo, Password : demo123', 'Warning');
+                toastr.error($scope.errorMessage, 'Error');
+                // toastr.warning('Untuk demo masukan lgin berikut. Username : demo, Password : demo123', 'Warning');
             });
         };
     };

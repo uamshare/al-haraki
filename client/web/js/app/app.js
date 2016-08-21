@@ -277,17 +277,42 @@ define(['services/routeResolver'], function () {
                         '404'
                     )
                 )
-
                 .otherwise({redirectTo: '/404'})
 
             $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/javascript';
             $httpProvider.defaults.headers.common['Content-Type'] = 'application/json; charset=utf-8';
-            $httpProvider.defaults.headers.common['access-token'] = '$2y$13$9js4d7rmpbRxZxQngMA';
+            $httpProvider.defaults.headers.common['access-token'] = null;
             $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+
+            $httpProvider.interceptors.push(function ($q, $rootScope) {
+                if ($rootScope.activeCalls == undefined) {
+                    $rootScope.activeCalls = 0;
+                }
+
+                return {
+                    request: function (config) {
+                        // console.log(config);
+                        config.headers['access-token'] = sessionStorage.getItem('accessToken');
+                        return config;
+                    },
+                    requestError: function (rejection) {
+                        // $rootScope.activeCalls -= 1;
+                        return rejection;
+                    },
+                    response: function (response) {
+                        // $rootScope.activeCalls -= 1;
+                        return response;
+                    },
+                    responseError: function (rejection) {
+                        // $rootScope.activeCalls -= 1;
+                        return rejection;
+                    }
+                };
+            });
         }
     ]);
-
-    app.run(['$rootScope', '$location', 'authService','$templateCache','cfpLoadingBar',
+    
+    app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar',
         function ($rootScope, $location, authService, $templateCache, cfpLoadingBar) {
             
             //Client-side security. Server-side framework MUST add it's 

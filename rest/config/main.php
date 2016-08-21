@@ -30,6 +30,7 @@ return [
         'user' => [
             'identityClass' => 'rest\models\Auth',
             'enableAutoLogin' => false,
+            'enableSession' => false
             // 'identityCookie' => ['name' => '_identity-rest', 'httpOnly' => true],
         ],
         'authManager'  => [

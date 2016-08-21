@@ -8,8 +8,8 @@
                 <img src="<?= Yii::$app->homeUrl ?>/img/profil/user-default.png" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p>Administrator</p>
-                <a href="#"><i class="fa fa-circle text-success"></i> Admin</a>
+                <p>{{profil.fullname}}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> {{profil.jabatan}}</a>
             </div>
         </div>
 

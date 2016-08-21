@@ -17,7 +17,8 @@ define(['app'], function (app) {
     		'uiGridConstants',
     		'kwitansiPemabayaranService',
     		'SiswaRombelService',
-    		'TagihanInfoService'
+    		'TagihanInfoService',
+    		'authService'
     	];
 
     var KwitansiPemabayaranController = function (
@@ -36,7 +37,8 @@ define(['app'], function (app) {
 		uiGridConstants,	
 		kwitansiPemabayaranService,
 		SiswaRombelService,
-		TagihanInfoService
+		TagihanInfoService,
+		authService
 	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/';
@@ -451,9 +453,9 @@ define(['app'], function (app) {
 		        });
 			}
 
-			function getRombel(){
+			function getRombel(paramdata){
 				cfpLoadingBar.start();
-				SiswaRombelService.getList()
+				SiswaRombelService.getList(paramdata)
 				.then(function (result) {
 		            if(result.success){
 			            $scope.rombel = result.rows;
@@ -592,7 +594,9 @@ define(['app'], function (app) {
 			}
 
 			this.init = function(){
-				getRombel();
+				getRombel({
+					sekolahid : authService.getProfile().sekolahid
+				});
 				if($routeParams.id){
 	                getById($routeParams.id);
 	            }else{

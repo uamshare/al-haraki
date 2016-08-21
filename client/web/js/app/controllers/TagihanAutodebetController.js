@@ -342,7 +342,7 @@ define(['app'], function (app) {
             $scope.form = {
                 no_transaksi : '',
                 tgl_transaksi : date,
-                sekolahid : 2,
+                sekolahid : authService.getProfile().sekolahid,
                 keterangan : '',
                 file_import : '',
                 bulan : '',
@@ -495,7 +495,7 @@ define(['app'], function (app) {
             function reset(){
                 // reset form
                 $scope.form.tgl_transaksi = date;
-                $scope.form.sekolahid = 2;
+                $scope.form.sekolahid = authService.getProfile().sekolahid;
                 $scope.form.keterangan = '';
                 $scope.form.file_import = '';
                 $scope.form.bulan = helperService.getMonthId(date.getMonth());
@@ -586,8 +586,6 @@ define(['app'], function (app) {
                     if(result.success){
                         var rowdata = []; //result.rows;
                         $scope.gridDetail.data = [];
-                        // console.log(rowdata);
-                        // console.log(xlsdata);
                         for(var idx in result.rows){
                             rowdata[result.rows[idx].nis] = result.rows[idx];
                         }
@@ -617,47 +615,70 @@ define(['app'], function (app) {
             }
 
             function handleFile(e) {
-                var ep = new ExcelPlus();
-                ep.openLocal({
+
+                // ep.showErrors=false;
+                var ep = new ExcelPlus({showErrors : false, flashUsed : true});
+                var a = ep.openLocal({
                     "flashPath":"/js/excelplus/2.4/swfobject/",
                     "labelButton":"Open an Excel file"
-                }, function(){
-                    
-                    var XLSdata = ep.selectSheet(1).readAll();
-                    var num = 1;
-                    var nodata = true;
-                    var rows = [],
-                        paramsRombel = [];
-                    for(var idx in XLSdata){
-                        if(idx > 0){
-                            var xls_spp = helperService.parseInt(XLSdata[idx][6]) || 0,
-                                xls_komite_sekolah = helperService.parseInt(XLSdata[idx][7]) || 0,
-                                xls_catering = helperService.parseInt(XLSdata[idx][8]) || 0,
-                                xls_keb_siswa = helperService.parseInt(XLSdata[idx][9]) || 0,
-                                xls_ekskul = helperService.parseInt(XLSdata[idx][10]) || 0,
-                                checkZeroData = xls_spp + xls_komite_sekolah + xls_catering + xls_keb_siswa + xls_ekskul;
-
-                            nodata = false;
-
-                            rows[XLSdata[idx][1]] = {
-                                    index : num,
-                                    no_transaksi : $scope.form.no_transaksi,
-                                    nis : XLSdata[idx][1],
-                                    nisn : XLSdata[idx][2],
-                                    nama_siswa : XLSdata[idx][3],
-                                    spp : xls_spp,
-                                    komite_sekolah : xls_komite_sekolah,
-                                    catering : xls_catering,
-                                    keb_siswa : xls_keb_siswa,
-                                    ekskul : xls_ekskul,
-                                    total : checkZeroData
-                            }
-                            paramsRombel.push(XLSdata[idx][1]);
+                }, function(c){
+                    console.log(c);
+                    try {
+                        var SheetNames = ep.getSheetNames();
+                        if(SheetNames.indexOf("Header") < 0 && SheetNames.indexOf("header") < 0){
+                            toastr.warning('Format file template tidak sesuai. Sheet Header tidak ditemukan', 'Warning');
+                            return false;
                         }
+
+                        if(SheetNames.indexOf("Konten") < 0 && SheetNames.indexOf("konten") < 0){
+                            toastr.warning('Format file template tidak sesuai. Sheet Konten tidak ditemukan', 'Warning');
+                            return false;
+                        }
+
+                        var XLSheader = ep.selectSheet("Header").readAll(),
+                            XLSdata = ep.selectSheet("Konten").readAll();
+                        var num = 1;
+                        var nodata = true;
+                        var rows = [],
+                            paramsRombel = [];
+
+                        for(var idx in XLSdata){
+                            if(idx > 0 && XLSdata[idx][1] != null){
+                                var xls_spp = helperService.parseInt(XLSdata[idx][6]) || 0,
+                                    xls_komite_sekolah = helperService.parseInt(XLSdata[idx][7]) || 0,
+                                    xls_catering = helperService.parseInt(XLSdata[idx][8]) || 0,
+                                    xls_keb_siswa = helperService.parseInt(XLSdata[idx][9]) || 0,
+                                    xls_ekskul = helperService.parseInt(XLSdata[idx][10]) || 0,
+                                    checkZeroData = xls_spp + xls_komite_sekolah + xls_catering + xls_keb_siswa + xls_ekskul;
+
+                                nodata = false;
+
+                                rows[XLSdata[idx][1]] = {
+                                        index : num,
+                                        no_transaksi : $scope.form.no_transaksi,
+                                        nis : XLSdata[idx][1],
+                                        nisn : XLSdata[idx][2],
+                                        nama_siswa : XLSdata[idx][3],
+                                        spp : xls_spp,
+                                        komite_sekolah : xls_komite_sekolah,
+                                        catering : xls_catering,
+                                        keb_siswa : xls_keb_siswa,
+                                        ekskul : xls_ekskul,
+                                        total : checkZeroData
+                                }
+                                paramsRombel.push(XLSdata[idx][1]);
+                            }
+                        }
+                        
+                        if(nodata){
+                            toastr.info('Data kosong.', 'Info');
+                            return false;
+                        }
+                        mergeXlsdataAndRombel({nis : paramsRombel.toString()}, rows);
                     }
-                    mergeXlsdataAndRombel({nis : paramsRombel.toString()}, rows);
-                    if(nodata){
-                        toastr.info('Data kosong.', 'Info');
+                    catch(err) {
+                        // document.getElementById("demo").innerHTML = err.message;
+                        console.log(err.message);
                     }
                 })
             }
@@ -665,10 +686,12 @@ define(['app'], function (app) {
             this.init = function(){
                 if($routeParams.id){
                     getById($routeParams.id);
+                    $scope.isButtonAddHide = false;
                 }else{
                     refreshNo();
                     reset();
                     handleFile();
+                    $scope.isButtonAddHide = true;
                 }
             }
 
@@ -725,26 +748,21 @@ define(['app'], function (app) {
                 // $location.path( "/keuangan/kwitansi-pembayaran/");
             }
 
-            // $scope.onDeleteDetailClick = function(rowdata){
-            //     var idx = $scope.gridDetail.data.indexOf(rowdata),
-            //         idxdirty = $scope.gridDetailDirtyRows.indexOf(rowdata);
-            //     $scope.gridDetail.data.splice(idx,1);
-            //     $scope.gridDetailDirtyRows.splice(idxdirty,1);
-            // }
+            $scope.onDownloadTpl = function(){
+                var win = window.open(BASEURL + "public/tpl/general_template_autodebet.xlsx", '_blank');
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                }
+            }
 
             $scope.onBulanChange = function(){
                 $scope.form.tahun = ($scope.form.bulan >= 1 &&  $scope.form.bulan <= 6) ? 
                                         (date.getFullYear() + 1) : date.getFullYear();
             }
-
-            // $scope.onUploadFIle = function(){
-            //     var reader = new FileReader();
-            //     reader.onload = function(e) {
-            //         var data = e.target.result;
-            //         var wb = X.read(data, {type: 'binary'});
-            //         console.log(wb);
-            //     }
-            // }
         }
 
         var controller;

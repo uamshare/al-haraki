@@ -4,7 +4,8 @@ namespace rest\models;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
+// use yii\db\ActiveRecord;
+use \rest\models\User;
 use yii\web\IdentityInterface;
 
 /**
@@ -21,7 +22,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
-class Auth extends ActiveRecord implements IdentityInterface
+class Auth extends User implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
@@ -30,10 +31,10 @@ class Auth extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
-        return '{{%user}}';
-    }
+    // public static function tableName()
+    // {
+    //     return '{{%user}}';
+    // }
 
     /**
      * @inheritdoc
@@ -93,11 +94,11 @@ class Auth extends ActiveRecord implements IdentityInterface
      */
     public static function findByLogin($username, $pass)
     {
-        if($username == 'demo' && $pass == md5('demo123')){
-            return static::findOne(['username' => 'admin', 'status' => self::STATUS_ACTIVE]);
+        $user = static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        if($user && $user->validatePassword($pass)){
+            return $user;
         }
         return false;
-        // return static::findOne(['username' => 'admin', 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -162,12 +163,11 @@ class Auth extends ActiveRecord implements IdentityInterface
     /**
      * Validates password
      *
-     * @param string $password password to validate
+     * @param  string  $password password to validate
      * @return boolean if password provided is valid for current user
      */
-    public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    public function validatePassword($password) {
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password_hash);
     }
 
     /**

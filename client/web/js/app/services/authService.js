@@ -14,6 +14,8 @@ define(['app'], function (app) {
                 }
             };
 
+        factory.profil;
+
         factory.login = function (usernameOrEmail, passwd) {
             return $http.post(serviceBase + 'auth/login', {
                     username : usernameOrEmail,
@@ -21,7 +23,8 @@ define(['app'], function (app) {
                 }).then(
                 function (results) {
                     var loggedIn = results.data.success;
-                    changeAuth(loggedIn);
+                    changeAuth(loggedIn, results.data.rows);
+                    factory.profil = results.data.rows;
                     return loggedIn;
                 }
             );
@@ -36,15 +39,28 @@ define(['app'], function (app) {
                 });
         };
 
+        factory.getProfile = function(paramdata) {
+            // return $http.get(serviceBase + 'auth/profile',{
+            //     params : paramdata
+            // }).then(function (results) {
+            //     return results.data;
+            // });
+            return JSON.parse(sessionStorage.getItem('user_profil'));
+        };
+
         factory.redirectToLogin = function () {
             $rootScope.$broadcast('redirectToLogin', null);
         };
 
-        function changeAuth(loggedIn) {
+        function changeAuth(loggedIn, data) {
             factory.user.isAuthenticated = loggedIn;
             // localStorage.setItem('isAuthValid', loggedIn);
             sessionStorage.setItem('isAuthValid', loggedIn);
-            $rootScope.$broadcast('loginStatusChanged', loggedIn);
+            if(typeof data != 'undefined'){
+                sessionStorage.setItem('accessToken', data.__accessToken);
+                sessionStorage.setItem('user_profil', JSON.stringify(data.__user_profile));
+                $rootScope.$broadcast('loginStatusChanged', loggedIn);
+            }
         }
 
         return factory;

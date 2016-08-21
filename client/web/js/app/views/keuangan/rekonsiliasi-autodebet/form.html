@@ -74,13 +74,18 @@
 	<div class="box-footer">
 		<div class="box-tools pull-left">
 			<a href="#keuangan/rekonsiliasi-autodebet/add" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
-				data-original-title="Tambah Kwitansi Pembayaran">
+				data-original-title="Tambah Kwitansi Pembayaran" ng-hide="isButtonAddHide">
 				<i class="fa fa-plus-circle"></i> Tambah Data
 			</a>
 			<a href="#keuangan/rekonsiliasi-autodebet" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Rekap Data">
 				<i class="fa fa-th-list"></i> Rekap Data
 			</a>
+			<a href="" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Download Template" ng-click="onDownloadTpl()">
+				<i class="fa fa-download"></i> Download Template
+			</a>
+			
 		</div>
 		<div class="box-tools pull-right">
 			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"

@@ -15,7 +15,9 @@ class AuthController extends \rest\modules\api\ActiveController
                 'verbs' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
-                        'login' => ['post']
+                        'profil' => ['get'],
+                        'login' => ['post'],
+                        'logout' => ['post']
                     ],
                 ],
             ]
@@ -33,29 +35,29 @@ class AuthController extends \rest\modules\api\ActiveController
         $post = Yii::$app->getRequest()->getBodyParams();
         $username = isset($post['username']) ? $post['username'] : false;
         $password = isset($post['password']) ? $post['password'] : false;
-        // var_dump($post);exit();
-        $user = $model::findByLogin($username, md5($password));
+
+        $user = $model::findByLogin($username, $password);
         
+        // var_dump(Yii::$app->security->generatePasswordHash('12345678'));exit();
+
         if($user && Yii::$app->user->login($user)){
-            // var_dump(Yii::$app->getSecurity()->generatePasswordHash($user->iduser));exit();
             $user = \Yii::$app->user->identity;
+            $user->access_token = \Yii::$app->getSecurity()->generateRandomString();
+            $a = $user->save();
+
             $data = [
-                '__id' => \Yii::$app->getSecurity()->generateRandomString(),
-                '__accessToken' =>  $user->access_token, //Yii::$app->getSecurity()->generatePasswordHash($user->access_token),
+                // '__id' => \Yii::$app->getSecurity()->generateRandomKey(),
+                '__accessToken' =>  $user->access_token,
                 '__isLogin' => true,
+                '__user_profile' => $user->profile,
             ];
 
-            $session = \Yii::$app->getSession();
-            $session->set('__token', $data['__accessToken']);
-            $session->set('__token_id', $data['__id']);
-            $session->set('__expired', time() + \Yii::$app->params['user.passwordResetTokenExpire']);
-            $session->set('__ip',\Yii::$app->request->userip);
-
+            $data = array_merge($data, $user->profile);
         }else{
             $this->response = Yii::$app->getResponse();
             $this->response->setStatusCode(401, 'Unauthorized');
             $data = [
-                '__isLogin' => false,
+                // '__isLogin' => false,
                 'error_message' => 'Username or password not found'
             ];
         }
@@ -67,6 +69,11 @@ class AuthController extends \rest\modules\api\ActiveController
     {
         Yii::$app->user->logout();
         return ['logout' => true];
+    }
+
+    public function actionProfile()
+    {
+        return Yii::$app->user->identity->profile;
     }
 
     public function checkAccess($action, $model = null, $params = [])

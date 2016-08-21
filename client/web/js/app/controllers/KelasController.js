@@ -102,7 +102,7 @@ define(['app'], function (app) {
             $scope.form.id = '';
             $scope.form.kelas = '';
             $scope.form.nama_kelas = '';
-            $scope.form.sekolahid = '';
+            $scope.form.sekolahid = authService.getProfile().sekolahid;
         }
 
         $scope.getList = function (paramdata){

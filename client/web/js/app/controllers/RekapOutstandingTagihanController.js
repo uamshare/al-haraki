@@ -17,7 +17,8 @@ define(['app'], function (app) {
         'uiGridConstants',
         'TagihanInfoService',
         'KelasService',
-        'uiGridGroupingConstants'
+        'uiGridGroupingConstants',
+        'authService'
     ];
 
     var RekapOutstandingTagihanController = function (
@@ -36,7 +37,8 @@ define(['app'], function (app) {
         uiGridConstants,  
         TagihanInfoService,
         KelasService,
-        uiGridGroupingConstants
+        uiGridGroupingConstants,
+        authService
     ) 
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/rekap-outstanding-tagihan/';
@@ -236,8 +238,9 @@ define(['app'], function (app) {
             $scope.filter.month = helperService.getMonthId(date.getMonth());
             $scope.filter.year = date.getFullYear();
             getKelas({
-                sekolahid : 2,
-                kelasid : $routeParams.idkelas
+                sekolahid : authService.getProfile().sekolahid,
+                kelasid : $routeParams.idkelas,
+                'per-page' : 0
             });
         } 
 

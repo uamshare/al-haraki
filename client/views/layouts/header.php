@@ -22,7 +22,7 @@ use yii\helpers\Html;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= Yii::$app->homeUrl ?>/img/profil/user-default.png" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">Administrator</span>
+                        <span class="hidden-xs">{{profil.fullname}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -31,8 +31,8 @@ use yii\helpers\Html;
                                  alt="User Image"/>
 
                             <p>
-                                Administrator
-                                <small>Admin TU</small>
+                                {{profil.fullname}}
+                                <small>{{profil.jabatan}}</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->

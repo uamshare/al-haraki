@@ -10,6 +10,11 @@ define(['app'], function (app) {
         $scope.isCollapsed = false;
         $scope.appTitle = appTitle ;
 
+        function errorHandle(error){
+            var msg = error.data.name;
+            toastr.warning(msg, 'Warning');
+        }
+
         $scope.highlight = function (path) {
             return $location.path().substr(0, path.length) === path;
         };
@@ -43,8 +48,23 @@ define(['app'], function (app) {
             redirectToLogin();
         });
 
+        
+        function getUserProfile(){
+            // cfpLoadingBar.start();
+            // authService.getProfile()
+            // .then(function (result) {
+            //     if(result.success){
+            //         $scope.profil = result.rows;
+            //     }
+            //     // cfpLoadingBar.complete();
+            // }, errorHandle);
+            $scope.profil = authService.getProfile();
+            // return authService.getProfile();
+        }
         function setLoginLogoutText() {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
+            getUserProfile();
+            
         }
 
         setLoginLogoutText();
