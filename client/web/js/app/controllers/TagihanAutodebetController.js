@@ -17,7 +17,8 @@ define(['app'], function (app) {
         'uiGridConstants',
         'uiGridGroupingConstants',
         'tagihanAutodebetService',
-        'SiswaRombelService'
+        'SiswaRombelService',
+        'authService'
 	];
 
     var TagihanAutodebetController = function (
@@ -36,7 +37,8 @@ define(['app'], function (app) {
         uiGridConstants, 
         uiGridGroupingConstants,
         tagihanAutodebetService,
-        SiswaRombelService
+        SiswaRombelService,
+        authService
 	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/rekonsiliasi-autodebet/';

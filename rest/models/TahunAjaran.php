@@ -9,8 +9,8 @@ use Yii;
  *
  * @property string $id
  * @property string $tahun_ajaran
- * @property string $tahun_awal
- * @property string $tahun_akhir
+ * @property integer $tahun_awal
+ * @property integer $tahun_akhir
  * @property string $aktif
  *
  * @property SiswaRombel[] $siswaRombels
@@ -31,7 +31,7 @@ class TahunAjaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tahun_awal', 'tahun_akhir'], 'safe'],
+            [['tahun_awal', 'tahun_akhir'], 'integer'],
             [['aktif'], 'string'],
             [['id'], 'string', 'max' => 6],
             [['tahun_ajaran'], 'string', 'max' => 10],
@@ -58,5 +58,11 @@ class TahunAjaran extends \yii\db\ActiveRecord
     public function getSiswaRombels()
     {
         return $this->hasMany(SiswaRombel::className(), ['tahun_ajaran_id' => 'id']);
+    }
+
+    public static function getActive($asArray = false){
+        return ($asArray) 
+                ? static::find(['aktif' => '1'])->asArray()->one()
+                : static::findOne(['aktif' => '1' ]);
     }
 }

@@ -43,7 +43,7 @@ class AppAsset extends AssetBundle
         'plugins/ng-dialog/js/ngDialog.min.js',
 
         'plugins/ExcelPlus-master-2.4.1/sheetjs.all.min.js',
-        'plugins/ExcelPlus-master-2.4.1/ExcelPlus-2.4.1.min.js'
+        'plugins/ExcelPlus-master-2.4.1/excelplus-2.4.1.min.js'
         
     ];
 

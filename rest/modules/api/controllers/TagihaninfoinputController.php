@@ -45,33 +45,14 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
         $this->response = Yii::$app->getResponse();
         $post = Yii::$app->getRequest()->getBodyParams();
         if($post){
-            $date = date('Y-m-d H:i:s');
-            $model = new $this->modelClass;
-            $wherids = [];
             $rows = $post['rows'];
-            $rowsTagihan = [];
-
-            foreach($rows as $key => $row){
-                if(is_array($row)){
-                    $wherids[$key] = $row['id'];
-                    $attrlog[$key] = [              
-                        'idrombel'              => $row['idrombel'],  
-                        'spp'                   => $row['spp'],                
-                        'komite_sekolah'        => $row['komite_sekolah'],
-                        'catering'              => $row['catering'], 
-                        'keb_siswa'             => $row['keb_siswa'],
-                        'ekskul'                => $row['ekskul'],
-                        'tahun_ajaran_id'       => isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] : '201617',
-                        'keterangan'            => $row['keterangan'],
-                        'created_at'            => $date,   
-                        'updated_at'            => $date,
-                    ];
-                    $rowsTagihan = array_merge($rowsTagihan, $this->setRowsTagihan($post, $row, $date));
-                }
+            
+            if($post['jenis_tagihan'] == '1'){
+                $result = $this->createMonthlyData($post, $rows);
+            }else if($post['jenis_tagihan'] == '2'){
+                $result = $this->createYearlyData($post, $rows);
             }
 
-            // var_dump($rowsTagihan);exit();
-            $result = $model->insertBatch($rowsTagihan, $attrlog, $wherids);
             if($result !== true){
                 $this->response->setStatusCode(422, 'Data Validation Failed.');
             }else{
@@ -86,6 +67,55 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
         }
     }
 
+    private function createMonthlyData($post, $rows){
+        $date = date('Y-m-d H:i:s');
+        $model = new $this->modelClass;
+        $rowsTagihan = [];
+        $wherids = [];
+        $attrlog = [];
+        
+        foreach($rows as $key => $row){
+            if(is_array($row)){
+                $wherids[$key] = $row['id'];
+                $attrlog[$key] = $attrlog[$key] = $this->setRowaLogInfo($post, $row, $date);
+                $rowsTagihan = array_merge($rowsTagihan, $this->setRowsTagihan($post, $row, $date));
+            }
+        }
+
+        // var_dump($rowsTagihan);exit();
+        return $model->insertBatch($post['jenis_tagihan'], $rowsTagihan, $attrlog, $wherids);
+    }
+
+    private function createYearlyData($post, $rows){
+        $date = date('Y-m-d H:i:s');
+        $model = new $this->modelClass;
+        $rowsTagihan = [];
+        $wherids = [];
+        $attrlog = [];
+        
+        foreach($rows as $key => $row){
+            if(is_array($row)){
+                $wherids[$key] = $row['id'];
+                $attrlog[$key] = $this->setRowaLogInfo($post, $row, $date);
+                $rowsTagihan[] = [
+                    'idrombel'              => $row['idrombel'],  
+                    'keb_siswa_kredit'      => $row['keb_siswa'],
+                    'ekskul_kredit'         => $row['ekskul'],  
+                    'bulan'                 => 7, 
+                    'tahun'                 => $post['year_start'],
+                    'tahun_ajaran'          => $post['tahun_ajaran_id'],    
+                    'no_ref'                => 'tagihan_info_2_' . $post['tahun_ajaran_id'],  
+                    'ket_ref'               => 'Tagihan Info Tahunan idrombel = ' . $row['idrombel'],
+                    'keterangan'            => '',   
+                    'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
+                    'updated_at'            => $date,
+                ];
+            }
+        }
+
+        return $model->insertBatch($post['jenis_tagihan'], $rowsTagihan, $attrlog, $wherids);
+    }
+
     private function setRowsTagihan($post, $row, $date){
         $attrvalue = [];
         extract($post);
@@ -97,24 +127,16 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
         for($i; $i <= $count; $i++){
             $attrvalue[] = [              
                 'idrombel'              => $row['idrombel'],  
-                'spp_debet'             => 0,                 
                 'spp_kredit'            => $row['spp'],
-                'komite_sekolah_debet'  => 0, 
                 'komite_sekolah_kredit' => $row['komite_sekolah'],
-                'catering_debet'        => 0, 
                 'catering_kredit'       => $row['catering'],
-                'keb_siswa_debet'       => 0, 
-                'keb_siswa_kredit'      => $row['keb_siswa'],
-                'ekskul_debet'          => 0, 
-                'ekskul_kredit'         => $row['ekskul'],  
                 'bulan'                 => $month, 
                 'tahun'                 => $year,
-                'tahun_ajaran'          => '201617',    
-                'no_ref'                => 'tagihan_info_' . (isset($row['tahun_ajaran_id']) ? 
-                                                $row['tahun_ajaran_id'] : '201617'),  
-                'ket_ref'               => 'Tagihan Info idrombel = ' . $row['idrombel'],
+                'tahun_ajaran'          => $tahun_ajaran_id,    
+                'no_ref'                => 'tagihan_info_1_' . $tahun_ajaran_id,  
+                'ket_ref'               => 'Tagihan Info bulan ' . $month . ' idrombel = ' . $row['idrombel'],
                 'keterangan'            => '',   
-                'created_at'            => $date,   
+                'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
                 'updated_at'            => $date,
             ];
             if($month == 12){
@@ -125,6 +147,24 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
             }
         }
         return $attrvalue;
+    }
+
+    private function setRowaLogInfo($post, $row , $date){
+        return [              
+            'idrombel'              => $row['idrombel'],  
+            'spp'                   => ($post['jenis_tagihan'] == '1') ? $row['spp'] : 0,              
+            'komite_sekolah'        => ($post['jenis_tagihan'] == '1') ? $row['komite_sekolah'] : 0,
+            'catering'              => ($post['jenis_tagihan'] == '1') ? $row['catering'] : 0,
+            'keb_siswa'             => ($post['jenis_tagihan'] == '2') ? $row['keb_siswa'] : 0,
+            'ekskul'                => ($post['jenis_tagihan'] == '2') ? $row['ekskul'] : 0,
+            'tahun_ajaran_id'       => isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] : '201617',
+            'keterangan'            => $row['keterangan'],
+            'jenis_tagihan'         => $post['jenis_tagihan'],
+            'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,   
+            'updated_at'            => $date,
+            'created_by'            => isset($row['created_by']) ? $row['created_by'] : \Yii::$app->user->getId(),   
+            'updated_by'            => \Yii::$app->user->getId(),
+        ];
     }
     /**
      * Get List input Info Tagihan
@@ -157,6 +197,7 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
             'kelasid' => $request->getQueryParam('kelasid', false),
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', '201617'),
             'idrombel' => $request->getQueryParam('idrombel', false),
+            'jenis_tagihan' => $request->getQueryParam('jenis_tagihan', '1'),
             'query' => $request->getQueryParam('query', false)
         ]);
     }

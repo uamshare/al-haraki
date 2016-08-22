@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$scope','$location', '$routeParams', 'authService','toastr'];
+    var injectParams = ['$scope','$location', '$routeParams', 'authService','toastr','cfpLoadingBar'];
 
-    var LoginController = function ($scope, $location, $routeParams, authService, toastr) {
+    var LoginController = function ($scope, $location, $routeParams, authService, toastr,cfpLoadingBar) {
         var vm = this,
             path = '/';
 
@@ -13,6 +13,7 @@ define(['app'], function (app) {
         $scope.errorMessage = null;
 
         $scope.login = function () {
+            cfpLoadingBar.start();
             authService.login($scope.username, $scope.password)
             .then(function (status) {
                 if (!status) {
@@ -24,7 +25,7 @@ define(['app'], function (app) {
                 if (status && $routeParams && $routeParams.redirect) {
                     path = path + $routeParams.redirect;
                 }
-
+                cfpLoadingBar.complete();
                 $location.path(path);
             }, function(error){
                 $scope.errorMessage = 'Unable to login';

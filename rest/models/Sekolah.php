@@ -112,4 +112,20 @@ class Sekolah extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Siswa::className(), ['sekolahid' => 'id']);
     }
+
+    public static function getProfile($id){
+        $self = static::find(['id' => $id])->one(); //static::findOne(['aktif' => $id]);
+        $tahunAjaran = \rest\models\TahunAjaran::getActive();
+
+        return [
+            'sekolahid' => $self->id,
+            'nama_sekolah' => $self->nama,
+            'alamat' => $self->alamat,
+            'tingkatan' => $self->tingkatan,
+            'tahun_ajaran_id' => $tahunAjaran->id,
+            'tahun_ajaran' => $tahunAjaran->tahun_ajaran,
+            'tahun_awal' => $tahunAjaran->tahun_awal,
+            'tahun_akhir' => $tahunAjaran->tahun_akhir
+        ];
+    }
 }

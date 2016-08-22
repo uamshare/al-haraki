@@ -304,11 +304,45 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         return $customeQuery->query();
     }
 
-    public function insertBatch($rows, $log, $whereids = null){
+    /**
+     * Save tagihan info into outstanding pembayaran
+     * @param $jt, String jenis tagihan
+     * @param $rows, Array value outstanding pembayaran
+     * @param $log, Array value info tagihan log
+     * @param $whereids, Array id log tagihan
+     */
+    public function insertBatch($jt, $rows, $log, $whereids = null){
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
-        $column = $this->attributes();
-        unset($column[0]);
+        // $column = $this->attributes();
+        // unset($column[0]);
+        $column = ($jt == '1') ? [
+            'idrombel',
+            'spp_kredit',
+            'komite_sekolah_kredit',
+            'catering_kredit',
+            'bulan',
+            'tahun',
+            'tahun_ajaran',
+            'no_ref',
+            'ket_ref',
+            'keterangan',
+            'created_at',
+            'updated_at'
+        ] : [
+            'idrombel',
+            'keb_siswa_kredit',
+            'ekskul_kredit',
+            'bulan',
+            'tahun',
+            'tahun_ajaran',
+            'no_ref',
+            'ket_ref',
+            'keterangan',
+            'created_at',
+            'updated_at'
+        ];
+
         $columnLog = [
             'idrombel',
             'spp',
@@ -318,8 +352,11 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             'ekskul',
             'tahun_ajaran_id',
             'keterangan',
+            'jenis_tagihan',
             'created_at',
-            'updated_at'
+            'updated_at',
+            'created_by',
+            'updated_by'
         ];
         try {
             $saved = $DB->createCommand()->batchInsert(

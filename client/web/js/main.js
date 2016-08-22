@@ -12,6 +12,7 @@ require(
         'services/authService',
         'services/helperService',
         'services/httpInterceptors',
+        'services/TahunAjaranService',
         'services/kwitansiPemabayaranService',
         'services/SiswaRombelService',
         'services/TagihanInfoService',

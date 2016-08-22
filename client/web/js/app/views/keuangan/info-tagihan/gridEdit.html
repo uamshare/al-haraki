@@ -16,11 +16,26 @@
 					<input type="text" name="nama_kelas" class="form-control" ng-model="kelas.options[0].nama_kelas" />
 				</div>
 			</div>
-			<div class="col-lg-6">
+			<div class="col-lg-2">
+				<div class="form-group">
+					<label>Jenis Tagihan</label>
+					<select name="jenis_tagihan" class="form-control" 
+						ng-model="jenis_tagihan"
+						ng-change="onJenisTagihanChange(jenis_tagihan)">
+						<option value="1">Bulanan</option>
+						<option value="2">Tahunan</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-6" ng-show="jenis_tagihan == 1">
 				<div class="form-group">
 					<label>Periode</label>
 					<div class="input-group">
-						<select name="month_start" class="form-control" ng-model="month_start.selected">
+						<select 
+							name="month_start" 
+							class="form-control" 
+							ng-model="month_start.selected"
+							ng-change="onMonthChange(month_start.selected)">
 							<option ng-repeat="bs in month_start.options" value="{{bs.id}}">
 							{{bs.name}}
 							</option>
@@ -30,7 +45,10 @@
 							{{month_start.year}}
 						</div>
 						<div class="input-group-addon">s/d</div>
-						<select name="month_end" class="form-control" ng-model="month_end.selected">
+						<select name="month_end" 
+							class="form-control"
+							ng-change="onMonthChange(month_start.selected)"
+							ng-model="month_end.selected">
 							<option ng-repeat="be in month_end.options" value="{{be.id}}" >
 							{{be.name}}
 							</option>
@@ -42,15 +60,21 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-2">
+			<div class="col-lg-6" ng-show="jenis_tagihan == 2">
 				<div class="form-group">
-					<label>Jenis Tagihan {{jenisTagihan}}</label>
-					<select name="jenis_tagihan" class="form-control" 
-						ng-model="jenisTagihan"
+					<label>Tahun Ajaran</label>
+					<!-- <select name="tahun_ajaran_id" class="form-control" 
+						ng-model="tahun_ajaran_id"
+						readonly="true"
 						ng-change="onJenisTagihanChange(jenisTagihan)">
-						<option value="1">Bulanan</option>
-						<option value="2">Tahunan</option>
-					</select>
+						<option ng-repeat="ta in tahun_ajaran_list" value="{{ta.id}}" >
+							{{ta.tahun_ajaran}}
+						</option>
+					</select> -->
+					<input type="hidden" class="form-control" name="tahun_ajaran_id" 
+						ng-model="tahun_ajaran_name" readonly />
+					<input type="text" class="form-control" name="tahun_ajaran_name" 
+						ng-model="tahun_ajaran_name" readonly />
 				</div>
 			</div>
 			<div class="col-lg-2">

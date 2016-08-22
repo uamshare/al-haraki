@@ -36,20 +36,24 @@ class AuthController extends \rest\modules\api\ActiveController
         $username = isset($post['username']) ? $post['username'] : false;
         $password = isset($post['password']) ? $post['password'] : false;
 
-        $user = $model::findByLogin($username, $password);
+        
         
         // var_dump(Yii::$app->security->generatePasswordHash('12345678'));exit();
 
+        $user = $model::findByLogin($username, $password);
         if($user && Yii::$app->user->login($user)){
             $user = \Yii::$app->user->identity;
             $user->access_token = \Yii::$app->getSecurity()->generateRandomString();
             $a = $user->save();
+
+            
 
             $data = [
                 // '__id' => \Yii::$app->getSecurity()->generateRandomKey(),
                 '__accessToken' =>  $user->access_token,
                 '__isLogin' => true,
                 '__user_profile' => $user->profile,
+                '__sekolah_profile' => \rest\models\Sekolah::getProfile(1),
             ];
 
             $data = array_merge($data, $user->profile);
