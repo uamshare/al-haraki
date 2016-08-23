@@ -4,9 +4,9 @@ namespace rest\modules\api\controllers;
 use Yii;
 use rest\modules\api\BaseApiController;
 
-class KwitansipembayaranhController extends \rest\modules\api\ActiveController
+class KwitansipengeluaranController extends \rest\modules\api\ActiveController
 {
-    public $modelClass = 'rest\models\KwitansiPembayaranH';
+    public $modelClass = 'rest\models\KwitansiPengeluaranH';
 
     
 
@@ -49,28 +49,10 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
             $flagdelete = [];
             extract($post);
             $date = date('Y-m-d H:i:s');
-            if($form['sumber_kwitansi'] == 1){
-                $pembayaran = [
-                    'idrombel' => $form['idrombel'],
-                    'spp_debet' => 0,
-                    'komite_sekolah_debet' => 0,
-                    'catering_debet' => 0,
-                    'keb_siswa_debet' => 0,
-                    'ekskul_debet' => 0,
-                    'bulan' => $form['month'],
-                    'tahun' => $form['year'],
-                    'tahun_ajaran' => '201617',
-                    'no_ref' => $form['no_kwitansi'],
-                    'ket_ref' => $form['keterangan'],
-                    'created_at' => isset($form['created_at']) ? $form['created_at'] : $date,   
-                    'updated_at' => $date
-                ];
-            }else{
-                $pembayaran = false;
-            }
 
             foreach($grid as $k => $rows){
                 $model = new $this->modelClass;
+                
                 if($rows['flag'] == '1'){
                     $attrvalue[] = [
                         'id'                    => isset($rows['id']) ? $rows['id'] : '', 
@@ -84,30 +66,19 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
                 }else if($rows['flag'] == '0'){
                     $flagdelete[] = $rows['id'];
                 }
-
                 
-                if($pembayaran && isset($pembayaran[$rows['kode'].'_debet'])){
-                    $pembayaran[$rows['kode'].'_debet'] = ($rows['flag'] == 1) ? $rows['jumlah'] : 0;
-                }
             }
+
             $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
             $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
             $form['updated_by'] = \Yii::$app->user->getId();
             $form['created_at'] = isset($form['created_at']) ? $form['created_at'] : $date;
             $form['updated_at'] = $date;
 
-            unset($form['nama_siswa']);
-            unset($form['kelas']);
-            $form['bulan'] = $form['month'];
-            $form['tahun'] = $form['year'];
-            unset($form['month']);
-            unset($form['year']);
-
             $result = $model->saveAndPosting([
             	'rowHeader' => $form,
             	'rowDetail' => $attrvalue,
-                'rowDetailDel' => $flagdelete,
-                'rowPembayaran' => $pembayaran
+                'rowDetailDel' => $flagdelete
             ]);
             
             if($result !== true){
@@ -149,9 +120,22 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
      */
     public function actionNewnokwitansi(){
         $model = new $this->modelClass();
-        // $sekolahid = 2;
         $request = Yii::$app->getRequest();
         $sekolahid = $request->getQueryParam('sekolahid', 0);
         return $model->getNewNOKwitansi(date('y'), $sekolahid);
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function actionFindbyno(){
+        $model = new \rest\models\KwitansiPengeluaranD();
+        $request = Yii::$app->getRequest();
+        return $model->findByNo([
+            'query' => $request->getQueryParam('query', false),
+            'no_kwitansi' => $request->getQueryParam('no_kwitansi', ''),
+            'nama_penerima' => $request->getQueryParam('nama_penerima', false)
+        ]);
     }
 }

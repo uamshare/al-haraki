@@ -15,13 +15,13 @@ define(['app'], function (app) {
     		'cfpLoadingBar',
     		'$timeout',
     		'uiGridConstants',
-    		'kwitansiPemabayaranService',
+    		'kwitansiPengeluaranService',
     		'SiswaRombelService',
     		'TagihanInfoService',
     		'authService'
     	];
 
-    var KwitansiPemabayaranController = function (
+    var KwitansiPengeluaranController = function (
 		$CONST_VAR,
 		helperService,
 		$scope, 
@@ -35,14 +35,14 @@ define(['app'], function (app) {
 		cfpLoadingBar,
 		$timeout,
 		uiGridConstants,	
-		kwitansiPemabayaranService,
+		kwitansiPengeluaranService,
 		SiswaRombelService,
 		TagihanInfoService,
 		authService
 	) 
     {
-    	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/';
-    	var $resourceApi = kwitansiPemabayaranService;
+    	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pengeluaran/';
+    	var $resourceApi = kwitansiPengeluaranService;
     	var date = new Date();
 
     	function errorHandle(error){
@@ -54,14 +54,13 @@ define(['app'], function (app) {
     		var gridOptions = {
 	    		columnDefs : [
 					{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
-					{ name: 'idrombel', displayName: 'Id Rombel', visible: false, width : '50',  enableCellEdit: false},
-					{ name: 'sekolahid', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
 					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120',  enableCellEdit: false},
-					{ name: 'nama_pembayar', displayName: 'Nama Pembayar', enableCellEdit: false},
+					{ name: 'nama_penerima', displayName: 'Nama Pembayar', enableCellEdit: false},
+					{ name: 'nik', displayName: 'NIK', visible: false, enableCellEdit: false},
 					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
-					{ name: 'bulan', displayName: 'Bulan', visible: false, enableCellEdit: false},
-					{ name: 'tahun', displayName: 'Tahun', visible: false, enableCellEdit: false},
+					{ name: 'sekolahid', displayName: 'SekolahId', visible: false, enableCellEdit: false},
+					{ name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, enableCellEdit: false},
 					{ name: 'created_by', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 					{ name: 'updated_by', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 					{ name: 'created_at', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
@@ -105,7 +104,7 @@ define(['app'], function (app) {
 			};
 
 			function setGridCollapse(collapse){
-				var box = $('#kwitansi-pembayaran-grid');
+				var box = $('#kwitansi-pengeluaran-grid');
 				var bf = box.find(".box-body, .box-footer");
 				
 				if (collapse) {
@@ -120,7 +119,7 @@ define(['app'], function (app) {
 			}
 
 			function setFormCollapse(collapse){
-				var box = $('#kwitansi-pembayaran-form');
+				var box = $('#kwitansi-pengeluaran-form');
 				var bf = box.find(".box-body, .box-footer");
 				if (collapse) {
 					box.find(".fa-minus").removeClass("fa-minus").addClass("fa-plus");
@@ -206,7 +205,7 @@ define(['app'], function (app) {
 			}
 
 			$scope.onEditClick = function(rowdata){
-				$location.path( "/keuangan/kwitansi-pembayaran/edit/" + rowdata.no_kwitansi);
+				$location.path( "/keuangan/kwitansi-pengeluaran/edit/" + rowdata.no_kwitansi);
 			}
 
 			$scope.onDeleteClick = function(rowdata){
@@ -214,89 +213,6 @@ define(['app'], function (app) {
 				if (del == true) {
 				    deleteData(rowdata.no_kwitansi);
 				} 
-			}
-
-			function terbilang(bilangan) {
-
-				bilangan    = String(bilangan);
-				var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
-				var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
-				var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
-
-				var panjang_bilangan = bilangan.length, 
-					i, 
-					j, 
-					kaLimat = '';
-
-				/* pengujian panjang bilangan */
-				if (panjang_bilangan > 15) {
-					kaLimat = "Diluar Batas";
-					return kaLimat;
-				}
-
-				/* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
-				for (i = 1; i <= panjang_bilangan; i++) {
-					angka[i] = bilangan.substr(-(i),1);
-				}
-
-				i = 1;
-				j = 0;
-				kaLimat = "";
-				/* mulai proses iterasi terhadap array angka */
-				while (i <= panjang_bilangan) {
-					var subkaLimat = "",
-					kata1 = "",
-					kata2 = "",
-					kata3 = "";
-
-					/* untuk Ratusan */
-					if (angka[i+2] != "0") {
-						if (angka[i+2] == "1") {
-						kata1 = "Seratus";
-						} else {
-						kata1 = kata[angka[i+2]] + " Ratus";
-						}
-					}
-
-					/* untuk Puluhan atau Belasan */
-					if (angka[i+1] != "0") {
-						if (angka[i+1] == "1") {
-							if (angka[i] == "0") {
-								kata2 = "Sepuluh";
-							}else if (angka[i] == "1") {
-								kata2 = "Sebelas";
-							}else {
-								kata2 = kata[angka[i]] + " Belas";
-							}
-						}else {
-							kata2 = kata[angka[i+1]] + " Puluh";
-						}
-					}
-
-					/* untuk Satuan */
-					if (angka[i] != "0") {
-						if (angka[i+1] != "1") {
-							kata3 = kata[angka[i]];
-						}
-					}
-
-					/* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
-					if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")) {
-						subkaLimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
-					}
-
-					/* gabungkan variabe sub kaLimat (untuk Satu blok 3 angka) ke variabel kaLimat */
-					kaLimat = subkaLimat + kaLimat;
-					i = i + 3;
-					j = j + 1;
-				}
-
-				/* mengganti Satu Ribu jadi Seribu jika diperlukan */
-				if ((angka[5] == "0") && (angka[6] == "0")) {
-					kaLimat = kaLimat.replace("Satu Ribu","Seribu");
-				}
-
-				return kaLimat + "Rupiah";
 			}
 
 			$scope.onPrintClick = function(rowdata){
@@ -316,7 +232,7 @@ define(['app'], function (app) {
 		            		}
 							return  total;
 						}
-						$scope.rowTerbilang = terbilang($scope.rowPrintTotal());
+						$scope.rowTerbilang = helperService.terbilang($scope.rowPrintTotal());
 						$scope.monthPrint = date.getMonth();
 						$scope.monthYear = date.getFullYear();
 
@@ -340,22 +256,16 @@ define(['app'], function (app) {
     		$scope.month = helperService.month().options;
 	    	$scope.form = {
 				no_kwitansi : '',
-				tgl_kwitansi : '',
-				nama_pembayar : '',
-				sekolahid : authService.getSekolahProfile().sekolahid,
-				idrombel : '',
+				tgl_kwitansi : date,
+				nama_penerima : '',
 				keterangan : '',
-				sumber_kwitansi : '',
-				month : '',
-				year : ''
-			};
-
-			$scope.rombel;
-			$scope.nis = {
-				data : [],
-				nama_kelas : '',
-				kelas : '',
-				select : ''
+				nik : '',
+				sekolahid : authService.getSekolahProfile().sekolahid,
+				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+				created_by : '',
+				updated_by : '',
+				created_at : date,
+				updated_at : date
 			};
 
 			$scope.gridDetailDirtyRows = [];
@@ -393,25 +303,20 @@ define(['app'], function (app) {
 					{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
 					{ name: 'flag', displayName: '', visible: false, width : '100',  enableCellEdit: false}
 				],
-				data : [
-					{
-						index : 1,
-						kode : '',
-						no_kwitansi : $scope.form.no_kwitansi,
-						rincian : '',
-						jumlah : 0,
-						flag : 1
-					}
-				],
+				// data : [
+				// 	{
+				// 		index : 1,
+				// 		kode : '',
+				// 		no_kwitansi : $scope.form.no_kwitansi,
+				// 		rincian : '',
+				// 		jumlah : 0,
+				// 		flag : 1
+				// 	}
+				// ],
 				//Export
 			    onRegisterApi: function(gridApi){
 					$scope.gridApi = gridApi;
 					gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-						// if(oldValue != newValue && (parseInt(newValue))){
-						// 	$scope.gridDetailDirtyRows.push(rowEntity);
-						// }else if(colDef.name == 'rincian' && oldValue != newValue && rowEntity != null){
-						// 	$scope.gridDetailDirtyRows.push(rowEntity);
-						// }
 						if(oldValue != newValue && (parseInt(newValue))){
 							$scope.gridDetailDirtyRows[rowEntity.index] = rowEntity;
 						}else if(colDef.name == 'rincian' && oldValue != newValue && rowEntity != null){
@@ -431,17 +336,29 @@ define(['app'], function (app) {
 				cellTemplate : columnDetailActionTpl
 			});
 
+			function addDataDetail(detail, idx){
+				var index = (typeof idx != 'undefined') ? idx : $scope.gridDetail.data.length + 1;
+				$scope.gridDetail.data.push({
+					"index": index,
+					"kode": (typeof detail != 'undefined') ? detail.kode : '',
+					"no_kwitansi": $scope.form.no_kwitansi,
+					"rincian": (typeof detail != 'undefined') ? detail.rincian : '',
+					"jumlah": (typeof detail != 'undefined') ? detail.jumlah : 0,
+					"flag": 1,
+				});
+			}
+
 			function reset(){
 				$scope.form.tgl_kwitansi = date;
-				$scope.form.nama_pembayar = '';
-				$scope.form.idrombel = '';
+				$scope.form.nama_penerima = '';
+				$scope.form.nik = '';
 				$scope.form.keterangan = '';
-				$scope.nis.nama_siswa = '';
-				$scope.nis.kelas = '';
-				$scope.nis.select = '';
-				$scope.form.sumber_kwitansi = '';
-				$scope.form.month = helperService.getMonthId(date.getMonth());
-				$scope.form.year = date.getFullYear();
+				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
+				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+				$scope.form.created_by = '';
+				$scope.form.updated_by = '';
+				$scope.form.created_at = date;
+				$scope.form.updated_at = date;
 
 				$scope.gridDetail.data = [
 					{
@@ -455,94 +372,22 @@ define(['app'], function (app) {
 				]
 			}
 
-			function refreshNo(paramdata){
+			function refreshNo(){
 				$resourceApi.getNewNoKwitansi({
 					sekolahid : authService.getSekolahProfile().sekolahid
 				})
 				.then(function (result) {
 		            if(result.success){
 			            $scope.form.no_kwitansi = result.rows;
+			            addDataDetail();
 					}
 		        }, function(error){
 		        	toastr.warning('No Kwitansi tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
 		        });
 			}
 
-			function getRombel(paramdata){
-				cfpLoadingBar.start();
-				SiswaRombelService.getList(paramdata)
-				.then(function (result) {
-		            if(result.success){
-			            $scope.rombel = result.rows;
-			            angular.forEach(result.rows, function(dt, index) {
-			                $scope.nis.data[index] = dt.nis;
-			            })
-					}
-					cfpLoadingBar.complete();
-		        }, function(error){
-		        	toastr.warning('Siswa tidak bisa dimuat.', 'Warning');
-		        	cfpLoadingBar.complete();
-		        });
-			}
 
-			function addDataDetail(detail, idx){
-				var index = (typeof idx != 'undefined') ? idx : $scope.gridDetail.data.length + 1;
-				$scope.gridDetail.data.push({
-					"index": index,
-					"kode": (typeof detail != 'undefined') ? detail.kode : '',
-					"no_kwitansi": $scope.form.no_kwitansi,
-					"rincian": (typeof detail != 'undefined') ? detail.rincian : '',
-					"jumlah": (typeof detail != 'undefined') ? detail.jumlah : 0,
-					"flag": 1
-				});
-			}
-
-			function getInfoTagihan(){
-				cfpLoadingBar.start();
-				TagihanInfoService.getList({
-					idrombel : $scope.form.idrombel,
-					month : $scope.form.month,
-					year : $scope.form.year
-				})
-				.then(function (result) {
-		            if(result.success){
-		            	$scope.gridDetail.data = [];
-		            	var row = result.rows[0];
-			            addDataDetail({
-			            	kode : 'spp',
-			            	rincian : 'SPP',
-			            	jumlah : parseInt(row.spp),
-			            });
-			            addDataDetail({
-			            	kode : 'komite_sekolah',
-			            	rincian : 'Komite Sekolah',
-			            	jumlah : parseInt(row.komite_sekolah)
-			            });
-			            addDataDetail({
-			            	kode : 'catering',
-			            	rincian : 'Catering',
-			            	jumlah : parseInt(row.catering)
-			            });
-			            addDataDetail({
-			            	kode : 'keb_siswa',
-			            	rincian : 'Kebutuhan Siswa',
-			            	jumlah : parseInt(row.keb_siswa)
-			            });
-			            addDataDetail({
-			            	kode : 'ekskul',
-			            	rincian : 'Ekskul',
-			            	jumlah : parseInt(row.ekskul)
-			            });
-			            angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
-			                $scope.gridDetailDirtyRows.push(rowEntity);
-			            })
-					}
-					cfpLoadingBar.complete();
-		        }, function(error){
-		        	toastr.warning('Info Tagihan tidak bisa dimuat.', 'Warning');
-		        	cfpLoadingBar.complete();
-		        });
-			}
+			
 
 			function getRowDetailByNo(noKwitansi){
 				cfpLoadingBar.start();
@@ -580,30 +425,16 @@ define(['app'], function (app) {
 						var rowdata = result.rows;
 						$scope.form.no_kwitansi = rowdata.no_kwitansi;
 						$scope.form.tgl_kwitansi = rowdata.tgl_kwitansi;
-						$scope.form.nama_pembayar = rowdata.nama_pembayar;
-						$scope.form.idrombel = rowdata.idrombel;
+						$scope.form.nama_penerima = rowdata.nama_penerima;
 						$scope.form.keterangan = rowdata.keterangan;
-						$scope.form.sumber_kwitansi = rowdata.sumber_kwitansi;
-						$scope.form.month = rowdata.bulan;
-						$scope.form.year = rowdata.tahun;
+						$scope.form.nik = rowdata.nik;
+						$scope.form.sekolahid = rowdata.sekolahid;
+						$scope.form.tahun_ajaran_id = rowdata.tahun_ajaran_id;
 						$scope.form.created_by = rowdata.created_by;
+						$scope.form.updated_by = rowdata.updated_by;
 						$scope.form.created_at = rowdata.created_at;
-						
-						var idx = -1;
-						if(rowdata.idrombel != null && rowdata.idrombel != ''){
-							for(var x in $scope.rombel){
-								idx = parseInt(x);
-								if($scope.rombel[idx].id == rowdata.idrombel){
-									break;
-								}
-							}
-						}else{
-							console.log('idrombel : ' + rowdata.idrombel);
-						}
+						$scope.form.updated_at = rowdata.updated_at;
 
-						$scope.nis.select = (idx == -1) ? '' : $scope.nis.data[idx];
-						$scope.nis.nama_siswa = (idx == -1) ? '' : $scope.rombel[idx].nama_siswa;
-						$scope.nis.kelas = (idx == -1) ? '' : $scope.rombel[idx].kelas + ' - ' + $scope.rombel[idx].nama_kelas;
 						getRowDetailByNo(rowdata.no_kwitansi);
 					}
 					cfpLoadingBar.complete();
@@ -611,14 +442,11 @@ define(['app'], function (app) {
 			}
 
 			this.init = function(){
-				getRombel({
-					sekolahid : authService.getProfile().sekolahid
-				});
 				if($routeParams.id){
 	                getById($routeParams.id);
 	            }else{
 	                refreshNo();
-					reset();
+					// reset();
 	            }
 			}
 
@@ -633,8 +461,8 @@ define(['app'], function (app) {
 					return false;
 				}
 
-				if($scope.form.nama_pembayar == '' || $scope.form.nama_pembayar == null){
-					toastr.warning('Nama Pembayar tidak boleh kosong.', 'Warning');
+				if($scope.form.nama_penerima == '' || $scope.form.nama_penerima == null){
+					toastr.warning('Nama Penerima tidak boleh kosong.', 'Warning');
 					return false;
 				}
 
@@ -643,6 +471,8 @@ define(['app'], function (app) {
 					return false;
 				}
 
+				console.log($scope.gridDetailDirtyRows);
+				// return; 
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
@@ -655,7 +485,7 @@ define(['app'], function (app) {
 						reset();
 						refreshNo();
 						cfpLoadingBar.complete();
-						$location.path( "/keuangan/kwitansi-pembayaran/");
+						$location.path( "/keuangan/kwitansi-pengeluaran/");
 						cfpLoadingBar.complete();
 					}else{
 						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
@@ -665,10 +495,7 @@ define(['app'], function (app) {
 			}
 
 			$scope.onResetClick = function(event){
-				// setFormCollapse(true);
-				// setGridCollapse(false);
-				// reset();
-				$location.path( "/keuangan/kwitansi-pembayaran/");
+				$location.path( "/keuangan/kwitansi-pengeluaran/");
 			}
 
 			$scope.onAddDetailClick = function(event){
@@ -682,47 +509,15 @@ define(['app'], function (app) {
 				// $scope.gridDetailDirtyRows.splice(idxdirty,1);
 				$scope.gridDetailDirtyRows[idxdirty].flag = 0;
 			}
-
-			$scope.onNISChange = function(index){
-				var index = $scope.nis.data.indexOf($scope.nis.select);
-				$scope.nis.nama_siswa = ($scope.rombel[index]) ? $scope.rombel[index].nama_siswa : '';
-				$scope.nis.kelas = ($scope.rombel[index]) ? $scope.rombel[index].kelas + ' - ' + $scope.rombel[index].nama_kelas : '';
-				$scope.form.idrombel = ($scope.rombel[index]) ? $scope.rombel[index].id : '';
-
-				if($scope.form.sumber_kwitansi == '1'){
-					getInfoTagihan();
-				}
-			}
-
-			$scope.onSKSelect = function(value){
-				$scope.form.sumber_kwitansi = value;
-				if(value =='1'){
-					if($scope.form.idrombel == '' || $scope.form.idrombel == null){
-						toastr.warning('NIS siswa belum diisi.', 'Warning');
-						return false;
-					}
-					$scope.form.year = ($scope.form.month >= 1 &&  $scope.form.month <= 6) ? 
-										(date.getFullYear() + 1) : date.getFullYear();
-					getInfoTagihan();
-				}else{
-					$scope.gridDetail.data = [
-						{
-							index : 1,
-							no_kwitansi : $scope.form.no_kwitansi,
-							rincian : '',
-							jumlah : 0
-						}
-					]
-				}
-			}
     	}
 
     	var controller;
 		switch($location.$$url){
-			case '/keuangan/kwitansi-pembayaran/add' :
+			case '/keuangan/kwitansi-pengeluaran/add' :
+			console.log();
 				controller = new addEditController();
 				break;
-			case '/keuangan/kwitansi-pembayaran/edit/' + $routeParams.id :
+			case '/keuangan/kwitansi-pengeluaran/edit/' + $routeParams.id :
 				controller = new addEditController();
 				break;
 			default : 
@@ -738,7 +533,7 @@ define(['app'], function (app) {
 			controller.init();
 		}, 1000);
     }
-    KwitansiPemabayaranController.$inject = injectParams;
+    KwitansiPengeluaranController.$inject = injectParams;
 
-    app.register.controller('KwitansiPemabayaranController', KwitansiPemabayaranController);
+    app.register.controller('KwitansiPengeluaranController', KwitansiPengeluaranController);
 });

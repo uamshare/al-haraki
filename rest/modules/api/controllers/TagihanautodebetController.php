@@ -51,11 +51,14 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
             extract($post);
             $date = date('Y-m-d H:i:s');
 
-            $form['sekolahid'] = 2;
+            $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
             $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] :'201617';
-            $form['created_by'] = (isset($form['created_by']) && !empty($form['created_by'])) ? $form['created_by'] : 1;
-            $form['updated_by'] = 1;
-            $form['created_at'] = (isset($form['created_at']) && !empty($form['created_at'])) ? $form['created_at'] : $date;
+            $form['created_by'] = (isset($form['created_by']) && !empty($form['created_by'])) ? 
+                                    $form['created_by'] : \Yii::$app->user->getId();
+            $form['updated_by'] = \Yii::$app->user->getId();
+
+            $form['created_at'] = (isset($form['created_at']) && !empty($form['created_at'])) ? 
+                                    $form['created_at'] : $date;
             $form['updated_at'] = $date;
 
             foreach($grid as $k => $rows){
@@ -141,7 +144,9 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
      */
     public function actionNewnotransaksi(){
         $model = new $this->modelClass();
-        $sekolahid = 2;
+        $post = Yii::$app->getRequest()->getBodyParams();
+        $sekolahid = (isset($post['sekolahid'])) ? $post['sekolahid'] : 0;
+
         return $model->getNewNoTransaksi(date('y'), $sekolahid);
     }
 

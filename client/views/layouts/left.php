@@ -50,7 +50,7 @@
                             ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
                             ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-outstanding-tagihan']],
                             // ['label' => 'Pengeluaran', 'icon' => 'fa fa-user-plus', 'url' => ['#keuangan/pengeluaran']],
-                            ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'url' => ['/#keuangan/kwitansi-pengeluaran']],
+                            ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'url' => ['/#keuangan/kwitansi-pengeluaran/add']],
                             ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'url' => ['/#keuangan/rekap-pengeluaran']],
                             ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-cc-mastercard', 'url' => ['#keuangan/rekonsiliasi-autodebet/add']]
                         ],

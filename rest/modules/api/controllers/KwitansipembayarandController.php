@@ -35,7 +35,8 @@ class KwitansipembayarandController extends \rest\modules\api\ActiveController
     	$model = new $this->modelClass();
         $request = Yii::$app->getRequest();
         return $model->findByNo([
-            'no_kwitansi' => $request->getQueryParam('no_kwitansi', false)
+            'no_kwitansi' => $request->getQueryParam('no_kwitansi', ''),
+            'query' => $request->getQueryParam('query', false)
         ]);
     }
 

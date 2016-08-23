@@ -12,8 +12,10 @@ define(['app'], function (app) {
             return getResource('kwitansipembayaranhs', pageIndex, pageSize);
         };
 
-        factory.getNewNoKwitansi = function () {
-            return $http.get(serviceBase + 'kwitansipembayaranh/newnokwitansi').then(function (results) {
+        factory.getNewNoKwitansi = function (paramdata) {
+            return $http.get(serviceBase + 'kwitansipembayaranh/newnokwitansi',{
+                params : paramdata
+            }).then(function (results) {
                 return results.data;
             });
         };

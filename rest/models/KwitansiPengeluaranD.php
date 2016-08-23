@@ -5,7 +5,7 @@ namespace rest\models;
 use Yii;
 
 /**
- * This is the model class for table "kwitansi_pembayaran_d".
+ * This is the model class for table "kwitansi_pengeluaran_d".
  *
  * @property integer $id
  * @property string $no_kwitansi
@@ -15,16 +15,16 @@ use Yii;
  * @property string $created_at
  * @property string $updated_at
  *
- * @property KwitansiPembayaranH $noKwitansi
+ * @property KwitansiPengeluaranH $noKwitansi
  */
-class KwitansiPembayaranD extends \yii\db\ActiveRecord
+class KwitansiPengeluaranD extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'kwitansi_pembayaran_d';
+        return 'kwitansi_pengeluaran_d';
     }
 
     /**
@@ -33,13 +33,11 @@ class KwitansiPembayaranD extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['no_kwitansi', 'rincian', 'created_at', 'updated_at'], 'required'],
             [['jumlah'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['no_kwitansi', 'kode'], 'string', 'max' => 20],
             [['rincian'], 'string', 'max' => 50],
-            [['no_kwitansi', 'rincian'], 'unique', 'targetAttribute' => ['no_kwitansi', 'rincian'], 'message' => 'The combination of No Kwitansi and Rincian has already been taken.'],
-            [['no_kwitansi'], 'exist', 'skipOnError' => true, 'targetClass' => KwitansiPembayaranH::className(), 'targetAttribute' => ['no_kwitansi' => 'no_kwitansi']],
+            [['no_kwitansi'], 'exist', 'skipOnError' => true, 'targetClass' => KwitansiPengeluaranH::className(), 'targetAttribute' => ['no_kwitansi' => 'no_kwitansi']],
         ];
     }
 
@@ -64,7 +62,7 @@ class KwitansiPembayaranD extends \yii\db\ActiveRecord
      */
     public function getNoKwitansi()
     {
-        return $this->hasOne(KwitansiPembayaranH::className(), ['no_kwitansi' => 'no_kwitansi']);
+        return $this->hasOne(KwitansiPengeluaranH::className(), ['no_kwitansi' => 'no_kwitansi']);
     }
 
     /**
@@ -93,8 +91,7 @@ class KwitansiPembayaranD extends \yii\db\ActiveRecord
                           `jumlah`,
                           `created_at`,
                           `updated_at` 
-                        FROM
-                          `kwitansi_pembayaran_d` $where";
+                        FROM `kwitansi_pengeluaran_d` $where";
 
         $connection = $this->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms, $bound);

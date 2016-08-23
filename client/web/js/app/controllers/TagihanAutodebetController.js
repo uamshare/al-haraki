@@ -344,7 +344,7 @@ define(['app'], function (app) {
             $scope.form = {
                 no_transaksi : '',
                 tgl_transaksi : date,
-                sekolahid : authService.getProfile().sekolahid,
+                sekolahid : authService.getSekolahProfile().sekolahid,
                 keterangan : '',
                 file_import : '',
                 bulan : '',
@@ -497,7 +497,7 @@ define(['app'], function (app) {
             function reset(){
                 // reset form
                 $scope.form.tgl_transaksi = date;
-                $scope.form.sekolahid = authService.getProfile().sekolahid;
+                $scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
                 $scope.form.keterangan = '';
                 $scope.form.file_import = '';
                 $scope.form.bulan = helperService.getMonthId(date.getMonth());

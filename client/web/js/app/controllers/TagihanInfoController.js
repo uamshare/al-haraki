@@ -354,7 +354,8 @@ define(['app'], function (app) {
 					year_end : $scope.month_end.year,
 					kelasid : $scope.kelas.selected,
 					jenis_tagihan : $scope.jenis_tagihan,
-					tahun_ajaran_id : $scope.tahun_ajaran_id
+					tahun_ajaran_id : $scope.tahun_ajaran_id,
+					sekolahid : authService.getProfile().sekolahid
 				}
 				saveAll(params);
 			}else{

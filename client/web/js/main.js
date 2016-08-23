@@ -14,6 +14,7 @@ require(
         'services/httpInterceptors',
         'services/TahunAjaranService',
         'services/kwitansiPemabayaranService',
+        'services/kwitansiPengeluaranService',
         'services/SiswaRombelService',
         'services/TagihanInfoService',
         'services/SiswaService',

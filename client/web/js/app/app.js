@@ -248,6 +248,28 @@ define(['services/routeResolver'], function () {
                     )
                 )
                 
+                .when('/keuangan/kwitansi-pengeluaran/add', 
+                    routeCustome.resolve(
+                        'keuangan/kwitansi-pembayaran/add', 
+                        'KwitansiPengeluaranController',
+                        true
+                    )
+                )
+                .when('/keuangan/kwitansi-pengeluaran/edit/:id', 
+                    routeCustome.resolve(
+                        'keuangan/kwitansi-pembayaran/add', 
+                        'KwitansiPengeluaranController',
+                        true
+                    )
+                )
+                .when('/keuangan/kwitansi-pengeluaran', 
+                    routeCustome.resolve(
+                        'keuangan/kwitansi-pembayaran/index', 
+                        'KwitansiPengeluaranController',
+                        true
+                    )
+                )
+                
 
                 // AKUNTANSI
                 .when('/akuntansi/coa', 

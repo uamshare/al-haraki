@@ -33,3 +33,7 @@ yii gii/model --tableName=kwitansi_pembayaran_d --modelClass=KwitansiPembayaranD
 yii gii/model --tableName=tagihan_autodebet_h --modelClass=TagihanAutodebetH --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
 
 yii gii/model --tableName=tagihan_autodebet_d --modelClass=TagihanAutodebetD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=kwitansi_pengeluaran_h --modelClass=kwitansiPengeluaranH --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=kwitansi_pengeluaran_d --modelClass=kwitansiPengeluaranD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1

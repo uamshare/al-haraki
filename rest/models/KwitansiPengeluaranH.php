@@ -5,35 +5,32 @@ namespace rest\models;
 use Yii;
 
 /**
- * This is the model class for table "kwitansi_pembayaran_h".
+ * This is the model class for table "kwitansi_pengeluaran_h".
  *
  * @property string $no_kwitansi
  * @property string $tgl_kwitansi
- * @property string $nama_pembayar
- * @property integer $idrombel
- * @property string $keterangan
+ * @property string $nama_penerima
+ * @property integer $nik
  * @property integer $sekolahid
- * @property string $sumber_kwitansi
- * @property integer $bulan
- * @property integer $tahun
+ * @property string $tahun_ajaran_id
  * @property integer $created_by
  * @property integer $updated_by
  * @property string $created_at
  * @property string $updated_at
  *
- * @property KwitansiPembayaranD[] $kwitansiPembayaranDs
+ * @property KwitansiPengeluaranD[] $kwitansiPengeluaranDs
  * @property User $createdBy
  * @property User $updatedBy
  * @property Sekolah $sekolah
  */
-class KwitansiPembayaranH extends \yii\db\ActiveRecord
+class kwitansiPengeluaranH extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'kwitansi_pembayaran_h';
+        return 'kwitansi_pengeluaran_h';
     }
 
     /**
@@ -44,11 +41,11 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
         return [
             [['no_kwitansi'], 'required'],
             [['tgl_kwitansi', 'created_at', 'updated_at'], 'safe'],
-            [['idrombel', 'sekolahid', 'bulan', 'tahun', 'created_by', 'updated_by'], 'integer'],
+            [['nik', 'sekolahid', 'created_by', 'updated_by'], 'integer'],
             [['no_kwitansi'], 'string', 'max' => 20],
-            [['nama_pembayar'], 'string', 'max' => 50],
+            [['nama_penerima'], 'string', 'max' => 50],
             [['keterangan'], 'string', 'max' => 255],
-            [['sumber_kwitansi'], 'string', 'max' => 2],
+            [['tahun_ajaran_id'], 'string', 'max' => 6],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
             [['sekolahid'], 'exist', 'skipOnError' => true, 'targetClass' => Sekolah::className(), 'targetAttribute' => ['sekolahid' => 'id']],
@@ -61,15 +58,13 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'no_kwitansi' => Yii::t('app', '01 : No Transaksi, 16 : Thn Transaksi, 02 : sekolahid, 00001 : no urut'),
+            'no_kwitansi' => Yii::t('app', 'No Kwitansi'),
             'tgl_kwitansi' => Yii::t('app', 'Tgl Kwitansi'),
-            'nama_pembayar' => Yii::t('app', 'Nama Pembayar'),
-            'idrombel' => Yii::t('app', 'Idrombel'),
-            'keterangan' => Yii::t('app', 'Keterangan'),
+            'nama_penerima' => Yii::t('app', 'Nama Penerima'),
+            'nik' => Yii::t('app', 'Nik'),
             'sekolahid' => Yii::t('app', 'Sekolahid'),
-            'sumber_kwitansi' => Yii::t('app', 'Sumber Kwitansi'),
-            'bulan' => Yii::t('app', 'Bulan'),
-            'tahun' => Yii::t('app', 'Tahun'),
+            'tahun_ajaran_id' => Yii::t('app', 'Tahun Ajaran ID'),
+            'keterangan' => Yii::t('app', 'Keterangan'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -80,9 +75,9 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getKwitansiPembayaranDs()
+    public function getKwitansiPengeluaranDs()
     {
-        return $this->hasMany(KwitansiPembayaranD::className(), ['no_kwitansi' => 'no_kwitansi']);
+        return $this->hasMany(KwitansiPengeluaranD::className(), ['no_kwitansi' => 'no_kwitansi']);
     }
 
     /**
@@ -110,7 +105,7 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
     }
 
     public function getNewNOKwitansi($year, $sekolahid){
-        $sqlCustoms = "SELECT MAX((SUBSTR(no_kwitansi,7,5))) AS no_kwitansi FROM kwitansi_pembayaran_h
+        $sqlCustoms = "SELECT MAX((SUBSTR(no_kwitansi,7,5))) AS no_kwitansi FROM kwitansi_pengeluaran_h
                     WHERE SUBSTR(no_kwitansi,3,2) = :param1 AND sekolahid = :param2";
         $conn = $this->getDb();
         $customeQuery = $conn->createCommand($sqlCustoms, [':param1' => $year, ':param2' => $sekolahid]);
@@ -118,7 +113,7 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
         $no = $customeQuery->queryOne()['no_kwitansi'];
         $no = $no + 1;
         $no = str_pad($no, 5, '0', STR_PAD_LEFT);
-        return '01' . $year . str_pad($sekolahid, 2, '0', STR_PAD_LEFT) . $no;
+        return '02' . $year . str_pad($sekolahid, 2, '0', STR_PAD_LEFT) . $no;
     }
     
     /**
@@ -131,10 +126,8 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
         $column = $this->attributes();
-        // $rowHeader = $params['header'];
-        // $rowDetail = $params['detail'];
-
         unset($column[0]);
+        
         $columnD = [
             'id',
             'no_kwitansi',
@@ -144,55 +137,34 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
             'created_at',
             'updated_at'
         ];
-        $columnP = [
-            'idrombel',
-            'spp_debet',
-            'komite_sekolah_debet',
-            'catering_debet',
-            'keb_siswa_debet',
-            'ekskul_debet',
-            'bulan',
-            'tahun',
-            'tahun_ajaran',
-            'no_ref',
-            'ket_ref',
-            'updated_at'
-        ];
+
         try {
             $savedH = $DB->createCommand()->insert(
                 self::tableName(),
                 $rowHeader
             );
+
             $savedH->setSql($savedH->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
             // echo $savedH->rawSql . '<br/>';
             $savedH->execute();
 
             $deleteD = $DB->createCommand()->delete(
-                'kwitansi_pembayaran_d', 
+                'kwitansi_pengeluaran_d', 
                 ['id' => $rowDetailDel]
             );
             // var_dump($rowDetailDel);
             // echo $deleteD->rawSql. '<br/>';;
             $deleteD->execute();
-            
+
             $savedD = $DB->createCommand()->batchInsert(
-                'kwitansi_pembayaran_d', 
+                'kwitansi_pengeluaran_d', 
                 $columnD, 
                 $rowDetail
             );
             $savedD->setSql($savedD->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnD));
-            // echo $savedD->rawSql. '<br/>';
+            // echo $savedD->rawSql; 
+            // exit();
             $savedD->execute();
-
-            if($rowPembayaran != false){
-                $savedP = $DB->createCommand()->insert(
-                    'tagihan_pembayaran',
-                    $rowPembayaran
-                );
-                $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
-                $savedP->execute();
-                // echo $savedD->rawSql;exit();
-            }
             
             $transaction->commit();
             return true;
@@ -219,7 +191,7 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
 
         try {
             $deleteD = $DB->createCommand()->delete(
-                'kwitansi_pembayaran_d',
+                'kwitansi_pengeluaran_d',
                 'no_kwitansi = :param1',
                 ['param1' => $no]
             );
@@ -233,14 +205,6 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
             );
             // echo $deleteH->rawSql . '<br/>';
             $deleteH->execute();
-
-            $deleteP = $DB->createCommand()->delete(
-                'tagihan_pembayaran',
-                'no_ref = :param1',
-                ['param1' => $no]
-            );
-            // echo $deleteP->rawSql;exit();
-            $deleteP->execute();
 
             $transaction->commit();
             return true;
