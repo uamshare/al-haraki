@@ -62,7 +62,7 @@
                         'items' => [
                             ['label' => 'Master Akun (Chart of Acount)', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/coa']],
                             ['label' => 'Pemetaan Posting Otomatis', 'icon' => 'fa fa-user-plus', 'url' => ['/#akuntansi/pemetaan']],
-                            ['label' => 'Jurnal Harian', 'icon' => 'fa fa-table', 'url' => ['#akuntansi/jurnal-harian']],
+                            ['label' => 'Jurnal Harian', 'icon' => 'fa fa-table', 'url' => ['#akuntansi/jurnal-harian/add']],
                             ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-print', 'url' => ['/#akuntansi/gl']]
                         ],
                     ],
@@ -72,7 +72,7 @@
                         'url' => '$',
                         'items' => [
                             ['label' => 'Pengguna', 'icon' => 'fa fa-user', 'url' => ['/#pengaturan/pengguna']],
-                            ['label' => 'Grup Akses Pengguna', 'icon' => 'fa fa-users', 'url' => ['/#pengaturan/grup-akses-pengguna']],
+                            ['label' => 'Grup Akses Pengguna', 'icon' => 'fa fa-users', 'url' => ['/#pengaturan/grup-akses']],
                             ['label' => 'Sekolah', 'icon' => 'fa fa-user-plus', 'url' => ['#pengaturan/sekolah']]
                         ],
                     ]

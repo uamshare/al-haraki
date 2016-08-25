@@ -5,30 +5,28 @@ namespace rest\models;
 use Yii;
 
 /**
- * This is the model class for table "tagihan_autodebet_h".
+ * This is the model class for table "tjmh".
  *
- * @property string $no_transaksi
- * @property string $tgl_transaksi
+ * @property string $tjmhno
+ * @property string $tjmhdt
+ * @property string $tjmhdesc
  * @property integer $sekolahid
- * @property string $keterangan
- * @property string $file_import
- * @property integer $bulan
- * @property integer $tahun
- * @property integer $tahun_ajaran_id
  * @property string $created_at
  * @property string $updated_at
+ * @property integer $created_by
+ * @property integer $updated_by
  *
- * @property TagihanAutodebetD[] $tagihanAutodebetDs
+ * @property Tjmd[] $tjmds
  * @property Sekolah $sekolah
  */
-class TagihanAutodebetH extends \yii\db\ActiveRecord
+class Tjmh extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'tagihan_autodebet_h';
+        return 'tjmh';
     }
 
     /**
@@ -37,11 +35,11 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['no_transaksi'], 'required'],
-            [['tgl_transaksi', 'created_at', 'updated_at'], 'safe'],
-            [['sekolahid', 'bulan', 'tahun', 'tahun_ajaran_id'], 'integer'],
-            [['no_transaksi'], 'string', 'max' => 11],
-            [['keterangan', 'file_import'], 'string', 'max' => 255],
+            [['tjmhno', 'tjmhdt', 'tjmhdesc', 'created_at'], 'required'],
+            [['tjmhdt', 'created_at', 'updated_at'], 'safe'],
+            [['sekolahid', 'created_by', 'updated_by'], 'integer'],
+            [['tjmhno'], 'string', 'max' => 13],
+            [['tjmhdesc'], 'string', 'max' => 200],
             [['sekolahid'], 'exist', 'skipOnError' => true, 'targetClass' => Sekolah::className(), 'targetAttribute' => ['sekolahid' => 'id']],
         ];
     }
@@ -52,25 +50,23 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'no_transaksi' => Yii::t('app', 'No Transaksi'),
-            'tgl_transaksi' => Yii::t('app', 'Tgl Transaksi'),
+            'tjmhno' => Yii::t('app', 'Tjmhno'),
+            'tjmhdt' => Yii::t('app', 'Tjmhdt'),
+            'tjmhdesc' => Yii::t('app', 'Tjmhdesc'),
             'sekolahid' => Yii::t('app', 'Sekolahid'),
-            'keterangan' => Yii::t('app', 'Keterangan'),
-            'file_import' => Yii::t('app', 'File Import'),
-            'bulan' => Yii::t('app', 'Bulan'),
-            'tahun' => Yii::t('app', 'Tahun'),
-            'tahun_ajaran_id' => Yii::t('app', 'Tahun Ajaran ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTagihanAutodebetDs()
+    public function getTjmds()
     {
-        return $this->hasMany(TagihanAutodebetD::className(), ['no_transaksi' => 'no_transaksi']);
+        return $this->hasMany(Tjmd::className(), ['tjmhno' => 'tjmhno']);
     }
 
     /**
@@ -96,67 +92,38 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }
-    
-    /**
-     * Get Autonumber Transaksi
-     * 
-     */
-    public function getNewNoTransaksi($year, $sekolahid)
-    {
-        $sqlCustoms = "SELECT MAX((SUBSTR(no_transaksi,7,5))) AS no_transaksi FROM tagihan_autodebet_h
-                    WHERE SUBSTR(no_transaksi,3,2) = :param1 AND sekolahid = :param2";
+
+    public function getNewNOKwitansi($year, $sekolahid){
+        $sqlCustoms = "SELECT MAX((SUBSTR(tjmhno,7,5))) AS tjmhno FROM tjmh
+                    WHERE SUBSTR(tjmhno,3,2) = :param1 AND sekolahid = :param2";
         $conn = $this->getDb();
         $customeQuery = $conn->createCommand($sqlCustoms, [':param1' => $year, ':param2' => $sekolahid]);
-        $no = $customeQuery->queryOne()['no_transaksi'];
+        // echo $customeQuery->rawSql;exit();
+        $no = $customeQuery->queryOne()['tjmhno'];
         $no = $no + 1;
         $no = str_pad($no, 5, '0', STR_PAD_LEFT);
-        return '03' . $year . str_pad($sekolahid, 2, '0', STR_PAD_LEFT) . $no;
+        return '04' . $year . str_pad($sekolahid, 2, '0', STR_PAD_LEFT) . $no;
     }
-
+    
     /**
      * Save header data, detail data and posting to buku besar
      * @param $params, Array parameter post
      * 
      */
-    public function saveAndPosting($params)
-    {
+    public function saveAndPosting($params){
         extract($params);
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
         $column = $this->attributes();
         unset($column[0]);
-
+        
         $columnD = [
-            'id',
-            'no_transaksi',
-            'idrombel',
-            'nis',
-            'nisn',
-            'nama_siswa',
-            'no_rekening',
-            'nama_no_rekening',
-            'spp',
-            'komite_sekolah',
-            'catering',
-            'keb_siswa',
-            'ekskul',
-            'total',
-            'created_at',
-            'updated_at'
-        ];
-
-        $columnP = [
-            'idrombel',
-            'spp_debet',
-            'komite_sekolah_debet',
-            'catering_debet',
-            'keb_siswa_debet',
-            'ekskul_debet',
-            'bulan',
-            'tahun',
-            'tahun_ajaran',
-            'no_ref',
-            'ket_ref',
+            'tjmdid',
+            'tjmhno',
+            'tjmddesc',
+            'mcoadno',
+            'debet',
+            'kredit',
             'created_at',
             'updated_at'
         ];
@@ -166,29 +133,42 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
                 self::tableName(),
                 $rowHeader
             );
+
             $savedH->setSql($savedH->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
             // echo $savedH->rawSql . '<br/>';
             $savedH->execute();
 
+            $deleteD = $DB->createCommand()->delete(
+                'tjmd', 
+                ['tjmdid' => $rowDetailDel['id']]
+            );
+            // var_dump($rowDetailDel);
+            // echo $deleteD->rawSql. '<br/>';;
+            $deleteD->execute();
+
             $savedD = $DB->createCommand()->batchInsert(
-                'tagihan_autodebet_d', 
+                'tjmd', 
                 $columnD, 
                 $rowDetail
             );
             $savedD->setSql($savedD->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnD));
-            // echo $savedD->rawSql. '<br/>';
+            // echo $savedD->rawSql; 
+            // exit();
             $savedD->execute();
 
-            if($rowPembayaran != false){
-                $savedP = $DB->createCommand()->batchInsert(
-                    'tagihan_pembayaran',
-                    $columnP,
-                    $rowPembayaran
-                );
-                $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
-                $savedP->execute();
-                // echo $savedD->rawSql;exit();
-            }
+            $GL = new \rest\models\Rgl();
+            $unpostingGL = $GL->unposting($DB, [
+                'noref' => $rowHeader['tjmhno'],
+                'mcoadno' => $rowDetailDel['mcoadno'],
+                'sekolahid' => $rowHeader['sekolahid'],
+                'tahun_ajaran_id' => $rowHeader['tahun_ajaran_id']
+            ]);
+            $unpostingGL->execute();
+            
+            $postingGL = $GL->posting($DB, $postingvalue);
+            // echo $postingGL->rawSql; 
+            // exit();
+            $postingGL->execute();
             
             $transaction->commit();
             return true;
@@ -215,8 +195,8 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
 
         try {
             $deleteD = $DB->createCommand()->delete(
-                'tagihan_autodebet_d',
-                'no_transaksi = :param1',
+                'tjmd',
+                'tjmhno = :param1',
                 ['param1' => $no]
             );
             // echo $deleteD->rawSql . '<br/>';
@@ -224,19 +204,11 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
 
             $deleteH = $DB->createCommand()->delete(
                 self::tableName(),
-                'no_transaksi = :param1',
+                'tjmhno = :param1',
                 ['param1' => $no]
             );
             // echo $deleteH->rawSql . '<br/>';
             $deleteH->execute();
-
-            $deleteP = $DB->createCommand()->delete(
-                'tagihan_pembayaran',
-                'no_ref = :param1',
-                ['param1' => $no]
-            );
-            // echo $deleteP->rawSql;exit();
-            $deleteP->execute();
 
             $transaction->commit();
             return true;

@@ -12,14 +12,20 @@ require(
         'services/authService',
         'services/helperService',
         'services/httpInterceptors',
+        //Master
+        'services/SiswaService',
+        'services/PegawaiService',
+        'services/KelasService',
+        'services/COAService',
+        // Pengaturan
+        'services/GrupAksesService',
         'services/TahunAjaranService',
         'services/kwitansiPemabayaranService',
         'services/kwitansiPengeluaranService',
         'services/SiswaRombelService',
         'services/TagihanInfoService',
-        'services/SiswaService',
-        'services/PegawaiService',
-        'services/KelasService',
+        
+        'services/jurnalHarianService',
         'services/tagihanAutodebetService',
         'controllers/NavbarController'
     ],

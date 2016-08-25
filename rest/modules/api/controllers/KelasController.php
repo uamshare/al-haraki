@@ -7,6 +7,21 @@ class KelasController extends \yii\rest\ActiveController //\yii\redis\ActiveReco
 {
     public $modelClass = 'rest\models\Kelas';
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        return array_merge($behaviors, 
+            [
+                'verbs' => [
+                    'class' => \yii\filters\VerbFilter::className(),
+                    'actions' => [
+                        'list'  => ['get'],
+                    ],
+                ],
+            ]
+        );
+    }
+
     /**
      * Get List input Info Tagihan
      *

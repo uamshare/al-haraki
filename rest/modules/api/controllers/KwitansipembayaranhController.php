@@ -59,7 +59,7 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
                     'ekskul_debet' => 0,
                     'bulan' => $form['month'],
                     'tahun' => $form['year'],
-                    'tahun_ajaran' => '201617',
+                    'tahun_ajaran' => isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] :'201617',
                     'no_ref' => $form['no_kwitansi'],
                     'ket_ref' => $form['keterangan'],
                     'created_at' => isset($form['created_at']) ? $form['created_at'] : $date,   
@@ -91,6 +91,7 @@ class KwitansipembayaranhController extends \rest\modules\api\ActiveController
                 }
             }
             $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+            $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] :'201617';
             $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
             $form['updated_by'] = \Yii::$app->user->getId();
             $form['created_at'] = isset($form['created_at']) ? $form['created_at'] : $date;

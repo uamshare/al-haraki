@@ -16,8 +16,6 @@ define(['app'], function (app) {
     		'$timeout',
     		'uiGridConstants',
     		'kwitansiPengeluaranService',
-    		'SiswaRombelService',
-    		'TagihanInfoService',
     		'authService'
     	];
 
@@ -36,8 +34,6 @@ define(['app'], function (app) {
 		$timeout,
 		uiGridConstants,	
 		kwitansiPengeluaranService,
-		SiswaRombelService,
-		TagihanInfoService,
 		authService
 	) 
     {

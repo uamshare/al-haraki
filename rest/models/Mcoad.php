@@ -88,19 +88,79 @@ class Mcoad extends \yii\db\ActiveRecord
         return $this->hasMany(Tjmd::className(), ['mcoadno' => 'mcoadno']);
     }
 
-    public function fields(){
-        $fields = parent::fields();
-        // var_dump($this->Mcoah->mcoahname);exit();
-        return array_merge($fields, [
-            'mcoahname' => function($model) {
-                return $model->mcoah->mcoahname; // or anything else from the mission relation
-            },
-            'mcoaclassification' => function($model) {
-                return $model->mcoah->mcoac->mcoaclassification; // or anything else from the mission relation
-            },
-            'mcoagroup' => function($model) {
-                return $model->mcoah->mcoac->mcoag->mcoagroup; // or anything else from the mission relation
-            },
-        ]);
+    // public function fields(){
+    //     $fields = parent::fields();
+    //     // var_dump($this->Mcoah->mcoahname);exit();
+    //     return array_merge($fields, [
+    //         'mcoahname' => function($model) {
+    //             return $model->mcoah->mcoahname; // or anything else from the mission relation
+    //         },
+    //         'mcoaclassification' => function($model) {
+    //             return $model->mcoah->mcoac->mcoaclassification; // or anything else from the mission relation
+    //         },
+    //         'mcoagroup' => function($model) {
+    //             return $model->mcoah->mcoac->mcoag->mcoagroup; // or anything else from the mission relation
+    //         },
+    //     ]);
+    // }
+
+    private function where($data){
+        $commaData = explode(",", $data);
+        $impl = array();
+        for($i=0; $i<count($commaData); $i++){
+            $impl[$i] = "'{$commaData[$i]}'";
+        }
+
+        $implode = implode(",", $impl);
+
+        if(count($impl) > 1)
+            return " IN ($implode) ";
+        else
+            return " = $implode";
+    }
+
+    public function getList($params){
+        extract($params);
+        $where = 'WHERE 1=1';
+
+        if($mcoadno){
+            $where .= ' AND mcoadno ' . $this->where($mcoadno);
+        }
+
+        if($mcoadname){
+            $where .= ' AND mcoadname ' . $this->where($mcoadname);
+        }
+
+        if($query){
+            $where .= " AND (
+                                mcoadno LIKE '%$query%' OR
+                                mcoadname LIKE '%$query%' OR
+                                mcoahno LIKE '%$query%' OR
+                                kelas LIKE '%$query%' OR
+                                mcoahname LIKE '%$query%' OR
+                                mcoaclassification LIKE '%$query%' OR
+                                mcoagroup LIKE '%$query%'
+                            )";
+        }
+
+        $sqlCustoms = "SELECT 
+                  a.`mcoadno`,
+                  a.`mcoadname`,
+                  a.`mcoahno`,
+                  a.`active`,
+                  b.`mcoahname`,
+                  c.`mcoaclassification`,
+                  g.`mcoagroup`,
+                  a.`created_at`,
+                  a.`updated_at` 
+                FROM `mcoad` a
+                INNER JOIN mcoah b ON a.`mcoahno` = b.`mcoahno`
+                INNER JOIN mcoac c ON b.`mcoacid` = c.`mcoacid`
+                INNER JOIN mcoag g ON g.`mcoagid` = c.`mcoagid` $where ";
+
+        $conn = $this->getDb();
+        $customeQuery = $conn->createCommand($sqlCustoms);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->queryAll();
     }
 }

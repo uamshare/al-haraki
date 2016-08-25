@@ -170,7 +170,7 @@ class SiswaRombel extends \yii\db\ActiveRecord
                                 nisn LIKE '%$query%' OR
                                 nama_siswa LIKE '%$query%' OR
                                 kelas LIKE '%$query%' OR
-                                nama_kelas LIKE '%$query%' OR
+                                nama_kelas LIKE '%$query%'
                             )";
         }
 

@@ -17,7 +17,8 @@ class AuthController extends \rest\modules\api\ActiveController
                     'actions' => [
                         'profil' => ['get'],
                         'login' => ['post'],
-                        'logout' => ['post']
+                        'logout' => ['post'],
+                        'assignmentrole' => ['post'],
                     ],
                 ],
             ]
@@ -36,18 +37,21 @@ class AuthController extends \rest\modules\api\ActiveController
         $username = isset($post['username']) ? $post['username'] : false;
         $password = isset($post['password']) ? $post['password'] : false;
 
-        
-        
         // var_dump(Yii::$app->security->generatePasswordHash('12345678'));exit();
 
         $user = $model::findByLogin($username, $password);
         if($user && Yii::$app->user->login($user)){
             $user = \Yii::$app->user->identity;
             $user->access_token = \Yii::$app->getSecurity()->generateRandomString();
+            $user->password_reset_token = \Yii::$app->getSecurity()->generateRandomString();
             $a = $user->save();
-
-            
-
+            if(!$user->save()){
+                $this->response = Yii::$app->getResponse();
+                $this->response->setStatusCode(400, 'Data is empty.');
+                return [
+                    'message' => $user->getErrors()
+                ];
+            }
             $data = [
                 // '__id' => \Yii::$app->getSecurity()->generateRandomKey(),
                 '__accessToken' =>  $user->access_token,
@@ -56,7 +60,7 @@ class AuthController extends \rest\modules\api\ActiveController
                 '__sekolah_profile' => \rest\models\Sekolah::getProfile(1),
             ];
 
-            $data = array_merge($data, $user->profile);
+            $data = array_merge($data);
         }else{
             $this->response = Yii::$app->getResponse();
             $this->response->setStatusCode(401, 'Unauthorized');
@@ -79,6 +83,8 @@ class AuthController extends \rest\modules\api\ActiveController
     {
         return Yii::$app->user->identity->profile;
     }
+
+    
 
     public function checkAccess($action, $model = null, $params = [])
     {

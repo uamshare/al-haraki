@@ -30,7 +30,6 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
                         'findbyno'  => ['get'],
                         'newnotransaksi'   => ['get'],
                         'create' => ['put', 'post'],
-                        // 'update' => ['get', 'put', 'post'],
                         'delete' => ['delete'],
                     ],
                 ],

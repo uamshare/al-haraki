@@ -42,14 +42,14 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'access_token', 'created_at', 'updated_at'], 'required'],
+            [['username', 'auth_key', 'password_hash', 'access_token', 'created_at', 'updated_at'], 'required'],
             [['status', 'pegawai_id'], 'integer'],
             [['type_token'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'access_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
-            [['email'], 'unique'],
+            // [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
             [['pegawai_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pegawai::className(), 'targetAttribute' => ['pegawai_id' => 'id']],
         ];

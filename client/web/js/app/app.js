@@ -250,21 +250,21 @@ define(['services/routeResolver'], function () {
                 
                 .when('/keuangan/kwitansi-pengeluaran/add', 
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/add', 
+                        'keuangan/kwitansi-pengeluaran/add', 
                         'KwitansiPengeluaranController',
                         true
                     )
                 )
                 .when('/keuangan/kwitansi-pengeluaran/edit/:id', 
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/add', 
+                        'keuangan/kwitansi-pengeluaran/add', 
                         'KwitansiPengeluaranController',
                         true
                     )
                 )
                 .when('/keuangan/kwitansi-pengeluaran', 
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/index', 
+                        'keuangan/kwitansi-pengeluaran/index', 
                         'KwitansiPengeluaranController',
                         true
                     )
@@ -280,6 +280,52 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
+                .when('/akuntansi/jurnal-harian/add', 
+                    routeCustome.resolve(
+                        'akuntansi/jurnal-harian/add', 
+                        'JurnalHarianController',
+                        true
+                    )
+                )
+                .when('/akuntansi/jurnal-harian/edit/:id', 
+                    routeCustome.resolve(
+                        'akuntansi/jurnal-harian/add', 
+                        'JurnalHarianController',
+                        true
+                    )
+                )
+                .when('/akuntansi/jurnal-harian', 
+                    routeCustome.resolve(
+                        'akuntansi/jurnal-harian/index', 
+                        'JurnalHarianController',
+                        true
+                    )
+                )
+
+
+                //Pengaturan
+                .when('/pengaturan/grup-akses/add', 
+                    routeCustome.resolve(
+                        'pengaturan/grup-akses/add', 
+                        'GrupAksesController',
+                        true
+                    )
+                )
+                .when('/pengaturan/grup-akses/edit/:id', 
+                    routeCustome.resolve(
+                        'pengaturan/grup-akses/add', 
+                        'GrupAksesController',
+                        true
+                    )
+                )
+                .when('/pengaturan/grup-akses', 
+                    routeCustome.resolve(
+                        'pengaturan/grup-akses/index', 
+                        'GrupAksesController',
+                        true
+                    )
+                )
+                
                 .when('/login', 
                     routeCustome.resolve(
                         'login',

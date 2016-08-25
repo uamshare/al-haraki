@@ -34,6 +34,12 @@ yii gii/model --tableName=tagihan_autodebet_h --modelClass=TagihanAutodebetH --n
 
 yii gii/model --tableName=tagihan_autodebet_d --modelClass=TagihanAutodebetD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
 
-yii gii/model --tableName=kwitansi_pengeluaran_h --modelClass=kwitansiPengeluaranH --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+yii gii/model --tableName=kwitansi_pengeluaran_h --modelClass=KwitansiPengeluaranH --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
 
-yii gii/model --tableName=kwitansi_pengeluaran_d --modelClass=kwitansiPengeluaranD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+yii gii/model --tableName=kwitansi_pengeluaran_d --modelClass=KwitansiPengeluaranD --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=tjmh --modelClass=Tjmh --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=tjmd --modelClass=Tjmd --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=rgl --modelClass=Rgl --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1

@@ -1,0 +1,86 @@
+<div id="jurnal-harian-form" class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-plus-circle"></i> Form Jurnal Harian</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<form class="form-horizontal form-custome">
+			<div class="row">
+				<div class="col-xs-12 col-md-8">
+					<fieldset>
+						<div class="form-group">
+							<label class="col-xs-4 col-md-3 control-label">Keterangan</label>
+							<div class="col-xs-8 col-md-9">
+								<textarea class="form-control input-sm" ng-model="form.tjmhdesc"></textarea>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<div class="col-md-4">
+					<div class="no-kwitansi">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">No Jurnal</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" readonly="true" 
+									ng-model="form.tjmhno" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Tanggal</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control input-sm" 
+									ng-model="form.tjmhdt" name="date" bs-datepicker />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-md-12" style="margin-top : 20px">
+	                <fieldset>
+	                	<legend>Rincian Jurnal : </legend>
+	                	<div class="form-group">
+		                	<div class="col-xs-4 col-md-3">
+		                		<a href="" ng-click="onAddDetailClick($event)" class="btn bg-blue btn-sm btn-flat" >
+									<i class="fa fa-plus-circle"></i>
+								</a>
+		                	</div>
+	                	</div>
+	                	<div id="grid2" ui-grid="gridDetail" 
+							ui-grid-resize-columns
+				            ui-grid-selection
+				            ui-grid-edit
+				            ui-grid-cellNav
+				            class="gridDetail">
+				        </div>
+	                </fieldset>
+	            </div>
+			</div>
+		</form>
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-left">
+			<a href="#akuntansi/jurnal-harian/add" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Tambah Kwitansi Pembayaran">
+				<i class="fa fa-plus-circle"></i> Tambah Data
+			</a>
+			<a href="#akuntansi/jurnal-harian" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Rekap Data Kwitansi Pembayaran">
+				<i class="fa fa-th-list"></i> Rekap Data
+			</a>
+		</div>
+		<div class="box-tools pull-right">
+			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Reset Data">
+				<i class="fa fa-refresh"></i> Batal
+			</a>
+			<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Simpan Data">
+				<i class="fa fa-save"></i> Simpan
+			</a>
+		</div>
+	</div>
+</div>

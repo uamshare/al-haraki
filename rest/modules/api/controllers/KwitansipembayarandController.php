@@ -17,10 +17,7 @@ class KwitansipembayarandController extends \rest\modules\api\ActiveController
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'index'  => ['get'],
-                        'newnokwitansi'   => ['get'],
-                        'create' => ['put', 'post'],
-                        // 'update' => ['get', 'put', 'post'],
-                        // 'delete' => ['delete'],
+                        'findbyno' => ['get']
                     ],
                 ],
             ]
