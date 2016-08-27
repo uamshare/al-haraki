@@ -47,6 +47,13 @@ define(['app'], function (app) {
     	// $scope.$broadcast('redirectToLogin', null);
     	var gridOptions = {
     		columnDefs : [
+    			{ 
+    				name: 'isCheck', 
+    				displayName: 'Check', 
+    				type: 'boolean',
+    				headerCellTemplate: '<input type="checkbox" ng-model="isCheck.checked" ng-change="toggleSelectAll(isCheck.checked)"/>',
+    				cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck">'
+    			},
 				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
 				{ name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
 				{ name: 'idrombel', displayName: 'Id Rombel', visible: false, width : '50',  enableCellEdit: false},
@@ -71,6 +78,13 @@ define(['app'], function (app) {
 				{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
 			]
     	};
+
+    	$scope.toggleSelectAll = function(checked) {	
+    		console.log("kampret");
+	        // for (var i = 0; i < $scope.gridData.length; i++) {
+	        //     $scope.gridData[i].isCheck = checked;
+	        // }
+	    };
 
     	if($routeParams.idkelas){
     	}else{

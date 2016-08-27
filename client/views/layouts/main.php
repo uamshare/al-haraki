@@ -21,8 +21,8 @@ dmstr\web\AdminLteAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
 
         <script type="text/javascript">
-            var BASEURL = 'http://local.project/al-haraki/client/web/';
-            var BASEAPIURL = 'http://local.project/al-haraki/rest/web/api/';
+            var BASEURL = 'http://localhost/al-haraki/client/web/';
+            var BASEAPIURL = 'http://localhost/al-haraki/rest/web/api/';
         </script>
         <?php $this->head() ?>
     </head>
