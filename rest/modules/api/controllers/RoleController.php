@@ -63,7 +63,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             return $role;
         }else{
             $this->response->setStatusCode(422, 'Data Validation Failed.');
-            return ['message' => 'Assign role failed']
+            return ['message' => 'Assign role failed'];
         }
         
     }

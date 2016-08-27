@@ -44,11 +44,13 @@ define(['app'], function (app) {
             $scope.profil = authService.getProfile();
         }
 
-        function setLoginLogoutText() {
+        function setLoginLogoutText(loggedIn) {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
-            getMenuPrivileges();
-            getUserProfile();
-            
+            console.log(loggedIn);
+            if(loggedIn){
+                getMenuPrivileges();
+                getUserProfile();
+            }
         }
 
         function resetMenu(){
@@ -74,7 +76,7 @@ define(['app'], function (app) {
             }, errorHandle);
         }
 
-        $scope.$on('loginStatusChanged', function (loggedIn) {
+        $scope.$on('loginStatusChanged', function (brodcastname, loggedIn) {
             setLoginLogoutText(loggedIn);
         });
 
@@ -107,12 +109,10 @@ define(['app'], function (app) {
             setting : false
         }
 
-        
-
-        setLoginLogoutText();
+        setLoginLogoutText(sessionStorage.getItem('isAuthValid'));
 
         $scope.$on('$viewContentLoaded', function(){
-            getMenuPrivileges();
+            // getMenuPrivileges();
         });
 
         $timeout(function() {
