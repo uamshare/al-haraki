@@ -95,29 +95,18 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $Auth = new $this->modelClass;
         $request = Yii::$app->getRequest();
         $userid = Yii::$app->user->getId();
-        $list = [
-            'master',
-
-            'keuangan',
-
-            'akuntasi',
-
-            'pengaturan'
-        ];
+        $list = [];
 
         if($userid){
             $permission =  $Auth->getPermissionsByUser($userid);
             foreach ($permission as $key => $value) {
-                $list[$key] = $value;
-                // $list[$key]['read'] = isset($permission[$value['name'] . '_view']) ? true : false;
-                // $list[$key]['create'] = isset($permission[$value['name'] . '_create']) ? true : false;
-                // $list[$key]['update'] = isset($permission[$value['name'] . '_update']) ? true : false;
-                // $list[$key]['delete'] = isset($permission[$value['name'] . '_delete']) ? true : false;
                 if(preg_match('/_index/', $key)){
-
+                    $list[] = $key;
                 }
-                $list[] = $key;
+            }
 
+            if(preg_match('/kelas | siswa | pegawai/', $list)){
+                $list[] = 'master';
             }
         }
 
