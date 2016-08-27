@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class TagihanpembayaranController extends \yii\rest\ActiveController // \rest\modules\api\ActiveController //
+class TagihanpembayaranController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController // 
 {
     public $modelClass = 'rest\models\TagihanPembayaran';
 

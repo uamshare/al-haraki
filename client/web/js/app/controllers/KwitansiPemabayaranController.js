@@ -468,6 +468,7 @@ define(['app'], function (app) {
 			            $scope.form.no_kwitansi = result.rows;
 					}
 		        }, function(error){
+
 		        	toastr.warning('No Kwitansi tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
 		        });
 			}

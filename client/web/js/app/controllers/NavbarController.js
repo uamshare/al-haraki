@@ -50,17 +50,9 @@ define(['app'], function (app) {
 
         
         function getUserProfile(){
-            // cfpLoadingBar.start();
-            // authService.getProfile()
-            // .then(function (result) {
-            //     if(result.success){
-            //         $scope.profil = result.rows;
-            //     }
-            //     // cfpLoadingBar.complete();
-            // }, errorHandle);
             $scope.profil = authService.getProfile();
-            // return authService.getProfile();
         }
+        
         function setLoginLogoutText() {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
             getUserProfile();

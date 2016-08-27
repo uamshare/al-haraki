@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class KelasController extends \yii\rest\ActiveController //\yii\redis\ActiveRecord // \rest\modules\api\ActiveController //
+class KelasController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController // 
 {
     public $modelClass = 'rest\models\Kelas';
 

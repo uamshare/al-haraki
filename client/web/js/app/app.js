@@ -345,6 +345,11 @@ define(['services/routeResolver'], function () {
                         '404'
                     )
                 )
+                .when('/403', 
+                    routeCustome.resolve(
+                        '403'
+                    )
+                )
                 .otherwise({redirectTo: '/404'})
 
             $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/javascript';
@@ -352,7 +357,7 @@ define(['services/routeResolver'], function () {
             $httpProvider.defaults.headers.common['access-token'] = null;
             $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
 
-            $httpProvider.interceptors.push(function ($q, $rootScope) {
+            $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
                 if ($rootScope.activeCalls == undefined) {
                     $rootScope.activeCalls = 0;
                 }
@@ -373,6 +378,15 @@ define(['services/routeResolver'], function () {
                     },
                     responseError: function (rejection) {
                         // $rootScope.activeCalls -= 1;
+                        switch(rejection.status){
+                            case 403 :
+                                $location.path( "/403");
+                                break;
+                            // default : 
+                            //     $location.path( "/404");
+                            //     break;
+                        }
+                        console.log(rejection);
                         return rejection;
                     }
                 };

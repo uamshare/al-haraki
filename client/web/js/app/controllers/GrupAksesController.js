@@ -20,6 +20,7 @@ define(['app'], function (app) {
 	        '$log', 
 	        'cfpLoadingBar',
 	        '$timeout',
+	        'authService',
     		'GrupAksesService'
     	];
 
@@ -35,43 +36,16 @@ define(['app'], function (app) {
 	        $log, 
 	        cfpLoadingBar,
 	        $timeout,
+	        authService,
     		GrupAksesService
-    	) 
+    ) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'pengaturan/grup-akses/';
     	var $resourceApi = GrupAksesService;
-
+    	var date = new Date();
     	//========================Grid Config =======================
 
-    	var grid = {
-    		columnDefs : [
-				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
-				{ name: 'name', displayName: 'Name', visible: false, width : '50' ,  enableCellEdit: false},
-				{ name: 'description', displayName: 'Nama Grup', visible: true, width : '100',  enableCellEdit: false},
-				{ name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
-                { name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
-				
-			]
-    	}
-
-    	$scope.grid = { 
-    		paginationPageSizes: [20, 30, 50, 100, 200],
-            paginationPageSize: 20,
-            pageNumber : 1,
-            useExternalPagination : true,
-            enableMinHeightCheck : true,
-            minRowsToShow : 20,
-            enableGridMenu: true,
-            enableSelectAll: true,
-            virtualizationThreshold: 20,
-            enableFiltering: true,
-            enableCellEditOnFocus: true,
-            columnDefs : grid.columnDefs,
-
-		    onRegisterApi: function(gridApi){
-		      	$scope.gridApi = gridApi;
-		    }
-		};
+    	
 
 		function errorHandle(error){
             var msg = error.data.name;
@@ -79,19 +53,71 @@ define(['app'], function (app) {
         }
 
         var indexController = function(){
+        	var columnActionTpl = 	'<div class="col-action">' + 
+		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
+		    						  		'</a>&nbsp;' +
+		    						  		'<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
+		    						  			'<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+		    						  		'</a>' +
+		    						  	'</div>';
+        	var grid = {
+	    		columnDefs : [
+					{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
+					{ name: 'name', displayName: 'ID', visible: true, width : '150' ,  enableCellEdit: false},
+					{ name: 'description', displayName: 'Nama Grup', visible: true, enableCellEdit: false},
+					{ name: 'createdAt', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
+	                { name: 'updatedAt', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
+					
+				]
+	    	}
+
+			grid.columnDefs.push({
+				name :' ',
+				enableFiltering : false,
+				width : '100',
+				enableSorting : false,
+				enableCellEdit: false,
+				cellTemplate : columnActionTpl
+			});	
+
+			$scope.grid = { 
+	    		paginationPageSizes: [20, 30, 50, 100, 200],
+	            paginationPageSize: 20,
+	            pageNumber : 1,
+	            useExternalPagination : true,
+	            enableMinHeightCheck : true,
+	            minRowsToShow : 20,
+	            enableGridMenu: true,
+	            enableSelectAll: true,
+	            virtualizationThreshold: 20,
+	            enableFiltering: true,
+	            enableCellEditOnFocus: true,
+	            columnDefs : grid.columnDefs,
+
+			    onRegisterApi: function(gridApi){
+			      	$scope.gridApi = gridApi;
+			    }
+			};
+
         	function getRoles(paramdata){
 				cfpLoadingBar.start();
 	            $resourceApi.getRoles(paramdata)
 	            .then(function (result) {
 	                if(result.success){
-	                	console.log(result.rows);
-	                    angular.forEach(result.rows, function(dt, index) {
-	                        var romnum = index + 1;
-	                        result.rows[index]["index"] = romnum;
-	                    })
-	                    $scope.grid.data = result.rows;
-	                    $scope.grid.totalItems = result.total;
-	                    $scope.grid.paginationCurrentPage = paramdata.page;
+	                    var index = 0;
+	                    $scope.grid.data = [];
+	                    for(var key in result.rows){
+	                    	var romnum = index + 1;
+	                    	$scope.grid.data[index] = {
+	                    		index : romnum,
+	                    		name : result.rows[key].name,
+	                    		description : result.rows[key].description,
+	                    		createdAt : result.rows[key].createdAt,
+	                    		updatedAt : result.rows[key].updatedAt
+	                    	};
+	                    	index++;
+	                    }
 	                }
 	                cfpLoadingBar.complete();
 	            }, errorHandle);
@@ -99,6 +125,17 @@ define(['app'], function (app) {
 
 			$scope.onAddClick = function(event){
 				$location.path( "/pengaturan/grup-akses/add");
+			}
+
+			$scope.onEditClick = function(rowdata){
+				$location.path( "/pengaturan/grup-akses/edit/" + rowdata.name);
+			}
+
+			$scope.onDeleteClick = function(rowdata){
+				var del = confirm("Anda yakin akan menghapus data `" + rowdata.name + "`");
+				if (del == true) {
+				    deleteData(rowdata.tjmhno);
+				} 
 			}
 
         	this.init = function(){
@@ -111,90 +148,124 @@ define(['app'], function (app) {
 
         var addEditController = function(){
         	$scope.form = {
-				no_kwitansi : '',
-				tgl_kwitansi : date,
-				nama_penerima : '',
-				keterangan : '',
-				nik : '',
-				sekolahid : authService.getSekolahProfile().sekolahid,
-				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
-				created_by : '',
-				updated_by : '',
+				name : '',
+				description : '',
 				created_at : date,
 				updated_at : date
 			};
 
+			$scope.gridDetailDirtyRows = [];
+			$scope.gridDetail = { 
+	    		enableMinHeightCheck : true,
+				minRowsToShow : 25,
+				enableGridMenu: false,
+				// enableSelectAll: true,
+				enableFiltering: false,
+				enableCellEditOnFocus: true,
+				showGridFooter: true,
+	    		showColumnFooter: true,
+				columnDefs : [
+					{ name: 'index', displayName : 'No',visible: false, width : '50', enableFiltering : false ,  enableCellEdit: false},
+					{ 
+						name: 'order', displayName : 'No', visible: false, width : '50', enableFiltering : false ,  
+						enableCellEdit: false,
+						// sort: { priority: 1, direction: 'asc' }, 
+					},
+					{ 
+	                    name: 'parent_name', 
+	                    grouping: { groupPriority: 1 }, 
+	                    width: 150,
+	                },
+					{ name: 'name', displayName: 'ID', visible: true,  width : 150, enableCellEdit: false},
+					{ name: 'description', displayName: 'Menu Akses', visible: true,  enableCellEdit: false},
+					{ 
+						name: 'create', displayName: 'Tambah', width : '100', visible: true, enableCellEdit: false,
+						cellTemplate: '<input checked="true" ng-model="row.entity.create" type="checkbox" />'
+					},
+					{ 
+						name: 'read', displayName: 'Lihat', width : '100', visible: true, enableCellEdit: false,
+						cellTemplate: '<input ng-model="row.entity.read" type="checkbox" />'
+					},
+					{ 
+						name: 'update', displayName: 'Perbaiki', width : '100', visible: true, enableCellEdit: false,
+						cellTemplate: '<input ng-model="row.entity.update" type="checkbox" />'
+					},
+					{ 
+						name: 'delete', displayName: 'Hapus', width : '100', visible: true, enableCellEdit: false,
+						cellTemplate: '<input ng-model="row.entity.delete" type="checkbox" />'
+					},
+					{ name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
+					{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
+				],
+				treeRowHeaderAlwaysVisible: false,
+				enableExpandAll  : true,
+				//Export
+
+			    onRegisterApi: function(gridApi){
+					$scope.gridApi = gridApi;
+					gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+						rowEntity.coalist = $scope.coa
+						if( oldValue != newValue && rowEntity != null){
+							var rowdata = rowEntity;
+							$scope.gridDetailDirtyRows[rowEntity.index] = rowdata;
+						}
+						console.log($scope.gridDetailDirtyRows);
+						$scope.$apply();
+					});
+
+					//expand all rows when loading the grid, otherwise it will only display the totals only
+					$scope.gridApi.grid.registerDataChangeCallback(function() {
+						$scope.gridApi.treeBase.expandAllRows();
+					});
+			    }
+			};
+
         	function reset(){
-				$scope.form.tgl_kwitansi = date;
-				$scope.form.nama_penerima = '';
-				$scope.form.nik = '';
-				$scope.form.keterangan = '';
-				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
-				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
-				$scope.form.created_by = '';
-				$scope.form.updated_by = '';
+				$scope.form.name = date;
+				$scope.form.description = '';
 				$scope.form.created_at = date;
 				$scope.form.updated_at = date;
-
-				$scope.gridDetail.data = [
-					{
-						index : 1,
-						kode : '',
-						no_kwitansi : $scope.form.no_kwitansi,
-						rincian : '',
-						jumlah : 0,
-						flag : 1
-					}
-				]
 			}
 
-			function getRowDetailByNo(noKwitansi){
+			function getPermission(paramdata){
 				cfpLoadingBar.start();
-				$resourceApi.getDetail({
-					no_kwitansi : noKwitansi
-				})
+				$resourceApi.getPermission(paramdata)
 				.then(function (result) {
 		            if(result.success){
 		            	$scope.gridDetail.data = [];
 		            	if(result.rows.length <= 0 )return false;
-		            	
 		            	angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
-			                result.rows[index]["jumlah"] = parseInt(result.rows[index]["jumlah"]);
-			                result.rows[index]["flag"] = 1;
 			            })
 			            $scope.gridDetail.data = result.rows;
 			            angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
 			                $scope.gridDetailDirtyRows.push(rowEntity);
 			            })
 					}
+
 					cfpLoadingBar.complete();
 		        }, function(error){
-		        	toastr.warning('Rincian Kwitansi tidak bisa dimuat.', 'Warning');
+
+		        	toastr.warning('Data tidak bisa dimuat.', 'Warning');
 		        	cfpLoadingBar.complete();
 		        });
 			}
 
-			function getById(id){
+			function getRole(params){
 				cfpLoadingBar.start();
-				$resourceApi.getById(id)
+				$resourceApi.getRoles(params)
 				.then(function (result) {
 	                if(result.success){
 						var rowdata = result.rows;
-						$scope.form.no_kwitansi = rowdata.no_kwitansi;
-						$scope.form.tgl_kwitansi = rowdata.tgl_kwitansi;
-						$scope.form.nama_penerima = rowdata.nama_penerima;
-						$scope.form.keterangan = rowdata.keterangan;
-						$scope.form.nik = rowdata.nik;
-						$scope.form.sekolahid = rowdata.sekolahid;
-						$scope.form.tahun_ajaran_id = rowdata.tahun_ajaran_id;
-						$scope.form.created_by = rowdata.created_by;
-						$scope.form.updated_by = rowdata.updated_by;
+						$scope.form.name = rowdata.name;
+						$scope.form.description = rowdata.description;
 						$scope.form.created_at = rowdata.created_at;
 						$scope.form.updated_at = rowdata.updated_at;
 
-						getRowDetailByNo(rowdata.no_kwitansi);
+						getPermission({
+							rolename : rowdata.name
+						});
 					}
 					cfpLoadingBar.complete();
 	            }, errorHandle);
@@ -202,49 +273,45 @@ define(['app'], function (app) {
 
 			this.init = function(){
 				if($routeParams.id){
-	                getById($routeParams.id);
-	            }else{
-	                refreshNo();
-					// reset();
+	                getRole({
+	                	rolename : $routeParams.id
+	                });
 	            }
 			}
 
 			$scope.onSaveClick = function(event){
-				if($scope.form.no_kwitansi == '' || $scope.form.no_kwitansi == null){
-					toastr.warning('No Kwitansi tidak boleh kosong.', 'Warning');
+				if($scope.form.name == '' || $scope.form.name == null){
+					toastr.warning('ID tidak boleh kosong.', 'Warning');
 					return false;
 				}
 
-				if($scope.form.tgl_kwitansi == '' || $scope.form.tgl_kwitansi == null){
-					toastr.warning('Tgl Kwitansi tidak boleh kosong.', 'Warning');
+				if($scope.form.description == '' || $scope.form.description == null){
+					toastr.warning('Deskripsi tidak boleh kosong.', 'Warning');
 					return false;
 				}
 
-				if($scope.form.nama_penerima == '' || $scope.form.nama_penerima == null){
-					toastr.warning('Nama Penerima tidak boleh kosong.', 'Warning');
-					return false;
-				}
+				$scope.gridDetailDirtyRows = $scope.gridDetail.data;
+				
 
 				if($scope.gridDetailDirtyRows.length <= 0){
-					toastr.warning('Rincian kwitansi belum diisi.', 'Warning');
+					toastr.warning('Grid belum diisi.', 'Warning');
 					return false;
 				}
 
-				console.log($scope.gridDetailDirtyRows);
-				// return; 
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
+
+				// console.log(params);
+				// return;
+				
 				cfpLoadingBar.start();
-				$resourceApi.insert(params)
+				$resourceApi.AddPermission(params)
 				.then(function (result) {
 	                if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
-						reset();
-						refreshNo();
-						cfpLoadingBar.complete();
-						$location.path( "/pengaturan/grup-akses/");
+						// $location.path( "/pengaturan/grup-akses/");
 						cfpLoadingBar.complete();
 					}else{
 						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
@@ -261,7 +328,6 @@ define(['app'], function (app) {
 		var controller;
 		switch($location.$$url){
 			case '/pengaturan/grup-akses/add' :
-			console.log();
 				controller = new addEditController();
 				break;
 			case '/pengaturan/grup-akses/edit/' + $routeParams.id :

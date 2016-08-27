@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\modules\api\ActiveController //
+class TagihaninfoinputController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController // 
 {
     public $modelClass = 'rest\models\TagihanInfoInput';
 
@@ -35,6 +35,10 @@ class TagihaninfoinputController extends \yii\rest\ActiveController // \rest\mod
         unset($actions['index']);
 
         return $actions;
+    }
+
+    public function actionIndex(){
+        return true;
     }
 
     /**

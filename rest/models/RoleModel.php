@@ -12,8 +12,8 @@ class RoleModel extends \yii\rbac\DbManager
         parent::init();
     }
 
-    public function getRoles(){
-    	return $this->getItems(1);
+    public function getRoles($rolename = ''){
+    	return (empty($rolename)) ? $this->getItems(1) : $this->getRole($rolename);
     }
 
     public function getPermissions(){

@@ -9,11 +9,11 @@ define(['app'], function (app) {
             factory = {};
 
         factory.get = function (pageIndex, pageSize) {
-            return getResource('kwitansipembayaranhs', pageIndex, pageSize);
+            return getResource('kwitansipembayarans', pageIndex, pageSize);
         };
 
         factory.getNewNoKwitansi = function (paramdata) {
-            return $http.get(serviceBase + 'kwitansipembayaranh/newnokwitansi',{
+            return $http.get(serviceBase + 'kwitansipembayaran/newnokwitansi',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -21,7 +21,7 @@ define(['app'], function (app) {
         };
 
         factory.insert = function (params) {
-            return $http.post(serviceBase + 'kwitansipembayaranh/create', params).then(function (results) {
+            return $http.post(serviceBase + 'kwitansipembayaran/create', params).then(function (results) {
                 return results.data;
             });
         };
@@ -31,13 +31,13 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'kwitansipembayaranhs/' + params.id, params).then(function (status) {
+            return $http.put(serviceBase + 'kwitansipembayarans/' + params.id, params).then(function (status) {
                 return status.data;
             });
         };
 
         factory.delete = function (id) {
-            return $http.delete(serviceBase + 'kwitansipembayaranh/delete/' + id).then(function (status) {
+            return $http.delete(serviceBase + 'kwitansipembayaran/delete/' + id).then(function (status) {
                 return status.data;
             });
         };
@@ -45,14 +45,14 @@ define(['app'], function (app) {
         factory.getById = function (id) {
             //then does not unwrap data so must go through .data property
             //success unwraps data automatically (no need to call .data property)
-            return $http.get(serviceBase + 'kwitansipembayaranhs/' + id).then(function (results) {
+            return $http.get(serviceBase + 'kwitansipembayarans/' + id).then(function (results) {
                 // extendData([results.data]);
                 return results.data;
             });
         };
 
         factory.getDetail = function (paramdata) {
-            return $http.get(serviceBase + 'kwitansipembayarand/findbyno',{
+            return $http.get(serviceBase + 'kwitansipembayaran/findbyno',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

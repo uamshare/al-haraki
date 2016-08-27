@@ -1,345 +1,66 @@
-<section class="content-header">
-      <h1>
-        Siswa Profile
-      	<small>Profile Siswa</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="http://localhost:8012/al-haraki/client/web/#/master/siswa">Data Siswa</a></li>
-        <li class="active">User profile</li>
-      </ol>
-</section>
- <!-- Main content -->
-<section class="content">
-
-  <div class="row">
-    <form class="form-horizontal">
-      <div class="col-md-3">
-        <!-- Profile Image -->
-        <div class="box box-primary">
-          <div class="box-body box-profile">
-            <img class="profile-user-img img-responsive img-circle" src="../../asset/img/user-profile.jpg" alt="User profile picture">
-
-            <h3 class="profile-username text-center">Nina Mcintire Nina Mcintire Nina Mcintire</h3>
-
-            <p class="text-muted text-center">Kelas Al-amak</p>
-
-            <a href="#" class="btn btn-primary btn-block"><b>Photo</b></a>
-          </div> <!-- /.box-body -->
-        </div><!-- /.box -->
-      </div><!-- /.col -->
-      <div class="col-md-9">
-          <div class="box box-success ">
-              <div class="box-header">
-                <h3 class="box-title">DATA SISWA</h3>
-              </div>
-              <div class="box-body">
-                <div class="form-group">
-                  <label for="nis" class="col-sm-3 control-label">NIS</label>
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="nisn" class="col-sm-3 control-label">NISN</label>
-
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="nisn" name="nisn" placeholder="NISN">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="namaSiswa" class="col-sm-3 control-label">Nama Siswa</label>
-
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="namaSiswa" name="nama_siswa" placeholder="Nama Siswa">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="namaPanggilan" class="col-sm-3 control-label">Nama Panggilan</label>
-
-                  <div class="col-sm-8">
-                     <input type="text" class="form-control" id="namaPanggilan" name="nama_panggilan" placeholder="Nama Panggilan">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="sekolah" class="col-sm-3 control-label">Sekolah</label>
-                  <div class="col-sm-8">
-                    <select class="form-control select2" style="width: 100%;">
-                      <option selected="selected">Alabama</option>
-                      <option>Alaska</option>
-                      <option>California</option>
-                      <option>Delaware</option>
-                      <option>Tennessee</option>
-                      <option>Texas</option>
-                      <option>Washington</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                    <label for="ttl" class="col-sm-3 control-label">Tempat/Tgl lahir</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" name="tmpt_lahir" id="tempat" placeholder="Tempat Lahir">
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="input-group date">
-                        <div class="input-group-addon">
-                          <i class="fa fa-calendar"></i>
+<div id="jurnal-harian-form" class="box box-no-margin box-primary box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-plus-circle"></i> Form Jurnal Harian</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <form class="form-horizontal form-custome">
+            <div class="row">
+                <div class="col-xs-12 col-md-8">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-xs-4 col-md-3 control-label">ID</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="text" class="form-control input-sm" ng-model="form.name" />
+                            </div>
                         </div>
-                        <input type="text" class="form-control pull-right" name="tgl_lahir" id="datepicker" placeholder="Tanggal Lahir">
-                      </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nisn" class="col-sm-3 control-label">Anak ke</label>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" name="anak_ke" id="anak_ke" placeholder="Anak Ke">
-                    </div>
-                    <label for="berat" class="col-sm-2 control-label">Jumlah Saudara</label>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" name="jml_saudara" id="dariSaudara" placeholder="Jml Saudara">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="berat" class="col-sm-3 control-label">Berat</label>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat Badan">
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" name="tinggi" id="tinggi" placeholder="Tinggi badan">
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="text" class="form-control" name="gol_darah" id="gol_darah" placeholder="Gol Darah">
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label for="riwayat_kesehatan" class="col-sm-3 control-label">Riwayat Kesehatan</label>
-                    <div class="col-sm-8">
-                       <textarea class="form-control" rows="3" id="riwayat_kesehatan" name="riwayat_kesehatan" placeholder="Riwayat Kesehatan"></textarea>
-                    </div>
-                </div>
-              </div>
-          </div>
-          <div class="box box-warning">
-              <div class="box-header">
-                <h3 class="box-title">ALAMAT SISWA</h3>
-              </div>
-              <div class="box-body">
-                <div class="form-group">
-                    <label for="jenis_tempat_tinggal" class="col-sm-3 control-label">Jenis Tempat Tinggal</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jenis_tempat_tinggal" name="jenis_tempat_tinggal" placeholder="Jenis Tempat Tinggal">
-                    </div>
-                </div>
-                <div class="form-group">
-                  <label for="alamat" class="col-sm-3 control-label">Alamat</label>
-                  <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" name="alamat" placeholder="Alamat"></textarea>
-                  </div>
-                </div>
-                <div class="form-group">
-                    <label for="kodepos" class="col-sm-3 control-label">Kodepos</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" id="kodepos" name="kodepos" placeholder="Kodepos">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="kelurahan" class="col-sm-3 control-label">Kelurahan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kelurahan" name="kelurahan" placeholder="Kelurahan">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="kecamatan" class="col-sm-3 control-label">Kecamatan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kecamatan" name="kecamatan" placeholder="Kecamatan">
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label for="kota" class="col-sm-3 control-label">Kota</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="teleponRumah" class="col-sm-3 control-label">Telepon Rumah</label>
-                    <div class="col-sm-4">
-                      <div class="input-group">
-                        <div class="input-group-addon">
-                          <i class="fa fa-phone"></i>
+                        <div class="form-group">
+                            <label class="col-xs-4 col-md-3 control-label">Nama Grup</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="text" class="form-control input-sm" ng-model="form.description" />
+                            </div>
                         </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="tlp_rumah" name="tlp_rumah" placeholder="Telepon Rumah">
-                      </div>
-                    </div>
-                   
+                    </fieldset>
                 </div>
-              </div>
             </div>
-            <div class="box box-info">
-              <div class="box-header">
-                <h3 class="box-title">ORANGTUA SISWA</h3>
-              </div>
-              <div class="box-body">
-              <!-- Ayah -->
-                <div class="form-group">
-                    <label for="nama_ayah" class="col-sm-3 control-label">Nama Ayah</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="nama_ayah" name="nama_ayah" placeholder="Nama Ayah">
+            <div class="row">
+                <div class="col-xs-12 col-md-12" style="margin-top : 20px">
+                    <div id="grid2" ui-grid="gridDetail" 
+                        ui-grid-resize-columns
+                        ui-grid-selection
+                        ui-grid-edit
+                        ui-grid-cellNav
+                        ui-grid-grouping
+                        class="gridDetail">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="hp_ayah" class="col-sm-3 control-label">HP</label>
-                    <div class="col-sm-4">
-                      <div class="input-group">
-                        <div class="input-group-addon">
-                          <i class="fa fa-phone"></i>
-                        </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ayah" name="hp_ayah" placeholder="HP Ayah">
-                      </div>
-                    </div>
-                   
-                </div>
-                <div class="form-group">
-                    <label for="pekerjaan_ayah" class="col-sm-3 control-label">Pekerjaan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pekerjaan_ayah" name="pekerjaan_ayah" placeholder="Pekerjaan Ayah">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="tempat_kerja_ayah" class="col-sm-3 control-label">Tempat Kerja</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="tempat_kerja_ayah" name="tempat_kerja_ayah" placeholder="Tempat Kerja Ayah">
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label for="jabatan_ayah" class="col-sm-3 control-label">Jabatan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jabatan_ayah" name="jabatan_ayah" placeholder="Jabatan Ayah">
-                    </div>
-                </div>
-                <div class="form-group">
-                  <label for="pendidikan_ayah" class="col-sm-3 control-label">Pendidikan</label>
-                  <div class="col-sm-8">
-                    <select class="form-control select2" style="width: 100%;" name="pendidikan_ayah" data-placeholder="Pendidikan Ayah">
-                      <option>S1</option>
-                      <option>S2</option>
-                      <option>D3</option>
-                      <option>D2</option>
-                      <option>D1</option>
-                      <option>SMA</option>
-                      <option>SMP</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="email_ayah" class="col-sm-3 control-label">Email</label>
-                   <div class="col-sm-8">
-                    <div class="input-group">
-                      <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                      <input type="email" class="form-control" id="email_ayah" name="email_ayah" placeholder="Email Ayah">
-                    </div>
-                  </div>
-                </div>
-                <!-- end ayah -->
-                <!-- Ibu -->
-                <div class="form-group">
-                    <label for="nama_ibu" class="col-sm-3 control-label">Nama Ibu</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="nama_ibu" name="nama_ibu" placeholder="Nama Ibu">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="hp_ibu" class="col-sm-3 control-label">HP</label>
-                    <div class="col-sm-4">
-                      <div class="input-group">
-                        <div class="input-group-addon">
-                          <i class="fa fa-phone"></i>
-                        </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ibu" name="hp_ibu" placeholder="HP Ibu">
-                      </div>
-                    </div>
-                   
-                </div>
-                <div class="form-group">
-                    <label for="pekerjaan_ibu" class="col-sm-3 control-label">Pekerjaan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pekerjaan_ibu" name="pekerjaan_ibu" placeholder="Pekerjaan Ibu">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="tempat_kerja_ibu" class="col-sm-3 control-label">Tempat Kerja</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="tempat_kerja_ibu" name="tempat_kerja_ibu" placeholder="Tempat Kerja Ibu">
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label for="jabatan_ibu" class="col-sm-3 control-label">Jabatan</label>
-                    <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jabatan_ibu" name="jabatan_ibu" placeholder="Jabatan Ibu">
-                    </div>
-                </div>
-                <div class="form-group">
-                  <label for="pendidikan_ibu" class="col-sm-3 control-label">Pendidikan</label>
-                  <div class="col-sm-8">
-                    <select class="form-control select2" style="width: 100%;" name="pendidikan_ibu" data-placeholder="Pendidikan Ibu">
-                      <option>S1</option>
-                      <option>S2</option>
-                      <option>D3</option>
-                      <option>D2</option>
-                      <option>D1</option>
-                      <option>SMA</option>
-                      <option>SMP</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="email_ibu" class="col-sm-3 control-label">Email</label>
-                   <div class="col-sm-8">
-                    <div class="input-group">
-                      <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                      <input type="email" class="form-control" id="" name="email_ibu" placeholder="Email Ibu">
-                    </div>
-                  </div>
-                </div>
-
-              </div>
             </div>
-
-            <!-- lain-lain -->
-            <div class="box box-primary ">
-              <div class="box-header">
-                <h3 class="box-title">LAIN-LAIN</h3>
-              </div>
-              <div class="box-body">
-                <div class="form-group">
-                  <label for="jarak_ke_sekolah" class="col-sm-3 control-label">Jarak Ke Sekolah</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control" id="jarak_ke_sekolah" name="jarak_ke_sekolah" placeholder="Jarak Ke Sekolah">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="sarana_transportasi" class="col-sm-3 control-label">Sarana Transportasi</label>
-
-                  <div class="col-sm-8">
-                    <input type="text" class="form-control" id="sarana_transportasi" name="sarana_transportasi" placeholder="Sarana Transportasi">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="keterangan" class="col-sm-3 control-label">Keterangan</label>
-                  <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" id="keterangan" name="keterangan" placeholder="Keterangan"></textarea>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <br>
-          <div class="form-group">
-              <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                <button type="submit" class="btn btn-danger"><i class="fa fa-close"></i> Batal</button>
-              </div>
-          </div>
-        
-      </div><!-- /.col -->
-    </form><!--endform -->
-  </div><!-- /.row -->
-</section>
+        </form>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-left">
+            <a href="#pengaturan/gru-akses" 
+                class="btn btn-default btn-sm btn-flat" 
+                data-toggle="tooltip"
+                data-original-title="Grup Akses">
+                <i class="fa fa-th-list"></i> Grup Akses
+            </a>
+        </div>
+        <div class="box-tools pull-right">
+            <a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+                data-original-title="Reset Data">
+                <i class="fa fa-refresh"></i> Batal
+            </a>
+            <a href="" ng-click="onSaveClick($event)" 
+                class="btn btn-success btn-sm btn-flat" 
+                data-toggle="tooltip"
+                data-original-title="Simpan Data">
+                <i class="fa fa-save"></i> Simpan
+            </a>
+        </div>
+    </div>
+</div>

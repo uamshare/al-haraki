@@ -16,7 +16,7 @@ define(['app'], function (app) {
             });
         };
 
-        factory.getPermission = function() {
+        factory.getPermission = function(paramdata) {
             return $http.get(serviceBase + 'role/listpermissions',{
                 params : paramdata
             }).then(function (results) {
@@ -26,6 +26,12 @@ define(['app'], function (app) {
 
         factory.assign = function (params) {
             return $http.post(serviceBase + 'role/assign', params).then(function (results) {
+                return results.data;
+            });
+        };
+
+        factory.AddPermission = function (params) {
+            return $http.post(serviceBase + 'roles', params).then(function (results) {
                 return results.data;
             });
         };

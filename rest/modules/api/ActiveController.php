@@ -8,9 +8,24 @@ class ActiveController extends \yii\rest\ActiveController
 	/**
      * @inheritdoc
      */
+
+    public $checkAccess = true;
+
     public function init()
     {
         parent::init();
+    }
+
+    public function beforeAction($action)
+    {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+        if ($this->checkAccess) {
+            $this->checkAccess($action->id);
+        }
+
+        return true; // or false to not run the action
     }
 
     /**
@@ -57,13 +72,22 @@ class ActiveController extends \yii\rest\ActiveController
      */
     public function checkAccess($action, $model = null, $params = [])
     {
-        // var_dump($this->id . '_' . $action);
-        // exit();
-        
-        // if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
-        // {
-        //      throw new \yii\web\ForbiddenHttpException('You don\'t have permission.');
-        // }
+        if( !in_array($action, ['index','view','create','update','delete']) ){
+            $method = Yii::$app->getRequest()->method;
+            $actiontransform = [
+                'GET' => 'index',
+                'POST' => 'create',
+                'PUT' => 'update',
+                'DELETE' => 'delete',
+            ];
+            $action = $actiontransform[$method];
+            // var_dump($method);exit();
+            // return true;
+        }
+        if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
+        {
+             throw new \yii\web\ForbiddenHttpException('You don\'t have permission.');
+        }
 
     }
 }
