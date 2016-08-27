@@ -24,6 +24,14 @@ define(['app'], function (app) {
             });
         };
 
+        factory.getMenuPrivileges = function(paramdata) {
+            return $http.get(serviceBase + 'role/menuprivileges',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
         factory.assign = function (params) {
             return $http.post(serviceBase + 'role/assign', params).then(function (results) {
                 return results.data;

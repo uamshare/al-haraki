@@ -12,6 +12,7 @@ define(['app'], function (app) {
             '$http', 
             '$log', 
             '$timeout',
+            'authService',
             'KelasService',
             'cfpLoadingBar',
             'toastr'
@@ -25,6 +26,7 @@ define(['app'], function (app) {
             $http, 
             $log, 
             $timeout,
+            authService,
             KelasService,
             cfpLoadingBar,
             toastr

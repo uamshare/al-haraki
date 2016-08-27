@@ -105,8 +105,21 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 }
             }
 
-            if(preg_match('/kelas | siswa | pegawai/', $list)){
+            $checklist = implode(',', $list);
+            if(preg_match('/(kelas|siswa|pegawai)/', $checklist)){
                 $list[] = 'master';
+            }
+
+            if(preg_match('/(tagihaninfoinput|kwitansipembayaran|tagihanpembayaran|kwitansipengeluaran|tagihanautodebet)/', $checklist)){
+                $list[] = 'keuangan';
+            }
+
+            if(preg_match('/(mcoad|postingmap|jurnalharian|rgl)/', $checklist)){
+                $list[] = 'akuntansi';
+            }
+
+            if(preg_match('/(user|role|setting)/', $checklist)){
+                $list[] = 'pengaturan';
             }
         }
 

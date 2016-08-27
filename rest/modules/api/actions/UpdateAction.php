@@ -37,12 +37,14 @@ class UpdateAction extends \yii\rest\Action
 
         $model->scenario = $this->scenario;
         $post = Yii::$app->getRequest()->getBodyParams();
-        if(!isset($post[$model->formName()])){
-            throw new \yii\web\HttpException('404','Root Property not set.');
-        }
-        $post[$model->formName()] = json_decode($post[$model->formName()], true);
 
-        $model->load($post);
+        // if(!isset($post[$model->formName()])){
+        //     throw new \yii\web\HttpException('404','Root Property not set.');
+        // }
+
+        // $post[$model->formName()] = json_decode($post[$model->formName()], true);
+
+        $model->load($post, '');
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
         }
