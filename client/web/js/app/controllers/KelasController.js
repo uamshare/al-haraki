@@ -113,7 +113,7 @@ define(['app'], function (app) {
             .then(function (result) {
                 if(result.success){
                     angular.forEach(result.rows, function(dt, index) {
-                        var romnum = index + 1;
+                        var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
                         result.rows[index]["index"] = romnum;
                     })
                     $scope.grid.data = result.rows;

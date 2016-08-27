@@ -15,7 +15,11 @@ define(['app'], function (app) {
     		'$routeParams', 
     		'$http', 
     		'$log', 
-    		'$timeout'
+    		'$timeout',
+            'authService',
+            'SiswaService',
+            'cfpLoadingBar',
+            'toastr'
     	];
 
     var SiswaController = function (
@@ -25,11 +29,15 @@ define(['app'], function (app) {
     		$routeParams, 
     		$http, 
     		$log, 
-    		$timeout
+    		$timeout,
+    		authService,
+            SiswaService,
+            cfpLoadingBar,
+            toastr
     	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'master/siswa/';
-
+    	var $resourceApi = SiswaService;
     	//========================Grid Config =======================
 
     	var grid = {
@@ -44,7 +52,34 @@ define(['app'], function (app) {
 			]
     	}
 
+    	var columnActionTpl =   '<div class="col-action">' + 
+                                    '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+                                        '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
+                                    '</a>&nbsp;' +
+                                    '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
+                                        '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+                                    '</a>' +
+                                '</div>';
+
+        grid.columnDefs.push({
+            name :' ',
+            enableFiltering : false,
+            width : '75',
+            enableSorting : false,
+            enableCellEdit: false,
+            cellTemplate : columnActionTpl
+        }); 
+
+        $scope.onEditClick = function(rowdata){
+            $location.path( "/master/siswa/edit/" + rowdata.id);
+        }
+
     	$scope.grid = { 
+    		paginationPageSizes: [20, 30, 50, 100, 200],
+            paginationPageSize: 20,
+            pageNumber : 1,
+            useExternalPagination : true,
+
     		enableMinHeightCheck : true,
 			minRowsToShow : 20,
 			enableGridMenu: true,
@@ -77,35 +112,172 @@ define(['app'], function (app) {
 		    exporterPdfOrientation: 'portrait',
 		    exporterPdfPageSize: 'LETTER',
 		    exporterPdfMaxGridWidth: 500,
-		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
-		    onRegisterApi: function(gridApi){
-		      $scope.gridApi = gridApi;
-		    }
+		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location"))
 		};
+		
+		/*
+		$scope.grid = { 
+            paginationPageSizes: [20, 30, 50, 100, 200],
+            paginationPageSize: 20,
+            pageNumber : 1,
+            useExternalPagination : true,
 
-		function getData(data){
-			$http.get($CONST_VAR.restDirectory + 'siswas',{
-				params : data
-			})
-			.success(function(data, status, header) {
-				var header = header();
-				if(data.success){
-					angular.forEach(data.rows, function(dt, index) {
-						var romnum = index + 1;
-		                data.rows[index]["index"] = romnum;
-		               
-		            })
-		            $scope.grid.data = data.rows;
-				}
-			});
-		}
+            enableMinHeightCheck : true,
+            minRowsToShow : 20,
+            enableGridMenu: true,
+            enableSelectAll: true,
+            virtualizationThreshold: 20,
+            enableFiltering: true,
+            enableCellEditOnFocus: true,
+            columnDefs : grid.columnDefs
+        };
+		*/
+
+		$scope.getList = function (paramdata){
+            cfpLoadingBar.start();
+            $resourceApi.get(paramdata.page, paramdata.perPage)
+            .then(function (result) {
+                if(result.success){
+                    angular.forEach(result.rows, function(dt, index) {
+                        var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
+                        result.rows[index]["index"] = romnum;
+                    })
+                    $scope.grid.data = result.rows;
+                    $scope.grid.totalItems = result.total;
+                    $scope.grid.paginationCurrentPage = paramdata.page;
+                }
+                cfpLoadingBar.complete();
+            }, errorHandle);
+        }
+
+        function errorHandle(error){
+            var msg = error.data.name;
+            toastr.warning(msg, 'Warning');
+        }
+
+        $scope.grid.onRegisterApi = function (gridApi) {
+            $scope.gridApi = gridApi;
+            gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                $scope.grid.pageNumber = newPage;
+                $scope.grid.pageSize = pageSize;
+                $scope.grid.virtualizationThreshold = pageSize; 
+                $scope.getList({
+                    page : newPage,
+                    perPage : pageSize
+                });
+            });
+        }
 
 		$scope.$on('$viewContentLoaded', function(){
 			init();
 		});
 
+		function initIndex(){
+            $scope.getList({
+                page : 1,
+                perPage : 20
+            });
+        }
+
+        $scope.form = {
+            id : '',
+            nis : '',
+            nisn : '',
+            nama_siswa : '',
+            nama_panggilan : '',
+            jk : '',
+            agama : '',
+            tempat_lahir : '',
+            tanggal_lahir : '',
+            anak_ke : '',
+            jml_saudara : '',
+            asal_sekolah : '',
+            alamat : '',
+            kelurahan : '',
+            kecamatan : '',
+            kota : '',
+            kodepos : '',
+            tlp_rumah : '',
+            nama_ayah : '',
+            hp_ayah : '',
+            pekerjaan_ayah : '',
+            tempat_kerja_ayah : '',
+            jabatan_ayah : '',
+            pendidikan_ayah : '',
+            email_ayah : '',
+            nama_ibu : '',
+            hp_ibu : '',
+            pekerjaan_ibu : '',
+            tempat_kerja_ibu : '',
+            jabatan_ibu : '',
+            pendidikan_ibu : '',
+            email_ibu : '',
+            berat : '',
+            tinggi : '',
+            gol_darah : '',
+            riwayat_kesehatan : '',
+            jenis_tempat_tinggal : '',
+            jarak_ke_sekolah : '',
+            sarana_transportasi : '',
+            keterangan : '',
+        }
+
+		function initEdit(id){
+            cfpLoadingBar.start();
+            $resourceApi.getById(id)
+            .then(function (result) {
+                if(result.success){
+                    $scope.form.id = result.rows.id;
+                    $scope.form.nis = result.rows.nis;
+                    $scope.form.nisn = result.rows.nisn;
+                    $scope.form.nama_siswa = result.rows.nama_siswa;
+                    $scope.form.nama_panggilan = result.rows.nama_panggilan;
+                    $scope.form.jk = result.rows.jk;
+                    $scope.form.agama = result.rows.agama;
+                    $scope.form.tempat_lahir = result.rows.tempat_lahir;
+                    $scope.form.tanggal_lahir = result.rows.tanggal_lahir;
+                    $scope.form.anak_ke = result.rows.anak_ke;
+                    $scope.form.jml_saudara = result.rows.jml_saudara;
+                    $scope.form.asal_sekolah = result.rows.asal_sekolah;
+                    $scope.form.alamat = result.rows.alamat;
+                    $scope.form.kelurahan = result.rows.kelurahan;
+                    $scope.form.kecamatan = result.rows.kecamatan;
+                    $scope.form.kota = result.rows.kota;
+                    $scope.form.kodepos = result.rows.kodepos;
+                    $scope.form.tlp_rumah = result.rows.tlp_rumah;
+                    $scope.form.nama_ayah = result.rows.nama_ayah;
+                    $scope.form.hp_ayah = result.rows.hp_ayah;
+                    $scope.form.pekerjaan_ayah = result.rows.pekerjaan_ayah;
+                    $scope.form.tempat_kerja_ayah = result.rows.tempat_kerja_ayah;
+                    $scope.form.jabatan_ayah = result.rows.jabatan_ayah;
+                    $scope.form.pendidikan_ayah = result.rows.pendidikan_ayah;
+                    $scope.form.email_ayah = result.rows.email_ayah;
+                    $scope.form.nama_ibu = result.rows.nama_ibu;
+                    $scope.form.hp_ibu = result.rows.hp_ibu;
+                    $scope.form.pekerjaan_ibu = result.rows.pekerjaan_ibu;
+                    $scope.form.tempat_kerja_ibu = result.rows.tempat_kerja_ibu;
+                    $scope.form.jabatan_ibu = result.rows.jabatan_ibu;
+                    $scope.form.pendidikan_ibu = result.rows.pendidikan_ibu;
+                    $scope.form.email_ibu = result.rows.email_ibu;
+                    $scope.form.berat = result.rows.berat;
+                    $scope.form.tinggi = result.rows.tinggi;
+                    $scope.form.gol_darah = result.rows.gol_darah;
+                    $scope.form.riwayat_kesehatan = result.rows.riwayat_kesehatan;
+                    $scope.form.jenis_tempat_tinggal = result.rows.jenis_tempat_tinggal;
+                    $scope.form.jarak_ke_sekolah = result.rows.jarak_ke_sekolah;
+                    $scope.form.sarana_transportasi = result.rows.sarana_transportasi;
+                    $scope.form.keterangan = result.rows.keterangan;
+                }
+                cfpLoadingBar.complete();
+            }, errorHandle);
+        }
+
 		function init(){
-			getData();
+			if($routeParams.id){
+                initEdit($routeParams.id);
+            }else{
+                initIndex();
+            }
 		}
 		
 		$scope.onAddClick = function(event){
