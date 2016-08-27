@@ -27,11 +27,12 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 'verbs' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
-                        'index'    => ['get'],
-                        'listpermissions'     => ['get'],
-                        'listmenuprivileges'     => ['get'],
-                        'list'     => ['get'],
-                        'create'   => ['post','put'],
+                        'index'                 => ['get'],
+                        'listpermissions'       => ['get'],
+                        'menuprivileges'        => ['get'],
+                        'list'                  => ['get'],
+                        'create'                => ['post','put'],
+                        'assign'                => ['post'],
                         // 'remove'   => ['delete']
                     ],
                 ],
@@ -43,9 +44,29 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
     	parent::init();
     }
 
-    // public function actionAssign(){
-    //     return ['success' => true];
-    // }
+    public function actionAssign(){
+        $Auth = new $this->modelClass;
+        $request = Yii::$app->getRequest();
+        $rolename = $request->getQueryParam('rolename', false);
+        $userid = $request->getQueryParam('userid', false);
+
+        if($rolename && $userid){
+            $role = $Auth->getRole($rolename);
+            if(!$role){
+                $role = $Auth->createRole('admin');
+                $role->description = $form['description'];
+                $Auth->add($role);
+                $Auth->assign($role, $user->getId());
+            }
+            $Auth->assign($role, $userid);
+            $this->response->setStatusCode(201, 'Created.');
+            return $role;
+        }else{
+            $this->response->setStatusCode(422, 'Data Validation Failed.');
+            return ['message' => 'Assign role failed']
+        }
+        
+    }
 
     
 
@@ -96,12 +117,13 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $request = Yii::$app->getRequest();
         $userid = Yii::$app->user->getId();
         $list = [];
-
+        $this->response = Yii::$app->getResponse();
+        
         if($userid){
             $permission =  $Auth->getPermissionsByUser($userid);
             foreach ($permission as $key => $value) {
                 if(preg_match('/_index/', $key)){
-                    $list[] = $key;
+                    $list[] = str_replace('_index', '', $key);
                 }
             }
 
@@ -121,6 +143,11 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             if(preg_match('/(user|role|setting)/', $checklist)){
                 $list[] = 'pengaturan';
             }
+        }else{
+            $this->response->setStatusCode(400, 'Data is empty.');
+            return [
+                'message' => 'Data can\'t be empty'
+            ];
         }
 
         return $list;
@@ -142,36 +169,6 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
     }
 
     private function _listPermissions(){
-        /**
-        $setPermissions = [
-            // 0 => ['name' => 'master_data', 'desc' => 'MASTER DATA', 'order' => 1],
-            4 => ['name' => 'siswa', 'desc' => 'Data Siswa', 'leaf' => true, 'parent' => 0, 'order' => 1],
-            5 => ['name' => 'pegawai', 'desc' => 'Data Karyawan', 'leaf' => true, 'parent' => 0, 'order' => 2],
-            6 => ['name' => 'kelas', 'desc' => 'Data Kelas', 'leaf' => true, 'parent' => 0, 'order' => 3],
-            // ['name' => 'master_data_rombel', 'desc' => 'Data Rombel', 'leaf' => true, 'parent' => 0, 'order' => 4],
-
-            // 1 => ['name' => 'keuangan', 'desc' => 'KEUANGAN', 'order' => 2],
-            7 => ['name' => 'Tagihaninfoinput', 'desc' => 'Info Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 1],
-            8 => ['name' => 'kwitansipembayaran', 'desc' => 'Kwitansi Pembayaran', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            9 => ['name' => 'tagihanpembayaran', 'desc' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            10 => ['name' => 'tagihanpembayaran', 'desc' => 'Rekap Outstanding Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 4],
-            11 => ['name' => 'kwitansipengeluaran', 'desc' => 'Kwitansi Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            12 => ['name' => 'kwitansipengeluaran', 'desc' => 'Rekap Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 4],
-            12 => ['name' => 'tagihanautodebet', 'desc' => 'Reonsiliasi Autodebet', 'leaf' => true, 'parent' => 1, 'order' => 3],
-
-            // 2 => ['name' => 'akuntansi', 'desc' => 'AKUNTASNI', 'order' => 3],
-            13 => ['name' => 'mcoad', 'desc' => 'Master Akun', 'leaf' => true, 'parent' => 1, 'order' => 1],
-            14 => ['name' => 'postingmap', 'desc' => 'Pemetaan Posting', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            15 => ['name' => 'jurnalharian', 'desc' => 'Jurnal Harian', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            16 => ['name' => 'rgl', 'desc' => 'Buku Besar', 'leaf' => true, 'parent' => 1, 'order' => 4],
-
-            // 3 => ['name' => 'pengaturan', 'desc' => 'PENGATURAN', 'order' => 4],
-            17 => ['name' => 'user', 'desc' => 'Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 1],
-            18 => ['name' => 'usergroup', 'desc' => 'Grup Akses Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            19 => ['name' => 'setting', 'desc' => 'Sekolah', 'leaf' => true, 'parent' => 1, 'order' => 3],
-        ];
-        **/
-
         $setPermissions = [
             ['parent_name' => 'MASTER DATA','name' => 'siswa', 'description' => 'Data Siswa', 'leaf' => true, 'parent' => 0, 'order' => 1],
             ['parent_name' => 'MASTER DATA','name' => 'pegawai', 'description' => 'Data Karyawan', 'leaf' => true, 'parent' => 0, 'order' => 2],
@@ -237,7 +234,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 $role = $Auth->createRole('admin');
                 $role->description = $form['description'];
                 $Auth->add($role);
-                $Auth->assign($role, $user->getId());
+                // $Auth->assign($role, $user->getId());
             }else{
                 $role->description = $form['description'];
                 $Auth->update($form['name'], $role);

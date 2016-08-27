@@ -2,26 +2,7 @@
 
 define(['app'], function (app) {
 
-    // var injectParams = ['$scope', '$location', '$routeParams'];
-
-    // var CoaController = function ($scope, $location, $routeParams) {
-    // 	console.log('tesss');
-    // };
-
-    // CoaController.$inject = injectParams;
-
-	// app.controller('MainCtrl', ['$scope', '$http', '$log', '$timeout', 'uiGridConstants', 
-	// 	function ($scope, $http, $log, $timeout, uiGridConstants) {
-	// 		$scope.gridOptions = {
-	// 		enableRowSelection: true,
-	// 		enableSelectAll: true,
-	// 		selectionRowHeaderWidth: 35,
-	// 		rowHeight: 35,
-	// 		showGridFooter:true
-	// 		};
-	// 	}
-
-    app.register.controller('CoaController', function ($scope, $location, $routeParams, $http, $log, $timeout, uiGridConstants) {
+    app.register.controller('CoaController', function ($CONST_VAR,$scope, $location, $routeParams, $http, $log, $timeout, uiGridConstants) {
     	// console.log('CoaController');
 
     	$scope.modelTest = 'Test Aja';
@@ -30,13 +11,13 @@ define(['app'], function (app) {
     	}
 		$scope.coad = { 
 			paginationPageSizes: [20, 30, 50, 100, 200],
-    		paginationPageSize: 20,
+    		paginationPageSize: $CONST_VAR.pageSize,
     		pageNumber : 1,
     		enableMinHeightCheck : true,
-			minRowsToShow : 20,
+			minRowsToShow : $CONST_VAR.pageSize,
 			enableGridMenu: true,
 			enableSelectAll: true,
-			virtualizationThreshold: 20,
+			virtualizationThreshold: $CONST_VAR.pageSize,
 			enableFiltering: true,
 			
 			//Export

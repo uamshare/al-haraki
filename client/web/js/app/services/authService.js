@@ -65,7 +65,7 @@ define(['app'], function (app) {
             }else{
                 sessionStorage.clear();
             }
-            
+            $rootScope.$broadcast('loginStatusChanged', loggedIn);
         }
 
         return factory;

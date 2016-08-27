@@ -1,0 +1,114 @@
+<div id="user-form" class="box box-no-margin box-primary box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-plus-circle"></i> Form Pengguna</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <form name="formUser" class="form-horizontal form-custome" novalidate>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <fieldset>
+                        <div class="form-group" has-feedback field-formUser-username required>
+                            <label class="col-xs-4 col-md-3 control-label">Username</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="text" name="username" class="form-control input-sm" 
+                                    ng-model="form.username" required/>
+                                <span class="errorMessage" 
+                                    ng-show="formUser.username.$touched && formUser.username.$error.required">
+                                    Username tidak boleh kosong
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 col-md-3 control-label">Email</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="email" name="email" class="form-control input-sm" 
+                                    ng-model="form.email" required />
+                                <span class="errorMessage" 
+                                    ng-show="formUser.email.$touched && formUser.email.$error.required">
+                                    Email tidak boleh kosong
+                                </span>
+                                <span class="errorMessage" 
+                                    ng-show="formUser.email.$touched && formUser.email.$error.email">
+                                    Format Email tidak valid
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group" has-feedback field-formUser-username required ng-hide="isEdit">
+                            <label class="col-xs-4 col-md-3 control-label">Password</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="{{isEdit ? 'hidden' : 'password'}}" name="password" class="form-control input-sm" 
+                                    ng-model="form.password_hash"
+                                    ng-minlength="6" required/>
+                                <span class="errorMessage" 
+                                    ng-show="formUser.password.$touched && formUser.password.$error.required">
+                                    Password tidak boleh kosong
+                                </span>
+                                <span class="errorMessage" 
+                                    ng-show="formUser.password.$touched && formUser.password.$error.minlength">
+                                    Password minimal karakter 6
+                                </span>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <fieldset>
+                        <div class="form-group" has-feedback field-formUser-username required>
+                            <label class="col-xs-4 col-md-3 control-label">Karyawan</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="text" class="form-control input-sm"
+                                    bs-typeahead 
+                                    ng-model="pegawai.select"
+                                    bs-options="pg for pg in pegawai.data"
+                                    ng-blur = "onPegawaiChange(index)"
+                                    data-min-length="0"
+                                    data-animation="am-flip-x"
+                                    placeholder="Pegawai">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 col-md-3 control-label">Grup Akses</label>
+                            <div class="col-xs-8 col-md-9">
+                                <input type="text" class="form-control input-sm"
+                                    bs-typeahead 
+                                    ng-model="roles.select"
+                                    bs-options="rl for rl in roles.data"
+                                    ng-blur = "onRoleChange(index)"
+                                    data-animation="am-flip-x"
+                                    placeholder="Grup Akses">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-left">
+            <a href="#pengaturan/user" 
+                class="btn btn-default btn-sm btn-flat" 
+                data-toggle="tooltip"
+                data-original-title="Grup Akses">
+                <i class="fa fa-th-list"></i> Grup Akses
+            </a>
+        </div>
+        <div class="box-tools pull-right">
+            <a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+                data-original-title="Reset Data">
+                <i class="fa fa-refresh"></i> Batal
+            </a>
+            <a href="" ng-click="onSaveClick($event)" 
+                class="btn btn-success btn-sm btn-flat" 
+                data-toggle="tooltip"
+                data-original-title="Simpan Data"
+                >
+                <i class="fa fa-save"></i> Simpan
+            </a>
+        </div>
+    </div>
+</div>

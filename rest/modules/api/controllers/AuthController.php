@@ -84,10 +84,8 @@ class AuthController extends \rest\modules\api\ActiveController
         return Yii::$app->user->identity->profile;
     }
 
-    
-
-    public function checkAccess($action, $model = null, $params = [])
-    {
-        return true;
-    }
+    // public function checkAccess($action, $model = null, $params = [])
+    // {
+    //     return true;
+    // }
 }

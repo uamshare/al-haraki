@@ -4,24 +4,16 @@ define(['app'], function (app) {
 
     var injectParams = ['$http', '$q'];
 
-    var PegawaiService = function ($http, $q) {
+    var UserService = function ($http, $q) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
         factory.get = function (pageIndex, pageSize) {
-            return getResource('pegawais', pageIndex, pageSize);
-        };
-
-        factory.getList = function(paramdata) {
-            return $http.get(serviceBase + 'pegawai/list',{
-                params : paramdata
-            }).then(function (results) {
-                return results.data;
-            });
+            return getResource('users', pageIndex, pageSize);
         };
 
         factory.insert = function (params) {
-            return $http.post(serviceBase + 'pegawais', params).then(function (results) {
+            return $http.post(serviceBase + 'users', params).then(function (results) {
                 return results.data;
             });
         };
@@ -31,22 +23,19 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'pegawais/' + params.id, params).then(function (status) {
+            return $http.put(serviceBase + 'users/' + params.id, params).then(function (status) {
                 return status.data;
             });
         };
 
         factory.delete = function (id) {
-            return $http.delete(serviceBase + 'pegawais/' + id).then(function (status) {
+            return $http.delete(serviceBase + 'users/' + id).then(function (status) {
                 return status.data;
             });
         };
 
         factory.getById = function (id) {
-            //then does not unwrap data so must go through .data property
-            //success unwraps data automatically (no need to call .data property)
-            return $http.get(serviceBase + 'pegawais/' + id).then(function (results) {
-                // extendData([results.data]);
+            return $http.get(serviceBase + 'users/' + id).then(function (results) {
                 return results.data;
             });
         };
@@ -67,8 +56,8 @@ define(['app'], function (app) {
         return factory;
     };
 
-    PegawaiService.$inject = injectParams;
+    UserService.$inject = injectParams;
 
-    app.factory('PegawaiService', PegawaiService);
+    app.factory('UserService', UserService);
 
 });

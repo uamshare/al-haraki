@@ -16,17 +16,21 @@ require(
         'services/SiswaService',
         'services/PegawaiService',
         'services/KelasService',
+        //AKUNTANSI
         'services/COAService',
+        'services/jurnalHarianService',
         // Pengaturan
         'services/GrupAksesService',
+        'services/UserService',
+
         'services/TahunAjaranService',
+        //KEUANGAN
         'services/kwitansiPemabayaranService',
         'services/kwitansiPengeluaranService',
         'services/SiswaRombelService',
         'services/TagihanInfoService',
-        
-        'services/jurnalHarianService',
         'services/tagihanAutodebetService',
+        
         'controllers/NavbarController'
     ],
     function () {

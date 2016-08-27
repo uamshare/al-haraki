@@ -43,3 +43,5 @@ yii gii/model --tableName=tjmh --modelClass=Tjmh --ns=rest\models --enableI18N=1
 yii gii/model --tableName=tjmd --modelClass=Tjmd --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
 
 yii gii/model --tableName=rgl --modelClass=Rgl --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1
+
+yii gii/model --tableName=logs --modelClass=Logs --ns=rest\models --enableI18N=1 --generateLabelsFromComments=1 --useSchemaName=1

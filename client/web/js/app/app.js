@@ -26,7 +26,8 @@ define(['services/routeResolver'], function () {
 
     app.constant('$CONST_VAR', {
         viewsDirectory : 'js/app/views/',
-        restDirectory : BASEAPIURL
+        restDirectory : BASEAPIURL,
+        pageSize : 20,
     });
 
     app.config([
@@ -304,6 +305,28 @@ define(['services/routeResolver'], function () {
 
 
                 //Pengaturan
+                .when('/pengaturan/user/add', 
+                    routeCustome.resolve(
+                        'pengaturan/user/add', 
+                        'UserController',
+                        true
+                    )
+                )
+                .when('/pengaturan/user/edit/:id', 
+                    routeCustome.resolve(
+                        'pengaturan/user/add', 
+                        'UserController',
+                        true
+                    )
+                )
+                .when('/pengaturan/user', 
+                    routeCustome.resolve(
+                        'pengaturan/user/index', 
+                        'UserController',
+                        true
+                    )
+                )
+
                 .when('/pengaturan/grup-akses/add', 
                     routeCustome.resolve(
                         'pengaturan/grup-akses/add', 

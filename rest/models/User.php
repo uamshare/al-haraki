@@ -3,6 +3,7 @@
 namespace rest\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "user".
@@ -26,7 +27,7 @@ use Yii;
  * @property KwitansiPengeluaranH[] $kwitansiPengeluaranHs0
  * @property Pegawai $pegawai
  */
-class User extends \yii\db\ActiveRecord
+class User extends \rest\models\AppActiveRecord
 {
     /**
      * @inheritdoc
@@ -39,10 +40,26 @@ class User extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [
+            [
+            'class' => \yii\behaviors\TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new \yii\db\Expression('NOW()'),
+            ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'access_token', 'created_at', 'updated_at'], 'required'],
+            [['username'], 'required'],
+            [['auth_key', 'password_hash'], 'required'],
             [['status', 'pegawai_id'], 'integer'],
             [['type_token'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
@@ -74,6 +91,13 @@ class User extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    public function init() {
+        parent::init();
+        // $this->on(parent::EVENT_AFTER_FIND, [$this, 'afterFind']);
+        // $this->on(parent::EVENT_BEFORE_UPDATE, [$this, 'beforeUpdate']);
+        // $this->on(parent::EVENT_BEFORE_INSERT, [$this, 'beforInsert']);
     }
 
     /**
@@ -123,6 +147,62 @@ class User extends \yii\db\ActiveRecord
             'jabatan' => ($this->pegawai) ? $this->pegawai->jabatan : '',
             'sekolahid' => 0, //($this->pegawai) ? $this->pegawai->sekolahid : 0,
         ];
+    }
+
+    public function beforeValidate(){
+        if($this->isNewRecord){
+            $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
+            $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
+        }else{
+            $old = $this->oldAttributes;
+            $this->password_hash = (empty($this->password_hash)) ? $old['password_hash'] : 
+                                        Yii::$app->security->generatePasswordHash($this->password_hash);
+        }
+        
+        return parent::beforeValidate();
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function getList($params){
+        $customeQuery = new Query;
+        $customeQuery->select('`id`,
+                      `username`,
+                      `email`,
+                      `status`,
+                      `pegawai_id`,
+                      `created_at`,
+                      `updated_at` ')
+            ->from(self::tableName());
+
+        extract($params);
+        $customeQuery->where('1=1');
+
+        if(isset($id) && $id){
+            $customeQuery->andWhere(['id' => $id]);
+        }
+
+        if(isset($username) && $username){
+            $customeQuery->andWhere(['username' => $username]);
+        }
+
+        if(isset($email) && $email){
+            $customeQuery->andWhere(['email' => $email]);
+        }
+
+        if(isset($query) && $query){
+            $customeQuery->andFilterWhere([
+                'or',
+                ['like', 'username', $query],
+                ['like', 'email', $query],
+            ]);
+        }   
+
+        // var_dump($customeQuery->createCommand()->rawSql);exit();
+
+        return $customeQuery;
     }
 
 }

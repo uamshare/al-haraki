@@ -3,6 +3,7 @@
 namespace rest\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "pegawai".
@@ -57,7 +58,7 @@ use Yii;
  * @property Sekolah $sekolah
  * @property User[] $users
  */
-class Pegawai extends \yii\db\ActiveRecord
+class Pegawai extends \rest\models\AppActiveRecord
 {
     /**
      * @inheritdoc
@@ -161,5 +162,101 @@ class Pegawai extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasMany(User::className(), ['pegawai_id' => 'id']);
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function getList($params){
+        $customeQuery = new Query;
+        $customeQuery->select('`id`,
+                  `nik`,
+                  `nuptk`,
+                  `nama_pegawai`,
+                  `sekolahid`,
+                  `nama_panggilan`,
+                  `jk`,
+                  `berat`,
+                  `tinggi`,
+                  `gol_darah`,
+                  `agama`,
+                  `tempat_lahir`,
+                  `tanggal_lahir`,
+                  `alamat_ktp`,
+                  `alamat_domisili`,
+                  `tlp`,
+                  `no_ktp`,
+                  `status_rumah`,
+                  `pendidikan_terakhir`,
+                  `kependidikan`,
+                  `jurusan`,
+                  `nim_ijasah`,
+                  `no_sertifikat_sertifikasi`,
+                  `no_peserta_sertifikasi`,
+                  `pengalaman_kerja`,
+                  `bahasa_dikuasai`,
+                  `kursus_pelatihan`,
+                  `riwayat_penyakit_khusus`,
+                  `status_pernikahan`,
+                  `nama_pasangan`,
+                  `pekerjaan_pasangan`,
+                  `jumlah_anak`,
+                  `nama_ayah_kandung`,
+                  `nama_ibu_kandung`,
+                  `jumlah_saudara`,
+                  `tanggal_mulai_bertugas`,
+                  `status_kepegawaian`,
+                  `jarak_dari_rumah`,
+                  `transportasi`,
+                  `keterangan`,
+                  `nomor_bpjs_kesehatan`,
+                  `nomor_bpjs_ketenagakerjaan`,
+                  `ukuran_baju`,
+                  `jabatan`,
+                  `created_at`,
+                  `updated_at` ')
+            ->from(self::tableName());
+
+        extract($params);
+        $customeQuery->where('1=1');
+
+        if(isset($id) && $id){
+            $customeQuery->andWhere(['id' => $id]);
+        }
+
+        if(isset($nik) && $nik){
+            $customeQuery->andWhere(['nik' => $Nik]);
+        }
+
+        if(isset($nuptk) && $nuptk){
+            $customeQuery->andWhere(['nuptk' => $nuptk]);
+        }
+
+        if(isset($nama_pegawai) && $nama_pegawai){
+            $customeQuery->andWhere(['nama_pegawai' => $nama_pegawai]);
+        }
+
+        if(isset($nama_panggilan) && $nama_panggilan){
+            $customeQuery->andWhere(['nama_panggilan' => $nama_panggilan]);
+        }
+
+        if(isset($sekolahid) && $sekolahid){
+            $customeQuery->andWhere(['sekolahid' => $sekolahid]);
+        }
+
+        if(isset($query) && $query){
+            $customeQuery->andFilterWhere([
+                'or',
+                ['like', 'nik', $query],
+                ['like', 'nuptk', $query],
+                ['like', 'nama_pegawai', $query],
+                ['like', 'nama_panggilan', $query]
+            ]);
+        }   
+
+        // var_dump($customeQuery->createCommand()->rawSql);exit();
+
+        return $customeQuery;
     }
 }

@@ -40,6 +40,40 @@ define(['app'], function (app) {
             $location.path(path);
         }
 
+        function getUserProfile(){
+            $scope.profil = authService.getProfile();
+        }
+
+        function setLoginLogoutText() {
+            $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
+            getMenuPrivileges();
+            getUserProfile();
+            
+        }
+
+        function resetMenu(){
+            for(var idx in $scope.menuprivileges){
+                $scope.menuprivileges[idx] = false;
+            }
+        }
+        
+        function getMenuPrivileges(){
+            // cfpLoadingBar.start();
+            resetMenu()
+            GrupAksesService.getMenuPrivileges()
+            .then(function (result) {
+                if(result.success){
+                    for(var idx in result.rows){
+                        if(typeof $scope.menuprivileges[result.rows[idx]] != 'undefined'){
+                            $scope.menuprivileges[result.rows[idx]] = true;
+                        }
+                    }
+                    
+                }
+                // cfpLoadingBar.complete();
+            }, errorHandle);
+        }
+
         $scope.$on('loginStatusChanged', function (loggedIn) {
             setLoginLogoutText(loggedIn);
         });
@@ -48,54 +82,41 @@ define(['app'], function (app) {
             redirectToLogin();
         });
 
-        
-        function getUserProfile(){
-            $scope.profil = authService.getProfile();
-        }
-
-        function setLoginLogoutText() {
-            $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
-            getUserProfile();
-            
-        }
-
-        function getMenuPrivileges(){
-            // cfpLoadingBar.start();
-            GrupAksesService.getMenuPrivileges()
-            .then(function (result) {
-                if(result.success){
-                    console.log(result.rows);
-                }
-                // cfpLoadingBar.complete();
-            }, errorHandle);
-        }
-
         $scope.menuprivileges = {
             master : false,
             siswa : false,
             kelas : false,
             pegawai : false,
+
             keuangan : false,
             tagihaninfoinput : false,
             kwitansipembayaran : false,
             tagihanpembayaran : false,
             kwitansipengeluaran : false,
-
             tagihanautodebet : false,
+
             akuntansi : false,
             mcoad : false,
-            kwitansipengeluaran : false,
-            tagihaninfoinput : false,
-            kwitansipembayaran : false,
-            tagihanpembayaran : false,
-            kwitansipengeluaran : false,
+            postingmap : false,
+            jurnalharian : false,
+            rgl : false,
 
+            pengaturan : '',
+            user : false,
+            role : false,
+            setting : false
         }
+
+        
 
         setLoginLogoutText();
 
-        $timeout(function() {
+        $scope.$on('$viewContentLoaded', function(){
             getMenuPrivileges();
+        });
+
+        $timeout(function() {
+            // getMenuPrivileges();
         }, 1000);
 
     };

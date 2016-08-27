@@ -72,6 +72,9 @@ class ActiveController extends \yii\rest\ActiveController
      */
     public function checkAccess($action, $model = null, $params = [])
     {
+        if( in_array($this->id . '.' . $action, ['auth.login','auth.logout','role.menuprivileges']) ){
+            return $action;
+        }
         if( !in_array($action, ['index','view','create','update','delete']) ){
             $method = Yii::$app->getRequest()->method;
             $actiontransform = [
@@ -81,8 +84,6 @@ class ActiveController extends \yii\rest\ActiveController
                 'DELETE' => 'delete',
             ];
             $action = $actiontransform[$method];
-            // var_dump($method);exit();
-            // return true;
         }
         if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
         {
