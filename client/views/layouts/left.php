@@ -35,9 +35,6 @@
                             'label' => 'MASTER DATA',
                             'icon' => 'fa fa-database',
                             'url' => '$',
-                            // 'options' => [
-                            //     'ng-show' => 'showMenu',
-                            // ],
                             'items' => [
                                 ['label' => 'Data Siswa', 'icon' => 'fa fa-user-plus', 'url' => ['/#master/siswa']],
                                 ['label' => 'Data Karyawan', 'icon' => 'fa fa-user-plus', 'url' => ['/#master/karyawan']],
