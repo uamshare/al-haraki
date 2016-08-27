@@ -37,84 +37,77 @@
                 <div class="form-group">
                   <label for="nis" class="col-sm-3 control-label">NIS</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
+                    <input type="hidden" id="id" name="id" ng-model="form.id">
+                    <input type="text" class="form-control" id="nis" name="nis" placeholder="NIS" ng-model="form.nis">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="nisn" class="col-sm-3 control-label">NISN</label>
 
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="nisn" name="nisn" placeholder="NISN">
+                    <input type="text" class="form-control" ng-model="form.nisn" id="nisn" name="nisn" placeholder="NISN">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="namaSiswa" class="col-sm-3 control-label">Nama Siswa</label>
 
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="namaSiswa" name="nama_siswa" placeholder="Nama Siswa">
+                    <input type="text" class="form-control" id="namaSiswa" name="nama_siswa"  ng-model="form.nama_siswa" placeholder="Nama Siswa">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="namaPanggilan" class="col-sm-3 control-label">Nama Panggilan</label>
 
                   <div class="col-sm-8">
-                     <input type="text" class="form-control" id="namaPanggilan" name="nama_panggilan" placeholder="Nama Panggilan">
+                     <input type="text" class="form-control" id="namaPanggilan" ng-model="form.nama_panggilan" name="nama_panggilan" placeholder="Nama Panggilan">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="sekolah" class="col-sm-3 control-label">Sekolah</label>
                   <div class="col-sm-8">
-                    <select class="form-control select2" style="width: 100%;">
-                      <option selected="selected">Alabama</option>
-                      <option>Alaska</option>
-                      <option>California</option>
-                      <option>Delaware</option>
-                      <option>Tennessee</option>
-                      <option>Texas</option>
-                      <option>Washington</option>
-                    </select>
+                    <input type="text" class="form-control" id="asal_sekolah" ng-model="form.asal_sekolah" name="asal_sekolah" placeholder="Asal Sekolah">
                   </div>
                 </div>
                 <div class="form-group">
                     <label for="ttl" class="col-sm-3 control-label">Tempat/Tgl lahir</label>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control" name="tmpt_lahir" id="tempat" placeholder="Tempat Lahir">
+                      <input type="text" class="form-control" name="tempat_lahir" ng-model="form.tempat_lahir" id="tempat_lahir" placeholder="Tempat Lahir">
                     </div>
                     <div class="col-sm-4">
                       <div class="input-group date">
                         <div class="input-group-addon">
                           <i class="fa fa-calendar"></i>
                         </div>
-                        <input type="text" class="form-control pull-right" name="tgl_lahir" id="datepicker" placeholder="Tanggal Lahir">
+                        <input type="text" class="form-control pull-right" name="tanggal_lahir" id="datepicker" ng-model="form.tanggal_lahir" placeholder="Tanggal Lahir">
                       </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nisn" class="col-sm-3 control-label">Anak ke</label>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="anak_ke" id="anak_ke" placeholder="Anak Ke">
+                      <input type="text" class="form-control" name="anak_ke" id="anak_ke" ng-model="form.anak_ke" placeholder="Anak Ke">
                     </div>
                     <label for="berat" class="col-sm-2 control-label">Jumlah Saudara</label>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="jml_saudara" id="dariSaudara" placeholder="Jml Saudara">
+                      <input type="text" class="form-control" name="jml_saudara" id="dariSaudara" ng-model="form.jml_saudara" placeholder="Jml Saudara">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="berat" class="col-sm-3 control-label">Berat</label>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="berat" id="berat" placeholder="Berat Badan">
+                      <input type="text" class="form-control" name="berat" id="berat" ng-model="form.berat" placeholder="Berat Badan">
                     </div>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="tinggi" id="tinggi" placeholder="Tinggi badan">
+                      <input type="text" class="form-control" name="tinggi" id="tinggi" ng-model="form.tinggi" placeholder="Tinggi badan">
                     </div>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="gol_darah" id="gol_darah" placeholder="Gol Darah">
+                      <input type="text" class="form-control" name="gol_darah" id="gol_darah" ng-model="form.gol_darah" placeholder="Gol Darah">
                     </div>
                 </div>
                  <div class="form-group">
                     <label for="riwayat_kesehatan" class="col-sm-3 control-label">Riwayat Kesehatan</label>
                     <div class="col-sm-8">
-                       <textarea class="form-control" rows="3" id="riwayat_kesehatan" name="riwayat_kesehatan" placeholder="Riwayat Kesehatan"></textarea>
+                       <textarea class="form-control" rows="3" id="riwayat_kesehatan" ng-model="form.riwayat_kesehatan" name="riwayat_kesehatan" placeholder="Riwayat Kesehatan"></textarea>
                     </div>
                 </div>
               </div>
@@ -127,37 +120,37 @@
                 <div class="form-group">
                     <label for="jenis_tempat_tinggal" class="col-sm-3 control-label">Jenis Tempat Tinggal</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jenis_tempat_tinggal" name="jenis_tempat_tinggal" placeholder="Jenis Tempat Tinggal">
+                      <input type="text" class="form-control" id="jenis_tempat_tinggal" ng-model="form.jenis_tempat_tinggal" name="jenis_tempat_tinggal" placeholder="Jenis Tempat Tinggal">
                     </div>
                 </div>
                 <div class="form-group">
                   <label for="alamat" class="col-sm-3 control-label">Alamat</label>
                   <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" name="alamat" placeholder="Alamat"></textarea>
+                    <textarea class="form-control" rows="3" name="alamat" ng-model="form.alamat" placeholder="Alamat"></textarea>
                   </div>
                 </div>
                 <div class="form-group">
                     <label for="kodepos" class="col-sm-3 control-label">Kodepos</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" id="kodepos" name="kodepos" placeholder="Kodepos">
+                      <input type="text" class="form-control" id="kodepos" name="kodepos" ng-model="form.kodepos" placeholder="Kodepos">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="kelurahan" class="col-sm-3 control-label">Kelurahan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kelurahan" name="kelurahan" placeholder="Kelurahan">
+                      <input type="text" class="form-control" id="kelurahan" name="kelurahan" ng-model="form.kelurahan" placeholder="Kelurahan">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="kecamatan" class="col-sm-3 control-label">Kecamatan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kecamatan" name="kecamatan" placeholder="Kecamatan">
+                      <input type="text" class="form-control" id="kecamatan" ng-model="form.kecamatan" name="kecamatan" placeholder="Kecamatan">
                     </div>
                 </div>
                  <div class="form-group">
                     <label for="kota" class="col-sm-3 control-label">Kota</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="kota" name="kota" placeholder="Kota">
+                      <input type="text" class="form-control" id="kota" ng-model="form.kota" name="kota" placeholder="Kota">
                     </div>
                 </div>
                 <div class="form-group">
@@ -167,7 +160,7 @@
                         <div class="input-group-addon">
                           <i class="fa fa-phone"></i>
                         </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="tlp_rumah" name="tlp_rumah" placeholder="Telepon Rumah">
+                        <input type="text" class="form-control" ng-model="form.tlp_rumah" data-inputmask='"mask": "(999) 999-9999"' data-mask id="tlp_rumah" name="tlp_rumah" placeholder="Telepon Rumah">
                       </div>
                     </div>
                    
@@ -183,7 +176,7 @@
                 <div class="form-group">
                     <label for="nama_ayah" class="col-sm-3 control-label">Nama Ayah</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="nama_ayah" name="nama_ayah" placeholder="Nama Ayah">
+                      <input type="text" class="form-control" ng-model="form.nama_ayah" id="nama_ayah" name="nama_ayah" placeholder="Nama Ayah">
                     </div>
                 </div>
                 <div class="form-group">
@@ -193,7 +186,7 @@
                         <div class="input-group-addon">
                           <i class="fa fa-phone"></i>
                         </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ayah" name="hp_ayah" placeholder="HP Ayah">
+                        <input type="text" class="form-control" ng-model="form.hp_ayah" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ayah" name="hp_ayah" placeholder="HP Ayah">
                       </div>
                     </div>
                    
@@ -201,19 +194,19 @@
                 <div class="form-group">
                     <label for="pekerjaan_ayah" class="col-sm-3 control-label">Pekerjaan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pekerjaan_ayah" name="pekerjaan_ayah" placeholder="Pekerjaan Ayah">
+                      <input type="text" class="form-control" ng-model="form.pekerjaan_ayah" id="pekerjaan_ayah" name="pekerjaan_ayah" placeholder="Pekerjaan Ayah">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="tempat_kerja_ayah" class="col-sm-3 control-label">Tempat Kerja</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="tempat_kerja_ayah" name="tempat_kerja_ayah" placeholder="Tempat Kerja Ayah">
+                      <input type="text" class="form-control" id="tempat_kerja_ayah" ng-model="form.tempat_kerja_ayah" name="tempat_kerja_ayah" placeholder="Tempat Kerja Ayah">
                     </div>
                 </div>
                  <div class="form-group">
                     <label for="jabatan_ayah" class="col-sm-3 control-label">Jabatan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jabatan_ayah" name="jabatan_ayah" placeholder="Jabatan Ayah">
+                      <input type="text" class="form-control" id="jabatan_ayah" ng-model="form.jabatan_ayah" name="jabatan_ayah" placeholder="Jabatan Ayah">
                     </div>
                 </div>
                 <div class="form-group">
@@ -235,7 +228,7 @@
                    <div class="col-sm-8">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                      <input type="email" class="form-control" id="email_ayah" name="email_ayah" placeholder="Email Ayah">
+                      <input type="email" class="form-control" id="email_ayah" ng-model="form.email_ayah" name="email_ayah" placeholder="Email Ayah">
                     </div>
                   </div>
                 </div>
@@ -244,7 +237,7 @@
                 <div class="form-group">
                     <label for="nama_ibu" class="col-sm-3 control-label">Nama Ibu</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="nama_ibu" name="nama_ibu" placeholder="Nama Ibu">
+                      <input type="text" class="form-control" id="nama_ibu" ng-model="form.nama_ibu" name="nama_ibu" placeholder="Nama Ibu">
                     </div>
                 </div>
                 <div class="form-group">
@@ -254,7 +247,7 @@
                         <div class="input-group-addon">
                           <i class="fa fa-phone"></i>
                         </div>
-                        <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ibu" name="hp_ibu" placeholder="HP Ibu">
+                        <input type="text" class="form-control" ng-model="form.hp_ibu" data-inputmask='"mask": "(999) 999-9999"' data-mask id="hp_ibu" name="hp_ibu" placeholder="HP Ibu">
                       </div>
                     </div>
                    
@@ -262,19 +255,19 @@
                 <div class="form-group">
                     <label for="pekerjaan_ibu" class="col-sm-3 control-label">Pekerjaan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="pekerjaan_ibu" name="pekerjaan_ibu" placeholder="Pekerjaan Ibu">
+                      <input type="text" class="form-control" id="pekerjaan_ibu" ng-model="form.pekerjaan_ibu" name="pekerjaan_ibu" placeholder="Pekerjaan Ibu">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="tempat_kerja_ibu" class="col-sm-3 control-label">Tempat Kerja</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="tempat_kerja_ibu" name="tempat_kerja_ibu" placeholder="Tempat Kerja Ibu">
+                      <input type="text" class="form-control" id="tempat_kerja_ibu" name="tempat_kerja_ibu" ng-model="form.tempat_kerja_ibu" placeholder="Tempat Kerja Ibu">
                     </div>
                 </div>
                  <div class="form-group">
                     <label for="jabatan_ibu" class="col-sm-3 control-label">Jabatan</label>
                     <div class="col-sm-8">
-                      <input type="text" class="form-control" id="jabatan_ibu" name="jabatan_ibu" placeholder="Jabatan Ibu">
+                      <input type="text" class="form-control" id="jabatan_ibu" ng-model="form.jabatan_ibu" name="jabatan_ibu" placeholder="Jabatan Ibu">
                     </div>
                 </div>
                 <div class="form-group">
@@ -296,7 +289,7 @@
                    <div class="col-sm-8">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                      <input type="email" class="form-control" id="" name="email_ibu" placeholder="Email Ibu">
+                      <input type="email" class="form-control" ng-model="form.email_ibu" id="" name="email_ibu" placeholder="Email Ibu">
                     </div>
                   </div>
                 </div>
@@ -313,20 +306,20 @@
                 <div class="form-group">
                   <label for="jarak_ke_sekolah" class="col-sm-3 control-label">Jarak Ke Sekolah</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" id="jarak_ke_sekolah" name="jarak_ke_sekolah" placeholder="Jarak Ke Sekolah">
+                    <input type="text" class="form-control" ng-model="form.jarak_ke_sekolah" id="jarak_ke_sekolah" name="jarak_ke_sekolah" placeholder="Jarak Ke Sekolah">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="sarana_transportasi" class="col-sm-3 control-label">Sarana Transportasi</label>
 
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="sarana_transportasi" name="sarana_transportasi" placeholder="Sarana Transportasi">
+                    <input type="text" class="form-control" id="sarana_transportasi" ng-model="form.sarana_transportasi" name="sarana_transportasi" placeholder="Sarana Transportasi">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="keterangan" class="col-sm-3 control-label">Keterangan</label>
                   <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" id="keterangan" name="keterangan" placeholder="Keterangan"></textarea>
+                    <textarea class="form-control" rows="3" ng-model="form.keterangan" id="keterangan" name="keterangan" placeholder="Keterangan"></textarea>
                   </div>
                 </div>
               </div>

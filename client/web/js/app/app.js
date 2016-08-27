@@ -127,6 +127,14 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
+                .when('/master/siswa/edit/:id', 
+                    routeCustome.resolve(
+                        'master/siswa/form', 
+                        'SiswaController',
+                        true
+                    )
+                )
+
                 // MASTER PEGAWAI
                 .when('/master/karyawan', 
                     routeCustome.resolve(
