@@ -74,6 +74,18 @@ define(['app'], function (app) {
 	            }, errorHandle);
 			}
 
+			function deleteData($id){
+				cfpLoadingBar.start();
+				$resourceApi.delete($id)
+				.then(function (result) {
+	                if(result.success){
+	                	toastr.success('Data telah berhasil dihapus.', 'Success');
+					}
+					cfpLoadingBar.complete();
+					get(1,$CONST_VAR.pageSize);
+	            }, errorHandle);
+			}
+
         	var columnActionTpl = 	'<div class="col-action">' + 
 		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
@@ -89,7 +101,9 @@ define(['app'], function (app) {
 	                { name: 'username', displayName: 'Username', visible: true, width : '150',  enableCellEdit: false},
 	                { name: 'email', displayName: 'Email', visible: true, enableCellEdit: false},
 	                { name: 'pegawai_id', displayName: 'PegawaiID', visible: false, width : '75',  enableCellEdit: false},
-	                { name: 'pegawai', displayName: 'Pegawai', visible: true, enableCellEdit: false},
+	                { name: 'nama_pegawai', displayName: 'Pegawai', visible: true, enableCellEdit: false},
+	                { name: 'sekolahid', displayName: 'SekolahID', visible: false, width : '75',  enableCellEdit: false},
+	                { name: 'sekolah', displayName: 'Sekolah', visible: true, width : '75',  enableCellEdit: false},
 	                { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
 	                { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
 					
@@ -144,7 +158,7 @@ define(['app'], function (app) {
 			$scope.onDeleteClick = function(rowdata){
 				var del = confirm("Anda yakin akan menghapus data `" + rowdata.id + "`");
 				if (del == true) {
-				    deleteData(rowdata.tjmhno);
+				    deleteData(rowdata.id);
 				} 
 			}
 
@@ -160,6 +174,7 @@ define(['app'], function (app) {
 				email : null,
 				pegawai_id : null,
 				role : null,
+				sekolahid : null,
 				password_hash : null,
 				created_at : null,
 				updated_at : null
@@ -182,8 +197,19 @@ define(['app'], function (app) {
 				$scope.form.email = null;
 				$scope.form.pegawai_id = null;
 				$scope.form.role = null;
+				$scope.form.sekolahid = null;
 				$scope.form.created_at = null;
 				$scope.form.updated_at = null;
+			}
+
+			function setPegawai(pegawai_id){
+				var index = $scope.pegawai.id.indexOf(pegawai_id);
+				$scope.pegawai.select = ($scope.pegawai.data[index]) ? $scope.pegawai.data[index] : '';
+			}
+
+			function setRoles(role){
+				var index = $scope.roles.name.indexOf(role);
+				$scope.roles.select = ($scope.roles.data[index]) ? $scope.roles.data[index] : '';
 			}
 
 			function getById(id){
@@ -196,6 +222,8 @@ define(['app'], function (app) {
 						$scope.form.username = rowdata.username;
 						$scope.form.email = rowdata.email;
 						$scope.form.pegawai_id = rowdata.pegawai_id;
+						$scope.form.role = rowdata.role;
+						$scope.form.sekolahid = rowdata.sekolahid;
 						$scope.form.created_at = rowdata.created_at;
 						$scope.form.updated_at = rowdata.updated_at;
 					}else{
@@ -214,6 +242,9 @@ define(['app'], function (app) {
 			            	$scope.pegawai.data[idx] = result.rows[idx].nama_pegawai;
 			                $scope.pegawai.id[idx] = result.rows[idx].id;
 			            }
+			            if($routeParams.id){
+							setPegawai($scope.form.pegawai_id);
+						}
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){
@@ -233,6 +264,9 @@ define(['app'], function (app) {
 			                $scope.roles.name[index] = result.rows[idx].name;
 			                index++;
 			            }
+			            if($routeParams.id){
+							setRoles($scope.form.role);
+						}
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){
@@ -261,17 +295,17 @@ define(['app'], function (app) {
 			}
 			
 			this.init = function(){
-				getPegawai({
-					sekolahid : authService.getProfile().sekolahid,
-					'per-page' : 0
-				});
-				getRoles();
+				
 				if($routeParams.id){
 					$scope.isEdit = true;
 	                getById($routeParams.id);
 	            }
+	            getPegawai({
+					sekolahid : authService.getProfile().sekolahid,
+					'per-page' : 0
+				});
+				getRoles();
 			}
-
 
 			$scope.onSaveClick = function(event){
 				if($scope.form.username == '' || $scope.form.username == null){
@@ -287,10 +321,9 @@ define(['app'], function (app) {
 				var params = $scope.form;
 				
 				function success(result){
-					console.log(result);
 					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
-						// $location.path( "/pengaturan/user/");
+						$location.path( "/pengaturan/user/");
 						cfpLoadingBar.complete();
 
 					}else{

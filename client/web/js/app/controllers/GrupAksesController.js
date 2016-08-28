@@ -273,10 +273,11 @@ define(['app'], function (app) {
 
 			this.init = function(){
 				if($routeParams.id){
-	                getRole({
-	                	rolename : $routeParams.id
-	                });
+	                
 	            }
+	            getRole({
+                	rolename : $routeParams.id
+                });
 			}
 
 			$scope.onSaveClick = function(event){
@@ -311,7 +312,7 @@ define(['app'], function (app) {
 				.then(function (result) {
 	                if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
-						// $location.path( "/pengaturan/grup-akses/");
+						$location.path( "/pengaturan/grup-akses/");
 						cfpLoadingBar.complete();
 					}else{
 						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');

@@ -46,7 +46,6 @@ define(['app'], function (app) {
 
         function setLoginLogoutText(loggedIn) {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
-            console.log(loggedIn);
             if(loggedIn){
                 getMenuPrivileges();
                 getUserProfile();

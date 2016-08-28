@@ -60,7 +60,7 @@ class User extends \rest\models\AppActiveRecord
         return [
             [['username'], 'required'],
             [['auth_key', 'password_hash'], 'required'],
-            [['status', 'pegawai_id'], 'integer'],
+            [['status', 'pegawai_id','sekolahid'], 'integer'],
             [['type_token'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'access_token'], 'string', 'max' => 255],
@@ -88,6 +88,7 @@ class User extends \rest\models\AppActiveRecord
             'access_token' => Yii::t('app', 'Access Token'),
             'type_token' => Yii::t('app', 'Type Token'),
             'pegawai_id' => Yii::t('app', 'Pegawai ID'),
+            'sekolahid' => Yii::t('app', 'Sekolah ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
@@ -145,22 +146,22 @@ class User extends \rest\models\AppActiveRecord
             'name' => $this->username,
             'fullname' => ($this->pegawai) ? $this->pegawai->nama_pegawai : $this->username,
             'jabatan' => ($this->pegawai) ? $this->pegawai->jabatan : '',
-            'sekolahid' => 0, //($this->pegawai) ? $this->pegawai->sekolahid : 0,
+            'sekolahid' => $this->sekolahid,
         ];
     }
 
-    public function beforeValidate(){
-        if($this->isNewRecord){
-            $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
-            $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
-        }else{
-            $old = $this->oldAttributes;
-            // $this->password_hash = (empty($this->password_hash)) ? $old['password_hash'] : 
-            //                             Yii::$app->security->generatePasswordHash($this->password_hash);
-        }
+    // public function beforeValidate(){
+    //     if($this->isNewRecord){
+    //         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
+    //         $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
+    //     }else{
+    //         $old = $this->oldAttributes;
+    //         // $this->password_hash = (empty($this->password_hash)) ? $old['password_hash'] : 
+    //         //                             Yii::$app->security->generatePasswordHash($this->password_hash);
+    //     }
         
-        return parent::beforeValidate();
-    }
+    //     return parent::beforeValidate();
+    // }
 
     /**
      * Get List input Info Tagihan
@@ -168,38 +169,52 @@ class User extends \rest\models\AppActiveRecord
      */
     public function getList($params){
         $customeQuery = new Query;
-        $customeQuery->select('`id`,
-                      `username`,
-                      `email`,
-                      `status`,
-                      `pegawai_id`,
-                      `created_at`,
-                      `updated_at` ')
-            ->from(self::tableName());
+        $customeQuery
+            ->select([
+                'a.`id`',
+                'a.`username`',
+                'a.`email`',
+                'a.`status`',
+                'a.`pegawai_id`',
+                'p.`nama_pegawai`',
+                'a.`sekolahid`',
+                'IF(a.sekolahid = 0, "All", `s`.`nama`) AS `sekolah`',
+                'b.item_name as role',
+                'a.`created_at`',
+                'a.`updated_at`',
+            ])
+            ->from('user a')
+            ->leftJoin('auth_assignment b', 'b.user_id = a.id')
+            ->leftJoin('pegawai p', 'p.id = a.pegawai_id')
+            ->leftJoin('sekolah s', 's.id = a.sekolahid');
 
-        extract($params);
-        $customeQuery->where('1=1');
+        if(is_array($params)){
+            extract($params);
+            $customeQuery->where('1=1');
 
-        if(isset($id) && $id){
-            $customeQuery->andWhere(['id' => $id]);
+            if(isset($id) && $id){
+                $customeQuery->andWhere(['a.id' => $id]);
+            }
+
+            if(isset($username) && $username){
+                $customeQuery->andWhere(['a.username' => $username]);
+            }
+
+            if(isset($email) && $email){
+                $customeQuery->andWhere(['a.email' => $email]);
+            }
+
+            if(isset($query) && $query){
+                $customeQuery->andFilterWhere([
+                    'or',
+                    ['like', 'username', $query],
+                    ['like', 'email', $query],
+                ]);
+            }  
+        }else if(is_string($params) || is_int($params)){
+            $customeQuery->andWhere(['a.id' => $params]);
         }
-
-        if(isset($username) && $username){
-            $customeQuery->andWhere(['username' => $username]);
-        }
-
-        if(isset($email) && $email){
-            $customeQuery->andWhere(['email' => $email]);
-        }
-
-        if(isset($query) && $query){
-            $customeQuery->andFilterWhere([
-                'or',
-                ['like', 'username', $query],
-                ['like', 'email', $query],
-            ]);
-        }   
-
+         
         // var_dump($customeQuery->createCommand()->rawSql);exit();
 
         return $customeQuery;

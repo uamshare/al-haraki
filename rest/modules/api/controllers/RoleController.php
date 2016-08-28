@@ -65,10 +65,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             $this->response->setStatusCode(422, 'Data Validation Failed.');
             return ['message' => 'Assign role failed'];
         }
-        
     }
-
-    
 
     /**
      * Get List input Info Tagihan
@@ -91,11 +88,12 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $request = Yii::$app->getRequest();
         $rolename = $request->getQueryParam('rolename', false);
 
-        if($rolename){
+        // if($rolename){
             $permission =  $Auth->getPermissionsByRole($rolename);
-        }else{
-            $permission =  $Auth->getPermissions();
-        }
+        // }else{
+            // $permission =  $Auth->getPermissions();
+        // }
+        // var_dump($permission);exit();
         $list = [];
         foreach ($this->_listPermissions() as $key => $value) {
             $list[$key] = $value;
@@ -152,8 +150,6 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 
         return $list;
     }
-
-    
 
     public function actionInit(){
         // $Auth = new $this->modelClass;
@@ -231,7 +227,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             // Add / Update Role
             $role = $Auth->getRole($form['name']);
             if(!$role){
-                $role = $Auth->createRole('admin');
+                $role = $Auth->createRole($form['name']);
                 $role->description = $form['description'];
                 $Auth->add($role);
                 // $Auth->assign($role, $user->getId());
@@ -269,8 +265,6 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 }
             }
         }
-        
-
         return ['success' => true];
     }
 
