@@ -7,7 +7,7 @@ define(['app'], function (app) {
     var helperService = function ($http, $rootScope) {
         var serviceBase = BASEAPIURL,
             factory = {
-                loginPath: 'auth/login',
+                loginPath: 'auths/login',
                 user: {
                     isAuthenticated: false,
                     roles: null

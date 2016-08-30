@@ -9,7 +9,7 @@ define(['app'], function (app) {
             factory = {};
 
         factory.getRoles = function(paramdata) {
-            return $http.get(serviceBase + 'role/list',{
+            return $http.get(serviceBase + 'roles/list',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -17,7 +17,7 @@ define(['app'], function (app) {
         };
 
         factory.getPermission = function(paramdata) {
-            return $http.get(serviceBase + 'role/listpermissions',{
+            return $http.get(serviceBase + 'roles/listpermissions',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -25,7 +25,7 @@ define(['app'], function (app) {
         };
 
         factory.getMenuPrivileges = function(paramdata) {
-            return $http.get(serviceBase + 'role/menuprivileges',{
+            return $http.get(serviceBase + 'roles/menuprivileges',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -33,7 +33,7 @@ define(['app'], function (app) {
         };
 
         factory.assign = function (params) {
-            return $http.post(serviceBase + 'role/assign', params).then(function (results) {
+            return $http.post(serviceBase + 'roles/assign', params).then(function (results) {
                 return results.data;
             });
         };

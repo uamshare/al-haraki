@@ -13,7 +13,7 @@ define(['app'], function (app) {
         };
 
         factory.getList = function(paramdata) {
-            return $http.get(serviceBase + 'pegawai/list',{
+            return $http.get(serviceBase + 'pegawais/list',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

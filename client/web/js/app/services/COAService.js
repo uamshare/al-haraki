@@ -13,7 +13,7 @@ define(['app'], function (app) {
         };
 
         factory.getList = function(paramdata) {
-            return $http.get(serviceBase + 'mcoad/list',{
+            return $http.get(serviceBase + 'mcoads/list',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

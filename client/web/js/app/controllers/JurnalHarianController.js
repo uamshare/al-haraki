@@ -330,19 +330,6 @@ define(['app'], function (app) {
 							var rowdata = rowEntity;
 							delete rowdata['coalist'];
 							$scope.gridDetailDirtyRows[rowEntity.index] = rowdata;
-							// $scope.gridDetailDirtyRows[rowEntity.index] = {
-							// 	index : '',
-							// 	tjmdid
-							// 	tjmhno
-							// 	tjmddesc
-							// 	mcoadno
-							// 	mcoadname
-							// 	debet
-							// 	kredit
-							// 	created_at
-							// 	updated_at
-							// 	flag
-							// };
 						}else if(['debet','kredit'].indexOf(colDef.name) > -1 && 
 									oldValue != newValue && (parseInt(newValue))){
 							var rowdata = rowEntity;
@@ -568,7 +555,10 @@ define(['app'], function (app) {
 					idxdirty = $scope.gridDetailDirtyRows.indexOf(rowdata);
 				$scope.gridDetail.data.splice(idx,1);
 				// $scope.gridDetailDirtyRows.splice(idxdirty,1);
-				$scope.gridDetailDirtyRows[idxdirty].flag = 0;
+				if($scope.gridDetailDirtyRows.length > 0){
+					$scope.gridDetailDirtyRows[idxdirty].flag = 0;
+				}
+				
 			}
     	}
 

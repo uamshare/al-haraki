@@ -1,7 +1,13 @@
 <?php
 namespace rest\modules\api;
 use Yii;
+use yii\web\Response;
 use yii\data\ActiveDataProvider;
+use yii\filters\auth\CompositeAuth;
+use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
+use rest\modules\api\auth\HttpHeaderAuth;
 
 class ActiveController extends \yii\rest\ActiveController
 {
@@ -23,7 +29,7 @@ class ActiveController extends \yii\rest\ActiveController
             return false;
         }
         if ($this->checkAccess) {
-            $this->checkAccess($action->id);
+            $action->id = $this->checkAccess($action->id);
         }
 
         return true; // or false to not run the action
@@ -55,8 +61,52 @@ class ActiveController extends \yii\rest\ActiveController
             'scenario' => $this->createScenario,
         ];
 
+        // var_dump($parentActions);exit();
+
         $response = Yii::$app->response;
         return $parentActions;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        $actionid = \Yii::$app->controller->id . '.' . \Yii::$app->controller->action->id;
+        $behaviors = parent::behaviors();
+
+        if(!in_array($actionid, ['auth.login']) && \Yii::$app->controller->action->id != 'options'){
+            $behaviors['authenticator'] = [
+                'class' => CompositeAuth::className(),
+                'authMethods' => [
+                    HttpBasicAuth::className(),
+                    HttpBearerAuth::className(),
+                    QueryParamAuth::className(),
+                    HttpHeaderAuth::className()
+                ]
+            ];
+        }
+        
+
+        $behaviors['contentNegotiator'] = [
+            'class' => 'yii\filters\ContentNegotiator',
+            'formats' => [
+                'text/html' => Response::FORMAT_JSON,
+                'application/json' => Response::FORMAT_JSON,
+                'application/xml' => Response::FORMAT_XML,
+            ],
+        ];
+        $behaviors['corsFilter'] = [
+            'class' => \yii\filters\Cors::className(),
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => true,
+                'Access-Control-Max-Age' => 86400,
+            ],
+        ];
+        return $behaviors;
     }
 
     /**
@@ -90,23 +140,42 @@ class ActiveController extends \yii\rest\ActiveController
      * @throws ForbiddenHttpException if the user does not have access
      */
     public function checkAccess($action, $model = null, $params = [])
-    {
+    {   
+        $method = Yii::$app->getRequest()->method;
+        $actiontransform = [
+            'GET' => 'index',
+            'POST' => 'create',
+            'PUT' => 'update',
+            'DELETE' => 'delete',
+        ];
+
+        if($method == 'OPTIONS'){
+            // var_dump($method);exit();
+            return 'options';
+        }
+        
+        
+
         if( in_array($this->id . '.' . $action, ['auth.login','auth.logout','role.menuprivileges']) ){
             return $action;
         }
+
+        if( in_array($this->id, ['siswarombel']) ){
+            return $action;
+        }
+
         if( !in_array($action, ['index','view','create','update','delete']) ){
-            $method = Yii::$app->getRequest()->method;
-            $actiontransform = [
-                'GET' => 'index',
-                'POST' => 'create',
-                'PUT' => 'update',
-                'DELETE' => 'delete',
-            ];
             $action = $actiontransform[$method];
         }
+
+        // var_dump(Yii::$app->user->getId());
+        // var_dump(Yii::$app->user->can( $this->id . '_' . $action));exit();
+
         if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
         {
              throw new \yii\web\ForbiddenHttpException('You don\'t have permission.');
         }
+
+        return $action;
     }
 }

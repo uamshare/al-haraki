@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use rest\modules\api\BaseApiController;
 
-class AuthController extends \rest\modules\api\ActiveController
+class AuthController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController //
 {
     public $modelClass = 'rest\models\Auth';
 
@@ -16,19 +16,19 @@ class AuthController extends \rest\modules\api\ActiveController
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'profil' => ['get'],
-                        'login' => ['post'],
+                        'login' => ['post', 'options'],
                         'logout' => ['post'],
                         'assignmentrole' => ['post'],
                     ],
-                ],
+                ]
             ]
         );
     }
 
-    public function actionIndex(){
-    	$data['data'] = ['__token' => Yii::$app->getSecurity()->generateRandomString()];
-    	return $data;
-    }
+    // public function actionIndex(){
+    // 	$data['data'] = ['__token' => Yii::$app->getSecurity()->generateRandomString()];
+    // 	return $data;
+    // }
 
     public function actionLogin()
     {
@@ -38,6 +38,14 @@ class AuthController extends \rest\modules\api\ActiveController
         $password = isset($post['password']) ? $post['password'] : false;
 
         // var_dump(Yii::$app->security->generatePasswordHash('12345678'));exit();
+
+        if(!$username || !$password){
+            $this->response = Yii::$app->getResponse();
+            $this->response->setStatusCode(401, 'Unauthorized');
+            return [
+                'error_message' => 'Username or password not found'
+            ];
+        }
 
         $user = $model::findByLogin($username, $password);
         if($user && Yii::$app->user->login($user)){

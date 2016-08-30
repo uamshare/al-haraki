@@ -17,7 +17,7 @@ define(['app'], function (app) {
          *
          */
         factory.getList = function(paramdata) {
-            return $http.get(serviceBase + 'tagihaninfoinput/list',{
+            return $http.get(serviceBase + 'tagihaninfoinputs/list',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -29,7 +29,7 @@ define(['app'], function (app) {
          *
          */
         factory.getListPembayaran = function(paramdata) {
-            return $http.get(serviceBase + 'tagihanpembayaran/listbayar',{
+            return $http.get(serviceBase + 'tagihanpembayarans/listbayar',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -41,7 +41,7 @@ define(['app'], function (app) {
          *
          */
         factory.getSummaryOuts = function(paramdata) {
-            return $http.get(serviceBase + 'tagihanpembayaran/summaryouts',{
+            return $http.get(serviceBase + 'tagihanpembayarans/summaryouts',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -49,7 +49,7 @@ define(['app'], function (app) {
         };
 
         factory.getListActive = function(paramdata) {
-            return $http.get(serviceBase + 'tagihaninfoinput/listinfo',{
+            return $http.get(serviceBase + 'tagihaninfoinputs/listinfo',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

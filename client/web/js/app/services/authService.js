@@ -7,7 +7,7 @@ define(['app'], function (app) {
     var authFactory = function ($http, $rootScope) {
         var serviceBase = BASEAPIURL,
             factory = {
-                loginPath: 'auth/login',
+                loginPath: 'auths/login',
                 user: {
                     isAuthenticated: false,
                     roles: null
@@ -17,7 +17,7 @@ define(['app'], function (app) {
         factory.profil;
 
         factory.login = function (usernameOrEmail, passwd) {
-            return $http.post(serviceBase + 'auth/login', {
+            return $http.post(serviceBase + 'auths/login', {
                     username : usernameOrEmail,
                     password : passwd 
                 }).then(
@@ -31,7 +31,7 @@ define(['app'], function (app) {
         };
 
         factory.logout = function () {
-            return $http.post(serviceBase + 'auth/logout').then(
+            return $http.post(serviceBase + 'auths/logout').then(
                 function (results) {
                     var loggedIn = !results.data.success;
                     changeAuth(loggedIn);

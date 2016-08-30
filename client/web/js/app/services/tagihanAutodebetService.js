@@ -18,7 +18,7 @@ define(['app'], function (app) {
         };
 
         factory.getNewNoTransaksi = function () {
-            return $http.get(serviceBase + 'tagihanautodebet/newnotransaksi').then(function (results) {
+            return $http.get(serviceBase + 'tagihanautodebets/newnotransaksi').then(function (results) {
                 return results.data;
             });
         };
@@ -55,7 +55,7 @@ define(['app'], function (app) {
         };
 
         factory.getDetail = function (paramdata) {
-            return $http.get(serviceBase + 'tagihanautodebet/findbyno',{
+            return $http.get(serviceBase + 'tagihanautodebets/findbyno',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

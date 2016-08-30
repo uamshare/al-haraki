@@ -19,7 +19,7 @@ define(['app'], function (app) {
         };
 
         factory.getNewNoKwitansi = function (paramdata) {
-            return $http.get(serviceBase + 'kwitansipengeluaran/newnokwitansi',{
+            return $http.get(serviceBase + 'kwitansipengeluarans/newnokwitansi',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -56,7 +56,7 @@ define(['app'], function (app) {
         };
 
         factory.getDetail = function (paramdata) {
-            return $http.get(serviceBase + 'kwitansipengeluaran/findbyno',{
+            return $http.get(serviceBase + 'kwitansipengeluarans/findbyno',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

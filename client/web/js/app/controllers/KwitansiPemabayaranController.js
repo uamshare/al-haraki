@@ -752,7 +752,9 @@ define(['app'], function (app) {
 					idxdirty = $scope.gridDetailDirtyRows.indexOf(rowdata);
 				$scope.gridDetail.data.splice(idx,1);
 				// $scope.gridDetailDirtyRows.splice(idxdirty,1);
-				$scope.gridDetailDirtyRows[idxdirty].flag = 0;
+				if($scope.gridDetailDirtyRows.length > 0){
+					$scope.gridDetailDirtyRows[idxdirty].flag = 0;
+				}
 			}
 
 			$scope.onNamaChange = function(index){

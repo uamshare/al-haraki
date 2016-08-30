@@ -3,7 +3,7 @@ namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
 
-class SiswarombelController extends \yii\rest\ActiveController // \rest\modules\api\ActiveController //
+class SiswarombelController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController // 
 {
     public $modelClass = 'rest\models\SiswaRombel';
 

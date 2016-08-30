@@ -13,7 +13,7 @@ define(['app'], function (app) {
         };
 
         factory.getNewNoKwitansi = function (paramdata) {
-            return $http.get(serviceBase + 'jurnalharian/newnotransaksi',{
+            return $http.get(serviceBase + 'jurnalharians/newnotransaksi',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;
@@ -37,7 +37,7 @@ define(['app'], function (app) {
         };
 
         factory.delete = function (id) {
-            return $http.delete(serviceBase + 'jurnalharian/delete/' + id).then(function (status) {
+            return $http.delete(serviceBase + 'jurnalharians/' + id).then(function (status) {
                 return status.data;
             });
         };
@@ -49,7 +49,7 @@ define(['app'], function (app) {
         };
 
         factory.getDetail = function (paramdata) {
-            return $http.get(serviceBase + 'jurnalharian/findbyno',{
+            return $http.get(serviceBase + 'jurnalharians/findbyno',{
                 params : paramdata
             }).then(function (results) {
                 return results.data;

@@ -15,27 +15,33 @@ class Api extends \yii\base\Module
 
     public function behaviors()
 	{
-		$actionid = \Yii::$app->controller->id . '.' . \Yii::$app->controller->action->id;
+		// $actionid = \Yii::$app->controller->id . '.' . \Yii::$app->controller->action->id;
 		$behaviors = parent::behaviors();
-		
-		$behaviors['corsFilter'] = [
-            'class' => \yii\filters\Cors::className()
-        ];
 
-		if(in_array($actionid, ['auth.login'])){
-			return $behaviors;
-		}
+		// if(in_array($actionid, ['auth.login'])){
+		// 	return $behaviors;
+		// }
 
-		$behaviors['authenticator'] = [
-			'class' => CompositeAuth::className(),
-			'authMethods' => [
-				HttpBasicAuth::className(),
-				HttpBearerAuth::className(),
-				QueryParamAuth::className(),
-				HttpHeaderAuth::className()
-			]
-		];
-	    // $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_HTML;
+		// $behaviors['authenticator'] = [
+		// 	'class' => CompositeAuth::className(),
+		// 	'authMethods' => [
+		// 		HttpBasicAuth::className(),
+		// 		HttpBearerAuth::className(),
+		// 		QueryParamAuth::className(),
+		// 		HttpHeaderAuth::className()
+		// 	]
+		// ];
+	 //    $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_HTML;
+	 //    $behaviors['corsFilter'] = [
+  //           'class' => \yii\filters\Cors::className(),
+  //           'cors' => [
+  //               'Origin' => ['*'],
+  //               'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+  //               'Access-Control-Request-Headers' => ['*'],
+  //               'Access-Control-Allow-Credentials' => true,
+  //               'Access-Control-Max-Age' => 86400,
+  //           ],
+  //       ];
 		return $behaviors;
 	}
 	
