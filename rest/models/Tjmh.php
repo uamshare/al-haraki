@@ -19,7 +19,7 @@ use Yii;
  * @property Tjmd[] $tjmds
  * @property Sekolah $sekolah
  */
-class Tjmh extends \yii\db\ActiveRecord
+class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -169,6 +169,12 @@ class Tjmh extends \yii\db\ActiveRecord
             // echo $postingGL->rawSql; 
             // exit();
             $postingGL->execute();
+            
+            $this->created_at = $rowHeader['created_at'];
+            $this->saveLogs([
+                'rowHeader' => $rowHeader,
+                'rowDetail' => $rowDetail
+            ]);
             
             $transaction->commit();
             return true;

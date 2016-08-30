@@ -21,7 +21,7 @@ define(['app'], function (app) {
         };
 
         factory.insert = function (params) {
-            return $http.post(serviceBase + 'jurnalharian/create', params).then(function (results) {
+            return $http.post(serviceBase + 'jurnalharians', params).then(function (results) {
                 return results.data;
             });
         };
@@ -31,7 +31,7 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'jurnalharians/' + params.id, params).then(function (status) {
+            return $http.put(serviceBase + 'jurnalharians/' + params.form.tjmhno, params).then(function (status) {
                 return status.data;
             });
         };

@@ -291,6 +291,44 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         return $customeQuery;
     }
 
+    /**
+     * Get Summary Outstanding By Tagihan
+     *
+     *
+     */
+    public function getSummaryOutsBySekolah($params){
+        $customeQuery = new Query;
+        if(is_array($params)){
+            extract($params);
+
+            $customeQuery
+            ->select([
+                '`kelas`',
+                '`sekolahid`',
+                'p.`tahun_ajaran`',
+                'SUM(IFNULL(`spp_kredit`,0) - IFNULL(`spp_debet`,0)) AS spp',
+                'SUM(IFNULL(`komite_sekolah_kredit`,0) - IFNULL(`komite_sekolah_debet`,0)) AS komite_sekolah',
+                'SUM(IFNULL(`catering_kredit`,0) - IFNULL(`catering_debet`,0)) AS catering',
+                'SUM(IFNULL(`keb_siswa_kredit`,0) - IFNULL(`keb_siswa_debet`,0)) AS keb_siswa',
+                'SUM(IFNULL(`ekskul_kredit`,0) - IFNULL(`ekskul_debet`,0)) AS ekskul'
+            ])
+            ->from('`kelas` k')
+            ->innerJoin('siswa_rombel sr', 'sr.`kelasid` = k.`id`')
+            ->leftJoin(
+                'tagihan_pembayaran p', 
+                'sr.`id` = p.`idrombel` AND p.`tahun_ajaran` = :tahun_ajaran_id AND p.updated_at <= :date',
+                [ 'tahun_ajaran_id' => $tahun_ajaran_id, 'date' => $date ]
+            )
+            ->groupBy(['k.`sekolahid`','k.`kelas`'])
+            ->where('1=1');
+
+        }
+         
+        // var_dump($customeQuery->createCommand()->rawSql);exit();
+
+        return $customeQuery;
+    }
+
     public function getListOutstandingByMonth($param){
         extract($param);
         $where = 'WHERE 1=1';

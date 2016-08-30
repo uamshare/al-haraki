@@ -46,18 +46,38 @@ define(['app'], function (app) {
         }
         $scope.month = helperService.getMonthName( date.getMonth() );
         $scope.year = date.getFullYear();
-
+        $scope.widget2 = {
+          sdit : [],
+          smpit : []
+        };
         function getSummary(paramdata){
             cfpLoadingBar.start();
             $resourceApi.getSummaryOuts(paramdata)
             .then(function (result) {
                 if(result.success){
                     if(result.rows){
-                        $scope.infoTagihan.rows[0].value = result.rows.spp;
-                        $scope.infoTagihan.rows[1].value = result.rows.komite_sekolah;
-                        $scope.infoTagihan.rows[2].value = result.rows.catering;
-                        $scope.infoTagihan.rows[3].value = result.rows.keb_siswa;
-                        $scope.infoTagihan.rows[4].value = result.rows.ekskul;
+                        var sumBytagihan = result.rows.sum_by_tagihan;
+                        $scope.infoTagihan.rows[0].value = sumBytagihan.spp;
+                        $scope.infoTagihan.rows[1].value = sumBytagihan.komite_sekolah;
+                        $scope.infoTagihan.rows[2].value = sumBytagihan.catering;
+                        $scope.infoTagihan.rows[3].value = sumBytagihan.keb_siswa;
+                        $scope.infoTagihan.rows[4].value = sumBytagihan.ekskul;
+
+                        var idx1 = 0, idx2 = 0;
+                        for(var idx in result.rows.sum_by_sekolah){
+                            
+                            if(result.rows.sum_by_sekolah[idx].sekolahid == 1){
+                                $scope.widget2.sdit[idx1] = result.rows.sum_by_sekolah[idx];
+                                $scope.widget2.sdit[idx1]['index'] = idx1 + 1;
+                                idx1++;
+                            }
+                            if(result.rows.sum_by_sekolah[idx].sekolahid == 2){
+                                $scope.widget2.smpit[idx2] = result.rows.sum_by_sekolah[idx];
+                                $scope.widget2.smpit[idx2]['index'] = idx2 + 1;
+                                idx2++;
+                            }
+                            
+                        }
                     }
                 }
                 cfpLoadingBar.complete();

@@ -53,7 +53,10 @@ define(['app'], function (app) {
     				name: 'isCheck', 
     				displayName: 'Check', 
     				type: 'boolean',
-    				headerCellTemplate: '<input type="checkbox" ng-model="parentCheck" ng-change="grid.appScope.toggleSelectAll(parentCheck)"/>',
+    				headerCellTemplate: '<div style="padding : 5px;">' + 
+    										'<input class="custome1" type="checkbox" ng-model="parentCheck" ' +
+    											'ng-change="grid.appScope.toggleSelectAll(parentCheck)"/>' +
+    									'</div>',
     				cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck"">'
     			},
 				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},

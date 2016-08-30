@@ -66,3 +66,15 @@
 .grid-align-center{
   text-align: center;
 }
+
+input[type=checkbox].custome1 + .lbl, 
+input[type=radio].custome1 + .lbl {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    line-height: 20px;
+    min-height: 18px;
+    min-width: 18px;
+    font-weight: normal;
+    cursor: pointer;
+}

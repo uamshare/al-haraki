@@ -52,11 +52,18 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
     public function actionSummaryouts(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
-        
-        // $kls = $request->getQueryParam('kelasid', false);
-        return $model->getSummaryOutsByTagihan([
-            'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
-            'date' => $request->getQueryParam('date', false)
-        ])->One();
+        $tahun_ajaran_id = $request->getQueryParam('tahun_ajaran_id', false);
+        $date = $request->getQueryParam('date', false);
+
+        return [
+            'sum_by_tagihan' => $model->getSummaryOutsByTagihan([
+                    'tahun_ajaran_id' => $tahun_ajaran_id,
+                    'date' => $date
+                ])->One(),
+            'sum_by_sekolah' => $model->getSummaryOutsBySekolah([
+                    'tahun_ajaran_id' => $tahun_ajaran_id,
+                    'date' => $date
+                ])->All()
+        ];
     }
 }

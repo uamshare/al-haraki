@@ -526,16 +526,13 @@ define(['app'], function (app) {
 					return false;
 				}
 
-				// console.log($scope.gridDetailDirtyRows);
-				// return; 
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
-				cfpLoadingBar.start();
-				$resourceApi.insert(params)
-				.then(function (result) {
-	                if(result.success){
+				
+				function success(result){
+					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
 						reset();
 						refreshNo();
@@ -546,7 +543,16 @@ define(['app'], function (app) {
 						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
 						cfpLoadingBar.complete();
 					}
-	            }, errorHandle);
+				}
+				
+				cfpLoadingBar.start();
+				if($routeParams.id){
+					$resourceApi.update(params)
+					.then(success, errorHandle);
+				}else{
+					$resourceApi.insert(params)
+					.then(success, errorHandle);
+				}
 			}
 
 			$scope.onResetClick = function(event){
