@@ -11,7 +11,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="no-kwitansi">
-						<div class="form-group">
+						<div class="form-group" ng-hide="isHideFile">
 							<label class="col-sm-4 control-label">File</label>
 							<div class="col-sm-8">
 								<object id="file-object" name="file_import"></object>
@@ -73,10 +73,10 @@
 	</div>
 	<div class="box-footer">
 		<div class="box-tools pull-left">
-			<a href="#keuangan/rekonsiliasi-autodebet/add" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+			<!-- <a href="#keuangan/rekonsiliasi-autodebet/add" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Tambah Kwitansi Pembayaran" ng-hide="isButtonAddHide">
 				<i class="fa fa-plus-circle"></i> Tambah Data
-			</a>
+			</a> -->
 			<a href="#keuangan/rekonsiliasi-autodebet" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Rekap Data">
 				<i class="fa fa-th-list"></i> Rekap Data

@@ -70,13 +70,15 @@ define(['app'], function (app) {
                 ]
             };
 
+            // var columnActionTpl =   '<div class="col-action">' + 
+            //                                 '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+            //                                     '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
+            //                                 '</a>&nbsp;' +
+            //                                 '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
+            //                                     '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+            //                                 '</a>' +
+            //                             '</div>';
             var columnActionTpl =   '<div class="col-action">' + 
-                                            '<a href="" ng-click="grid.appScope.onPrintClick(row.entity)" >' + 
-                                                '<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
-                                            '</a>&nbsp;' +
-                                            '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
-                                                '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
-                                            '</a>&nbsp;' +
                                             '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
                                                 '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
                                             '</a>' +
@@ -91,19 +93,23 @@ define(['app'], function (app) {
             }); 
 
             $scope.grid = { 
+                paginationPageSizes: [20, 30, 50, 100, 200],
+                paginationPageSize: $CONST_VAR.pageSize,
+                pageNumber : 1,
+                useExternalPagination : true,
                 enableMinHeightCheck : true,
-                minRowsToShow : 20,
+                minRowsToShow : $CONST_VAR.pageSize,
                 enableGridMenu: true,
                 enableSelectAll: true,
-                virtualizationThreshold: 20,
+                virtualizationThreshold: $CONST_VAR.pageSize,
                 enableFiltering: true,
-                enableCellEditOnFocus: true,
                 columnDefs : gridOptions.columnDefs,
-                //Export
-                onRegisterApi: function(gridApi){
-                  $scope.gridApi = gridApi;
-                }
             };
+
+            $scope.filter = {
+                date_start : helperService.date(date).firstDay,
+                date_end : date //helperService.date(date).lastDay //
+            }
 
             function setGridCollapse(collapse){
                 var box = $('#tagihan-autodebet-grid');
@@ -136,18 +142,15 @@ define(['app'], function (app) {
 
             function get(paramdata){
                 cfpLoadingBar.start();
-                $resourceApi.get(paramdata.page, paramdata.perPage)
+                $resourceApi.get(paramdata)
                 .then(function (result) {
                     if(result.success){
                         angular.forEach(result.rows, function(dt, index) {
                             var romnum = index + 1;
                             result.rows[index]["index"] = romnum;
-
                             result.rows[index]["namabulan"] = helperService.getMonthName(result.rows[index]["bulan"] - 1);
                         })
                         $scope.grid.data = result.rows;
-                        // $scope.gridApi.grid.minRowsToShow = 5; //paramdata.perPage;
-                        // $scope.gridApi.grid.gridHeight =500;
                     }
                     cfpLoadingBar.complete();
                 }, errorHandle);
@@ -163,7 +166,9 @@ define(['app'], function (app) {
                     cfpLoadingBar.complete();
                     get({
                         page : 1,
-                        perPage : 20
+                        'per-page' : $CONST_VAR.pageSize,
+                        date_start : $scope.filter.date_start,
+                        date_end : $scope.filter.date_end
                     });
                 }, errorHandle);
             }
@@ -186,7 +191,25 @@ define(['app'], function (app) {
             this.init = function(){
                 get({
                     page : 1,
-                    perPage : 20
+                    'per-page' : $CONST_VAR.pageSize,
+                    date_start : $scope.filter.date_start,
+                    date_end : $scope.filter.date_end
+                });
+            }
+
+            $scope.grid.onRegisterApi = function(gridApi){
+                $scope.gridApi = gridApi;
+                gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+                    $scope.grid.pageNumber = newPage;
+                    $scope.grid.pageSize = pageSize;
+                    $scope.grid.virtualizationThreshold = pageSize; 
+
+                    get({
+                        page : newPage,
+                        'per-page' : $scope.grid.virtualizationThreshold,
+                        date_start : $scope.filter.date_start,
+                        date_end : $scope.filter.date_end
+                    });
                 });
             }
 
@@ -200,6 +223,24 @@ define(['app'], function (app) {
                 setGridCollapse(true);
                 reset();
                 refreshNo();
+            }
+
+            $scope.onSearchClick = function(event){
+                if($scope.filter.date_start == '' || $scope.filter.date_start == null){
+                    toastr.warning('Tgl Awal tidak boleh kosong.', 'Warning');
+                    return false;
+                }
+
+                if($scope.filter.date_end == '' || $scope.filter.date_end == null){
+                    toastr.warning('Tgl Akhir tidak boleh kosong.', 'Warning');
+                    return false;
+                }
+                get({
+                    page : 1,
+                    'per-page' : $CONST_VAR.pageSize,
+                    date_start : $scope.filter.date_start,
+                    date_end : $scope.filter.date_end
+                });
             }
 
             $scope.onShowClick = function(event){
@@ -689,11 +730,13 @@ define(['app'], function (app) {
                 if($routeParams.id){
                     getById($routeParams.id);
                     $scope.isButtonAddHide = false;
+                    $scope.isHideFile = true;
                 }else{
                     refreshNo();
                     reset();
                     handleFile();
-                    $scope.isButtonAddHide = true;
+                    $scope.isButtonAddHide = false;
+                    $scope.isHideFile = false;
                 }
             }
 
@@ -729,9 +772,7 @@ define(['app'], function (app) {
                     grid : $scope.gridDetailDirtyRows
                 }
 
-                cfpLoadingBar.start();
-                $resourceApi.insert(params)
-                .then(function (result) {
+                function success(result){
                     if(result.success){
                         toastr.success('Data telah tersimpan', 'Success');
                         reset();
@@ -742,7 +783,16 @@ define(['app'], function (app) {
                         toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
                         cfpLoadingBar.complete();
                     }
-                }, errorHandle);
+                }
+                
+                cfpLoadingBar.start();
+                if($routeParams.id){
+                    $resourceApi.update(params)
+                    .then(success, errorHandle);
+                }else{
+                    $resourceApi.insert(params)
+                    .then(success, errorHandle);
+                }
             }
 
             $scope.onResetClick = function(event){

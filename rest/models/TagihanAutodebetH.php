@@ -21,7 +21,7 @@ use Yii;
  * @property TagihanAutodebetD[] $tagihanAutodebetDs
  * @property Sekolah $sekolah
  */
-class TagihanAutodebetH extends \yii\db\ActiveRecord
+class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -190,6 +190,17 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
                 // echo $savedD->rawSql;exit();
             }
             
+            $GL = new \rest\models\Rgl();
+            $autoPosting = $GL->AutoPosting('03', $postingValue);
+            $autoPosting['unposting']->execute();
+            $autoPosting['posting']->execute();
+
+            $this->created_at = $rowHeader['created_at'];
+            $this->saveLogs([
+                'rowHeader' => $rowHeader,
+                'rowDetail' => $rowDetail
+            ]);
+
             $transaction->commit();
             return true;
         } catch(\Exception $e) {
@@ -212,7 +223,6 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
     public function deleteAndRemoveAll($no){
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
-
         try {
             $deleteD = $DB->createCommand()->delete(
                 'tagihan_autodebet_d',
@@ -237,6 +247,17 @@ class TagihanAutodebetH extends \yii\db\ActiveRecord
             );
             // echo $deleteP->rawSql;exit();
             $deleteP->execute();
+
+            $GL = new \rest\models\Rgl();
+            $unpostingGL = $GL->unposting($DB, [
+                'noref' => $no
+            ]);
+            $unpostingGL->execute();
+            
+            $this->created_at = date('Y-m-d H:i:s A');
+            $this->saveLogs([
+                'no_kwitansi' => $no
+            ]);
 
             $transaction->commit();
             return true;

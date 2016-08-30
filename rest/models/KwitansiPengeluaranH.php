@@ -167,7 +167,7 @@ class kwitansiPengeluaranH extends \rest\models\AppActiveRecord //\yii\db\Active
             $savedD->execute();
             
             $GL = new \rest\models\Rgl();
-            $autoPosting = $GL->AutoPosting('01', $postingValue);
+            $autoPosting = $GL->AutoPosting('02', $postingValue);
             $autoPosting['unposting']->execute();
             $autoPosting['posting']->execute();
 

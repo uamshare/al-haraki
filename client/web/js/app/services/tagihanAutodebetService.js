@@ -8,8 +8,13 @@ define(['app'], function (app) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
-        factory.get = function (pageIndex, pageSize) {
-            return getResource('tagihanautodebets', pageIndex, pageSize);
+        factory.get = function (paramdata) {
+            return $http.get(serviceBase + 'tagihanautodebets',{
+                params : paramdata
+            }).then(function (results) {
+                return (results.data) ? results.data : null;
+            });
+
         };
 
         factory.getNewNoTransaksi = function () {
@@ -19,7 +24,7 @@ define(['app'], function (app) {
         };
 
         factory.insert = function (params) {
-            return $http.post(serviceBase + 'tagihanautodebet/create', params).then(function (results) {
+            return $http.post(serviceBase + 'tagihanautodebets', params).then(function (results) {
                 return results.data;
             });
         };
@@ -35,7 +40,7 @@ define(['app'], function (app) {
         };
 
         factory.delete = function (id) {
-            return $http.delete(serviceBase + 'tagihanautodebet/delete/' + id).then(function (status) {
+            return $http.delete(serviceBase + 'tagihanautodebets/' + id).then(function (status) {
                 return status.data;
             });
         };
