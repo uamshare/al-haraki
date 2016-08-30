@@ -15,7 +15,8 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
                 'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
-                        'listbayar'  => ['get']
+                        'listbayar'  => ['get'],
+                        'summary'  => ['get']
                     ],
                 ],
             ]
@@ -45,20 +46,17 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
     }
 
     /**
-     * Prepares the data provider that should return the requested collection of the models.
-     * @return ActiveDataProvider
+     * Get List input Info Tagihan
+     *
      */
-    protected function prepareDataProvider($query)
-    {
+    public function actionSummaryouts(){
+        $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
-        $perpage = $request->getQueryParam('per-page', 20);
-        $pagination = [
-            'pageSize' => $perpage
-        ];
-
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ($perpage > 0) ? $pagination : false
-        ]);
+        
+        // $kls = $request->getQueryParam('kelasid', false);
+        return $model->getSummaryOutsByTagihan([
+            'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
+            'date' => $request->getQueryParam('date', false)
+        ])->One();
     }
 }

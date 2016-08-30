@@ -36,6 +36,18 @@ define(['app'], function (app) {
             });
         };
 
+        /**
+         * Get list Pembayaran
+         *
+         */
+        factory.getSummaryOuts = function(paramdata) {
+            return $http.get(serviceBase + 'tagihanpembayaran/summaryouts',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
         factory.getListActive = function(paramdata) {
             return $http.get(serviceBase + 'tagihaninfoinput/listinfo',{
                 params : paramdata

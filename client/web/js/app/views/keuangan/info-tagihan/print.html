@@ -1,7 +1,13 @@
-
+<div class="row">
+    <div class="con-xs-12 col-md-12 no-print pull-right">
+        <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-info-tagihan')" >
+            <i class="fa fa-print"></i> Cetak
+        </a>
+    </div>
+</div>
 <div id="print-info-tagihan" >
-<link rel="stylesheet" type="text/css" href="css/print-style-2.css" />
-  <div class="printStyle-box">
+    <link rel="stylesheet" type="text/css" href="css/print-style-2.css" />
+    <div class="printStyle-box">
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
                 <td colspan="2">
@@ -68,7 +74,9 @@
                                 <br/>
                                 <br>
                                 <br/>
-                                Adm. Keuangan
+                                <span class="profil-name">{{profil.fullname}}</span><br/>
+                                -----------------------------<br/>
+                                <span class="profil-jabatan">{{profil.jabatan ? profil.jabatan : 'Adm. Keuangan'}}</span>
                             </td>
                         </tr>
                     </table>
@@ -86,7 +94,9 @@
             </ol>
         </div>
     </div>
-    <div class="row no-print pull-right">
+</div>
+<div class="row">
+    <div class="con-xs-12 col-md-12 no-print pull-right">
         <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-info-tagihan')" >
             <i class="fa fa-print"></i> Cetak
         </a>

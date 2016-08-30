@@ -5,19 +5,36 @@ define(['app'], function (app) {
     var injectParams = [
         '$scope',
         '$location', 
-        '$routeParams', 
-        '$CONST_VAR'
+        '$routeParams',
+        '$timeout',
+        'cfpLoadingBar',
+        '$CONST_VAR',
+        'authService',
+        'helperService',
+        'TagihanInfoService'
     ];
 
     var MainController = function (
         $scope, 
         $location, 
         $routeParams, 
-        $CONST_VAR
+        $timeout,
+        cfpLoadingBar,
+        $CONST_VAR,
+        authService,
+        helperService,
+        TagihanInfoService
     ) 
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'main/';
+        var $resourceApi = TagihanInfoService;
         var date = new Date();
+
+        function errorHandle(error){
+            var msg = error.data.name;
+            toastr.warning(msg, 'Warning');
+        }
+
         $scope.infoTagihan = {
             rows : [
                 {name : 'spp', label : 'SPP', value : 150000, clsBg : 'bg-aqua'},
@@ -27,40 +44,60 @@ define(['app'], function (app) {
                 {name : 'ekskul', label : 'Ekskul', value : 100000, clsBg : 'bg-blue'}
             ]
         }
-        $scope.month = date.getMonth() +1;
+        $scope.month = helperService.getMonthName( date.getMonth() );
         $scope.year = date.getFullYear();
 
-        // $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-        // $scope.series = ['Series A', 'Series B'];
-        // $scope.datasets = [
-        //     {
-        //         label: "Electronics",
-        //         fillColor: "rgba(210, 214, 222, 1)",
-        //         strokeColor: "rgba(210, 214, 222, 1)",
-        //         pointColor: "rgba(210, 214, 222, 1)",
-        //         pointStrokeColor: "#c1c7d1",
-        //         pointHighlightFill: "#fff",
-        //         pointHighlightStroke: "rgba(220,220,220,1)",
-        //         data: [65, 59, 80, 81, 56, 55, 40]
-        //     },
-        //     {
-        //         label: "Digital Goods",
-        //         fillColor: "rgba(60,141,188,0.9)",
-        //         strokeColor: "rgba(60,141,188,0.8)",
-        //         pointColor: "#3b8bba",
-        //         pointStrokeColor: "rgba(60,141,188,1)",
-        //         pointHighlightFill: "#fff",
-        //         pointHighlightStroke: "rgba(60,141,188,1)",
-        //         data: [28, 48, 40, 19, 86, 27, 90]
-        //     }
-        // ]
-        // $scope.data = [
-        //     [65, 59, 80, 81, 56, 55, 40],
-        //     [28, 48, 40, 19, 86, 27, 90]
-        // ];
-        // $scope.onClick = function (points, evt) {
-        //     console.log(points, evt);
-        // };
+        function getSummary(paramdata){
+            cfpLoadingBar.start();
+            $resourceApi.getSummaryOuts(paramdata)
+            .then(function (result) {
+                if(result.success){
+                    if(result.rows){
+                        $scope.infoTagihan.rows[0].value = result.rows.spp;
+                        $scope.infoTagihan.rows[1].value = result.rows.komite_sekolah;
+                        $scope.infoTagihan.rows[2].value = result.rows.catering;
+                        $scope.infoTagihan.rows[3].value = result.rows.keb_siswa;
+                        $scope.infoTagihan.rows[4].value = result.rows.ekskul;
+                    }
+                }
+                cfpLoadingBar.complete();
+            }, errorHandle);
+        }
+
+        /**
+         *
+        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+        $scope.series = ['Series A', 'Series B'];
+        $scope.datasets = [
+            {
+                label: "Electronics",
+                fillColor: "rgba(210, 214, 222, 1)",
+                strokeColor: "rgba(210, 214, 222, 1)",
+                pointColor: "rgba(210, 214, 222, 1)",
+                pointStrokeColor: "#c1c7d1",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [65, 59, 80, 81, 56, 55, 40]
+            },
+            {
+                label: "Digital Goods",
+                fillColor: "rgba(60,141,188,0.9)",
+                strokeColor: "rgba(60,141,188,0.8)",
+                pointColor: "#3b8bba",
+                pointStrokeColor: "rgba(60,141,188,1)",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(60,141,188,1)",
+                data: [28, 48, 40, 19, 86, 27, 90]
+            }
+        ]
+        $scope.data = [
+            [65, 59, 80, 81, 56, 55, 40],
+            [28, 48, 40, 19, 86, 27, 90]
+        ];
+        $scope.onClick = function (points, evt) {
+            console.log(points, evt);
+        };
+        */
 
         var areaChartData = {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -87,6 +124,7 @@ define(['app'], function (app) {
                 }
             ]
         };
+
         function initBarChart(){
             // console.log($("#barChart").getContext("2d"));
             var barChartCanvas = $("#barChart")[0].getContext("2d");
@@ -125,8 +163,21 @@ define(['app'], function (app) {
             barChartOptions.datasetFill = false;
             barChart.Bar(barChartData, barChartOptions);
         }
-        // initBarChart();
 
+        function init(){
+            getSummary({
+                tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+                date : date
+            });
+        }
+        // initBarChart();
+        $scope.$on('$viewContentLoaded', function(){
+            // init();
+        });
+
+        $timeout(function() {
+            init();
+        }, 1000);
         
     };
 

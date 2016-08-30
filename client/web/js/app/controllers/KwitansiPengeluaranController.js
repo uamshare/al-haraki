@@ -269,6 +269,7 @@ define(['app'], function (app) {
 							return  total;
 						}
 						$scope.rowTerbilang = helperService.terbilang($scope.rowPrintTotal());
+						$scope.profil = authService.getProfile();
 						$scope.monthPrint = date.getMonth();
 						$scope.monthYear = date.getFullYear();
 

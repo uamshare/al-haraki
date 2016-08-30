@@ -45,14 +45,16 @@ define(['app'], function (app) {
 		var sekolahProfil = authService.getSekolahProfile();
     	/******************* GRID CONFIG **********************************/
     	// $scope.$broadcast('redirectToLogin', null);
+
+
     	var gridOptions = {
     		columnDefs : [
     			{ 
     				name: 'isCheck', 
     				displayName: 'Check', 
     				type: 'boolean',
-    				headerCellTemplate: '<input type="checkbox" ng-model="isCheck.checked" ng-change="toggleSelectAll(isCheck.checked)"/>',
-    				cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck">'
+    				headerCellTemplate: '<input type="checkbox" ng-model="parentCheck" ng-change="grid.appScope.toggleSelectAll(parentCheck)"/>',
+    				cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck"">'
     			},
 				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
 				{ name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
@@ -79,38 +81,11 @@ define(['app'], function (app) {
 			]
     	};
 
-    	$scope.toggleSelectAll = function(checked) {	
-    		console.log("kampret");
-	        // for (var i = 0; i < $scope.gridData.length; i++) {
-	        //     $scope.gridData[i].isCheck = checked;
-	        // }
-	    };
+    	
 
     	if($routeParams.idkelas){
     	}else{
-    		$scope.gridAction = {
-				onPrintClick : function(rowdata){
-					var date = new Date();
-					$scope.row = rowdata;
-					$scope.row.total = function(){
-						return  $scope.row.spp + 
-								$scope.row.komite_sekolah +
-								$scope.row.catering +
-								$scope.row.keb_siswa +
-								$scope.row.ekskul;
-					}
-					$scope.monthPrint = date.getMonth();
-					$scope.monthYear = date.getFullYear();
-
-			        ngDialog.open({
-			            template: $scope.viewdir + 'print.html',
-			            className: 'ngdialog-theme-flat',
-			            scope: $scope
-			        });
-				}
-			};
-
-    		var columnActionTpl = 	'<div class="col-action">' + 
+     		var columnActionTpl = 	'<div class="col-action">' + 
 	    								'<a href="" ng-click="grid.appScope.gridAction.onPrintClick(row.entity)"' + 
 	    						  			' data-toggle="tooltip" data-original-title="Cetak Info Tagihan">' + 
 	    						  			'<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
@@ -234,7 +209,7 @@ define(['app'], function (app) {
 		$scope.tahun_ajaran_list = [];
 		/*********************** Action ******************************/
 		
-		
+
 		function errorHandle(error){
 			var msg = error.data.name;
 			toastr.warning(msg, 'Warning');
@@ -321,6 +296,62 @@ define(['app'], function (app) {
             }, errorHandle);
 		}
 
+		$scope.toggleSelectAll = function(checked) {	
+	        for (var i = 0; i < $scope.grid.data.length; i++) {
+	            $scope.grid.data[i].isCheck = checked;
+	        }
+	    };
+		
+		$scope.gridAction = {
+			onPrintClick : function(rowdata){
+				var date = new Date();
+				$scope.row = rowdata;
+				$scope.row.total = function(){
+					return  $scope.row.spp + 
+							$scope.row.komite_sekolah +
+							$scope.row.catering +
+							$scope.row.keb_siswa +
+							$scope.row.ekskul;
+				}
+				$scope.profil = authService.getProfile();
+				$scope.monthPrint = date.getMonth();
+				$scope.monthYear = date.getFullYear();
+
+		        ngDialog.open({
+		            template: $scope.viewdir + 'print.html',
+		            className: 'ngdialog-theme-flat',
+		            scope: $scope
+		        });
+			},
+			onPrintSelectedClick : function(event){
+				var date = new Date();
+				$scope.rows = [];
+				var index = 0;
+				for(var idx in $scope.grid.data){
+					if($scope.grid.data[idx].isCheck){
+						$scope.rows[index] = $scope.grid.data[idx];
+						$scope.rows[index].total = $scope.rows[index].spp + 
+									$scope.rows[index].komite_sekolah +
+									$scope.rows[index].catering +
+									$scope.rows[index].keb_siswa +
+									$scope.rows[index].ekskul;
+						index++;
+					}
+				}
+				$scope.profil = authService.getProfile();
+				$scope.monthPrint = date.getMonth();
+				$scope.monthYear = date.getFullYear();
+
+				if($scope.rows.length > 0){
+					ngDialog.open({
+			            template: $scope.viewdir + 'printMultiple.html',
+			            className: 'ngdialog-theme-flat',
+			            scope: $scope
+			        });
+				}
+		        
+			}
+		};
 		$scope.onSearchClick = function (event) {
 			if($scope.kelas.selected == null || $scope.kelas.selected == ''){
 				toastr.warning('Silahkan pilih kelas', 'Warning');
