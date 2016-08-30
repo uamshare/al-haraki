@@ -59,7 +59,9 @@ define(['app'], function (app) {
 		$scope.filter = {
 			kelas : [],
 			month : '',
-			year : ''
+			year : '',
+            date_start : helperService.date(date).firstDay,
+            date_end : date //helperService.date(date).lastDay //
 		}
 
 		var gridOptions = {
@@ -213,7 +215,7 @@ define(['app'], function (app) {
 		            })
 		            // $scope.grid.data = result.rows;
 		            if(nodata){
-		            	toastr.info('Belum ada pembayaran di bulan yang dipilih.', 'Info');
+		            	toastr.info('Data Pembayaran kosong.', 'Info');
 		            }
 				}
 				cfpLoadingBar.complete();
@@ -235,8 +237,8 @@ define(['app'], function (app) {
         }
 
 		function init(){
-			$scope.filter.month = helperService.getMonthId(date.getMonth());
-			$scope.filter.year = date.getFullYear();
+			// $scope.filter.month = helperService.getMonthId(date.getMonth());
+			// $scope.filter.year = date.getFullYear();
 			getKelas({
                 sekolahid : authService.getProfile().sekolahid,
                 kelasid : $routeParams.idkelas,
@@ -250,25 +252,38 @@ define(['app'], function (app) {
 				return false;
 			}
 
-			if($scope.filter.month == '' || $scope.filter.month == null){
-				toastr.warning('Bulan tidak boleh kosong.', 'Warning');
-				return false;
-			}
+			// if($scope.filter.month == '' || $scope.filter.month == null){
+			// 	toastr.warning('Bulan tidak boleh kosong.', 'Warning');
+			// 	return false;
+			// }
+            if($scope.filter.date_start == '' || $scope.filter.date_start == null){
+                toastr.warning('Tgl Awal tidak boleh kosong.', 'Warning');
+                return false;
+            }
+
+            if($scope.filter.date_end == '' || $scope.filter.date_end == null){
+                toastr.warning('Tgl Akhir tidak boleh kosong.', 'Warning');
+                return false;
+            }
+            
 			getData({
     			'page' : 1,
 				'per-page' : 0,
 				'kelasid' : $scope.filter.kelas.toString(),
-				'month' : $scope.filter.month,
-				'year' : $scope.filter.year,
+				// 'month' : $scope.filter.month,
+				// 'year' : $scope.filter.year,
+                'date_start' : $scope.filter.date_start,
+                'date_end' : $scope.filter.date_end,
 				'status' : 1
     		});
-
 		}
 
 		$scope.onResetClick = function(event){
 			$scope.filter.kelas = [];
             $scope.filter.month = helperService.getMonthId(date.getMonth());
             $scope.filter.year = date.getFullYear();
+            $scope.filter.date_start = helperService.date(date).firstDay;
+            $scope.filter.date_end = date;
 		}
 
 		$scope.onBulanChange = function(event){

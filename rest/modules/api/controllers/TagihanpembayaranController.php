@@ -12,7 +12,7 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'listbayar'  => ['get']
@@ -36,8 +36,10 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
             'idrombel' => $request->getQueryParam('idrombel', false),
             'query' => $request->getQueryParam('query', false),
-            'month' => $request->getQueryParam('month', -1),
-            'year' => $request->getQueryParam('year', -1),
+            'month' => $request->getQueryParam('month', false),
+            'year' => $request->getQueryParam('year', false),
+            'date_start' => $request->getQueryParam('date_start', false),
+            'date_end' => $request->getQueryParam('date_end', false),
             'status' => $request->getQueryParam('status', 'all')
         ]);
     }

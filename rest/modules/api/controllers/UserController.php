@@ -23,7 +23,7 @@ class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecor
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'index'  => ['get'],

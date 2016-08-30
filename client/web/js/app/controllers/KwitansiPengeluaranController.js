@@ -52,7 +52,7 @@ define(['app'], function (app) {
 					{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
 					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
 					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120',  enableCellEdit: false},
-					{ name: 'nama_penerima', displayName: 'Nama Pembayar', enableCellEdit: false},
+					{ name: 'nama_penerima', displayName: 'Nama Penerima', enableCellEdit: false},
 					{ name: 'nik', displayName: 'NIK', visible: false, enableCellEdit: false},
 					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
 					{ name: 'sekolahid', displayName: 'SekolahId', visible: false, enableCellEdit: false},
@@ -85,19 +85,23 @@ define(['app'], function (app) {
 			});	
 
 	    	$scope.grid = { 
-	    		enableMinHeightCheck : true,
-				minRowsToShow : 20,
-				enableGridMenu: true,
-				enableSelectAll: true,
-				virtualizationThreshold: 20,
-				enableFiltering: true,
-				enableCellEditOnFocus: true,
+				paginationPageSizes: [20, 30, 50, 100, 200],
+	            paginationPageSize: $CONST_VAR.pageSize,
+	            pageNumber : 1,
+	            useExternalPagination : true,
+	            enableMinHeightCheck : true,
+	            minRowsToShow : $CONST_VAR.pageSize,
+	            enableGridMenu: true,
+	            enableSelectAll: true,
+	            virtualizationThreshold: $CONST_VAR.pageSize,
+	            enableFiltering: true,
 				columnDefs : gridOptions.columnDefs,
-				//Export
-			    onRegisterApi: function(gridApi){
-			      $scope.gridApi = gridApi;
-			    }
 			};
+
+			$scope.filter = {
+				date_start : helperService.date(date).firstDay,
+				date_end : date //helperService.date(date).lastDay //
+			}
 
 			function setGridCollapse(collapse){
 				var box = $('#kwitansi-pengeluaran-grid');
@@ -130,7 +134,7 @@ define(['app'], function (app) {
 
 			function get(paramdata){
 				cfpLoadingBar.start();
-				$resourceApi.get(paramdata.page, paramdata.perPage)
+				$resourceApi.get(paramdata)
 				.then(function (result) {
 	                if(result.success){
 						angular.forEach(result.rows, function(dt, index) {
@@ -155,7 +159,7 @@ define(['app'], function (app) {
 					cfpLoadingBar.complete();
 					get({
 						page : 1,
-						perPage : 20
+						perPage : $CONST_VAR.pageSize
 					});
 	            }, errorHandle);
 			}
@@ -178,9 +182,27 @@ define(['app'], function (app) {
 			this.init = function(){
 				get({
 					page : 1,
-					perPage : 20
+					'per-page' : $CONST_VAR.pageSize,
+					date_start : $scope.filter.date_start,
+					date_end : $scope.filter.date_end
 				});
 			}
+
+			$scope.grid.onRegisterApi = function(gridApi){
+				$scope.gridApi = gridApi;
+				gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+					$scope.grid.pageNumber = newPage;
+					$scope.grid.pageSize = pageSize;
+					$scope.grid.virtualizationThreshold = pageSize; 
+
+					get({
+						page : newPage,
+						'per-page' : $scope.grid.virtualizationThreshold,
+						date_start : $scope.filter.date_start,
+						date_end : $scope.filter.date_end
+					});
+				});
+		    }
 
 			$scope.print = function(divName){
 				printElement(document.getElementById(divName));
@@ -192,6 +214,24 @@ define(['app'], function (app) {
 				setGridCollapse(true);
 				reset();
 				refreshNo();
+			}
+
+			$scope.onSearchClick = function(event){
+				if($scope.filter.date_start == '' || $scope.filter.date_start == null){
+					toastr.warning('Tgl Awal tidak boleh kosong.', 'Warning');
+					return false;
+				}
+
+				if($scope.filter.date_end == '' || $scope.filter.date_end == null){
+					toastr.warning('Tgl Akhir tidak boleh kosong.', 'Warning');
+					return false;
+				}
+				get({
+					page : 1,
+					'per-page' : 20,
+					date_start : $scope.filter.date_start,
+					date_end : $scope.filter.date_end
+				});
 			}
 
 			$scope.onShowClick = function(event){
@@ -258,8 +298,8 @@ define(['app'], function (app) {
 				nik : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
 				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
-				created_by : '',
-				updated_by : '',
+				created_by : null,
+				updated_by : null,
 				created_at : date,
 				updated_at : date
 			};
@@ -381,9 +421,6 @@ define(['app'], function (app) {
 		        	toastr.warning('No Kwitansi tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
 		        });
 			}
-
-
-			
 
 			function getRowDetailByNo(noKwitansi){
 				cfpLoadingBar.start();

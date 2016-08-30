@@ -210,6 +210,12 @@ class Tjmh extends \yii\db\ActiveRecord
             // echo $deleteH->rawSql . '<br/>';
             $deleteH->execute();
 
+            $GL = new \rest\models\Rgl();
+            $unpostingGL = $GL->unposting($DB, [
+                'noref' => $no
+            ]);
+            $unpostingGL->execute();
+            
             $transaction->commit();
             return true;
         } catch(\Exception $e) {

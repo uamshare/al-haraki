@@ -24,7 +24,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'index'                 => ['get'],

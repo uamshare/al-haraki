@@ -12,7 +12,7 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'list'  => ['get'],

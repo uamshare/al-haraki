@@ -57,7 +57,7 @@
                                 ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
                                 ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran'],'url' => ['/#keuangan/rekap-outstanding-tagihan']],
                                 ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipengeluaran'],'url' => ['/#keuangan/kwitansi-pengeluaran/add']],
-                                ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['/#keuangan/rekap-pengeluaran']],
+                                ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['/#keuangan/kwitansi-pengeluaran']],
                                 ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-cc-mastercard', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['#keuangan/rekonsiliasi-autodebet/add']]
                             ],
                         ],

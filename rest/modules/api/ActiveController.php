@@ -1,6 +1,7 @@
 <?php
 namespace rest\modules\api;
 use Yii;
+use yii\data\ActiveDataProvider;
 
 class ActiveController extends \yii\rest\ActiveController
 {
@@ -59,6 +60,24 @@ class ActiveController extends \yii\rest\ActiveController
     }
 
     /**
+     * Prepares the data provider that should return the requested collection of the models.
+     * @return ActiveDataProvider
+     */
+    protected function prepareDataProvider($query)
+    {
+        $request = Yii::$app->getRequest();
+        $perpage = $request->getQueryParam('per-page', 20);
+        $pagination = [
+            'pageSize' => $perpage
+        ];
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ($perpage > 0) ? $pagination : false
+        ]);
+    }
+
+    /**
      * Checks the privilege of the current user.
      *
      * This method should be overridden to check whether the current user has the privilege
@@ -89,6 +108,5 @@ class ActiveController extends \yii\rest\ActiveController
         {
              throw new \yii\web\ForbiddenHttpException('You don\'t have permission.');
         }
-
     }
 }

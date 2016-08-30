@@ -126,6 +126,60 @@ class Rgl extends \yii\db\ActiveRecord
         return implode(',', $values);
     }
 
+    /**
+     * Auto posting for transaction
+     * @param $kode, kode transaksi
+     * @param $values, value data
+     */
+    public function AutoPosting($kode, $values){
+        $DB = $this->getDb();
+        $posAuto = \rest\models\PostingAuto::find()->where(['kode' => $kode])->One();
+        $postingvalue = [];
+
+        $debet1 = $this->setPostingValue( $posAuto->acc_debet, $values, 1 );
+        if( $debet1 != false){
+            $postingvalue[] = $debet1;
+        }
+        $debet2 = $this->setPostingValue( $posAuto->acc_debet2, $values, 1 );
+        if( $debet2 != false){
+            $postingvalue[] = $debet2;
+        }
+        $debet3 = $this->setPostingValue( $posAuto->acc_debet3, $values, 1 );
+        if( $debet3 != false){
+            $postingvalue[] = $debet3;
+        }
+        $debet4 = $this->setPostingValue( $posAuto->acc_debet4, $values, 1 );
+        if( $debet4 != false){
+            $postingvalue[] = $debet4;
+        }
+
+        $kredit1 = $this->setPostingValue( $posAuto->acc_credit, $values, 2 );
+        if( $kredit1 != false){
+            $postingvalue[] = $kredit1;
+        }
+        $kredit2 = $this->setPostingValue( $posAuto->acc_credit2, $values, 2 );
+        if( $kredit2 != false){
+            $postingvalue[] = $kredit2;
+        }
+        $kredit3 = $this->setPostingValue( $posAuto->acc_credit3, $values, 2 );
+        if( $kredit3 != false){
+            $postingvalue[] = $kredit3;
+        }
+        $kredit4 = $this->setPostingValue( $posAuto->acc_credit4, $values, 2 );
+        if( $kredit4 != false){
+            $postingvalue[] = $kredit4;
+        }
+        
+        return [
+            'unposting' => $this->unposting($DB, [
+                'noref' => $values['noref'],
+                'sekolahid' => $values['sekolahid'],
+                'tahun_ajaran_id' => $values['tahun_ajaran_id']
+            ]),
+            'posting' => $this->posting($DB, $postingvalue)
+        ];
+    }
+
     public function posting($DB, $values){
         $column = $this->attributes();
         unset($column[0]);
@@ -145,6 +199,34 @@ class Rgl extends \yii\db\ActiveRecord
             $where
         );
         return $delete;
+    }
+
+    /**
+     * Auto posting for transaction
+     * @param $AccoutNo, NO Account
+     * @param $values, value data
+     * @param $pos, posisi saldo 1:Debet, 2:kredit
+     */
+    private function setPostingValue($AccoutNo, $values, $pos = 1){
+        if(isset($AccoutNo) && !empty($AccoutNo)){
+            return [
+                'rgldt'                => $values['date'], 
+                'mcoadno'              => $AccoutNo,
+                'noref'                => $values['noref'],        
+                'noref2'               => $values['noref'], 
+                'rglin'                => ($pos == 1) ? $values['value'] : 0,
+                'rglout'               => ($pos == 2) ? $values['value'] : 0,
+                'rgldesc'              => $values['description'],
+                'fk_id'                => null,
+                'sekolahid'            => $values['sekolahid'],
+                'tahun_ajaran_id'      => $values['tahun_ajaran_id'],
+                'created_at'           => $values['created_at'],   
+                'updated_at'           => $values['updated_at'],
+                'created_by'           => $values['created_by'],   
+                'updated_by'           => $values['updated_by']
+            ];
+        }
+        return false;
     }
 
 }

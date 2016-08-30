@@ -13,7 +13,7 @@ class PegawaiController extends \yii\rest\ActiveController //\rest\modules\api\A
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'list'  => ['get'],

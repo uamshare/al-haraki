@@ -35,6 +35,17 @@ define(['app'], function (app) {
             }
         }
 
+        factory.date = function(date){
+            if(typeof date == 'undefined'){
+                date = new Date();
+            }
+            return {
+                firstDay : new Date(date.getFullYear(), date.getMonth(), 1),
+                lastDay : new Date(date.getFullYear(), date.getMonth() + 1, 0)
+            }
+            
+        }
+
         factory.getMonthName = function(id){
             return factory.month().options[id].name
         }

@@ -3,6 +3,7 @@
 namespace rest\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "tagihan_pembayaran".
@@ -140,26 +141,26 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
               INNER JOIN kelas k ON a.`kelasid`=k.`id`
               $join
                 (SELECT 
-                  `id`,
-                  `idrombel`,
+                  a.`id`,
+                  a.`idrombel`,
                   SUM(IFNULL(`spp_kredit`,0) - IFNULL(`spp_debet`,0)) AS spp,
                   SUM(IFNULL(`komite_sekolah_kredit`,0) - IFNULL(`komite_sekolah_debet`,0)) AS komite_sekolah,
                   SUM(IFNULL(`catering_kredit`,0) - IFNULL(`catering_debet`,0)) AS catering,
                   SUM(IFNULL(`keb_siswa_kredit`,0) - IFNULL(`keb_siswa_debet`,0)) AS keb_siswa,
                   SUM(IFNULL(`ekskul_kredit`,0) - IFNULL(`ekskul_debet`,0)) AS ekskul,
-                  `bulan`,
-                  `tahun`,
-                  `tahun_ajaran`,
-                  `no_ref`,
-                  `ket_ref`,
-                  `keterangan`,
-                  `created_at`,
-                  `updated_at` 
+                  a.`bulan`,
+                  a.`tahun`,
+                  a.`tahun_ajaran`,
+                  a.`no_ref`,
+                  a.`ket_ref`,
+                  a.`keterangan`,
+                  a.`created_at`,
+                  a.`updated_at` 
                 FROM
-                  `tagihan_pembayaran`
+                  `tagihan_pembayaran` a
+                LEFT JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi`
                 WHERE $filter
                 GROUP BY idrombel
-
                 ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
         return $sqlCustoms;
     }
@@ -194,23 +195,23 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                       INNER JOIN kelas k ON a.`kelasid`=k.`id`
                       $join
                         (SELECT 
-                          `id`,
-                          `idrombel`,
+                          a.`id`,
+                          a.`idrombel`,
                           IFNULL(`spp_debet`,0) AS spp,
                           IFNULL(`komite_sekolah_debet`,0) AS komite_sekolah,
                           IFNULL(`catering_debet`,0) AS catering,
                           IFNULL(`keb_siswa_debet`,0) AS keb_siswa,
                           IFNULL(`ekskul_debet`,0) AS ekskul,
-                          `bulan`,
-                          `tahun`,
-                          `tahun_ajaran`,
-                          `no_ref`,
-                          `ket_ref`,
-                          `keterangan`,
-                          `created_at`,
-                          `updated_at` 
-                        FROM
-                          `tagihan_pembayaran`
+                          a.`bulan`,
+                          a.`tahun`,
+                          a.`tahun_ajaran`,
+                          a.`no_ref`,
+                          a.`ket_ref`,
+                          a.`keterangan`,
+                          a.`created_at`,
+                          a.`updated_at` 
+                        FROM `tagihan_pembayaran` a
+                        INNER JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi`
                         WHERE $filter) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
         return $sqlCustoms;
     }
@@ -234,13 +235,20 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
         } 
 
-        $param1 = $month + (12 * $year);
-        $filter = '(bulan + (12 * tahun)) <= :param1';
+        
+        if($date_end){
+            $filter = '(a.`updated_at` <= :param1)';
+            $bound = [':param1' => $date_end];
+        }else{
+            $param1 = $month + (12 * $year);
+            $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
+            $bound = [':param1' => $param1];
+        }
 
         $sqlCustoms = $this->queryOutstanding($filter, $status);
 
         $connection = $this->getDb(); //Yii::$app->getDb();
-        $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $param1]);
+        $customeQuery = $connection->createCommand($sqlCustoms . $where, $bound);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
@@ -294,12 +302,13 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
         } 
 
-        $filter = '(bulan = :param1 AND tahun = :param2)';
+        // $filter = '(bulan = :param1 AND tahun = :param2)';
+        $filter = '(b.`tgl_kwitansi` BETWEEN :param1 AND :param2)';
 
         $sqlCustoms = $this->queryPembayaran($filter, $status);
 
         $conn = $this->getDb(); //Yii::$app->getDb();
-        $customeQuery = $conn->createCommand($sqlCustoms . $where, [':param1' => $month, ':param2' => $year]);
+        $customeQuery = $conn->createCommand($sqlCustoms . $where, [':param1' => $date_start, ':param2' => $date_end]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }

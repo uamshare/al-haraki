@@ -8,8 +8,14 @@ define(['app'], function (app) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
-        factory.get = function (pageIndex, pageSize) {
-            return getResource('kwitansipengeluarans', pageIndex, pageSize);
+        factory.get = function (paramdata) {
+            // return getResource('kwitansipengeluarans', pageIndex, pageSize);
+            return $http.get(serviceBase + 'kwitansipengeluarans',{
+                params : paramdata
+            }).then(function (results) {
+                return (results.data) ? results.data : null;
+            });
+
         };
 
         factory.getNewNoKwitansi = function (paramdata) {
@@ -21,7 +27,7 @@ define(['app'], function (app) {
         };
 
         factory.insert = function (params) {
-            return $http.post(serviceBase + 'kwitansipengeluaran/create', params).then(function (results) {
+            return $http.post(serviceBase + 'kwitansipengeluarans', params).then(function (results) {
                 return results.data;
             });
         };
@@ -31,13 +37,14 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'kwitansipengeluarans/' + params.id, params).then(function (status) {
-                return status.data;
+            return $http.put(serviceBase + 'kwitansipengeluarans/' + params.form.no_kwitansi, params)
+            .then(function (results) {
+                return results.data;
             });
         };
 
         factory.delete = function (id) {
-            return $http.delete(serviceBase + 'kwitansipengeluaran/delete/' + id).then(function (status) {
+            return $http.delete(serviceBase + 'kwitansipengeluarans/' + id).then(function (status) {
                 return status.data;
             });
         };

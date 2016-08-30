@@ -29,6 +29,7 @@ use yii\db\Query;
  */
 class User extends \rest\models\AppActiveRecord
 {
+    protected $isAutoSaveLog = true;
     /**
      * @inheritdoc
      */
@@ -149,19 +150,6 @@ class User extends \rest\models\AppActiveRecord
             'sekolahid' => $this->sekolahid,
         ];
     }
-
-    // public function beforeValidate(){
-    //     if($this->isNewRecord){
-    //         $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
-    //         $this->password_hash = Yii::$app->security->generatePasswordHash($this->password_hash);
-    //     }else{
-    //         $old = $this->oldAttributes;
-    //         // $this->password_hash = (empty($this->password_hash)) ? $old['password_hash'] : 
-    //         //                             Yii::$app->security->generatePasswordHash($this->password_hash);
-    //     }
-        
-    //     return parent::beforeValidate();
-    // }
 
     /**
      * Get List input Info Tagihan

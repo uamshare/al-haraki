@@ -12,7 +12,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $behaviors = parent::behaviors();
         return array_merge($behaviors, 
             [
-                'verbs' => [
+                'verbFilter' => [
                     'class' => \yii\filters\VerbFilter::className(),
                     'actions' => [
                         'index'  => ['get'],
@@ -186,6 +186,8 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             'query' => $request->getQueryParam('query', false),
             'month' => $request->getQueryParam('month', -1),
             'year' => $request->getQueryParam('year', -1),
+            // 'date_start' => $request->getQueryParam('date_start', false),
+            'date_end' => $request->getQueryParam('date_end', false),
             'status' => $request->getQueryParam('status', 'all')
         ]);
     }

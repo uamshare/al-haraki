@@ -18,7 +18,7 @@
 								ng-model="filter.kelas" 
 								data-multiple="1" 
 								data-animation="am-flip-x" 
-								bs-options="kls.id as kls.nama_kelas for kls in kelas" 
+								bs-options="kls.id as (kls.kelas + ' - ' + kls.nama_kelas) for kls in kelas" 
 								bs-select
 								placeholder="Pilih kelas"
 								all-text="All"
@@ -28,6 +28,26 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">Dari Tgl</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="filter.date_start" 
+								name="date_start" 
+								data-max-date="{{filter.date_end}}"
+								bs-datepicker />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">S/D Tgl</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="filter.date_end" 
+								name="date_end" 
+								data-min-date="{{filter.date_start}}"
+								bs-datepicker />
+						</div>
+					</div>
+					<!-- <div class="form-group">
 						<label class="col-xs-4 col-md-3 control-label">Bulan</label>
 						<div class="col-xs-8 col-md-9">
 							<div class="input-group">
@@ -45,7 +65,7 @@
 								<div class="input-group-addon">{{filter.year}}</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</form>
@@ -57,7 +77,7 @@
 				<i class="fa fa-refresh"></i> Reset
 			</a>
 			<a href="" ng-click="onSearchClick($event)" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
-				data-original-title="Simpan Data">
+				data-original-title="Cari Data">
 				<i class="fa fa-search"></i> Cari data
 			</a>
 		</div>

@@ -23,7 +23,7 @@ use Yii;
  * @property User $updatedBy
  * @property Sekolah $sekolah
  */
-class kwitansiPengeluaranH extends \yii\db\ActiveRecord
+class kwitansiPengeluaranH extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -166,6 +166,17 @@ class kwitansiPengeluaranH extends \yii\db\ActiveRecord
             // exit();
             $savedD->execute();
             
+            $GL = new \rest\models\Rgl();
+            $autoPosting = $GL->AutoPosting('01', $postingValue);
+            $autoPosting['unposting']->execute();
+            $autoPosting['posting']->execute();
+
+            $this->created_at = $rowHeader['created_at'];
+            $this->saveLogs([
+                'rowHeader' => $rowHeader,
+                'rowDetail' => $rowDetail
+            ]);
+
             $transaction->commit();
             return true;
         } catch(\Exception $e) {
@@ -205,6 +216,17 @@ class kwitansiPengeluaranH extends \yii\db\ActiveRecord
             );
             // echo $deleteH->rawSql . '<br/>';
             $deleteH->execute();
+
+            $GL = new \rest\models\Rgl();
+            $unpostingGL = $GL->unposting($DB, [
+                'noref' => $no
+            ]);
+            $unpostingGL->execute();
+
+            $this->created_at = date('Y-m-d H:i:s A');
+            $this->saveLogs([
+                'no_kwitansi' => $no
+            ]);
 
             $transaction->commit();
             return true;

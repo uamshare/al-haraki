@@ -26,7 +26,7 @@ use Yii;
  * @property User $updatedBy
  * @property Sekolah $sekolah
  */
-class KwitansiPembayaranH extends \yii\db\ActiveRecord
+class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -131,8 +131,6 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
         $column = $this->attributes();
-        // $rowHeader = $params['header'];
-        // $rowDetail = $params['detail'];
 
         unset($column[0]);
         $columnD = [
@@ -171,7 +169,6 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
                 'kwitansi_pembayaran_d', 
                 ['id' => $rowDetailDel]
             );
-            // var_dump($rowDetailDel);
             // echo $deleteD->rawSql. '<br/>';;
             $deleteD->execute();
             
@@ -194,6 +191,16 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
                 // echo $savedD->rawSql;exit();
             }
             
+            $GL = new \rest\models\Rgl();
+            $autoPosting = $GL->AutoPosting('01', $postingValue);
+            $autoPosting['unposting']->execute();
+            $autoPosting['posting']->execute();
+
+            $this->created_at = $rowHeader['created_at'];
+            $this->saveLogs([
+                'rowHeader' => $rowHeader,
+                'rowDetail' => $rowDetail
+            ]);
             $transaction->commit();
             return true;
         } catch(\Exception $e) {
@@ -241,6 +248,17 @@ class KwitansiPembayaranH extends \yii\db\ActiveRecord
             );
             // echo $deleteP->rawSql;exit();
             $deleteP->execute();
+
+            $GL = new \rest\models\Rgl();
+            $unpostingGL = $GL->unposting($DB, [
+                'noref' => $no
+            ]);
+            $unpostingGL->execute();
+            
+            $this->created_at = date('Y-m-d H:i:s A');
+            $this->saveLogs([
+                'no_kwitansi' => $no
+            ]);
 
             $transaction->commit();
             return true;
