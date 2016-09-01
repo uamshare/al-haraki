@@ -314,7 +314,8 @@ define(['app'], function (app) {
 					},
 					{ name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
 					{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
-					{ name: 'flag', displayName: '', visible: false, width : '100',  enableCellEdit: false}
+					{ name: 'flag', displayName: '', visible: false, width : '100',  enableCellEdit: false},
+					{ name: 'mcoadnoold', displayName: 'Old No', visible: false, width : '120',  enableCellEdit: false}
 				],
 				//Export
 			    onRegisterApi: function(gridApi){
@@ -329,13 +330,13 @@ define(['app'], function (app) {
 							}
 							var rowdata = rowEntity;
 							delete rowdata['coalist'];
-							$scope.gridDetailDirtyRows[rowEntity.index] = rowdata;
+							$scope.gridDetailDirtyRows[rowEntity.index - 1] = rowdata;
 						}else if(['debet','kredit'].indexOf(colDef.name) > -1 && 
 									oldValue != newValue && (parseInt(newValue))){
 							var rowdata = rowEntity;
 							var rowdata = rowEntity;
 							delete rowdata['coalist'];
-							$scope.gridDetailDirtyRows[rowEntity.index] = rowdata;
+							$scope.gridDetailDirtyRows[rowEntity.index - 1] = rowdata;
 						}
 						
 						$scope.$apply();
@@ -434,14 +435,16 @@ define(['app'], function (app) {
 		            	angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
+			                result.rows[index]["mcoadnoold"] = result.rows[index]["mcoadno"];
 			                result.rows[index]["jumlah"] = parseInt(result.rows[index]["jumlah"]);
 			                result.rows[index]["flag"] = 1;
 			                $scope.gridDetailDirtyRows[index] = result.rows[index];
 			            })
 			            $scope.gridDetail.data = result.rows;
-			            angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
-			                $scope.gridDetailDirtyRows.push(rowEntity);
-			            })
+
+			            // angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
+			            //     $scope.gridDetailDirtyRows.push(rowEntity);
+			            // })
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){
@@ -475,7 +478,6 @@ define(['app'], function (app) {
 			}
 
 			this.init = function(){
-				
 				if($routeParams.id){
 	                getById($routeParams.id);
 	            }else{

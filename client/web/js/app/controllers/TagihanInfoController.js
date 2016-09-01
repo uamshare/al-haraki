@@ -292,6 +292,7 @@ define(['app'], function (app) {
 						'kelasid' : $routeParams.idkelas,
 						'jenis_tagihan' : $scope.jenis_tagihan
 	        		});
+	        		// $location.path( "keuangan/info-tagihan");
 				}else{
 					toastr.warning('Data gagal tersimpan.<br/>' + result.message, 'Warning');
 					cfpLoadingBar.complete();
@@ -355,6 +356,7 @@ define(['app'], function (app) {
 		        
 			}
 		};
+
 		$scope.onSearchClick = function (event) {
 			if($scope.kelas.selected == null || $scope.kelas.selected == ''){
 				toastr.warning('Silahkan pilih kelas', 'Warning');
@@ -482,14 +484,56 @@ define(['app'], function (app) {
 				$scope.gridEdit.columnDefs[7].visible = true;
 				$scope.gridEdit.columnDefs[8].visible = true;
 				$scope.gridEdit.columnDefs[9].visible = true;
+				$scope.form2IsBulanan = true;
 			}else{
 				$scope.gridEdit.columnDefs[7].visible = false;
 				$scope.gridEdit.columnDefs[8].visible = false;
 				$scope.gridEdit.columnDefs[9].visible = false;
 				$scope.gridEdit.columnDefs[10].visible = true;
 				$scope.gridEdit.columnDefs[11].visible = true;
+				$scope.form2IsBulanan = false;
 			}
 			$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+		}
+
+		$scope.form2 = {
+			spp : '',
+			komite_sekolah : '',
+			catering : '',
+			keb_siswa : '',
+			ekskul : ''
+		}
+		$scope.form2IsBulanan = true;
+
+		$scope.onAddMultipleClick = function(){
+			$scope.form2.spp = '';
+			$scope.form2.komite_sekolah = '';
+			$scope.form2.catering = '';
+			$scope.form2.keb_siswa = '';
+			$scope.form2.ekskul = '';
+
+			ngDialog.open({
+	            template: $scope.viewdir + 'form2.html',
+	            className: 'ngdialog-theme-flat custom-width-50',
+	            scope: $scope,
+	            width: '300px',
+	            height: '100%'
+	        });
+		}
+
+		$scope.onAddMiltiple = function(){
+			for(var idx in $scope.gridEdit.data){
+				if($scope.form2IsBulanan){
+					$scope.gridEdit.data[idx].spp = $scope.form2.spp;
+					$scope.gridEdit.data[idx].komite_sekolah = $scope.form2.komite_sekolah;
+					$scope.gridEdit.data[idx].catering = $scope.form2.catering;
+				}else{
+					$scope.gridEdit.data[idx].keb_siswa = $scope.form2.keb_siswa;
+					$scope.gridEdit.data[idx].ekskul = $scope.form2.ekskul;
+				}
+				$scope.gridDirtyRows[idx] = $scope.gridEdit.data[idx];
+			}
+			ngDialog.close();
 		}
 
 		$scope.onMonthChange = function(value){
@@ -497,6 +541,7 @@ define(['app'], function (app) {
 									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
 			$scope.month_end.year = ($scope.month_end.selected >= 1 &&  $scope.month_end.selected <= 6) ? 
 									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
+			$scope.gridDirtyRows = $scope.gridEdit.data;
 		}
 
 		function getTahuunAjaran(){

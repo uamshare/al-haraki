@@ -69,6 +69,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
         $post = Yii::$app->getRequest()->getBodyParams();
         
         $attrvalue = [];
+        $postingvalue = [];
         $flagdelete = [
             'id' => [],
             'mcoadno' => []
@@ -99,6 +100,11 @@ class JurnalharianController extends \rest\modules\api\ActiveController
                     'created_at'            => isset($rows['created_at']) ? $rows['created_at'] : $date,   
                     'updated_at'            => $date
                 ];
+
+                // If mcoadno is edited
+                if(isset($rows['mcoadnoold']) && $rows['mcoadno'] != $rows['mcoadnoold']){
+                     $flagdelete['mcoadno'][] = $rows['mcoadnoold'];
+                }
 
                 $postingvalue[] = [
                     'rgldt'                => isset($form['tjmhdt']) ? $form['tjmhdt'] : $date, 

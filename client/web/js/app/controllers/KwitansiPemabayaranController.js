@@ -631,11 +631,12 @@ define(['app'], function (app) {
 			                result.rows[index]["index"] = romnum;
 			                result.rows[index]["jumlah"] = parseInt(result.rows[index]["jumlah"]);
 			                result.rows[index]["flag"] = 1;
+			                $scope.gridDetailDirtyRows[romnum] = result.rows[index];
 			            })
 			            $scope.gridDetail.data = result.rows;
-			            angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
-			                $scope.gridDetailDirtyRows.push(rowEntity);
-			            })
+			            // angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
+			            //     $scope.gridDetailDirtyRows.push(rowEntity);
+			            // })
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){

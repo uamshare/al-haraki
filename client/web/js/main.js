@@ -19,6 +19,7 @@ require(
         //AKUNTANSI
         'services/COAService',
         'services/jurnalHarianService',
+        'services/RglService',
         // Pengaturan
         'services/GrupAksesService',
         'services/UserService',

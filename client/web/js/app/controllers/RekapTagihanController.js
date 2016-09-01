@@ -179,7 +179,11 @@ define(['app'], function (app) {
             showColumnFooter: true,
 
             onRegisterApi: function(gridApi){
-              $scope.gridApi = gridApi;
+                $scope.gridApi = gridApi;
+                $scope.gridApi.grid.registerDataChangeCallback(function(e) {
+                    $scope.gridApi.treeBase.expandAllRows();
+                    setGridToContentXLS(gridApi);
+                });
             }
         };
 
@@ -292,6 +296,106 @@ define(['app'], function (app) {
             // $scope.onSearchClick();
         }
 
+        $scope.j_direktur = "Dir. Pendidikan SIT Al Haraki";
+        $scope.nama_direktur = "Susi P. Krisnawan, S.H";
+        $scope.j_kepala_sekolah = "Kepala SDIT Al Harakai";
+        $scope.nama_kepala_sekolah = "Chairulllah, M. Pd. I";
+        $scope.tempat   = "Depok";
+        $scope.tanggal  = date.getDate() + ' ' + 
+                            helperService.getMonthName(date.getMonth()) + ' ' + 
+                            date.getFullYear();
+
+        var exportTo = {
+            pdf : function (gridApi){
+                var pdfdata = setGridToContentPdf(gridApi);
+                var docDefinition = {
+                    pageSize: 'LETTER',
+                    // pageOrientation: 'landscape',
+                    pageMargins: [40, 150, 40, 60],
+                    // header: {
+                    //     margin: 100,
+                    //     columns : [
+                    //         {text: 'Al HARAKI',alignment: 'center'},
+                    //     ]
+                    // },
+                    header: {},
+                    content: pdfdata,
+                    
+                    footer: function(currentPage, pageCount) { 
+                        // return currentPage.toString() + ' of ' + pageCount;
+                        return { 
+                            color: 'black',
+                            margin: 25,
+                            text: currentPage.toString() + ' of ' + pageCount, 
+                            alignment: 'right', //(currentPage % 2) ? 'left' : 'right' 
+                        };
+                    },
+                    styles: {
+                        topHeader: {
+                            bold: true,
+                            color: '#000',
+                            margin: [0, 25, 0, 25],
+                        },
+                        header: {
+                            bold: true,
+                            color: '#000',
+                            padding : 5,
+                            fontSize: 10
+                        },
+                        table: {
+                            color: 'black',
+                            margin: [0, 5, 0, 15],
+                            fontSize: 9
+                        },
+                        footer : {
+                            color: 'black',
+                            margin: [40, 80, 40, 60],
+                            // margin: [10, 15, 10, 15],
+                            fontSize: 9
+                        },
+                        colApproval : {
+                            margin: [10, 20, 10, 50],
+                        }
+                    },
+                };
+                pdfMake.createPdf(docDefinition).open("Oustanding_tagihan.pdf");
+            },
+            xls : function(gridApi){
+                function download(id){
+                    var dt = new Date();
+                    var day = dt.getDate();
+                    var month = dt.getMonth() + 1;
+                    var year = dt.getFullYear();
+                    var hour = dt.getHours();
+                    var mins = dt.getMinutes();
+                    var postfix = year.toString() + month.toString() + day.toString() + '-' + hour.toString() + mins.toString();
+
+                    var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+                    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+
+                    var table = document.getElementById(id);
+                    var ctx = { worksheet : name || 'Outstanding ' + postfix, table : table.innerHTML }
+                    // window.location.href = uri + base64(format(template, ctx));
+                    // var win = window.open( uri + base64(format(template, ctx)) ,'_blank') ;
+                    // win.document.title = 'oustanding_' + postfix + '.xlsx';
+                    // win.document.open().write(format( template, ctx ));
+
+                    
+                    var a = document.createElement('a');
+                    a.href = uri + base64(format(template, ctx));
+                    a.download = 'pembayaran_' + postfix + '.xls';
+                    a.click();
+                    // return false;
+                }
+                return download('print-oustanding');
+            },
+
+            _title : 'DATA PEMBAYARAN SPP ' + authService.getSekolahProfile().nama_sekolah + ' AL HARAKI',
+            _titleDate : 'PER - ' + helperService.formatDateID(date),
+        }
+
         /*
          *
          * @param gt, grid.treeBase.tree
@@ -299,8 +403,7 @@ define(['app'], function (app) {
         function setGridToContentPdf(gridApi){
             var content = [],
                 gt = gridApi.grid.treeBase.tree,
-                rdate = 'PER - ' + helperService.formatDateID(date),
-                sekolah = 'SMPIT';
+                rdate = exportTo._titleDate;
 
             function formatValueNumber(val){
                 if((typeof val !='undefined' && parseInt(val))){
@@ -314,6 +417,13 @@ define(['app'], function (app) {
                 return {text: 'Kelas ' + label};
             }
 
+            var s_spp             = 0;
+            var s_komite_sekolah  = 0;
+            var s_catering        = 0;
+            var s_keb_siswa       = 0;
+            var s_ekskul          = 0;
+            var s_total          = 0;
+
             /**
              *
              * @params {obj} ObjectgridApi.grid.treeBase.tree
@@ -321,8 +431,7 @@ define(['app'], function (app) {
             function setTableData(obj){
                 var rows = obj.children,
                     rowdata,
-                    rowbody = []
-                    
+                    rowbody = [];
 
                 // Set Header Table
                 rowbody.push([
@@ -333,13 +442,7 @@ define(['app'], function (app) {
                         // style: 'header', 
                         colSpan: 7, 
                         alignment: 'center' 
-                    },
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {}
+                    },{},{},{},{},{},{}
                 ]);
                 rowbody.push([
                     '', 
@@ -365,12 +468,7 @@ define(['app'], function (app) {
                     var ekskul = formatValueNumber(rowdata.ekskul);
                     var keterangan = (rowdata.keterangan != null) ? rowdata.keterangan : '';
 
-                    if( spp != '' ||
-                        komite_sekolah != '' ||
-                        catering != '' ||
-                        keb_siswa != '' ||
-                        ekskul != ''
-                       )
+                    if( spp != '' || komite_sekolah != '' || catering != '' || keb_siswa != '' || ekskul != '')
                     {
                         rowbody.push([
                             no.toString(), 
@@ -383,9 +481,21 @@ define(['app'], function (app) {
                             {text: ekskul, alignment: 'right'},
                             keterangan
                         ]);
-                    }
-                    
+                    }  
                 }
+
+                // Summary
+                s_spp             += parseInt(obj.aggregations[1].value);
+                s_komite_sekolah  += parseInt(obj.aggregations[2].value);
+                s_catering        += parseInt(obj.aggregations[3].value);
+                s_keb_siswa       += parseInt(obj.aggregations[4].value);
+                s_ekskul          += parseInt(obj.aggregations[5].value);
+                
+                s_total           += parseInt(obj.aggregations[1].value) +
+                                     parseInt(obj.aggregations[2].value) +
+                                     parseInt(obj.aggregations[3].value) +
+                                     parseInt(obj.aggregations[4].value) +
+                                     parseInt(obj.aggregations[5].value);
 
                 // Set Footer Table
                 var sum_spp             = formatValueNumber(obj.aggregations[1].value);
@@ -393,10 +503,10 @@ define(['app'], function (app) {
                 var sum_catering        = formatValueNumber(obj.aggregations[3].value);
                 var sum_keb_siswa       = formatValueNumber(obj.aggregations[4].value);
                 var sum_ekskul          = formatValueNumber(obj.aggregations[5].value);
+
                 rowbody.push([
                     {text: 'TOTAL', style: 'header', colSpan: 3, alignment: 'right'},
-                    {},
-                    {},
+                    {},{},
                     {text: sum_spp, style: 'header', alignment: 'right'},
                     {text: sum_komite_sekolah, style: 'header', alignment: 'right'},
                     {text: sum_catering, style: 'header', alignment: 'right'},
@@ -416,7 +526,7 @@ define(['app'], function (app) {
 
             content.push({
                 margin: [10,10,10,0],
-                text: 'DATA PEMBAYARAN SPP ' + sekolah + ' AL HARAKI',
+                text: exportTo._title,
                 alignment: 'center'
             });
             content.push({
@@ -431,65 +541,198 @@ define(['app'], function (app) {
                 
             }
 
+            // Set Content Summary
+            s_spp             = formatValueNumber(s_spp);
+            s_komite_sekolah  = formatValueNumber(s_komite_sekolah);
+            s_catering        = formatValueNumber(s_catering);
+            s_keb_siswa       = formatValueNumber(s_keb_siswa);
+            s_ekskul          = formatValueNumber(s_ekskul);
+            s_total          = formatValueNumber(s_total);
+
+            content.push({
+                style: 'table',
+                table: {
+                    widths: [250, 100],
+                    body : [
+                        [
+                            {text: 'SPP', style: 'header',  alignment: 'left'},
+                            {text: s_spp, style: 'header', alignment: 'right'},
+                        ],
+                        [
+                            {text: 'KOMITE SEKOLAH', style: 'header', alignment: 'left'},
+                            {text: s_komite_sekolah, style: 'header', alignment: 'right'},
+                        ],
+                        [
+                            {text: 'CATERING', style: 'header',  alignment: 'left'},
+                            {text: s_catering, style: 'header', alignment: 'right'},
+                        ],[
+                            {text: 'KEBUTUHAN SISWA', style: 'header', alignment: 'left'},
+                            {text: s_keb_siswa, style: 'header', alignment: 'right'},
+                        ],
+                        [
+                            {text: 'EKSKUL', style: 'header', alignment: 'left'},
+                            {text: s_ekskul, style: 'header', alignment: 'right'},
+                        ],
+                        [
+                            {text: 'TOTAL', style: 'header', alignment: 'left'},
+                            {text: s_total, style: 'header', alignment: 'right'},
+                        ]
+                    ]
+                }
+            });
+
+            // Set Content Approval
+            content.push({
+                // style: 'table',
+                margin : [10, 25, 10, 10],
+                table: {
+                    widths: ['50%', '50%'],
+                    body : [
+                        [
+                            {text: 'Mengetahui, ', alignment: 'left'},
+                            {
+                                text: $scope.tempat + ', ' + $scope.tanggal, 
+                                alignment: 'right'
+                            },
+                        ],
+                        ['',''],['',''],['',''],['',''],['',''],['',''],['',''],
+                        ['',''],['',''],['',''],['',''],
+                        [
+                            {
+                                alignment: 'left',
+                                decoration: 'underline',
+                                text: $scope.nama_direktur
+                            },
+                            {
+                                alignment: 'right',
+                                decoration: 'underline',
+                                text: $scope.nama_kepala_sekolah
+                            }
+                        ],
+                        [
+                            {
+                                alignment: 'left',
+                                italics: true,
+                                text: $scope.j_direktur
+                            },
+                            {
+                                alignment: 'right',
+                                italics: true,
+                                text: $scope.j_kepala_sekolah
+                            }
+                        ]
+                    ]
+                },
+                fontSize: 10,
+                layout: 'noBorders'
+            });
             return content;
         }
 
-        var exportTo = {
-        	'pdf' : function(){
-        		var pdfdata = setGridToContentPdf($scope.gridApi);
-	            var docDefinition = {
-	                pageSize: 'LETTER',
-	                // pageOrientation: 'landscape',
-	                pageMargins: [40, 150, 40, 60],
-	                // header: {
-	                //     margin: 100,
-	                //     columns : [
-	                //         {text: 'Al HARAKI',alignment: 'center'},
-	                //     ]
-	                // },
-	                header: {},
-	                content: pdfdata,
-	                
-	                footer: function(currentPage, pageCount) { 
-	                    // return currentPage.toString() + ' of ' + pageCount;
-	                    return { 
-	                        color: 'black',
-	                        margin: 25,
-	                        text: currentPage.toString() + ' of ' + pageCount, 
-	                        alignment: 'right', //(currentPage % 2) ? 'left' : 'right' 
-	                    };
-	                },
-	                styles: {
-	                    topHeader: {
-	                        bold: true,
-	                        color: '#000',
-	                        margin: [0, 25, 0, 25],
-	                    },
-	                    header: {
-	                        bold: true,
-	                        color: '#000',
-	                        padding : 5,
-	                        fontSize: 10
-	                    },
-	                    table: {
-	                        color: 'black',
-	                        margin: [0, 5, 0, 15],
-	                        fontSize: 9
-	                    },
-	                    footer : {
-	                        color: 'black',
-	                        margin: [40, 80, 40, 60],
-	                        // margin: [10, 15, 10, 15],
-	                        fontSize: 9
-	                    }
-	                },
-	            };
-	            pdfMake.createPdf(docDefinition).open("Oustanding_tagihan.pdf");
-        	},
-            'xlsx' : function(griddata){
-                
+        function setGridToContentXLS(gridApi){
+            var content = [],
+                gt = gridApi.grid.treeBase.tree,
+                rdate = 'PER - ' + helperService.formatDateID(date),
+                sekolah = 'SMPIT';
+
+
+            function formatValueNumber(val){
+                if((typeof val !='undefined' && parseInt(val))){
+                    return parseInt(val); //$filter('number')(val, 0);
+                }
+
+                return '';
             }
-        };
+
+            function setTableLabel(label){
+                return {text: 'Kelas ' + label};
+            }
+
+            var s_spp             = 0;
+            var s_komite_sekolah  = 0;
+            var s_catering        = 0;
+            var s_keb_siswa       = 0;
+            var s_ekskul          = 0;
+            var s_total          = 0;
+
+            function setTableData(obj){
+                var rows = obj.children,
+                rowdata,
+                rowbody = [];
+
+                // Set Body Table
+                for(var idx in rows){
+                    rowdata = rows[idx].row.entity;
+
+                    var no = parseInt(idx) + 1;
+                    var spp = formatValueNumber(rowdata.spp);
+                    var komite_sekolah = formatValueNumber(rowdata.komite_sekolah);
+                    var catering = formatValueNumber(rowdata.catering);
+                    var keb_siswa = formatValueNumber(rowdata.keb_siswa);
+                    var ekskul = formatValueNumber(rowdata.ekskul);
+                    var keterangan = (rowdata.keterangan != null) ? rowdata.keterangan : '';
+
+                    if( spp != '' || komite_sekolah != '' || catering != '' || keb_siswa != '' || ekskul != '')
+                    {
+                        rowbody.push({
+                            index : no.toString(),
+                            nama_siswa : rowdata.nama_siswa,
+                            bulan : '',
+                            spp : spp,
+                            komite_sekolah : komite_sekolah,
+                            catering : catering,
+                            keb_siswa : keb_siswa,
+                            ekskul : ekskul,
+                            keterangan : rowdata.keterangan,
+                        });
+                    }  
+                }
+
+                // Summary
+                s_spp             += parseInt(obj.aggregations[1].value);
+                s_komite_sekolah  += parseInt(obj.aggregations[2].value);
+                s_catering        += parseInt(obj.aggregations[3].value);
+                s_keb_siswa       += parseInt(obj.aggregations[4].value);
+                s_ekskul          += parseInt(obj.aggregations[5].value);
+                
+                s_total           += parseInt(obj.aggregations[1].value) +
+                                     parseInt(obj.aggregations[2].value) +
+                                     parseInt(obj.aggregations[3].value) +
+                                     parseInt(obj.aggregations[4].value) +
+                                     parseInt(obj.aggregations[5].value);
+                return {
+                    rows : rowbody,
+                    summary : {
+                        sum_spp             : formatValueNumber(obj.aggregations[1].value),
+                        sum_komite_sekolah  : formatValueNumber(obj.aggregations[2].value),
+                        sum_catering        : formatValueNumber(obj.aggregations[3].value),
+                        sum_keb_siswa       : formatValueNumber(obj.aggregations[4].value),
+                        sum_ekskul          : formatValueNumber(obj.aggregations[5].value)
+                    }
+                };
+            }
+
+            for(var idx in gt){
+                content.push({
+                    title : 'Kelas ' + gt[idx].aggregations[0].groupVal,
+                    data : setTableData(gt[idx])
+                });
+            }
+            
+            $scope.templateExport = {
+                title : exportTo._title,
+                titleDate : exportTo._titleDate,
+                table  : content,
+                summary : {
+                    s_spp             : s_spp,
+                    s_komite_sekolah  : s_komite_sekolah,
+                    s_catering        : s_catering,
+                    s_keb_siswa       : s_keb_siswa,
+                    s_ekskul          : s_ekskul,
+                    s_total           : s_total
+                }
+            }
+        }
 
         $scope.onExport = function(type){
             if($scope.grid.data.length <= 0){
@@ -497,8 +740,8 @@ define(['app'], function (app) {
                 return false;
             }
 
-            // console.log();
-            exportTo[type]();
+            exportTo[type]($scope.gridApi);
+            
         }
 
 		$scope.$on('$viewContentLoaded', function(){

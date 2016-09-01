@@ -9,7 +9,7 @@
 			  </button>
 			  <ul class="dropdown-menu" role="menu">
 			    <li><a ng-click="onExport('pdf')"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
-			    <li><a href="#"><i class="fa fa-file-excel-o"></i> Excel</a></li>
+			    <li><a ng-click="onExport('xls')"><i class="fa fa-file-excel-o"></i> Excel</a></li>
 			  </ul>
 			</div>
 		</div>
@@ -31,6 +31,55 @@
 		            ui-grid-grouping
 		            class="grid">
 		        </div>
+			</div>
+		</div>
+		
+	</div>
+	<div class="box-footer with-border">
+		<div class="row">
+			
+			<div class="col-xs-12 col-md-6">
+				<fieldset><legend>Mengetahui, </legend>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">Nama Direktur</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="nama_direktur" 
+								name="nama_direktur" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">Deskripsi</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="j_direktur" 
+								name="j_direktur" />
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<div class="col-xs-12 col-md-6">
+				<fieldset>
+					<legend>{{tempat}}, {{tanggal}}
+						
+					</legend>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">Nama Kepala</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="nama_kepala_sekolah" 
+								name="nama_kepala_sekolah" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">Deskripsi</label>
+						<div class="col-xs-8 col-md-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="j_kepala_sekolah" 
+								name="j_kepala_sekolah" />
+						</div>
+					</div>
+				</fieldset>
 			</div>
 		</div>
 	</div>

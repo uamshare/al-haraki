@@ -70,7 +70,7 @@
                                 ['label' => 'Master Akun (Chart of Acount)', 'icon' => 'fa fa-user-plus', 'options' => ['ng-show' => 'menuprivileges.mcoad'],'url' => ['/#akuntansi/coa']],
                                 // ['label' => 'Pemetaan Posting Otomatis', 'icon' => 'fa fa-user-plus', 'options' => ['ng-show' => 'menuprivileges.postingmap'], 'url' => ['/#akuntansi/pemetaan']],
                                 ['label' => 'Jurnal Harian', 'icon' => 'fa fa-table', 'options' => ['ng-show' => 'menuprivileges.jurnalharian'], 'url' => ['#akuntansi/jurnal-harian/add']],
-                                ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.rgl'], 'url' => ['/#akuntansi/gl']]
+                                ['label' => 'Buku Besar (Ledger)', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.rgl'], 'url' => ['/#akuntansi/rgl']]
                             ],
                         ],
                         [

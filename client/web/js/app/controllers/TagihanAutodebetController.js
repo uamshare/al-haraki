@@ -390,9 +390,9 @@ define(['app'], function (app) {
                 file_import : '',
                 bulan : '',
                 tahun : '',
-                tahun_ajaran_id : '',
-                created_at : '',
-                updated_at : '',
+                tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+                created_at : date,
+                updated_at : date,
                 created_by : '',
                 updated_by : ''
             };
@@ -543,9 +543,11 @@ define(['app'], function (app) {
                 $scope.form.file_import = '';
                 $scope.form.bulan = helperService.getMonthId(date.getMonth());
                 $scope.form.tahun = date.getFullYear();
-                $scope.form.tahun_ajaran_id = '';
-                $scope.form.created_at = '';
-                $scope.form.updated_at = '';
+                $scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+                $scope.form.created_at = date;
+                $scope.form.updated_at = date;
+                $scope.form.created_by = '',
+                $scope.form.updated_by = ''
 
                 // reset grid
                 $scope.gridDetail.data = [];

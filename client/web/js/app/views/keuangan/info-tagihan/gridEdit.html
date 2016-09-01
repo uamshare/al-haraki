@@ -7,13 +7,16 @@
 		</button>
 		</div>
 	</div>
-	<div class="box-body">
+	<div class="box-footer">
 		<div class="row">
 			<div class="col-lg-2">
 				<div class="form-group">
 					<label>Kelas</label>
 					<input type="hidden" name="kelasid" class="form-control" ng-model="kelas.options[0].id" />
-					<input type="text" name="nama_kelas" class="form-control" ng-model="kelas.options[0].nama_kelas" />
+					<input type="hidden" name="kelasid" class="form-control" 
+						ng-model="kelas.options[0].nama_kelas" />
+					<input type="text" name="nama_kelas" class="form-control" 
+						value="{{kelas.options[0].kelas}} - {{kelas.options[0].nama_kelas}}" />
 				</div>
 			</div>
 			<div class="col-lg-2">
@@ -27,7 +30,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-lg-6" ng-show="jenis_tagihan == 1">
+			<div class="col-lg-5" ng-show="jenis_tagihan == 1">
 				<div class="form-group">
 					<label>Periode</label>
 					<div class="input-group">
@@ -60,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-6" ng-show="jenis_tagihan == 2">
+			<div class="col-lg-5" ng-show="jenis_tagihan == 2">
 				<div class="form-group">
 					<label>Tahun Ajaran</label>
 					<!-- <select name="tahun_ajaran_id" class="form-control" 
@@ -77,15 +80,18 @@
 						ng-model="tahun_ajaran_name" readonly />
 				</div>
 			</div>
-			<div class="col-lg-2">
+			<div class="col-lg-3">
 				<label>&nbsp;</label>
 				<div class="form-group">
-					<a class="btn btn-sm btn-success btn-flat pull-right	" href="" ng-click="onSaveClick($event)">
-						<i class="fa fa-save"></i> Simpan
+					<a class="btn btn-sm btn-primary btn-flat pull-right" 
+							href="" ng-click="onAddMultipleClick($event)">
+						<i class="fa fa-plus"></i>
 					</a>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="box-body">
 		<div class="row">
 			<div class="col-xs-12">
 				<div id="grid1" ui-grid="gridEdit" 
@@ -96,6 +102,18 @@
 		            class="grid">
 		        </div>
 			</div>
+		</div>
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-right">
+			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Reset Data">
+				<i class="fa fa-refresh"></i> Batal
+			</a>
+			<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Simpan Data">
+				<i class="fa fa-save"></i> Simpan
+			</a>
 		</div>
 	</div>
 </div>

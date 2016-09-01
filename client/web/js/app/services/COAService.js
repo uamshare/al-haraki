@@ -20,6 +20,14 @@ define(['app'], function (app) {
             });
         };
 
+        factory.getListMaster = function(paramdata) {
+            return $http.get(serviceBase + 'mcoahs',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
         factory.insert = function (params) {
             return $http.post(serviceBase + 'mcoads', params).then(function (results) {
                 return results.data;
@@ -31,7 +39,7 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'mcoads/' + params.id, params).then(function (status) {
+            return $http.put(serviceBase + 'mcoads/' + params.mcoadno, params).then(function (status) {
                 return status.data;
             });
         };

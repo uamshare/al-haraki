@@ -8,19 +8,33 @@ class McoadController extends \rest\modules\api\ActiveController //\yii\rest\Act
 {
     public $modelClass = 'rest\models\Mcoad';
 
-    public function behaviors()
+    public function actions()
     {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'list'   => ['get'],
-                    ],
-                ],
-            ]
-        );
+        $actions = parent::actions();
+        // unset($actions['create']);
+        // unset($actions['update']);
+        // unset($actions['delete']);
+        unset($actions['index']);
+        unset($actions['view']);
+        return $actions;
+    }
+
+    public function actionIndex(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        return $this->prepareDataProvider($model->getList([
+            'id' => $request->getQueryParam('id', false),
+            'mcoadnno' => $request->getQueryParam('mcoadnno', false),
+            'mcoadname' => $request->getQueryParam('mcoadname', false),
+            'query' => $request->getQueryParam('query', false)
+        ]));
+    }
+
+    public function actionView($id){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+
+        return $this->prepareDataProvider($model->getList($id));
     }
 
     /**
@@ -32,8 +46,8 @@ class McoadController extends \rest\modules\api\ActiveController //\yii\rest\Act
         $request = Yii::$app->getRequest();
         return $model->getList([
             'query' => $request->getQueryParam('query', false),
-            'mcoadno' => $request->getQueryParam('nis', false),
-            'mcoadname' => $request->getQueryParam('nisn', false)
-        ]);
+            'mcoadno' => $request->getQueryParam('mcoadno', false),
+            'mcoadname' => $request->getQueryParam('mcoadname', false)
+        ])->All();
     }
 }

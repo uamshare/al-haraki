@@ -78,3 +78,24 @@ input[type=radio].custome1 + .lbl {
     font-weight: normal;
     cursor: pointer;
 }
+
+.ngdialog.ngdialog-theme-flat.custom-width-800 .ngdialog-content {
+    width: 800px;
+}
+.ngdialog.ngdialog-theme-flat.custom-width-900 .ngdialog-content {
+    width: 900px;
+}
+
+.ngdialog.ngdialog-theme-flat.custom-width-100 .ngdialog-content {
+    width: 100%;
+}
+.ngdialog.ngdialog-theme-flat.custom-width-100 .ngdialog-content {
+    width: 100%;
+}
+
+.ngdialog.ngdialog-theme-flat.custom-width-50 .ngdialog-content {
+    width: 50%;
+}
+.ngdialog.ngdialog-theme-flat.custom-width-50 .ngdialog-content {
+    width: 50%;
+}

@@ -288,6 +288,20 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
+                .when('/akuntansi/coa/edit/:id', 
+                    routeCustome.resolve(
+                        'akuntansi/coa/add', 
+                        'CoaController',
+                        true
+                    )
+                )
+                .when('/akuntansi/coa/add', 
+                    routeCustome.resolve(
+                        'akuntansi/coa/add', 
+                        'CoaController',
+                        true
+                    )
+                )
 
                 .when('/akuntansi/jurnal-harian/add', 
                     routeCustome.resolve(
@@ -307,6 +321,20 @@ define(['services/routeResolver'], function () {
                     routeCustome.resolve(
                         'akuntansi/jurnal-harian/index', 
                         'JurnalHarianController',
+                        true
+                    )
+                )
+                .when('/akuntansi/rgl/detail/:id', 
+                    routeCustome.resolve(
+                        'akuntansi/rgl/detail', 
+                        'RglController',
+                        true
+                    )
+                )
+                .when('/akuntansi/rgl', 
+                    routeCustome.resolve(
+                        'akuntansi/rgl/index', 
+                        'RglController',
                         true
                     )
                 )

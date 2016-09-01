@@ -133,7 +133,11 @@ class Rgl extends \yii\db\ActiveRecord
      */
     public function AutoPosting($kode, $values){
         $DB = $this->getDb();
-        $posAuto = \rest\models\PostingAuto::find()->where(['kode' => $kode])->One();
+        $posAuto = \rest\models\PostingAuto::find()->where([
+            'kode' => $kode, 
+            'sekolahid' => $values['sekolahid']
+        ])->One();
+        
         $postingvalue = [];
 
         $debet1 = $this->setPostingValue( $posAuto->acc_debet, $values, 1 );
@@ -227,6 +231,152 @@ class Rgl extends \yii\db\ActiveRecord
             ];
         }
         return false;
+    }
+
+    private function where($data){
+        $commaData = explode(",", $data);
+        $impl = array();
+        for($i=0; $i<count($commaData); $i++){
+            $impl[$i] = "'{$commaData[$i]}'";
+        }
+
+        $implode = implode(",", $impl);
+
+        if(count($impl) > 1)
+            return " IN ($implode) ";
+        else
+            return " = $implode";
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function getList($params){
+        extract($params);
+        $where = 'WHERE 1=1';
+
+        if($date_start && $date_end){
+            $bound[':date1'] = $date_start;
+            $bound[':date2'] = $date_end;
+        }
+
+        if($mcoahno){
+            $where .= ' AND mcoahno ' . $this->where($mcoahno);
+        }
+
+        if($mcoahname){
+            $where .= ' AND mcoahname ' . $this->where($mcoahname);
+        }
+
+        // if($tahun_ajaran_id){
+        //     $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
+        // }
+
+        // if($query){
+        //     $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
+        // } 
+
+        $sqlCustoms = "SELECT * FROM 
+            (SELECT 
+              h.`mcoahno`,
+              h.`mcoahname`,
+              d.`mcoadno`,
+              IFNULL(b.`saldo_a`,0) AS `saldo_a`,
+              IFNULL(a.`saldo_c`,0) AS `saldo_c`,
+              (IFNULL(b.`saldo_a`,0) + IFNULL(a.`saldo_c`,0)) AS `saldo_e`
+            FROM mcoah h
+            INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
+            LEFT JOIN (SELECT 
+                  `rgldt`,
+                  `mcoadno`,
+                  ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_c`,
+                  `sekolahid`,
+                  `tahun_ajaran_id`
+                FROM `rgl` WHERE rgldt BETWEEN :date1 AND :date2
+                GROUP BY mcoadno) a ON a.`mcoadno` = d.`mcoadno`
+            LEFT JOIN (SELECT 
+                  `rgldt`,
+                  `mcoadno`,
+                  ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_a`,
+                  `sekolahid`,
+                  `tahun_ajaran_id`
+                FROM `rgl` WHERE rgldt < :date1
+                GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno` 
+            GROUP BY h.`mcoahno`) AS q_gl ";
+
+        $connection = $this->getDb();
+        $customeQuery = $connection->createCommand($sqlCustoms . $where, $bound);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->query();
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function getListDetail($params){
+        extract($params);
+        // $where = 'WHERE 1=1 AND rgldt IS NOT NULL';
+        $where = 'WHERE 1=1';
+
+        if($date_start && $date_end){
+            $bound[':date1'] = $date_start;
+            $bound[':date2'] = $date_end;
+        }
+
+        if($mcoahno){
+            $where .= ' AND mcoahno ' . $this->where($mcoahno);
+        }
+
+        if($mcoahname){
+            $where .= ' AND mcoahname ' . $this->where($mcoahname);
+        }
+
+        $sqlCustoms = "SELECT * FROM 
+                (SELECT 
+                  h.`mcoahno`,
+                  h.`mcoahname`,
+                  a.`rgldt`,
+                  a.noref,
+                  a.`rgldesc`,
+                  a.`sekolahid`,
+                  a.`tahun_ajaran_id`,
+                  d.`mcoadno`,
+                  d.`mcoadname`,
+                  IFNULL(b.`saldo_a`,0) AS `saldo_a`,
+                  IFNULL(a.`debet_c`,0) AS `debet_c`,
+                  IFNULL(a.`credit_c`,0) AS `credit_c`
+                FROM mcoah h
+                INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
+                LEFT JOIN (SELECT 
+                      a.`rgldt`,
+                      a.noref,
+                      a.noref2,
+                      a.`rgldesc`,
+                      a.`mcoadno`,
+                      a.`rglin` AS `debet_c`,
+                      a.`rglout` AS `credit_c`,
+                      a.`sekolahid`,
+                      a.`tahun_ajaran_id`
+                    FROM `rgl` a
+                    WHERE rgldt BETWEEN :date1 AND :date2) a ON a.`mcoadno` = d.`mcoadno`
+                LEFT JOIN (SELECT 
+                      `rgldt`,
+                      `mcoadno`,
+                      ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_a`,
+                      `sekolahid`,
+                      `tahun_ajaran_id`
+                    FROM `rgl` WHERE rgldt <= :date1
+                    GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno`
+                ) AS q_gl_detail 
+                $where
+                ORDER BY rgldt,sekolahid,mcoahno, noref, mcoadno ";
+
+        $connection = $this->getDb();
+        $customeQuery = $connection->createCommand($sqlCustoms, $bound);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->query();
     }
 
 }

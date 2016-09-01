@@ -153,14 +153,12 @@ class ActiveController extends \yii\rest\ActiveController
             // var_dump($method);exit();
             return 'options';
         }
-        
-        
 
         if( in_array($this->id . '.' . $action, ['auth.login','auth.logout','role.menuprivileges']) ){
             return $action;
         }
 
-        if( in_array($this->id, ['siswarombel']) ){
+        if( in_array($this->id, ['siswarombel','bukubesar','mcoah']) ){
             return $action;
         }
 

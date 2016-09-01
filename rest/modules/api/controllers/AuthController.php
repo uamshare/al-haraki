@@ -53,7 +53,7 @@ class AuthController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             $user->access_token = \Yii::$app->getSecurity()->generateRandomString();
             $user->password_reset_token = \Yii::$app->getSecurity()->generateRandomString();
             $a = $user->save();
-            if(!$user->save()){
+            if(!$a){
                 $this->response = Yii::$app->getResponse();
                 $this->response->setStatusCode(400, 'Data is empty.');
                 return [
@@ -83,6 +83,11 @@ class AuthController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 
     public function actionLogout()
     {
+        $user = \Yii::$app->user->identity;
+        $user->access_token = \Yii::$app->getSecurity()->generateRandomString();
+        $user->password_reset_token = \Yii::$app->getSecurity()->generateRandomString();
+        $a = $user->save();
+        
         Yii::$app->user->logout();
         return ['logout' => true];
     }

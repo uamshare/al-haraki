@@ -3,6 +3,8 @@
 namespace rest\models;
 
 use Yii;
+use yii\db\Query;
+
 
 /**
  * This is the model class for table "mcoad".
@@ -120,47 +122,47 @@ class Mcoad extends \yii\db\ActiveRecord
     }
 
     public function getList($params){
-        extract($params);
-        $where = 'WHERE 1=1';
+        $customeQuery = new Query;
+        $customeQuery
+            ->select([
+                'a.`mcoadno`',
+                'a.`mcoadname`',
+                'a.`mcoahno`',
+                'a.`active`',
+                'b.`mcoahname`',
+                'c.`mcoaclassification`',
+                'g.`mcoagroup`',
+                'a.`created_at`',
+                'a.`updated_at`'
+            ])
+            ->from('mcoad a')
+            ->innerJoin('mcoah b', 'a.`mcoahno` = b.`mcoahno`')
+            ->innerJoin('mcoac c', 'b.`mcoacid` = c.`mcoacid`')
+            ->innerJoin('mcoag g', 'g.`mcoagid` = c.`mcoagid`');
 
-        if($mcoadno){
-            $where .= ' AND mcoadno ' . $this->where($mcoadno);
+        if(is_array($params)){
+            extract($params);
+            $customeQuery->where('1=1');
+
+            if(isset($mcoadno) && $mcoadno){
+                $customeQuery->andWhere(['a.mcoadno' => $mcoadno]);
+            }
+
+            if(isset($mcoadname) && $mcoadname){
+                $customeQuery->andWhere(['a.mcoadname' => $mcoadname]);
+            }
+
+            if(isset($query) && $query){
+                $customeQuery->andFilterWhere([
+                    'or',
+                    ['like', 'a.mcoadno', $query],
+                    ['like', 'a.mcoadname', $query],
+                ]);
+            }  
+        }else if(is_string($params) || is_int($params)){
+            $customeQuery->andWhere(['a.mcoadno' => $params]);
         }
-
-        if($mcoadname){
-            $where .= ' AND mcoadname ' . $this->where($mcoadname);
-        }
-
-        if($query){
-            $where .= " AND (
-                                mcoadno LIKE '%$query%' OR
-                                mcoadname LIKE '%$query%' OR
-                                mcoahno LIKE '%$query%' OR
-                                kelas LIKE '%$query%' OR
-                                mcoahname LIKE '%$query%' OR
-                                mcoaclassification LIKE '%$query%' OR
-                                mcoagroup LIKE '%$query%'
-                            )";
-        }
-
-        $sqlCustoms = "SELECT 
-                  a.`mcoadno`,
-                  a.`mcoadname`,
-                  a.`mcoahno`,
-                  a.`active`,
-                  b.`mcoahname`,
-                  c.`mcoaclassification`,
-                  g.`mcoagroup`,
-                  a.`created_at`,
-                  a.`updated_at` 
-                FROM `mcoad` a
-                INNER JOIN mcoah b ON a.`mcoahno` = b.`mcoahno`
-                INNER JOIN mcoac c ON b.`mcoacid` = c.`mcoacid`
-                INNER JOIN mcoag g ON g.`mcoagid` = c.`mcoagid` $where ";
-
-        $conn = $this->getDb();
-        $customeQuery = $conn->createCommand($sqlCustoms);
-        // var_dump($customeQuery->rawSql);exit();
-        return $customeQuery->queryAll();
+        // var_dump($customeQuery->createCommand()->rawSql);exit();
+        return $customeQuery;
     }
 }

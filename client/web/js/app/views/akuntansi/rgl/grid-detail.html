@@ -1,0 +1,61 @@
+<div id="rgl-form" class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-plus-circle"></i> Rincian Buku Besar</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<table id="example1" class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<th>{{list.header.mcoahno}}</th>
+					<th colspan="4">{{list.header.mcoahname}}</th>
+					<th>Saldo Awal</th>
+					<th width="120" style="text-align : right">{{list.header.saldoAwal | number:0}}</th>
+				</tr>
+				<tr>
+					<th width="10"></th>
+					<th width="120">Tanggal</th>
+					<th width="75">No Akun</th>
+					<th>Nama Akun</th>
+					<th width="100">Ref</th>
+					<th width="120" style="text-align : right">Debet</th>
+					<th width="120" style="text-align : right">Kredit</th>
+					<th width="120" style="text-align : right">Saldo</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(key, row) in list.rows">
+					<td>{{row.index}}</td>
+					<td>{{row.rgldt}}</td>
+					<td>{{row.mcoadno}}</td>
+					<td>{{row.mcoadname}}</td>
+					<td>{{row.noref}}</td>
+					<td style="text-align : right">{{row.debet_c | number:0}}</td>
+					<td style="text-align : right">{{row.credit_c | number:0}}</td>
+					<td style="text-align : right">{{row.saldo | number:0}}</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<th>{{list.header.mcoahno}}</th>
+					<th colspan="4">{{list.header.mcoahname}}</th>
+					<th>Saldo Akhir</th>
+					<th style="text-align : right">{{list.header.saldoAkhir | number:0}}</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-left">
+			<a href="#akuntansi/rgl" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Rekap Buku Besar">
+				<i class="fa fa-th-list"></i> Rekap Data
+			</a>
+		</div>
+	</div>
+</div>

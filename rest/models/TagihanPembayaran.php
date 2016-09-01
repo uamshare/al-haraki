@@ -111,7 +111,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             return " = $implode";
     }
 
-    private function queryOutstanding($filter, $status = 'all'){
+    private function queryOutstanding($filter, $filter2, $status = 'all'){
         if($status == 'all'){
             $join = 'LEFT JOIN';
         }else{
@@ -158,7 +158,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                   a.`updated_at` 
                 FROM
                   `tagihan_pembayaran` a
-                LEFT JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi`
+                LEFT JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi` $filter2
                 WHERE $filter
                 GROUP BY idrombel
                 ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
@@ -237,15 +237,18 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
 
         
         if($date_end){
-            $filter = '(a.`updated_at` <= :param1)';
-            $bound = [':param1' => $date_end];
+            $param1 = date('m', strtotime($date_end)) + (12 * date('Y', strtotime($date_end)));
+            $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
+            $filter2 = " AND DATE_FORMAT(a.`updated_at`,'%Y-%m-%d') <= :param2 ";
+            $bound = [':param1' => $param1, ':param2' => $date_end];
         }else{
             $param1 = $month + (12 * $year);
             $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
+            $filter2 = '';
             $bound = [':param1' => $param1];
         }
 
-        $sqlCustoms = $this->queryOutstanding($filter, $status);
+        $sqlCustoms = $this->queryOutstanding($filter, $filter2, $status);
 
         $connection = $this->getDb(); //Yii::$app->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms . $where, $bound);

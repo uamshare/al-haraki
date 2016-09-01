@@ -138,13 +138,16 @@ class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             // echo $savedH->rawSql . '<br/>';
             $savedH->execute();
 
-            $deleteD = $DB->createCommand()->delete(
-                'tjmd', 
-                ['tjmdid' => $rowDetailDel['id']]
-            );
-            // var_dump($rowDetailDel);
-            // echo $deleteD->rawSql. '<br/>';;
-            $deleteD->execute();
+            if(count($rowDetailDel['id']) > 0){
+                $deleteD = $DB->createCommand()->delete(
+                    'tjmd', 
+                    ['tjmdid' => $rowDetailDel['id']]
+                );
+                // var_dump($rowDetailDel);
+                // echo $deleteD->rawSql. '<br/>';;
+                $deleteD->execute();
+            }
+            
 
             $savedD = $DB->createCommand()->batchInsert(
                 'tjmd', 
@@ -156,14 +159,18 @@ class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             // exit();
             $savedD->execute();
 
-            $GL = new \rest\models\Rgl();
-            $unpostingGL = $GL->unposting($DB, [
-                'noref' => $rowHeader['tjmhno'],
-                'mcoadno' => $rowDetailDel['mcoadno'],
-                'sekolahid' => $rowHeader['sekolahid'],
-                'tahun_ajaran_id' => $rowHeader['tahun_ajaran_id']
-            ]);
-            $unpostingGL->execute();
+            if(count($rowDetailDel['mcoadno']) > 0){
+                $GL = new \rest\models\Rgl();
+                $unpostingGLWhere = [
+                    'noref' => $rowHeader['tjmhno'],
+                    'mcoadno' => $rowDetailDel['mcoadno'],
+                    'sekolahid' => $rowHeader['sekolahid'],
+                    'tahun_ajaran_id' => $rowHeader['tahun_ajaran_id']
+                ];
+
+                $unpostingGL = $GL->unposting($DB, $unpostingGLWhere);
+                $unpostingGL->execute();
+            }
             
             $postingGL = $GL->posting($DB, $postingvalue);
             // echo $postingGL->rawSql; 
