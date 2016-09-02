@@ -521,7 +521,7 @@ define(['app'], function (app) {
 						$location.path( "/keuangan/kwitansi-pengeluaran/");
 						cfpLoadingBar.complete();
 					}else{
-						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+						toastr.error('Data gagal tersimpan.<br/>' + result.message, 'Error');
 						cfpLoadingBar.complete();
 					}
 				}

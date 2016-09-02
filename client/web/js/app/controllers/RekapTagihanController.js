@@ -244,7 +244,7 @@ define(['app'], function (app) {
 			// $scope.filter.month = helperService.getMonthId(date.getMonth());
 			// $scope.filter.year = date.getFullYear();
 			getKelas({
-                sekolahid : authService.getProfile().sekolahid,
+                sekolahid : authService.getSekolahProfile().sekolahid,
                 kelasid : $routeParams.idkelas,
                 'per-page' : 0
             });
@@ -298,8 +298,8 @@ define(['app'], function (app) {
 
         $scope.j_direktur = "Dir. Pendidikan SIT Al Haraki";
         $scope.nama_direktur = "Susi P. Krisnawan, S.H";
-        $scope.j_kepala_sekolah = "Kepala SDIT Al Harakai";
-        $scope.nama_kepala_sekolah = "Chairulllah, M. Pd. I";
+        $scope.j_kepala_sekolah = "Kepala " + authService.getSekolahProfile().nama_sekolah;
+        $scope.nama_kepala_sekolah = authService.getSekolahProfile().kepala_sekolah;
         $scope.tempat   = "Depok";
         $scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 

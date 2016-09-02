@@ -150,24 +150,23 @@ class ActiveController extends \yii\rest\ActiveController
         ];
 
         if($method == 'OPTIONS'){
-            // var_dump($method);exit();
             return 'options';
         }
 
-        if( in_array($this->id . '.' . $action, ['auth.login','auth.logout','role.menuprivileges']) ){
+        if( in_array($this->id . '.' . $action, ['auth.login']) ){
             return $action;
         }
 
-        if( in_array($this->id, ['siswarombel','bukubesar','mcoah']) ){
-            return $action;
-        }
-
-        if( !in_array($action, ['index','view','create','update','delete']) ){
+        if( !in_array($action, [
+                'index','view','create','update','delete',
+                'changeprofile',
+                'logout',
+                'profile',
+                'menuprivileges'
+            ])
+        ){
             $action = $actiontransform[$method];
         }
-
-        // var_dump(Yii::$app->user->getId());
-        // var_dump(Yii::$app->user->can( $this->id . '_' . $action));exit();
 
         if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
         {

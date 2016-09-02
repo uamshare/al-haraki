@@ -14,9 +14,17 @@ use yii\helpers\Html;
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
-
+        <div class="navbar-brand">
+            <span ng-hide="profil.sekolahid == 0">{{sekolahProfile.nama_sekolah}}</span>
+            <select ng-hide="profil.sekolahid != 0" name="sekolahid" class="form-control" 
+                ng-model="sekolahid_selected" 
+                ng-change="onSekolahidChange(sekolahid_selected)" >
+                <option value="1">1 - SDIT AL Haraki</option>
+                <option value="2">2 - SMPIT AL Haraki</option>
+            </select>
+        </div>
+        
         <div class="navbar-custom-menu">
-
             <ul class="nav navbar-nav">
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
@@ -38,7 +46,7 @@ use yii\helpers\Html;
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#/" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
+                                <a href="#/profile" class="btn btn-default btn-flat"><i class="fa fa-user"></i> Profile</a>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-danger btn-flat" ng-click="loginOrOut()">
@@ -48,7 +56,6 @@ use yii\helpers\Html;
                         </li>
                     </ul>
                 </li>
-
                 <!-- User Account: style can be found in dropdown.less -->
             </ul>
         </div>

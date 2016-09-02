@@ -47,6 +47,15 @@ define(['app'], function (app) {
             return JSON.parse(sessionStorage.getItem('sekolah_profile'));
         };
 
+        factory.changeSekolahId = function(id) {
+            return $http.get(serviceBase + 'sekolahs/profile/' + id).then(function (results) {
+                if(results.data.success){
+                    sessionStorage.setItem('sekolah_profile', JSON.stringify(results.data.rows));
+                }
+                return results.data;
+            });
+        };
+
         factory.redirectToLogin = function () {
             $rootScope.$broadcast('redirectToLogin', null);
         };

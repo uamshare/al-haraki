@@ -245,7 +245,7 @@ define(['app'], function (app) {
             $scope.filter.month = helperService.getMonthId(date.getMonth());
             $scope.filter.year = date.getFullYear();
             getKelas({
-                sekolahid : authService.getProfile().sekolahid,
+                sekolahid : authService.getSekolahProfile().sekolahid,
                 kelasid : $routeParams.idkelas,
                 'per-page' : 0
             });
@@ -299,8 +299,8 @@ define(['app'], function (app) {
 
         $scope.j_direktur = "Dir. Pendidikan SIT Al Haraki";
         $scope.nama_direktur = "Susi P. Krisnawan, S.H";
-        $scope.j_kepala_sekolah = "Kepala SDIT Al Harakai";
-        $scope.nama_kepala_sekolah = "Chairulllah, M. Pd. I";
+        $scope.j_kepala_sekolah = "Kepala " + authService.getSekolahProfile().nama_sekolah;
+        $scope.nama_kepala_sekolah = authService.getSekolahProfile().kepala_sekolah; //"Chairulllah, M. Pd. I";
         $scope.tempat   = "Depok";
         $scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
@@ -404,8 +404,7 @@ define(['app'], function (app) {
         function setGridToContentPdf(gridApi){
             var content = [],
                 gt = gridApi.grid.treeBase.tree,
-                rdate = 'PER - ' + helperService.formatDateID(date),
-                sekolah = 'SMPIT';
+                rdate = exportTo._titleDate;
 
             function formatValueNumber(val){
                 if((typeof val !='undefined' && parseInt(val))){
@@ -528,7 +527,7 @@ define(['app'], function (app) {
 
             content.push({
                 margin: [10,10,10,0],
-                text: 'DATA OUTSTANDING SPP ' + sekolah + ' AL HARAKI',
+                text: exportTo._title,
                 alignment: 'center'
             });
             content.push({
@@ -633,9 +632,7 @@ define(['app'], function (app) {
 
         function setGridToContentXLS(gridApi){
             var content = [],
-                gt = gridApi.grid.treeBase.tree,
-                rdate = 'PER - ' + helperService.formatDateID(date),
-                sekolah = 'SMPIT';
+                gt = gridApi.grid.treeBase.tree;
 
 
             function formatValueNumber(val){
@@ -743,7 +740,6 @@ define(['app'], function (app) {
             }
 
             exportTo[type]($scope.gridApi);
-            
         }
 
         $timeout(function() {

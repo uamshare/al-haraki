@@ -23,6 +23,7 @@ require(
         // Pengaturan
         'services/GrupAksesService',
         'services/UserService',
+        'services/SekolahService',
 
         'services/TahunAjaranService',
         //KEUANGAN

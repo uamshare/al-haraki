@@ -665,7 +665,7 @@ define(['app'], function (app) {
 						$scope.form.created_at = rowdata.created_at;
 						
 						getRombel({
-							sekolahid : authService.getProfile().sekolahid
+							sekolahid : authService.getSekolahProfile().sekolahid
 						});
 						
 						getRowDetailByNo(rowdata.no_kwitansi);
@@ -681,7 +681,7 @@ define(['app'], function (app) {
 	                refreshNo();
 					reset();
 					getRombel({
-						sekolahid : authService.getProfile().sekolahid
+						sekolahid : authService.getSekolahProfile().sekolahid
 					});
 	            }
 	            
@@ -723,7 +723,7 @@ define(['app'], function (app) {
 						$location.path( "/keuangan/kwitansi-pembayaran/");
 						cfpLoadingBar.complete();
 					}else{
-						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+						toastr.error('Data gagal tersimpan.' + result.message, 'Error');
 						cfpLoadingBar.complete();
 					}
 				}

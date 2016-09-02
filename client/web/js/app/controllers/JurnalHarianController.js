@@ -529,7 +529,7 @@ define(['app'], function (app) {
 						$location.path( "/akuntansi/jurnal-harian/");
 						cfpLoadingBar.complete();
 					}else{
-						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+						toastr.error('Data gagal tersimpan.<br/>' + result.message, 'Error');
 						cfpLoadingBar.complete();
 					}
 				}

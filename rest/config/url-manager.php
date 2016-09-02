@@ -36,6 +36,11 @@ return [
                         'GET listinfo' => 'listinfo',
                         'OPTIONS findbyno' => 'options',
                         'GET findbyno' => 'findbyno',
+                        'GET profile' => 'profile',
+                        'GET profile/{id}' => 'profile',
+                        'POST profile' => 'changeprofile',
+                        'PUT profile' => 'changeprofile',
+                        'OPTIONS profile' => 'options',
                     ]
                 ],
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',

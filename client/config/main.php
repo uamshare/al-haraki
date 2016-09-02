@@ -18,7 +18,7 @@ return [
         ],
         'user' => [
             'identityClass' => 'client\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-client', 'httpOnly' => true],
         ],
         'session' => [

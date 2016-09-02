@@ -54,8 +54,8 @@
                             'items' => [
                                 ['label' => 'Info Tagihan', 'icon' => 'fa fa-info-circle', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput'],'url' => ['/#keuangan/info-tagihan']],
                                 ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipembayaran'], 'url' => ['#keuangan/kwitansi-pembayaran/add']],
-                                ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
-                                ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran'],'url' => ['/#keuangan/rekap-outstanding-tagihan']],
+                                ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput_listbayar'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
+                                ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput_list'],'url' => ['/#keuangan/rekap-outstanding-tagihan']],
                                 ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipengeluaran'],'url' => ['/#keuangan/kwitansi-pengeluaran/add']],
                                 ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['/#keuangan/kwitansi-pengeluaran']],
                                 ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-cc-mastercard', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['#keuangan/rekonsiliasi-autodebet/add']]
@@ -81,7 +81,7 @@
                             'items' => [
                                 ['label' => 'Pengguna', 'icon' => 'fa fa-user', 'options' => ['ng-show' => 'menuprivileges.user'], 'url' => ['/#pengaturan/user']],
                                 ['label' => 'Grup Akses Pengguna', 'icon' => 'fa fa-users', 'options' => ['ng-show' => 'menuprivileges.role'], 'url' => ['/#pengaturan/grup-akses']],
-                                ['label' => 'Sekolah', 'icon' => 'fa fa-user-plus', 'options' => ['ng-show' => 'menuprivileges.setting'], 
+                                ['label' => 'Sekolah', 'icon' => 'fa fa-user-plus', 'options' => ['ng-show' => 'menuprivileges.sekolah'], 
                                     'url' => ['#pengaturan/sekolah']]
                             ],
                         ]

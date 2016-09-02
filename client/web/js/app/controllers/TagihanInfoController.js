@@ -17,6 +17,7 @@ define(['app'], function (app) {
     		'uiGridConstants',
     		'TagihanInfoService',
     		'authService',
+    		'KelasService',
     		'TahunAjaranService'
     	];
 
@@ -36,6 +37,7 @@ define(['app'], function (app) {
 		uiGridConstants,
 		TagihanInfoService,
 		authService,
+		KelasService,
 		TahunAjaranService
 	) 
     {
@@ -405,7 +407,7 @@ define(['app'], function (app) {
 					kelasid : $scope.kelas.selected,
 					jenis_tagihan : $scope.jenis_tagihan,
 					tahun_ajaran_id : $scope.tahun_ajaran_id,
-					sekolahid : authService.getProfile().sekolahid
+					sekolahid : authService.getSekolahProfile().sekolahid
 				}
 				saveAll(params);
 			}else{
@@ -555,25 +557,28 @@ define(['app'], function (app) {
 	        });
 		}
 
+		function getkelas(params){
+			KelasService.getList(params)
+			.then(function (result) {
+	            if(result.success){
+		            // var header = header();
+					if(result.success){
+						$scope.kelas.options = result.rows;
+					}
+					$scope.month.selected = helperService.getMonthId(date.getMonth());
+					$scope.month.year = date.getFullYear();
+				}
+	        }, function(error){
+	        	toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+	        });
+		}
+
 		function init(){
-			$http.get($CONST_VAR.restDirectory + 'kelas/list',{
-				params : {
-					sekolahid : authService.getProfile().sekolahid,
-					kelasid : $routeParams.idkelas,
-					'per-page' : 0,
-				}
+			getkelas({
+				sekolahid : authService.getSekolahProfile().sekolahid,
+				kelasid : $routeParams.idkelas,
+				'per-page' : 0,
 			})
-			.success(function(data, status, header) {
-				var header = header();
-				if(data.success){
-					$scope.kelas.options = data.rows;
-				}
-				$scope.month.selected = helperService.getMonthId(date.getMonth());
-				$scope.month.year = date.getFullYear();
-			})
-			.error(function (data, status, header, config) {
-				alert('Unable to load data kelas')
-        	});
 
         	if($routeParams.idkelas){
         		getTahuunAjaran();

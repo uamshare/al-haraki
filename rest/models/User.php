@@ -142,6 +142,15 @@ class User extends \rest\models\AppActiveRecord
         return $this->hasOne(Pegawai::className(), ['id' => 'pegawai_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRoles()
+    {
+        $roles = new RoleModel();
+        return $roles->getRoles($this->username);
+    }
+
     public function getProfile(){
         return [
             'name' => $this->username,
@@ -155,7 +164,7 @@ class User extends \rest\models\AppActiveRecord
      * Get List input Info Tagihan
      *
      */
-    public function getList($params){
+    public function getList($params = null){
         $customeQuery = new Query;
         $customeQuery
             ->select([
@@ -168,11 +177,13 @@ class User extends \rest\models\AppActiveRecord
                 'a.`sekolahid`',
                 'IF(a.sekolahid = 0, "All", `s`.`nama`) AS `sekolah`',
                 'b.item_name as role',
+                'c.description as role_desc',
                 'a.`created_at`',
                 'a.`updated_at`',
             ])
             ->from('user a')
             ->leftJoin('auth_assignment b', 'b.user_id = a.id')
+            ->leftJoin('auth_item c', 'b.item_name = c.name')
             ->leftJoin('pegawai p', 'p.id = a.pegawai_id')
             ->leftJoin('sekolah s', 's.id = a.sekolahid');
 
@@ -201,8 +212,9 @@ class User extends \rest\models\AppActiveRecord
             }  
         }else if(is_string($params) || is_int($params)){
             $customeQuery->andWhere(['a.id' => $params]);
+        }else {
+            $customeQuery->andWhere(['a.id' => $this->id]);
         }
-         
         // var_dump($customeQuery->createCommand()->rawSql);exit();
 
         return $customeQuery;

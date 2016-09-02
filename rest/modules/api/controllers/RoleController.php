@@ -8,7 +8,10 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 {
     public $modelClass = 'rest\models\RoleModel';
     public $Auth;
-
+    protected $authname_extra = [
+        'tagihaninfoinput_list',
+        'tagihaninfoinput_listbayar'
+    ];
     public function actions()
     {
         $actions = parent::actions();
@@ -97,10 +100,16 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $list = [];
         foreach ($this->_listPermissions() as $key => $value) {
             $list[$key] = $value;
-            $list[$key]['read'] = isset($permission[$value['name'] . '_view']) ? true : false;
-            $list[$key]['create'] = isset($permission[$value['name'] . '_create']) ? true : false;
-            $list[$key]['update'] = isset($permission[$value['name'] . '_update']) ? true : false;
-            $list[$key]['delete'] = isset($permission[$value['name'] . '_delete']) ? true : false;
+            if(in_array($value['name'], $this->authname_extra)){
+                // $this->validAddChild($role, $rows['name'], $rows['description']);
+                $list[$key]['read'] = isset($permission[$value['name']]) ? true : false;
+            }else{
+                $list[$key]['read'] = isset($permission[$value['name'] . '_view']) ? true : false;
+                $list[$key]['create'] = isset($permission[$value['name'] . '_create']) ? true : false;
+                $list[$key]['update'] = isset($permission[$value['name'] . '_update']) ? true : false;
+                $list[$key]['delete'] = isset($permission[$value['name'] . '_delete']) ? true : false;
+            }
+            
 
         }
         return $list;
@@ -120,8 +129,12 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         if($userid){
             $permission =  $Auth->getPermissionsByUser($userid);
             foreach ($permission as $key => $value) {
-                if(preg_match('/_index/', $key)){
-                    $list[] = str_replace('_index', '', $key);
+                if(in_array($key, $this->authname_extra)){
+                    $list[] = $key;
+                }else{
+                    if(preg_match('/_index/', $key)){
+                        $list[] = str_replace('_index', '', $key);
+                    }
                 }
             }
 
@@ -172,20 +185,20 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 
             ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput', 'description' => 'Info Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'KEUANGAN','name' => 'kwitansipembayaran', 'description' => 'Kwitansi Pembayaran', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            ['parent_name' => 'KEUANGAN','name' => 'tagihanpembayaran', 'description' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            ['parent_name' => 'KEUANGAN','name' => 'tagihanpembayaran', 'description' => 'Rekap Outstanding Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 4],
+            ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput_list', 'description' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
+            ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput_listbayar', 'description' => 'Rekap Outstanding Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 4],
             ['parent_name' => 'KEUANGAN','name' => 'kwitansipengeluaran', 'description' => 'Kwitansi Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            ['parent_name' => 'KEUANGAN','name' => 'kwitansipengeluaran', 'description' => 'Rekap Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 4],
+            // ['parent_name' => 'KEUANGAN','name' => 'kwitansipengeluaran', 'description' => 'Rekap Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 4],
             ['parent_name' => 'KEUANGAN','name' => 'tagihanautodebet', 'description' => 'Reonsiliasi Autodebet', 'leaf' => true, 'parent' => 1, 'order' => 3],
 
             ['parent_name' => 'AKUNTANSI','name' => 'mcoad', 'description' => 'Master Akun', 'leaf' => true, 'parent' => 1, 'order' => 1],
-            ['parent_name' => 'AKUNTANSI','name' => 'postingmap', 'description' => 'Pemetaan Posting', 'leaf' => true, 'parent' => 1, 'order' => 2],
+            // ['parent_name' => 'AKUNTANSI','name' => 'postingmap', 'description' => 'Pemetaan Posting', 'leaf' => true, 'parent' => 1, 'order' => 2],
             ['parent_name' => 'AKUNTANSI','name' => 'jurnalharian', 'description' => 'Jurnal Harian', 'leaf' => true, 'parent' => 1, 'order' => 3],
             ['parent_name' => 'AKUNTANSI','name' => 'rgl', 'description' => 'Buku Besar', 'leaf' => true, 'parent' => 1, 'order' => 4],
 
             ['parent_name' => 'PENGATURAN','name' => 'user', 'description' => 'Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'PENGATURAN','name' => 'role', 'description' => 'Grup Akses Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            ['parent_name' => 'PENGATURAN','name' => 'setting', 'description' => 'Sekolah', 'leaf' => true, 'parent' => 1, 'order' => 3],
+            ['parent_name' => 'PENGATURAN','name' => 'sekolah', 'description' => 'Sekolah', 'leaf' => true, 'parent' => 1, 'order' => 3],
         ];
 
         return  $setPermissions;
@@ -198,7 +211,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         if(!$p){
             $p = $Auth->createPermission($name);
             $p->description = $desc;
-            $Auth->add($permission);
+            $Auth->add($p);
         }
         if(!$Auth->hasChild($role, $p)){
             $Auth->addChild($role, $p);
@@ -236,14 +249,27 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 $Auth->update($form['name'], $role);
             }
 
+            $default_role = $Auth->getRole('default_role');
+            if(!$Auth->hasChild($role, $default_role)){
+                $Auth->addChild($role, $default_role);
+            }
+
             // Add Permission to role
             foreach($grid as $rows){
                 if(isset($rows['read']) && $rows['read']){
-                    $this->validAddChild($role, $rows['name'] . '_index', $rows['description'] . ' Index');
-                    $this->validAddChild($role, $rows['name'] . '_view', $rows['description'] . ' View');
+                    if(in_array($rows['name'], $this->authname_extra)){
+                        $this->validAddChild($role, $rows['name'], $rows['description']);
+                    }else{
+                        $this->validAddChild($role, $rows['name'] . '_index', $rows['description'] . ' Index');
+                        $this->validAddChild($role, $rows['name'] . '_view', $rows['description'] . ' View');
+                    }
                 }else{
-                    $this->validRemoveChild($role, $rows['name'] . '_index');
-                    $this->validRemoveChild($role, $rows['name'] . '_view');
+                    if(in_array($rows['name'], $this->authname_extra)){
+                        $this->validRemoveChild($role, $rows['name']);
+                    }else{
+                        $this->validRemoveChild($role, $rows['name'] . '_index');
+                        $this->validRemoveChild($role, $rows['name'] . '_view');
+                    }
                 }
 
                 if(isset($rows['create']) && $rows['create']){

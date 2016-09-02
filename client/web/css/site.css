@@ -99,3 +99,8 @@ input[type=radio].custome1 + .lbl {
 .ngdialog.ngdialog-theme-flat.custom-width-50 .ngdialog-content {
     width: 50%;
 }
+
+.navbar-brand select{
+    margin-top: -8px;
+    padding-left: 0;
+}

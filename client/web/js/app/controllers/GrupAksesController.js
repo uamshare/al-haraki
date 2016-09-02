@@ -57,14 +57,14 @@ define(['app'], function (app) {
 		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
 		    						  		'</a>&nbsp;' +
-		    						  		'<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
+		    						  		'<a href="" ng-hide="grid.appScope.isDeleteHide(row.entity)" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
 		    						  		'</a>' +
 		    						  	'</div>';
         	var grid = {
 	    		columnDefs : [
 					{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
-					{ name: 'name', displayName: 'ID', visible: true, width : '150' ,  enableCellEdit: false},
+					{ name: 'name', displayName: 'ID', visible: false, width : '150' ,  enableCellEdit: false},
 					{ name: 'description', displayName: 'Nama Grup', visible: true, enableCellEdit: false},
 					{ name: 'createdAt', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
 	                { name: 'updatedAt', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
@@ -78,6 +78,7 @@ define(['app'], function (app) {
 				width : '100',
 				enableSorting : false,
 				enableCellEdit: false,
+				cellClass: 'grid-align-right',
 				cellTemplate : columnActionTpl
 			});	
 
@@ -100,6 +101,11 @@ define(['app'], function (app) {
 			    }
 			};
 
+			$scope.username = authService.getProfile().name;
+			$scope.isDeleteHide = function(rowentity){
+				return (['admin','default_role'].indexOf(rowentity.name) > -1)
+			}
+
         	function getRoles(paramdata){
 				cfpLoadingBar.start();
 	            $resourceApi.getRoles(paramdata)
@@ -109,13 +115,27 @@ define(['app'], function (app) {
 	                    $scope.grid.data = [];
 	                    for(var key in result.rows){
 	                    	var romnum = index + 1;
-	                    	$scope.grid.data[index] = {
-	                    		index : romnum,
-	                    		name : result.rows[key].name,
-	                    		description : result.rows[key].description,
-	                    		createdAt : result.rows[key].createdAt,
-	                    		updatedAt : result.rows[key].updatedAt
-	                    	};
+	                    	if(authService.getProfile().name == 'admin' && 
+	                    			['admin','default_role'].indexOf(result.rows[key].name) > -1 ){
+	                    		$scope.grid.data[index] = {
+		                    		index : romnum,
+		                    		name : result.rows[key].name,
+		                    		description : result.rows[key].description,
+		                    		createdAt : result.rows[key].createdAt,
+		                    		updatedAt : result.rows[key].updatedAt
+		                    	};
+		                    	// continue;
+	                    	}else if(['admin','default_role'].indexOf(result.rows[key].name) > -1){
+	                    		continue;
+	                    	}else{
+	                    		$scope.grid.data[index] = {
+		                    		index : romnum,
+		                    		name : result.rows[key].name,
+		                    		description : result.rows[key].description,
+		                    		createdAt : result.rows[key].createdAt,
+		                    		updatedAt : result.rows[key].updatedAt
+		                    	};
+	                    	}
 	                    	index++;
 	                    }
 	                }
@@ -180,19 +200,19 @@ define(['app'], function (app) {
 					{ name: 'description', displayName: 'Menu Akses', visible: true,  enableCellEdit: false},
 					{ 
 						name: 'create', displayName: 'Tambah', width : '100', visible: true, enableCellEdit: false,
-						cellTemplate: '<input checked="true" ng-model="row.entity.create" type="checkbox" />'
+						cellTemplate: '<input ng-hide="grid.appScope.noAction(row.entity, \'create\')" ng-model="row.entity.create" type="checkbox" />'
 					},
 					{ 
 						name: 'read', displayName: 'Lihat', width : '100', visible: true, enableCellEdit: false,
-						cellTemplate: '<input ng-model="row.entity.read" type="checkbox" />'
+						cellTemplate: '<input ng-hide="grid.appScope.noAction(row.entity, \'read\')"ng-model="row.entity.read" type="checkbox" />'
 					},
 					{ 
 						name: 'update', displayName: 'Perbaiki', width : '100', visible: true, enableCellEdit: false,
-						cellTemplate: '<input ng-model="row.entity.update" type="checkbox" />'
+						cellTemplate: '<input ng-hide="grid.appScope.noAction(row.entity, \'update\')" ng-model="row.entity.update" type="checkbox" />'
 					},
 					{ 
 						name: 'delete', displayName: 'Hapus', width : '100', visible: true, enableCellEdit: false,
-						cellTemplate: '<input ng-model="row.entity.delete" type="checkbox" />'
+						cellTemplate: '<input ng-hide="grid.appScope.noAction(row.entity, \'delete\')" ng-model="row.entity.delete" type="checkbox" />'
 					},
 					{ name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
 					{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
@@ -219,6 +239,21 @@ define(['app'], function (app) {
 					});
 			    }
 			};
+
+			$scope.noAction = function(rowentity, action){
+				var controller = [
+					'tagihaninfoinput_list',
+					'tagihaninfoinput_listbayar',
+					'rgl'
+				];
+
+				var actions = ['create','update','delete'];
+
+				if(controller.indexOf(rowentity.name) > -1 && actions.indexOf(action) > -1){
+					return true;
+				}
+				return false;
+			}
 
         	function reset(){
 				$scope.form.name = date;
@@ -315,7 +350,7 @@ define(['app'], function (app) {
 						$location.path( "/pengaturan/grup-akses/");
 						cfpLoadingBar.complete();
 					}else{
-						toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+						toastr.error('Data gagal tersimpan.<br/>' + result.message, 'Error');
 						cfpLoadingBar.complete();
 					}
 	            }, errorHandle);

@@ -20,8 +20,9 @@ use Yii;
  * @property Pegawai[] $pegawais
  * @property Siswa[] $siswas
  */
-class Sekolah extends \yii\db\ActiveRecord
+class Sekolah extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
     /**
      * @inheritdoc
      */
@@ -108,13 +109,23 @@ class Sekolah extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getKepalaSekolah()
+    {
+        return $this->hasOne(Pegawai::className(), ['sekolahid' => 'id'])->where(['jabatan' => 'Kepala Sekolah']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getSiswas()
     {
         return $this->hasMany(Siswa::className(), ['sekolahid' => 'id']);
     }
 
     public static function getProfile($id){
-        $self = static::find(['id' => $id])->one(); //static::findOne(['aktif' => $id]);
+
+        $self = static::find()->where(['id' => $id])->one();
+        // var_dump($self);exit();
         $tahunAjaran = \rest\models\TahunAjaran::getActive();
 
         return [
@@ -122,6 +133,7 @@ class Sekolah extends \yii\db\ActiveRecord
             'nama_sekolah' => $self->nama,
             'alamat' => $self->alamat,
             'tingkatan' => $self->tingkatan,
+            'kepala_sekolah' => $self->kepalaSekolah->nama_pegawai,
             'tahun_ajaran_id' => $tahunAjaran->id,
             'tahun_ajaran' => $tahunAjaran->tahun_ajaran,
             'tahun_awal' => $tahunAjaran->tahun_awal,

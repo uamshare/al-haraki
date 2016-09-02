@@ -301,7 +301,7 @@ define(['app'], function (app) {
 	                getById($routeParams.id);
 	            }
 	            getPegawai({
-					sekolahid : authService.getProfile().sekolahid,
+					sekolahid : authService.getSekolahProfile().sekolahid,
 					'per-page' : 0
 				});
 				getRoles();
@@ -327,7 +327,7 @@ define(['app'], function (app) {
 						cfpLoadingBar.complete();
 
 					}else{
-						toastr.success('Data gagal tersimpan. ' + result.message, 'Success');
+						toastr.error('Data gagal tersimpan. ' + result.message, 'Error');
 						cfpLoadingBar.complete();
 					}
 				}
@@ -357,6 +357,130 @@ define(['app'], function (app) {
 			}
         }
 
+        var profileController = function(){
+        	
+        	$scope.form = {
+        		user : {
+        			id : '',
+        			username : '',
+        			password : '',
+        			sekolahid : '',
+        			role : ''
+        		},
+        		pegawai : {
+        			id : '',
+        			nuptk : '',
+        			nik : '',
+        			nama_pegawai : '',
+        			nama_panggilan : ''
+        		}
+			};
+			$scope.isChangedPassword = false;
+        	function reset(){
+				$scope.form.username = null;
+				$scope.form.email = null;
+				$scope.form.pegawai_id = null;
+				$scope.form.role = null;
+				$scope.form.sekolahid = null;
+				$scope.form.created_at = null;
+				$scope.form.updated_at = null;
+			}
+
+			function getByProfile(){
+				cfpLoadingBar.start();
+				$resourceApi.getProfile()
+				.then(function (result) {
+	                if(result.success){
+						var rowdata = result.rows;
+						$scope.form.user = rowdata.user;
+						$scope.form.user.passsword_new1 = '';
+						$scope.form.user.passsword_new2 = '';
+						$scope.form.pegawai = rowdata.pegawai;
+					}else{
+						toastr.warning('Tidak ada data.', 'Warning');
+					}
+					cfpLoadingBar.complete();
+	            }, errorHandle);
+			}
+			
+			this.init = function(){
+				getByProfile();
+			}
+
+			$scope.onSavePegawaiClick = function(event){
+
+				var params = $scope.form.pegawai;
+				cfpLoadingBar.start();
+				function success(result){
+					if(result.success){
+						toastr.success('Data telah tersimpan', 'Success');
+						$location.path( "/profile");
+						cfpLoadingBar.complete();
+					}else{
+						toastr.error('Data gagal tersimpan. ' + result.message, 'Error');
+						cfpLoadingBar.complete();
+					}
+				}
+
+				PegawaiService.update(params)
+				.then(success, errorHandle);	
+			}
+
+			$scope.onSaveUserClick = function(event){
+				if($scope.form.user.username == '' || $scope.form.user.username == null){
+					toastr.warning('Username tidak boleh kosong.', 'Warning');
+					return false;
+				}
+
+				if($scope.form.user.email == '' || $scope.form.user.email == null){
+					toastr.warning('Email tidak boleh kosong.', 'Warning');
+					return false;
+				}
+
+				if($scope.isChangedPassword && 
+						($scope.form.user.password == '' || $scope.form.user.password == null)){
+					toastr.warning('Kata sandi lama tidak boleh kosong.', 'Warning');
+					return false;
+				}
+
+				if($scope.isChangedPassword && 
+						($scope.form.user.password_new1 == '' || $scope.form.user.password_new1 == null)){
+					toastr.warning('Kata sandi baru tidak boleh kosong.', 'Warning');
+					return false;
+				}
+
+				if($scope.isChangedPassword && 
+						($scope.form.user.password == $scope.form.user.password_new1)){
+					toastr.warning('Silahkan masukan Kata sandi baru yang berbeda ', 'Warning');
+					return false;
+				}
+				
+
+				var params = $scope.form.user;
+				// $scope.form.user.password = $scope.form.user.password_new1;
+				// $scope.form.user.password_new1 = null;
+				// $scope.form.user.password_new2 = null;
+				cfpLoadingBar.start();
+				function success(result){
+					if(result.success){
+						toastr.success('Data telah tersimpan', 'Success');
+						$location.path( "/profile");
+						cfpLoadingBar.complete();
+					}else{
+						toastr.error('Data gagal tersimpan. ' + result.message, 'Error');
+						cfpLoadingBar.complete();
+					}
+				}
+
+				$resourceApi.updateProfile(params)
+				.then(success, errorHandle);	
+			}
+
+			$scope.onResetClick = function(event){
+				$location.path( "/pengaturan/user/");
+			}
+        }
+
 		var controller;
 		switch($location.$$url){
 			case '/pengaturan/user/add' :
@@ -364,6 +488,9 @@ define(['app'], function (app) {
 				break;
 			case '/pengaturan/user/edit/' + $routeParams.id :
 				controller = new addEditController();
+				break;
+			case '/profile' :
+				controller = new profileController();
 				break;
 			default : 
 				controller = new indexController();

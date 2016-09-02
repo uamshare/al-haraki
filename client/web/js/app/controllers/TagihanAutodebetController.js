@@ -782,7 +782,7 @@ define(['app'], function (app) {
                         cfpLoadingBar.complete();
                         $location.path( "/keuangan/rekonsiliasi-autodebet");
                     }else{
-                        toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+                        toastr.error('Data gagal tersimpan.<br/>' + result.message, 'Error');
                         cfpLoadingBar.complete();
                     }
                 }

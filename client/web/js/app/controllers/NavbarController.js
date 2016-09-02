@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$scope', '$location', '$timeout','authService','GrupAksesService'];
+    var injectParams = ['$scope','$route', '$location', '$timeout','authService','GrupAksesService', 'cfpLoadingBar'];
 
-    var NavbarController = function ($scope, $location, $timeout, authService, GrupAksesService) {
+    var NavbarController = function ($scope, $route, $location, $timeout, authService, GrupAksesService, cfpLoadingBar) {
         var appTitle = 'Al Harakai';
 
         $scope.isCollapsed = false;
@@ -44,11 +44,21 @@ define(['app'], function (app) {
             $scope.profil = authService.getProfile();
         }
 
+        function getSekolahProfile(){
+            $scope.sekolahProfile = authService.getSekolahProfile();
+            $scope.sekolahid_selected = $scope.sekolahProfile.sekolahid;
+        }
+
+        function initLogin(){
+            getMenuPrivileges();
+            getUserProfile();
+            getSekolahProfile();
+        }
+
         function setLoginLogoutText(loggedIn) {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
             if(loggedIn){
-                getMenuPrivileges();
-                getUserProfile();
+                initLogin();
             }
         }
 
@@ -69,9 +79,22 @@ define(['app'], function (app) {
                             $scope.menuprivileges[result.rows[idx]] = true;
                         }
                     }
-                    
                 }
+                
                 // cfpLoadingBar.complete();
+            }, errorHandle);
+        }
+
+        $scope.onSekolahidChange = function(value){
+            cfpLoadingBar.start();
+            authService.changeSekolahId($scope.sekolahid_selected)
+            .then(function (result) {
+                if(result.success){
+                    // console.log(result);
+                    getSekolahProfile();
+                    $route.reload();
+                }
+                cfpLoadingBar.complete();
             }, errorHandle);
         }
 
@@ -91,6 +114,8 @@ define(['app'], function (app) {
 
             keuangan : false,
             tagihaninfoinput : false,
+            tagihaninfoinput_list : false,
+            tagihaninfoinput_listbayar : false,
             kwitansipembayaran : false,
             tagihanpembayaran : false,
             kwitansipengeluaran : false,
@@ -105,7 +130,7 @@ define(['app'], function (app) {
             pengaturan : '',
             user : false,
             role : false,
-            setting : false
+            sekolah : false
         }
 
         setLoginLogoutText(sessionStorage.getItem('isAuthValid'));

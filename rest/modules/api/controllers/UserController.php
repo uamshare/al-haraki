@@ -2,8 +2,9 @@
 namespace rest\modules\api\controllers;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\web\ServerErrorHttpException;
 
-class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecord // \rest\modules\api\ActiveController //
+class UserController extends \rest\modules\api\ActiveController // \yii\rest\ActiveController
 {
     public $modelClass = 'rest\models\User';
 
@@ -18,24 +19,24 @@ class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecor
         return $actions;
     }
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'  => ['get'],
-                        'view'   => ['get'],
-                        'create' => ['post'],
-                        'update' => ['put'],
-                        'delete' => ['delete'],
-                    ],
-                ],
-            ]
-        );
-    }
+    // public function behaviors()
+    // {
+    //     $behaviors = parent::behaviors();
+    //     return array_merge($behaviors, 
+    //         [
+    //             'verbFilter' => [
+    //                 'class' => \yii\filters\VerbFilter::className(),
+    //                 'actions' => [
+    //                     'index'  => ['get'],
+    //                     'view'   => ['get'],
+    //                     'create' => ['post'],
+    //                     'update' => ['put'],
+    //                     'delete' => ['delete'],
+    //                 ],
+    //             ],
+    //         ]
+    //     );
+    // }
 
     public function actionIndex(){
         $model = new $this->modelClass();
@@ -55,6 +56,16 @@ class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecor
         return $this->prepareDataProvider($model->getList([
             'id' => $id
         ]));
+    }
+
+    public function actionProfile(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+
+        return [
+            'user' => Yii::$app->user->identity->getList()->One(),
+            'pegawai' => Yii::$app->user->identity->pegawai,
+        ];
     }
 
     public function actionCreate(){
@@ -123,23 +134,38 @@ class UserController extends \yii\rest\ActiveController //\yii\redis\ActiveRecor
             }
         }
         return $model->getList($model->id)->one();
-    }   
+    }
 
-    /**
-     * Prepares the data provider that should return the requested collection of the models.
-     * @return ActiveDataProvider
-     */
-    protected function prepareDataProvider($query)
-    {
-        $request = Yii::$app->getRequest();
-        $perpage = $request->getQueryParam('per-page', 20);
-        $pagination = [
-            'pageSize' => $perpage
-        ];
+    public function actionChangeprofile(){
+        $model = Yii::$app->user->identity;//\rest\models\User::findOne($id);
+        $this->response = Yii::$app->getResponse();
 
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ($perpage > 0) ? $pagination : false
-        ]);
+        $post = Yii::$app->getRequest()->getBodyParams();
+        if($post){
+
+            if(isset($post['password']) && !$model->validatePassword($post['password'])){
+                $this->response->setStatusCode(422, 'Data Validation Failed.');
+                return [
+                    'message' => 'Pasword lama tidak sesuai'
+                ];
+            }
+
+            $model->password_hash = (isset($post['password_new1'])) ? 
+                Yii::$app->security->generatePasswordHash($post['password_new1']) : 
+                $model->password_hash;
+
+            $model->username = (isset($post['username'])) ? $post['username'] : $model->username;
+            $model->email = (isset($post['email'])) ? $post['email'] : $model->email;
+
+            if ($model->save() === false && !$model->hasErrors()) {
+                throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
+            }else if($model->hasErrors()){
+                return $model->hasErrors();
+            }
+            return $model->getList($model->id)->one();
+        }else{
+            $this->response->setStatusCode(422, 'Data Validation Failed.');
+            return false;
+        }
     }
 }

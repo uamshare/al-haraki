@@ -187,7 +187,7 @@ define(['app'], function (app) {
                     cfpLoadingBar.complete();
                     $location.path( "/master/kelas/");
                 }else{
-                    toastr.success('Data gagal tersimpan.<br/>' + result.message, 'Success');
+                    toastr.error('Data gagal tersimpan.' + result.message, 'Error');
                     cfpLoadingBar.complete();
                 }
             }

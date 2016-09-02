@@ -9,6 +9,7 @@ define(['services/routeResolver'], function () {
             'ngAnimate', 
             'toastr',
             'routeResolverServices', 
+            // 'service',
             // 'ui.bootstrap', 
             'mgcrea.ngStrap',
             'ui.grid',
@@ -355,6 +356,14 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
+                .when('/profile', 
+                    routeCustome.resolve(
+                        'pengaturan/user/profil', 
+                        'UserController',
+                        true
+                    )
+                )
+
                 .when('/pengaturan/user', 
                     routeCustome.resolve(
                         'pengaturan/user/index', 
@@ -381,6 +390,13 @@ define(['services/routeResolver'], function () {
                     routeCustome.resolve(
                         'pengaturan/grup-akses/index', 
                         'GrupAksesController',
+                        true
+                    )
+                )
+                .when('/pengaturan/sekolah', 
+                    routeCustome.resolve(
+                        'pengaturan/sekolah/index', 
+                        'SekolahController',
                         true
                     )
                 )
@@ -453,7 +469,7 @@ define(['services/routeResolver'], function () {
         }
     ]);
     
-    app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar',
+    app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar', 
         function ($rootScope, $location, authService, $templateCache, cfpLoadingBar) {
             
             //Client-side security. Server-side framework MUST add it's 
