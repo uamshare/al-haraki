@@ -2,12 +2,13 @@
 namespace rest\modules\api\controllers;
 
 use Yii;
-use yii\data\ActiveDataProvider;
+// use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
-class PegawaiController extends \yii\rest\ActiveController //\rest\modules\api\ActiveController //
+class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController //
 {
     public $modelClass = 'rest\models\Pegawai';
-
+    private $profile_path = 'profile/pegawai/';
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -37,21 +38,47 @@ class PegawaiController extends \yii\rest\ActiveController //\rest\modules\api\A
         ]));
     }
 
+    public function actionAvatar(){
+        $path = Yii::getAlias('@webroot') . \Yii::$app->params['profile_pegawai_path'];
+        $pegawai = Yii::$app->user->identity->pegawai;
+        $pegawai->scenario = 'avatar';
+
+        $fileupload = UploadedFile::getInstancesByName('photo');
+        if (!file_exists( $path )) {
+            $a = mkdir( $path , 0777, true);
+        } 
+        $fileupload = $fileupload[0];
+        $saveUpload = $fileupload->saveAs( $path . 'avatar_' . $pegawai->id . '.' . $fileupload->extension);
+
+        if($saveUpload){
+            $pegawai->avatar = 'avatar_' . $pegawai->id . '.' . $fileupload->extension;
+            if(!$pegawai->save()){
+                return $pegawai->errors;
+            }
+            return [
+                'avatar' => $pegawai->avatarPath,
+                'filename' => $pegawai->avatar
+            ]; //$fileupload;
+        }else{
+            return $fileupload->error;
+        }
+    }
+
     /**
      * Prepares the data provider that should return the requested collection of the models.
      * @return ActiveDataProvider
      */
-    protected function prepareDataProvider($query)
-    {
-        $request = Yii::$app->getRequest();
-        $perpage = $request->getQueryParam('per-page', 20);
-        $pagination = [
-            'pageSize' => $perpage
-        ];
+    // protected function prepareDataProvider($query)
+    // {
+    //     $request = Yii::$app->getRequest();
+    //     $perpage = $request->getQueryParam('per-page', 20);
+    //     $pagination = [
+    //         'pageSize' => $perpage
+    //     ];
 
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ($perpage > 0) ? $pagination : false
-        ]);
-    }
+    //     return new ActiveDataProvider([
+    //         'query' => $query,
+    //         'pagination' => ($perpage > 0) ? $pagination : false
+    //     ]);
+    // }
 }

@@ -104,12 +104,12 @@ define(['app'], function (app) {
             $scope.form.id = '';
             $scope.form.kelas = '';
             $scope.form.nama_kelas = '';
-            $scope.form.sekolahid = authService.getProfile().sekolahid;
+            $scope.form.sekolahid = authService.getSekolahProfile().sekolahid
         }
 
         $scope.getList = function (paramdata){
             cfpLoadingBar.start();
-            $resourceApi.get(paramdata.page, paramdata.perPage)
+            $resourceApi.getList(paramdata)
             .then(function (result) {
                 if(result.success){
                     angular.forEach(result.rows, function(dt, index) {
@@ -141,7 +141,8 @@ define(['app'], function (app) {
                     cfpLoadingBar.complete();
                     $scope.getList({
                         page : 1,
-                        perPage : 20
+                        'per-page' : 20,
+                        sekolahid : authService.getSekolahProfile().sekolahid
                     });
                     // if(result.success){
                     //     console.log(result);
@@ -149,7 +150,7 @@ define(['app'], function (app) {
                     //     cfpLoadingBar.complete();
                     //     $scope.getList({
                     //         page : 1,
-                    //         perPage : 20
+                    //         'per-page' : 20
                     //     });
                     // }else{
                     //     toastr.success('Data gagal dihapus.<br/>' + result.message, 'Success');
@@ -213,7 +214,8 @@ define(['app'], function (app) {
                 $scope.grid.virtualizationThreshold = pageSize; 
                 $scope.getList({
                     page : newPage,
-                    perPage : pageSize
+                    'per-page' : pageSize,
+                    sekolahid : authService.getSekolahProfile().sekolahid
                 });
             });
         }
@@ -221,7 +223,8 @@ define(['app'], function (app) {
         function initIndex(){
             $scope.getList({
                 page : 1,
-                perPage : 20
+                'per-page' : 20,
+                sekolahid : authService.getSekolahProfile().sekolahid
             });
         }
 

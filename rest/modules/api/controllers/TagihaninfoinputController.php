@@ -127,6 +127,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $count = (int)$month_end + ((int)$year_end * 12);
         $month = (int)$month_start;
         $year = (int)$year_start;
+        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
 
         for($i; $i <= $count; $i++){
             $attrvalue[] = [              
@@ -161,7 +162,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             'catering'              => ($post['jenis_tagihan'] == '1') ? $row['catering'] : 0,
             'keb_siswa'             => ($post['jenis_tagihan'] == '2') ? $row['keb_siswa'] : 0,
             'ekskul'                => ($post['jenis_tagihan'] == '2') ? $row['ekskul'] : 0,
-            'tahun_ajaran_id'       => isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] : '201617',
+            'tahun_ajaran_id'       => isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] : $TahunAjaran->id,
             'keterangan'            => $row['keterangan'],
             'jenis_tagihan'         => $post['jenis_tagihan'],
             'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,   
@@ -199,9 +200,11 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
     public function actionListinfo(){
         $model = new \rest\models\TagihanInfoInputLog;
         $request = Yii::$app->getRequest();
+        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
+        
         return $model->getListActive([
             'kelasid' => $request->getQueryParam('kelasid', false),
-            'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', '201617'),
+            'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $TahunAjaran->id),
             'idrombel' => $request->getQueryParam('idrombel', false),
             'jenis_tagihan' => $request->getQueryParam('jenis_tagihan', '1'),
             'query' => $request->getQueryParam('query', false)

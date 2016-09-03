@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle
         'plugins/ng-dialog/css/ngDialog.min.css',
         'plugins/ng-dialog/css/ngDialog-theme-default.min.css',
         'plugins/ng-dialog/css/ngDialog-theme-flat.css',
+        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload.css',
         'css/site.css'
     ];
 
@@ -43,7 +44,12 @@ class AppAsset extends AssetBundle
         'plugins/ng-dialog/js/ngDialog.min.js',
 
         'plugins/ExcelPlus-master-2.4.1/sheetjs.all.min.js',
-        'plugins/ExcelPlus-master-2.4.1/excelplus-2.4.1.min.js'
+        'plugins/ExcelPlus-master-2.4.1/excelplus-2.4.1.min.js',
+
+        'plugins/jQuery-File-Upload-9.12.5/jquery.ui.widget.js',
+        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload.js',
+        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload-process.js',
+        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload-angular.js'
         
     ];
 

@@ -88,6 +88,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         $total = 0;
         extract($post);
         $date = date('Y-m-d H:i:s');
+        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
 
         foreach($grid as $k => $rows){
             $model = new $this->modelClass;
@@ -106,11 +107,10 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
             }else if($rows['flag'] == '0'){
                 $flagdelete[] = $rows['id'];
             }
-            
         }
 
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
-        $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] :'201617';
+        $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
         $form['updated_by'] = \Yii::$app->user->getId();
         $form['created_at'] = isset($form['created_at']) ? $form['created_at'] : $date;

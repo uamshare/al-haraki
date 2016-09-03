@@ -54,11 +54,12 @@ use yii\db\Query;
  * @property string $jabatan
  * @property string $created_at
  * @property string $updated_at
+ * @property string $avatar
  *
  * @property Sekolah $sekolah
  * @property User[] $users
  */
-class Pegawai extends \rest\models\AppActiveRecord
+class Pegawai extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -76,7 +77,7 @@ class Pegawai extends \rest\models\AppActiveRecord
         return [
             [['nama_pegawai', 'sekolahid'], 'required'],
             [['sekolahid', 'berat', 'tinggi', 'jumlah_anak', 'jumlah_saudara'], 'integer'],
-            [['jk', 'kependidikan'], 'string'],
+            [['jk', 'kependidikan', 'avatar'], 'string'],
             [['tanggal_lahir', 'tanggal_mulai_bertugas', 'created_at', 'updated_at'], 'safe'],
             [['jarak_dari_rumah'], 'number'],
             [['nik', 'nuptk', 'agama', 'status_rumah', 'status_pernikahan', 'jabatan'], 'string', 'max' => 15],
@@ -91,6 +92,12 @@ class Pegawai extends \rest\models\AppActiveRecord
             [['nik'], 'unique'],
             [['sekolahid'], 'exist', 'skipOnError' => true, 'targetClass' => Sekolah::className(), 'targetAttribute' => ['sekolahid' => 'id']],
         ];
+    }
+
+    public function scenarios(){
+        $scenarios = parent::scenarios();
+        $scenarios['avatar'] = ['avatar'];//Scenario Values Only Accepted
+        return $scenarios;
     }
 
     /**
@@ -145,6 +152,7 @@ class Pegawai extends \rest\models\AppActiveRecord
             'jabatan' => Yii::t('app', 'Jabatan'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'avatar' => Yii::t('app', 'Avatar'),
         ];
     }
 
@@ -162,6 +170,12 @@ class Pegawai extends \rest\models\AppActiveRecord
     public function getUsers()
     {
         return $this->hasMany(User::className(), ['pegawai_id' => 'id']);
+    }
+
+    public function getAvatarPath(){
+
+        $baseurl = Yii::$app->urlManager->createAbsoluteUrl(\Yii::$app->params['profile_pegawai_path'] . $this->avatar);
+        return $baseurl;
     }
 
     /**

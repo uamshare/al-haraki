@@ -2,9 +2,11 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$scope','$route', '$location', '$timeout','authService','GrupAksesService', 'cfpLoadingBar'];
+    var injectParams = ['$scope','$route', '$location', '$timeout',
+        'authService','GrupAksesService', 'cfpLoadingBar', 'SekolahService'];
 
-    var NavbarController = function ($scope, $route, $location, $timeout, authService, GrupAksesService, cfpLoadingBar) {
+    var NavbarController = function ($scope, $route, $location, $timeout, 
+        authService, GrupAksesService, cfpLoadingBar, SekolahService) {
         var appTitle = 'Al Harakai';
 
         $scope.isCollapsed = false;
@@ -42,6 +44,8 @@ define(['app'], function (app) {
 
         function getUserProfile(){
             $scope.profil = authService.getProfile();
+            $scope.profil.avatar = ($scope.profil.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.profil.avatar;
+            // $scope.$root.avatar = $scope.profil.avatar;
         }
 
         function getSekolahProfile(){
@@ -97,9 +101,15 @@ define(['app'], function (app) {
                 cfpLoadingBar.complete();
             }, errorHandle);
         }
-
+        
         $scope.$on('loginStatusChanged', function (brodcastname, loggedIn) {
             setLoginLogoutText(loggedIn);
+        });
+
+        $scope.$on('profileChanged', function (brodcastname, value) {
+            console.log(value);
+            $scope.profil.avatar = value;
+            $route.reload();
         });
 
         $scope.$on('redirectToLogin', function () {

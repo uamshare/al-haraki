@@ -1,3 +1,12 @@
+#container-login {
+    /*background: radial-gradient(blue 15%, transparent 16%) 0 0,
+    radial-gradient(blue 15%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px !important;
+    background-color: #EEE !important;
+    background-size: 16px 16px !important;*/
+}
+
 .box.box-no-margin {
     margin-bottom: 0 !important;
     border-radius: 0;

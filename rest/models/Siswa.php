@@ -3,6 +3,7 @@
 namespace rest\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "siswa".
@@ -50,6 +51,7 @@ use Yii;
  * @property string $keterangan
  * @property string $created_at
  * @property string $updated_at
+ * @property string $avatar
  *
  * @property Sekolah $sekolah
  * @property SiswaRombel[] $siswaRombels
@@ -67,27 +69,13 @@ class Siswa extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
-        return [
-            [
-            'class' => \yii\behaviors\TimestampBehavior::className(),
-                'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
-                'value' => new \yii\db\Expression('NOW()'),
-            ]
-        ];
-    }
-    
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
             [['nama_siswa', 'sekolahid'], 'required'],
             [['sekolahid', 'anak_ke', 'jml_saudara', 'berat', 'tinggi'], 'integer'],
             [['tanggal_lahir', 'created_at', 'updated_at'], 'safe'],
+            [['avatar'], 'string'],
             [['nis'], 'string', 'max' => 10],
             [['nisn', 'agama'], 'string', 'max' => 15],
             [['nama_siswa'], 'string', 'max' => 100],
@@ -154,6 +142,7 @@ class Siswa extends \yii\db\ActiveRecord
             'keterangan' => Yii::t('app', 'Keterangan'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'avatar' => Yii::t('app', 'Avatar'),
         ];
     }
 

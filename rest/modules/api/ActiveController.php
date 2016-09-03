@@ -162,12 +162,13 @@ class ActiveController extends \yii\rest\ActiveController
                 'changeprofile',
                 'logout',
                 'profile',
-                'menuprivileges'
+                'menuprivileges',
+                'avatar'
             ])
         ){
             $action = $actiontransform[$method];
         }
-
+        // var_dump($this->id . '_' . $action);exit();
         if ( Yii::$app->user->can($this->id . '_' . $action) === false) 
         {
              throw new \yii\web\ForbiddenHttpException('You don\'t have permission.');

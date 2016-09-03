@@ -5,7 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?= Yii::$app->homeUrl ?>/img/profil/user-default.png" class="img-circle" alt="User Image"/>
+                <img ng-src="{{profil.avatar}}" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 <p>{{profil.fullname}}</p>

@@ -29,15 +29,13 @@ use yii\helpers\Html;
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="<?= Yii::$app->homeUrl ?>/img/profil/user-default.png" class="user-image" alt="User Image"/>
+                        <img ng-src="{{profil.avatar}}" class="user-image" alt="User Image"/>
                         <span class="hidden-xs">{{profil.fullname}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img src="<?= Yii::$app->homeUrl ?>/img/profil/user-default.png" class="img-circle"
-                                 alt="User Image"/>
-
+                            <img ng-src="{{profil.avatar}}" class="img-circle"  alt="User Image"/>
                             <p>
                                 {{profil.fullname}}
                                 <small>{{profil.jabatan}}</small>

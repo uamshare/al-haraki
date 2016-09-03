@@ -41,6 +41,8 @@ return [
                         'POST profile' => 'changeprofile',
                         'PUT profile' => 'changeprofile',
                         'OPTIONS profile' => 'options',
+                        'POST avatar' => 'avatar',
+                        'OPTIONS avatar' => 'options',
                     ]
                 ],
                 // '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',

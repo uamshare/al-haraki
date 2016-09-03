@@ -12,12 +12,15 @@ define(['app'], function (app) {
 			'$CONST_VAR',
 	        'helperService',
 	        '$scope',
+	        '$rootScope',
 	        '$filter',
 	        'toastr',
 	        '$location', 
 	        '$routeParams', 
 	        '$http', 
+	        '$route',
 	        '$log', 
+	        'ngDialog',
 	        'cfpLoadingBar',
 	        '$timeout',
 	        'authService',
@@ -30,12 +33,15 @@ define(['app'], function (app) {
     		$CONST_VAR,
 	        helperService,
 	        $scope,
+	        $rootScope,
 	        $filter,
 	        toastr,
 	        $location, 
 	        $routeParams, 
 	        $http, 
-	        $log, 
+	        $route,
+	        $log,
+	        ngDialog,
 	        cfpLoadingBar,
 	        $timeout,
 	        authService,
@@ -375,6 +381,9 @@ define(['app'], function (app) {
         			nama_panggilan : ''
         		}
 			};
+
+            $scope.profilAvatar = (authService.getProfile().avatar == '') ? BASEURL + 'img/profil/user-default.png' : authService.getProfile().avatar;
+
 			$scope.isChangedPassword = false;
         	function reset(){
 				$scope.form.username = null;
@@ -405,6 +414,7 @@ define(['app'], function (app) {
 			
 			this.init = function(){
 				getByProfile();
+				$scope.options.headers['access-token'] = sessionStorage.getItem('accessToken');
 			}
 
 			$scope.onSavePegawaiClick = function(event){
@@ -479,6 +489,64 @@ define(['app'], function (app) {
 			$scope.onResetClick = function(event){
 				$location.path( "/pengaturan/user/");
 			}
+
+			$scope.onPhotoClick = function(){
+				ngDialog.open({
+		            template: $scope.viewdir + 'upload.html',
+		            className: 'ngdialog-theme-flat custom-width-50',
+		            scope: $scope
+		        });
+			}
+
+			// File Upload Config
+			$scope.options = {
+                url: BASEAPIURL + 'pegawais/avatar',
+                headers : {
+                	'access-token' : sessionStorage.getItem('accessToken')
+                },
+                done : function (e, data) {
+					var result = data.result;
+					if(result.success){
+						ngDialog.close();
+						toastr.success('Silahkan muat ulang aplikasi untuk melihat hasilnya.', 'Success');
+					}else{
+						toastr.warning('Upload Photo gagal.', 'Warning');
+					}
+					
+				}
+            };
+
+            $scope.loadingFiles = true;
+
+            var file = $scope.file,
+                state;
+            if (file && file.url) {
+                file.$state = function () {
+                	console.log(state);
+                    return state;
+                };
+                file.$destroy = function () {
+                    state = 'pending';
+                    return $http({
+                        url: file.deleteUrl,
+                        method: file.deleteType
+                    }).then(
+                        function () {
+                            state = 'resolved';
+                            $scope.clear(file);
+                        },
+                        function () {
+                            state = 'rejected';
+                        }
+                    );
+                };
+            } else if (file && !file.$cancel && !file._index) {
+                file.$cancel = function () {
+                    $scope.clear(file);
+                };
+            }
+
+			
         }
 
 		var controller;

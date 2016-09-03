@@ -155,6 +155,7 @@ class User extends \rest\models\AppActiveRecord
         return [
             'name' => $this->username,
             'fullname' => ($this->pegawai) ? $this->pegawai->nama_pegawai : $this->username,
+            'avatar' => ($this->pegawai) ? $this->pegawai->avatarPath : '',
             'jabatan' => ($this->pegawai) ? $this->pegawai->jabatan : '',
             'sekolahid' => $this->sekolahid,
         ];
