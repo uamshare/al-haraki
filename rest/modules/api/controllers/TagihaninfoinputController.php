@@ -127,7 +127,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $count = (int)$month_end + ((int)$year_end * 12);
         $month = (int)$month_start;
         $year = (int)$year_start;
-        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
+        $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
         for($i; $i <= $count; $i++){
             $attrvalue[] = [              
@@ -200,7 +200,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
     public function actionListinfo(){
         $model = new \rest\models\TagihanInfoInputLog;
         $request = Yii::$app->getRequest();
-        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
+        $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         
         return $model->getListActive([
             'kelasid' => $request->getQueryParam('kelasid', false),

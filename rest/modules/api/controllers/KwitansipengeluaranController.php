@@ -88,7 +88,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         $total = 0;
         extract($post);
         $date = date('Y-m-d H:i:s');
-        $TahunAjaran = \rest\models\TahunAjaran::findOne('aktif = "1"');
+        $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
         foreach($grid as $k => $rows){
             $model = new $this->modelClass;
