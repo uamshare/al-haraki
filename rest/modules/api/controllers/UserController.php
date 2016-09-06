@@ -76,7 +76,7 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
         $post['auth_key'] = Yii::$app->getSecurity()->generateRandomString();
         $post['password_hash'] = Yii::$app->security->generatePasswordHash($post['password_hash']);
         $post['pegawai_id'] = (isset($post['pegawai_id'])) ? (int)$post['pegawai_id'] : null;
-        $post['sekolahid'] = (isset($post['pegawai_id'])) ? (int)$post['sekolahid'] : null;
+        $post['sekolahid'] = (isset($post['sekolahid'])) ? (int)$post['sekolahid'] : null;
 
         $model->load($post, '');
 
@@ -120,7 +120,7 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
         $post['auth_key'] = Yii::$app->getSecurity()->generateRandomString();
         $post['password_hash'] = $model->password_hash;
         $post['pegawai_id'] = (isset($post['pegawai_id'])) ? (int)$post['pegawai_id'] : null;
-        $post['sekolahid'] = (isset($post['pegawai_id'])) ? (int)$post['sekolahid'] : null;
+        $post['sekolahid'] = (isset($post['sekolahid'])) ? (int)$post['sekolahid'] : null;
 
         // var_dump($post);exit();
 
