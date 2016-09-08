@@ -201,8 +201,8 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
      */
     public function actionNewnotransaksi(){
         $model = new $this->modelClass();
-        $post = Yii::$app->getRequest()->getBodyParams();
-        $sekolahid = (isset($post['sekolahid'])) ? $post['sekolahid'] : 0;
+        $request = Yii::$app->getRequest();
+        $sekolahid =  $request->getQueryParam('sekolahid', 0);
 
         return $model->getNewNoTransaksi(date('y'), $sekolahid);
     }

@@ -110,6 +110,7 @@ class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRec
         $no = $customeQuery->queryOne()['no_transaksi'];
         $no = $no + 1;
         $no = str_pad($no, 5, '0', STR_PAD_LEFT);
+        // var_dump($customeQuery->rawSql);exit();
         return '03' . $year . str_pad($sekolahid, 2, '0', STR_PAD_LEFT) . $no;
     }
 

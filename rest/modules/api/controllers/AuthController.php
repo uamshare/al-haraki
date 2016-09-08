@@ -60,12 +60,14 @@ class AuthController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                     'message' => $user->getErrors()
                 ];
             }
+
+            $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
             $data = [
                 // '__id' => \Yii::$app->getSecurity()->generateRandomKey(),
                 '__accessToken' =>  $user->access_token,
                 '__isLogin' => true,
                 '__user_profile' => $user->profile,
-                '__sekolah_profile' => \rest\models\Sekolah::getProfile($user->sekolahid),
+                '__sekolah_profile' => \rest\models\Sekolah::getProfile($sekolahid),
             ];
 
             $data = array_merge($data);

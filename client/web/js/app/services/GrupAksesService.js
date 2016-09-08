@@ -38,6 +38,14 @@ define(['app'], function (app) {
             });
         };
 
+        factory.delete = function (id) {
+            return $http.delete(serviceBase + 'roles/1', {
+                params : {rolename : id}
+            }).then(function (status) {
+                return status.data;
+            });
+        };
+
         factory.AddPermission = function (params) {
             return $http.post(serviceBase + 'roles', params).then(function (results) {
                 return results.data;

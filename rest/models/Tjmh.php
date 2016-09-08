@@ -158,9 +158,8 @@ class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             // echo $savedD->rawSql; 
             // exit();
             $savedD->execute();
-
+            $GL = new \rest\models\Rgl();
             if(count($rowDetailDel['mcoadno']) > 0){
-                $GL = new \rest\models\Rgl();
                 $unpostingGLWhere = [
                     'noref' => $rowHeader['tjmhno'],
                     'mcoadno' => $rowDetailDel['mcoadno'],

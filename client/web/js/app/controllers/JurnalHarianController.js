@@ -65,9 +65,9 @@ define(['app'], function (app) {
 	    	};
 
 	    	var columnActionTpl = 	'<div class="col-action">' + 
-		    								'<a href="" ng-click="grid.appScope.onPrintClick(row.entity)" >' + 
-		    						  			'<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
-		    						  		'</a>&nbsp;' +
+		    								// '<a href="" ng-click="grid.appScope.onPrintClick(row.entity)" >' + 
+		    						  // 			'<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
+		    						  // 		'</a>&nbsp;' +
 		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
 		    						  		'</a>&nbsp;' +

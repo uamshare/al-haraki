@@ -21,7 +21,7 @@
 							<label class="col-sm-4 control-label">Bulan</label>
 							<div class="col-sm-8">
 								<div class="input-group">
-									<select 
+									<select ng-disabled="isView" 
 										name="bulan" 
 										class="form-control" 
 										ng-model="form.bulan"
@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Tanggal</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control input-sm" 
+								<input type="text" class="form-control input-sm" ng-disabled="isView"
 									ng-model="form.tgl_transaksi" name="date" bs-datepicker />
 							</div>
 						</div>
@@ -64,7 +64,8 @@
 					<div class="form-group">
 						<label class="col-xs-4 col-md-4 control-label">Keterangan</label>
 						<div class="col-xs-8 col-md-8">
-							<textarea class="form-control input-sm" ng-model="form.keterangan"></textarea>
+							<textarea class="form-control input-sm" ng-model="form.keterangan" ng-disabled="isView">
+							</textarea>
 						</div>
 					</div>
 				</div>
@@ -81,13 +82,13 @@
 				data-original-title="Rekap Data">
 				<i class="fa fa-th-list"></i> Rekap Data
 			</a>
-			<a href="" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+			<a href="" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip" ng-hide="isView"
 				data-original-title="Download Template" ng-click="onDownloadTpl()">
 				<i class="fa fa-download"></i> Download Template
 			</a>
 			
 		</div>
-		<div class="box-tools pull-right">
+		<div class="box-tools pull-right" ng-hide="isView">
 			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Reset Data">
 				<i class="fa fa-refresh"></i> Batal

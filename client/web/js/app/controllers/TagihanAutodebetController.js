@@ -70,19 +70,19 @@ define(['app'], function (app) {
                 ]
             };
 
-            // var columnActionTpl =   '<div class="col-action">' + 
-            //                                 '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
-            //                                     '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
-            //                                 '</a>&nbsp;' +
-            //                                 '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
-            //                                     '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
-            //                                 '</a>' +
-            //                             '</div>';
             var columnActionTpl =   '<div class="col-action">' + 
+                                            '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+                                                '<span class="badge bg-blue"><i class="fa fa-list"></i></span>' + 
+                                            '</a>&nbsp;' +
                                             '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
                                                 '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
                                             '</a>' +
                                         '</div>';
+            // var columnActionTpl =   '<div class="col-action">' + 
+            //                                 '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
+            //                                     '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+            //                                 '</a>' +
+            //                             '</div>';
             gridOptions.columnDefs.push({
                 name :' ',
                 enableFiltering : false,
@@ -554,7 +554,9 @@ define(['app'], function (app) {
             }
 
             function refreshNo(){
-                $resourceApi.getNewNoTransaksi()
+                $resourceApi.getNewNoTransaksi({
+                    sekolahid : authService.getSekolahProfile().sekolahid
+                })
                 .then(function (result) {
                     if(result.success){
                         $scope.form.no_transaksi = result.rows;
@@ -592,6 +594,7 @@ define(['app'], function (app) {
                         });
 
                         $scope.gridDetail.data = result.rows;
+                        
                     }
                     cfpLoadingBar.complete();
                 }, function(error){
@@ -733,15 +736,18 @@ define(['app'], function (app) {
                     getById($routeParams.id);
                     $scope.isButtonAddHide = false;
                     $scope.isHideFile = true;
+                    $scope.isView = true;
                 }else{
                     refreshNo();
                     reset();
                     handleFile();
                     $scope.isButtonAddHide = false;
                     $scope.isHideFile = false;
+                    $scope.isView = false;
                 }
             }
 
+            $scope.isView = false;
             $scope.onSaveClick = function(event){
                 if($scope.form.no_transaksi == '' || $scope.form.no_transaksi == null){
                     toastr.warning('No Transaksi tidak boleh kosong.', 'Warning');

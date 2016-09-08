@@ -17,8 +17,10 @@ define(['app'], function (app) {
 
         };
 
-        factory.getNewNoTransaksi = function () {
-            return $http.get(serviceBase + 'tagihanautodebets/newnotransaksi').then(function (results) {
+        factory.getNewNoTransaksi = function (paramdata) {
+            return $http.get(serviceBase + 'tagihanautodebets/newnotransaksi',{
+                params : paramdata
+            }).then(function (results) {
                 return results.data;
             });
         };

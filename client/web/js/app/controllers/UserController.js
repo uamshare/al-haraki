@@ -109,7 +109,7 @@ define(['app'], function (app) {
 	                { name: 'pegawai_id', displayName: 'PegawaiID', visible: false, width : '75',  enableCellEdit: false},
 	                { name: 'nama_pegawai', displayName: 'Pegawai', visible: true, enableCellEdit: false},
 	                { name: 'sekolahid', displayName: 'SekolahID', visible: false, width : '75',  enableCellEdit: false},
-	                { name: 'sekolah', displayName: 'Sekolah', visible: true, width : '75',  enableCellEdit: false},
+	                { name: 'sekolah', displayName: 'Sekolah', visible: true, width : '120',  enableCellEdit: false},
 	                { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
 	                { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
 					

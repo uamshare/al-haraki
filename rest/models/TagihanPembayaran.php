@@ -211,7 +211,11 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                           a.`created_at`,
                           a.`updated_at` 
                         FROM `tagihan_pembayaran` a
-                        INNER JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi`
+                        INNER JOIN (SELECT idrombel,kp.`no_kwitansi`,kp.`tgl_kwitansi` FROM kwitansi_pembayaran_h kp
+                          UNION ALL 
+                          SELECT idrombel,h.no_transaksi,h.tgl_transaksi FROM tagihan_autodebet_h h
+                          INNER JOIN tagihan_autodebet_d d ON h.no_transaksi = d.no_transaksi) 
+                          b ON a.`no_ref` = b.`no_kwitansi` AND a.`idrombel`=b.idrombel
                         WHERE $filter) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
         return $sqlCustoms;
     }

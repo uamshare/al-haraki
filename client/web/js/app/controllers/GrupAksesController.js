@@ -143,6 +143,21 @@ define(['app'], function (app) {
 	            }, errorHandle);
 			}
 
+			function deleteData($no){
+				cfpLoadingBar.start();
+				$resourceApi.delete($no)
+				.then(function (result) {
+	                if(result.success){
+	                	toastr.success('Data telah berhasil dihapus.', 'Success');
+					}
+					cfpLoadingBar.complete();
+					getRoles({
+						page : 1,
+						perPage : 20
+					});
+	            }, errorHandle);
+			}
+
 			$scope.onAddClick = function(event){
 				$location.path( "/pengaturan/grup-akses/add");
 			}
@@ -154,7 +169,7 @@ define(['app'], function (app) {
 			$scope.onDeleteClick = function(rowdata){
 				var del = confirm("Anda yakin akan menghapus data `" + rowdata.name + "`");
 				if (del == true) {
-				    deleteData(rowdata.tjmhno);
+				    deleteData(rowdata.name);
 				} 
 			}
 
@@ -196,7 +211,7 @@ define(['app'], function (app) {
 	                    grouping: { groupPriority: 1 }, 
 	                    width: 150,
 	                },
-					{ name: 'name', displayName: 'ID', visible: true,  width : 150, enableCellEdit: false},
+					{ name: 'name', displayName: 'ID', visible: false,  width : 150, enableCellEdit: false},
 					{ name: 'description', displayName: 'Menu Akses', visible: true,  enableCellEdit: false},
 					{ 
 						name: 'create', displayName: 'Tambah', width : '100', visible: true, enableCellEdit: false,

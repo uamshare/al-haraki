@@ -22,26 +22,26 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         return $actions;
     }
     
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'                 => ['get'],
-                        'listpermissions'       => ['get'],
-                        'menuprivileges'        => ['get'],
-                        'list'                  => ['get'],
-                        'create'                => ['post','put'],
-                        'assign'                => ['post'],
-                        // 'remove'   => ['delete']
-                    ],
-                ],
-            ]
-        );
-    }
+    // public function behaviors()
+    // {
+    //     $behaviors = parent::behaviors();
+    //     return array_merge($behaviors, 
+    //         [
+    //             'verbFilter' => [
+    //                 'class' => \yii\filters\VerbFilter::className(),
+    //                 'actions' => [
+    //                     'index'                 => ['get'],
+    //                     'listpermissions'       => ['get'],
+    //                     'menuprivileges'        => ['get'],
+    //                     'list'                  => ['get'],
+    //                     'create'                => ['post','put'],
+    //                     'assign'                => ['post'],
+    //                     // 'remove'   => ['delete']
+    //                 ],
+    //             ],
+    //         ]
+    //     );
+    // }
 
     public function init(){
     	parent::init();
@@ -292,6 +292,26 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             }
         }
         return ['success' => true];
+    }
+
+    public function actionDelete($id){
+
+        $Auth = new $this->modelClass;
+        $request = Yii::$app->getRequest();
+        $rolename = $request->getQueryParam('rolename', false);
+
+        if(isset($rolename) && !empty($rolename)){
+            $result = $Auth->deleteRule($rolename);
+            if($result !== true){
+                $this->response->setStatusCode(422, 'Data Validation Failed.');
+            }
+            return $result;
+        }else{
+            $this->response->setStatusCode(400, 'Data is empty.');
+            return [
+                'message' => 'Rolename can\'t be empty'
+            ];
+        }
     }
 
     private function validAdd($name, $desc){

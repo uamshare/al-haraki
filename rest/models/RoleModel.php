@@ -23,4 +23,13 @@ class RoleModel extends \yii\rbac\DbManager
     public function setDefaultPermission($rolename = ''){
         return (empty($rolename)) ? $this->getItems(1) : $this->getRole($rolename);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteRule($rolename)
+    {   
+        $role = $this->getItem($rolename);
+        return $this->removeItem($role);
+    }
 }

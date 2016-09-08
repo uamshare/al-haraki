@@ -148,7 +148,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
 
     public function actionDelete($id){
         $this->response = Yii::$app->getResponse();
-        if($id && !empty($id) && $id != 'undefined'){
+        if(isset($id) && !empty($id) && $id != 'undefined'){
             $model = new $this->modelClass;
             $result = $model->deleteAndRemoveAll($id);
             if($result !== true){
