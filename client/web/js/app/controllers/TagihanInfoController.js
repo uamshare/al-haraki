@@ -183,11 +183,12 @@ define(['app'], function (app) {
 		      	$scope.gridApi = gridApi;
 				gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
 					if(oldValue != newValue && ((parseInt(newValue) || newValue == 0)) && rowEntity != null){
-						$scope.gridDirtyRows[rowEntity.idrombel] = rowEntity;
+						$scope.gridDirtyRows[rowEntity.index] = rowEntity;
 					}else if(colDef.name == 'keterangan' && oldValue != newValue && rowEntity != null){
-						$scope.gridDirtyRows[rowEntity.idrombel] = rowEntity;
+						$scope.gridDirtyRows[rowEntity.index] = rowEntity;
 					}
 					$scope.$apply();
+					console.log($scope.gridDirtyRows);
 				});
 				// gridApi.rowEdit.on.saveRow($scope, $scope.saveRow);
 		    }
@@ -239,12 +240,6 @@ define(['app'], function (app) {
 			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
 			            })
 			            $scope.gridEdit.data = result.rows;
-			            $scope.kelas.selected = paramdata.kelasid;
-
-			            $scope.month_start.selected = $routeParams.month;
-			            $scope.month_start.year = sekolahProfil.tahun_awal;
-			            $scope.month_end.selected = 6;
-			            $scope.month_end.year = sekolahProfil.tahun_akhir;
                 	}else{
                 		toastr.info('Data kosong', 'Info');
                 	}
@@ -292,7 +287,9 @@ define(['app'], function (app) {
 		    		$scope.gridDirtyRows = [];
 		    		getDataInfo({
 						'kelasid' : $routeParams.idkelas,
-						'jenis_tagihan' : $scope.jenis_tagihan
+						'jenis_tagihan' : $scope.jenis_tagihan,
+						'month_start' : $scope.month_start.selected,
+						'year_start' : $scope.month_start.year
 	        		});
 	        		// $location.path( "keuangan/info-tagihan");
 				}else{
@@ -478,7 +475,9 @@ define(['app'], function (app) {
 			$scope.jenis_tagihan = value;
 			getDataInfo({
 				'kelasid' : $routeParams.idkelas,
-				'jenis_tagihan' : $scope.jenis_tagihan
+				'jenis_tagihan' : $scope.jenis_tagihan,
+				'month_start' : $scope.month_start.selected,
+				'year_start' : $scope.month_start.year
     		});
 			if($scope.jenis_tagihan == 1){
 				$scope.gridEdit.columnDefs[10].visible = false;
@@ -533,9 +532,10 @@ define(['app'], function (app) {
 					$scope.gridEdit.data[idx].keb_siswa = $scope.form2.keb_siswa;
 					$scope.gridEdit.data[idx].ekskul = $scope.form2.ekskul;
 				}
-				$scope.gridDirtyRows[idx] = $scope.gridEdit.data[idx];
+				$scope.gridDirtyRows[$scope.gridEdit.data[idx].index] = $scope.gridEdit.data[idx];
 			}
 			ngDialog.close();
+			// console.log($scope.gridDirtyRows);
 		}
 
 		$scope.onMonthChange = function(value){
@@ -543,7 +543,13 @@ define(['app'], function (app) {
 									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
 			$scope.month_end.year = ($scope.month_end.selected >= 1 &&  $scope.month_end.selected <= 6) ? 
 									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
-			$scope.gridDirtyRows = $scope.gridEdit.data;
+			// $scope.gridDirtyRows = $scope.gridEdit.data;
+			getDataInfo({
+				'kelasid' : $routeParams.idkelas,
+				'jenis_tagihan' : $scope.jenis_tagihan,
+				'month_start' : $scope.month_start.selected,
+				'year_start' : $scope.month_start.year
+    		});
 		}
 
 		function getTahuunAjaran(){
@@ -565,8 +571,18 @@ define(['app'], function (app) {
 					if(result.success){
 						$scope.kelas.options = result.rows;
 					}
-					$scope.month.selected = helperService.getMonthId(date.getMonth());
-					$scope.month.year = date.getFullYear();
+
+					if($routeParams.idkelas){
+						$scope.kelas.selected = $routeParams.idkelas;
+						$scope.month_start.selected = $routeParams.month;
+			            $scope.month_start.year = sekolahProfil.tahun_awal;
+			            $scope.month_end.selected = 6;
+			            $scope.month_end.year = sekolahProfil.tahun_akhir;
+					}else{
+						$scope.month.selected = helperService.getMonthId(date.getMonth());
+						$scope.month.year = date.getFullYear();
+					}
+					
 				}
 	        }, function(error){
 	        	toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
@@ -585,7 +601,9 @@ define(['app'], function (app) {
 
         		getDataInfo({
 					'kelasid' : $routeParams.idkelas,
-					'jenis_tagihan' : $scope.jenis_tagihan
+					'jenis_tagihan' : $scope.jenis_tagihan,
+					'month_start' : $routeParams.month, //$scope.month_start.selected
+					'year_start' : sekolahProfil.tahun_awal
         		});
         		$scope.gridEdit.columnDefs[10].visible = false;
 				$scope.gridEdit.columnDefs[11].visible = false;

@@ -60,9 +60,17 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             if($result !== true){
                 $this->response->setStatusCode(422, 'Data Validation Failed.');
             }else{
+                $res = [
+                    'result' => $result,
+                    'posting' => $this->createPostingData([
+                        'tahun_ajaran_id' => (isset($post['tahun_ajaran_id'])) ? $post['tahun_ajaran_id'] : false,
+                        'sekolahid' => (isset($post['sekolahid'])) ? $post['sekolahid'] : false,
+                    ], $post)
+                ];
+
                 $this->response->setStatusCode(201, 'Created.');
             }
-            return $result;
+            return $res;
         }else{
             $this->response->setStatusCode(400, 'Data is empty.');
             return [
@@ -84,9 +92,8 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                 $attrlog[$key] = $attrlog[$key] = $this->setRowaLogInfo($post, $row, $date);
                 $rowsTagihan = array_merge($rowsTagihan, $this->setRowsTagihan($post, $row, $date));
             }
-        }
 
-        // var_dump($rowsTagihan);exit();
+        }
         return $model->insertBatch($post['jenis_tagihan'], $rowsTagihan, $attrlog, $wherids);
     }
 
@@ -108,7 +115,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                     'bulan'                 => 7, 
                     'tahun'                 => $post['year_start'],
                     'tahun_ajaran'          => $post['tahun_ajaran_id'],    
-                    'no_ref'                => 'tagihan_info_2_' . $post['tahun_ajaran_id'],  
+                    'no_ref'                => 't_info_2_' . $post['tahun_ajaran_id'],  
                     'ket_ref'               => 'Tagihan Info Tahunan idrombel = ' . $row['idrombel'],
                     'keterangan'            => '',   
                     'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
@@ -118,6 +125,41 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         }
 
         return $model->insertBatch($post['jenis_tagihan'], $rowsTagihan, $attrlog, $wherids);
+    }
+
+    private function createPostingData($params, $post){
+        $model = new $this->modelClass();
+        $date = date('Y-m-d H:i:s');
+        $outstanding = $model->getSummaryOutsForPosting($params)->All();
+
+        $GL = new \rest\models\Rgl();
+        foreach($outstanding as $key => $row){
+            foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {
+                $postingValue = [
+                    'date'                 => $row['dt'],
+                    'noref'                => 't_info_' .$row['bulan']. '_' .  $row['tahun_ajaran'],        
+                    'value'                => $row[$tagihan],
+                    'description'          => 'Info Tagihan ' .$tagihan. ' Bulan  ' .$row['bulan']. ' Tahun ' . 
+                                                $row['tahun_ajaran'],
+                    'sekolahid'            => $row['sekolahid'],
+                    'tahun_ajaran_id'      => $row['tahun_ajaran'],
+                    'created_at'           => isset($post['created_at']) ? $post['created_at'] : $date, 
+                    'updated_at'           => $date,
+                    'created_by'           => (isset($post['created_by']) && !empty($post['created_by'])) ? 
+                                                    $form['created_by'] : \Yii::$app->user->getId(),  
+                    'updated_by'           => \Yii::$app->user->getId(),
+                ];
+                $autoPosting = $GL->AutoPosting('00', $postingValue, $tagihan);
+                // $autoPosting['unposting']->execute();
+                $autoPosting['posting']->execute();
+            }
+        }
+        // var_dump($outstanding);exit();
+        $rest = \rest\models\Rgl::find()->where(['LIKE','noref','t_info_'])
+                                       ->andWhere([ 'tahun_ajaran_id' => $row['tahun_ajaran']])
+                                       ->All();
+        // var_dump($rest->createCommand()->rawSql);exit();
+        return $rest;
     }
 
     private function setRowsTagihan($post, $row, $date){
@@ -138,9 +180,9 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                 'bulan'                 => $month, 
                 'tahun'                 => $year,
                 'tahun_ajaran'          => $tahun_ajaran_id,    
-                'no_ref'                => 'tagihan_info_1_' . $tahun_ajaran_id,  
+                'no_ref'                => 't_info_1_' . $tahun_ajaran_id,  
                 'ket_ref'               => 'Tagihan Info bulan ' . $month . ' idrombel = ' . $row['idrombel'],
-                'keterangan'            => '',   
+                'keterangan'            => $row['keterangan'],   
                 'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
                 'updated_at'            => $date,
             ];
@@ -155,6 +197,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
     }
 
     private function setRowaLogInfo($post, $row , $date){
+        $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         return [              
             'idrombel'              => $row['idrombel'],  
             'spp'                   => ($post['jenis_tagihan'] == '1') ? $row['spp'] : 0,              
@@ -165,6 +208,8 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             'tahun_ajaran_id'       => isset($row['tahun_ajaran_id']) ? $row['tahun_ajaran_id'] : $TahunAjaran->id,
             'keterangan'            => $row['keterangan'],
             'jenis_tagihan'         => $post['jenis_tagihan'],
+            'periode_awal'          => $post['month_start'],
+            'periode_akhir'         => $post['month_end'],
             'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,   
             'updated_at'            => $date,
             'created_by'            => isset($row['created_by']) ? $row['created_by'] : \Yii::$app->user->getId(),   
@@ -191,6 +236,11 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             'date_end' => $request->getQueryParam('date_end', false),
             'status' => $request->getQueryParam('status', 'all')
         ]);
+
+        // return $this->createPostingData([
+        //     'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
+        //     'sekolahid' => $request->getQueryParam('sekolahid', false)
+        // ]);
     }
 
     /**
@@ -207,6 +257,8 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $TahunAjaran->id),
             'idrombel' => $request->getQueryParam('idrombel', false),
             'jenis_tagihan' => $request->getQueryParam('jenis_tagihan', '1'),
+            'month_start' => $request->getQueryParam('month_start', 0),
+            'year_start' => $request->getQueryParam('year_start', 0),
             'query' => $request->getQueryParam('query', false)
         ]);
     }

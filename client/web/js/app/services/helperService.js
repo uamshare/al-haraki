@@ -53,7 +53,7 @@ define(['app'], function (app) {
             return factory.month().options[id].id
         }
 
-        factory.formatDateID = function(date, delimeter = ' '){
+        factory.formatDateID = function(date, delimeter){
             // var date = new Date();
             var day = date.getDate();
             var monthIndex = date.getMonth();

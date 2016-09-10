@@ -128,14 +128,26 @@ class Rgl extends \yii\db\ActiveRecord
 
     /**
      * Auto posting for transaction
+     * $postingValue = [
+            'date'                 => $form['tgl_transaksi'],
+            'noref'                => $form['no_transaksi'],        
+            'value'                => $total,
+            'description'          => 'Transaksi Autodebet NO . ' . $form['no_transaksi'],
+            'sekolahid'            => $form['sekolahid'],
+            'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
+            'created_at'           => $form['created_at'],   
+            'updated_at'           => $form['updated_at'],
+            'created_by'           => $form['created_by'],   
+            'updated_by'           => $form['updated_by']
+        ];
      * @param $kode, kode transaksi
      * @param $values, value data
      */
-    public function AutoPosting($kode, $values){
+    public function AutoPosting($kode, $values, $jtagihan = 'spp'){
         $DB = $this->getDb();
         $posAuto = \rest\models\PostingAuto::find()->where([
             'kode' => $kode, 
-            'sekolahid' => $values['sekolahid']
+            'j_tagihan' => $jtagihan
         ])->One();
         
         $postingvalue = [];
@@ -269,9 +281,8 @@ class Rgl extends \yii\db\ActiveRecord
             $where .= ' AND mcoahname ' . $this->where($mcoahname);
         }
 
-        // if($tahun_ajaran_id){
-        //     $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
-        // }
+        
+        $bound[':sekolahid'] = $sekolahid;
 
         // if($query){
         //     $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
@@ -282,9 +293,9 @@ class Rgl extends \yii\db\ActiveRecord
               h.`mcoahno`,
               h.`mcoahname`,
               d.`mcoadno`,
-              IFNULL(b.`saldo_a`,0) AS `saldo_a`,
-              IFNULL(a.`saldo_c`,0) AS `saldo_c`,
-              (IFNULL(b.`saldo_a`,0) + IFNULL(a.`saldo_c`,0)) AS `saldo_e`
+              SUM(IFNULL(b.`saldo_a`,0)) AS `saldo_a`,
+              SUM(IFNULL(a.`saldo_c`,0)) AS `saldo_c`,
+              (SUM(IFNULL(b.`saldo_a`,0)) + SUM(IFNULL(a.`saldo_c`,0))) AS `saldo_e`
             FROM mcoah h
             INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
             LEFT JOIN (SELECT 
@@ -294,6 +305,7 @@ class Rgl extends \yii\db\ActiveRecord
                   `sekolahid`,
                   `tahun_ajaran_id`
                 FROM `rgl` WHERE rgldt BETWEEN :date1 AND :date2
+                AND sekolahid = :sekolahid
                 GROUP BY mcoadno) a ON a.`mcoadno` = d.`mcoadno`
             LEFT JOIN (SELECT 
                   `rgldt`,
@@ -302,6 +314,7 @@ class Rgl extends \yii\db\ActiveRecord
                   `sekolahid`,
                   `tahun_ajaran_id`
                 FROM `rgl` WHERE rgldt < :date1
+                AND sekolahid = :sekolahid
                 GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno` 
             GROUP BY h.`mcoahno`) AS q_gl ";
 
@@ -333,6 +346,8 @@ class Rgl extends \yii\db\ActiveRecord
             $where .= ' AND mcoahname ' . $this->where($mcoahname);
         }
 
+        $bound[':sekolahid'] = $sekolahid;
+        
         $sqlCustoms = "SELECT * FROM 
                 (SELECT 
                   h.`mcoahno`,
@@ -361,6 +376,7 @@ class Rgl extends \yii\db\ActiveRecord
                       a.`tahun_ajaran_id`
                     FROM `rgl` a
                     WHERE rgldt BETWEEN :date1 AND :date2) a ON a.`mcoadno` = d.`mcoadno`
+                    AND sekolahid = :sekolahid
                 LEFT JOIN (SELECT 
                       `rgldt`,
                       `mcoadno`,
@@ -368,6 +384,7 @@ class Rgl extends \yii\db\ActiveRecord
                       `sekolahid`,
                       `tahun_ajaran_id`
                     FROM `rgl` WHERE rgldt <= :date1
+                    AND sekolahid = :sekolahid
                     GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno`
                 ) AS q_gl_detail 
                 $where

@@ -134,6 +134,7 @@ define(['app'], function (app) {
         var addEditController = function(){
         	$scope.form = {
 				mcoadno : null,
+				mcoadnoold : null,
 				mcoadname : null,
 				mcoahno : null,
 				active : 1,
@@ -148,6 +149,7 @@ define(['app'], function (app) {
 			};
 
         	function reset(){
+				$scope.form.mcoadnoold = null;
 				$scope.form.mcoadno = null;
 				$scope.form.mcoadname = null;
 				$scope.form.mcoahno = null;
@@ -177,6 +179,7 @@ define(['app'], function (app) {
 				.then(function (result) {
 	                if(result.success && result.rows.length > 0){
 						var rowdata = result.rows[0];
+						$scope.form.mcoadnoold = rowdata.mcoadno;
 						$scope.form.mcoadno = rowdata.mcoadno;
 						$scope.form.mcoadname = rowdata.mcoadname;
 						$scope.form.mcoahno = rowdata.mcoahno;

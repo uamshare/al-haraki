@@ -1,4 +1,38 @@
-<link rel="stylesheet" type="text/css" href="css/print-style-2.css" />
+<style type="text/css">
+    .print-info-tagihan hr {
+        margin-top: 0;
+        margin-bottom: 0;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+    .printStyle-box .note {
+        font-size: 8pt;
+    }
+    @media print {
+        @page {
+            margin: 1cm 0.5cm 1cm 0.5cm;
+        }
+        /* 21.59 x 27.94 centimetres */
+        .print-info-tagihan{
+            float: left;
+            width: 9.25cm;
+            height: 13cm;
+            margin:10px !important;
+            padding:2px;
+            font-size:9pt;
+            line-height:9pt;
+        }
+        .title h2{
+            font-size : 14pt;
+            line-height: 12pt;
+        }
+        #footer {
+           clear: both;
+           position: relative;
+           /*page-break-after: auto;*/
+        }
+    }
+</style>
 <div class="row">
     <div class="con-xs-12 col-md-12 no-print pull-right">
         <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-multiple-info-tagihan')" >
@@ -8,7 +42,7 @@
 </div>
 <div id="print-multiple-info-tagihan">
     <div ng-repeat="(key, row) in rows" >
-        <div class="printStyle-box">
+        <div class="printStyle-box print-info-tagihan">
             <table cellpadding="0" cellspacing="0">
                 <tr class="top">
                     <td colspan="2">
@@ -95,7 +129,8 @@
                 </ol>
             </div>
         </div>
-        <div style="display: block; page-break-after: always;"></div>
+        <div id="footer" ng-show="($index + 1) % 4 == 0"></div>
+        <div ng-show="($index + 1) % 4 == 0" style="display: block; page-break-after: always;"></div>
     </div>
 </div>
 <div class="row">

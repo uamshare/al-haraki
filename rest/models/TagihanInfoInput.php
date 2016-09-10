@@ -90,4 +90,47 @@ class TagihanInfoInput extends TagihanPembayaran
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
+
+    /**
+     * Get Summary Outstanding By Tagihan
+     *
+     *
+     */
+    public function getSummaryOutsForPosting($params){
+        $customeQuery = new Query;
+        $customeQuery
+        ->select([
+            'a.`tahun_ajaran`',
+            's.`sekolahid`',
+            'a.`bulan`',
+            'a.`tahun`',
+            'CONCAT(a.`tahun`, "-", a.`bulan`, "-", "1") AS dt',
+            'SUM(IFNULL(`spp_kredit`,0) - IFNULL(`spp_debet`,0)) AS spp',
+            'SUM(IFNULL(`komite_sekolah_kredit`,0) - IFNULL(`komite_sekolah_debet`,0)) AS komite_sekolah',
+            'SUM(IFNULL(`catering_kredit`,0) - IFNULL(`catering_debet`,0)) AS catering',
+            'SUM(IFNULL(`keb_siswa_kredit`,0) - IFNULL(`keb_siswa_debet`,0)) AS keb_siswa',
+            'SUM(IFNULL(`ekskul_kredit`,0) - IFNULL(`ekskul_debet`,0)) AS ekskul'
+        ])
+        ->from('`tagihan_pembayaran` a')
+        ->innerJoin('siswa_rombel sr', 'sr.`id` = a.`idrombel`')
+        ->innerJoin('siswa s', 's.`id` = sr.`siswaid`')
+        ->groupBy(['a.`tahun_ajaran`, s.`sekolahid`, a.`tahun`, a.`bulan`'])
+        ->where('1=1');
+
+        if(is_array($params)){
+            extract($params);
+
+            if($tahun_ajaran_id){
+                $customeQuery->andWhere(['a.`tahun_ajaran`' => $tahun_ajaran_id]);
+            }
+
+            if($sekolahid){
+                $customeQuery->andWhere(['s.`sekolahid`' => $sekolahid]);
+            } 
+        }
+         
+        // var_dump($customeQuery->createCommand()->rawSql);exit();
+
+        return $customeQuery;
+    }
 }

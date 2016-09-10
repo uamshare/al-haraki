@@ -39,7 +39,7 @@ define(['app'], function (app) {
         };
 
         factory.update = function (params) {
-            return $http.put(serviceBase + 'mcoads/' + params.mcoadno, params).then(function (status) {
+            return $http.put(serviceBase + 'mcoads/' + params.mcoadnoold, params).then(function (status) {
                 return status.data;
             });
         };

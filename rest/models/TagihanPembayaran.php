@@ -328,7 +328,6 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             )
             ->groupBy(['k.`sekolahid`','k.`kelas`'])
             ->where('1=1');
-
         }
          
         // var_dump($customeQuery->createCommand()->rawSql);exit();
@@ -396,6 +395,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         return $customeQuery->query();
     }
 
+
     /**
      * Save tagihan info into outstanding pembayaran
      * @param $jt, String jenis tagihan
@@ -445,6 +445,8 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             'tahun_ajaran_id',
             'keterangan',
             'jenis_tagihan',
+            'periode_awal',
+            'periode_akhir',
             'created_at',
             'updated_at',
             'created_by',
@@ -461,12 +463,12 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             $saved->execute();
 
             // Set flag 0 to old log
-            $updateL = $DB->createCommand()->update(
-                'tagihan_info_input_log', 
-                ['flag' => '0'], 
-                ['id' => $whereids]
-            );
-            $updateL->execute();
+            // $updateL = $DB->createCommand()->update(
+            //     'tagihan_info_input_log', 
+            //     ['flag' => '0'], 
+            //     ['id' => $whereids]
+            // );
+            // $updateL->execute();
 
             // Save new log
             $saveL = $DB->createCommand()->batchInsert(

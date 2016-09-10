@@ -175,7 +175,7 @@ class Pegawai extends \yii\db\ActiveRecord
     public function getAvatarPath(){
 
         $baseurl = Yii::$app->urlManager->createAbsoluteUrl(\Yii::$app->params['profile_pegawai_path'] . $this->avatar);
-        return $baseurl;
+        return (isset($this->avatar) && !empty($this->avatar)) ? $baseurl : '';
     }
 
     /**

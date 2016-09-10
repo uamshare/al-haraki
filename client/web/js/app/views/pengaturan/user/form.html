@@ -12,13 +12,13 @@
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <fieldset>
-                        <div class="form-group" has-feedback field-formUser-username required>
+                        <div class="form-group" has-feedback field-formUser-fusername required>
                             <label class="col-xs-4 col-md-3 control-label">Username</label>
                             <div class="col-xs-8 col-md-9">
-                                <input type="text" name="username" class="form-control input-sm" 
+                                <input type="text" name="fusername" class="form-control input-sm" 
                                     ng-model="form.username" required/>
                                 <span class="errorMessage" 
-                                    ng-show="formUser.username.$touched && formUser.username.$error.required">
+                                    ng-show="formUser.fusername.$touched && formUser.fusername.$error.required">
                                     Username tidak boleh kosong
                                 </span>
                             </div>
@@ -26,30 +26,30 @@
                         <div class="form-group">
                             <label class="col-xs-4 col-md-3 control-label">Email</label>
                             <div class="col-xs-8 col-md-9">
-                                <input type="email" name="email" class="form-control input-sm" 
+                                <input type="email" name="femail" class="form-control input-sm" 
                                     ng-model="form.email" required />
                                 <span class="errorMessage" 
-                                    ng-show="formUser.email.$touched && formUser.email.$error.required">
+                                    ng-show="formUser.femail.$touched && formUser.femail.$error.required">
                                     Email tidak boleh kosong
                                 </span>
                                 <span class="errorMessage" 
-                                    ng-show="formUser.email.$touched && formUser.email.$error.email">
+                                    ng-show="formUser.femail.$touched && formUser.femail.$error.email">
                                     Format Email tidak valid
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group" has-feedback field-formUser-username required ng-hide="isEdit">
+                        <div class="form-group" has-feedback field-formUser-fpassword required ng-hide="isEdit">
                             <label class="col-xs-4 col-md-3 control-label">Password</label>
                             <div class="col-xs-8 col-md-9">
-                                <input type="{{isEdit ? 'hidden' : 'password'}}" name="password" class="form-control input-sm" 
+                                <input type="{{isEdit ? 'hidden' : 'password'}}" name="fpassword" class="form-control input-sm" 
                                     ng-model="form.password_hash"
                                     ng-minlength="6" required/>
                                 <span class="errorMessage" 
-                                    ng-show="formUser.password.$touched && formUser.password.$error.required">
+                                    ng-show="formUser.fpassword.$touched && formUser.fpassword.$error.required">
                                     Password tidak boleh kosong
                                 </span>
                                 <span class="errorMessage" 
-                                    ng-show="formUser.password.$touched && formUser.password.$error.minlength">
+                                    ng-show="formUser.fpassword.$touched && formUser.fpassword.$error.minlength">
                                     Password minimal karakter 6
                                 </span>
                             </div>

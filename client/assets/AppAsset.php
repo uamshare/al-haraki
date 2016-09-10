@@ -21,6 +21,7 @@ class AppAsset extends AssetBundle
         'plugins/ng-dialog/css/ngDialog-theme-default.min.css',
         'plugins/ng-dialog/css/ngDialog-theme-flat.css',
         'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload.css',
+        'css/print-style-2.css',
         'css/site.css'
     ];
 

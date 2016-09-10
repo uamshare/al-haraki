@@ -18,6 +18,8 @@ use Yii;
  * @property string $keterangan
  * @property string $jenis_tagihan
  * @property string $flag
+ * @property integer $periode_awal
+ * @property integer $periode_akhir
  * @property string $created_at
  * @property string $updated_at
  * @property integer $created_by
@@ -43,11 +45,12 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idrombel', 'tahun_ajaran_id'], 'required'],
-            [['idrombel', 'spp', 'komite_sekolah', 'catering', 'keb_siswa', 'ekskul', 'created_by', 'updated_by'], 'integer'],
+            [['idrombel', 'tahun_ajaran_id', 'periode_awal', 'periode_akhir'], 'required'],
+            [['idrombel', 'spp', 'komite_sekolah', 'catering', 'keb_siswa', 'ekskul', 'periode_awal', 'periode_akhir', 'created_by', 'updated_by'], 'integer'],
             [['keterangan', 'jenis_tagihan', 'flag'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['tahun_ajaran_id'], 'string', 'max' => 6],
+            [['idrombel', 'tahun_ajaran_id', 'periode_awal', 'periode_akhir'], 'unique', 'targetAttribute' => ['idrombel', 'tahun_ajaran_id', 'periode_awal', 'periode_akhir'], 'message' => 'The combination of Idrombel, Tahun Ajaran ID, Periode Awal and Periode Akhir has already been taken.'],
             [['idrombel'], 'exist', 'skipOnError' => true, 'targetClass' => SiswaRombel::className(), 'targetAttribute' => ['idrombel' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
@@ -71,6 +74,8 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
             'keterangan' => Yii::t('app', 'Keterangan'),
             'jenis_tagihan' => Yii::t('app', 'Jenis Tagihan'),
             'flag' => Yii::t('app', 'Flag'),
+            'periode_awal' => Yii::t('app', 'Periode Awal'),
+            'periode_akhir' => Yii::t('app', 'Periode Akhir'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_by' => Yii::t('app', 'Created By'),
@@ -136,6 +141,7 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
             $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
         } 
 
+        $periode = ($month_start + ($year_start * 12));
         $sqlCustoms = $this->queryList();
         $orderBy = " ORDER BY nama_siswa";
         $conn = $this->getDb(); //Yii::$app->getDb();
@@ -143,7 +149,10 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
             'idrombel' => $idrombel,
             'kelasid' => $kelasid,
             'tahun_ajaran_id' => $tahun_ajaran_id,
-            'jenis_tagihan' => $jenis_tagihan
+            // 'periode' => (int)$periode,
+            'month_start' => ($jenis_tagihan == '1') ? (int)$month_start : 7,
+            // 'jenis_tagihan' => $jenis_tagihan
+            'no_ref' => 't_info_' .$jenis_tagihan. '_' . $tahun_ajaran_id
         ]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
@@ -164,32 +173,25 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
               , b.`keb_siswa`
               , b.`ekskul`
               , b.`keterangan`
-              , b.`jenis_tagihan`
               , b.`created_at`
               , b.`updated_at`
-              , b.`created_by`
-              , b.`updated_by`
               FROM siswa_rombel a
               INNER JOIN siswa s ON a.`siswaid`=s.`id`
               LEFT JOIN 
             (SELECT 
-              `id`,
-              `idrombel`,
-              `spp`,
-              `komite_sekolah`,
-              `catering`,
-              `keb_siswa`,
-              `ekskul`,
-              `tahun_ajaran_id`,
-              `keterangan`,
-              `jenis_tagihan`,
-              `flag`,
-              `created_at`,
-              `updated_at` ,
-              `created_by`,
-              `updated_by`
-            FROM `tagihan_info_input_log` 
-            WHERE flag='1' AND tahun_ajaran_id = :tahun_ajaran_id AND jenis_tagihan = :jenis_tagihan
-        ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan";
+                a.`id`,
+                a.`idrombel`,
+                a.`spp_kredit` AS `spp`,
+                a.`komite_sekolah_kredit` AS `komite_sekolah`,
+                a.`catering_kredit` AS `catering`,
+                a.`keb_siswa_kredit` AS `keb_siswa`,
+                a.`ekskul_kredit` AS `ekskul`,
+                a.`tahun_ajaran` AS tahun_ajaran_id,
+                a.keterangan,
+                a.`created_at`,
+                a.`updated_at`
+                FROM `tagihan_pembayaran` a
+                WHERE tahun_ajaran = :tahun_ajaran_id AND no_ref = :no_ref
+                AND `bulan` = :month_start) b ON a.`id` = b.`idrombel`) AS q_info_tagihan";
     }
 }

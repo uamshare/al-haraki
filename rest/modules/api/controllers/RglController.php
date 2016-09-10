@@ -28,7 +28,7 @@ class RglController extends \rest\modules\api\ActiveController //\yii\rest\Activ
         // $kls = $request->getQueryParam('kelasid', false);
         return $model->getList([
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
-            'sekolahid' => $request->getQueryParam('sekolahid', false),
+            'sekolahid' => $request->getQueryParam('sekolahid', 0),
             'date_start' => $request->getQueryParam('date_start', '0000-00-00'),
             'date_end' => $request->getQueryParam('date_end', '0000-00-00'),
             'mcoahno' => $request->getQueryParam('mcoahno', false),
@@ -47,7 +47,7 @@ class RglController extends \rest\modules\api\ActiveController //\yii\rest\Activ
         // $kls = $request->getQueryParam('kelasid', false);
         return $model->getListDetail([
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
-            'sekolahid' => $request->getQueryParam('sekolahid', false),
+            'sekolahid' => $request->getQueryParam('sekolahid', 0),
             'date_start' => $request->getQueryParam('date_start', '0000-00-00'),
             'date_end' => $request->getQueryParam('date_end', '0000-00-00'),
             'mcoahno' => $id ? $id : $request->getQueryParam('mcoahno', false),

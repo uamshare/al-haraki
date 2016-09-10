@@ -160,7 +160,8 @@ define(['app'], function (app) {
                     page : 1,
                     'per-page' : $CONST_VAR.pageSize,
                     date_start : $scope.filter.date_start,
-                    date_end : $scope.filter.date_end
+                    date_end : $scope.filter.date_end,
+                    sekolahid : authService.getSekolahProfile().sekolahid
                 });
             }
 
@@ -199,7 +200,8 @@ define(['app'], function (app) {
                     page : 1,
                     'per-page' : $CONST_VAR.pageSize,
                     date_start : $scope.filter.date_start,
-                    date_end : $scope.filter.date_end
+                    date_end : $scope.filter.date_end,
+                    sekolahid : authService.getSekolahProfile().sekolahid
                 });
             }
 
@@ -269,7 +271,12 @@ define(['app'], function (app) {
                         if(result.rows.length > 0){
                             $scope.list.header.mcoahno = result.rows[0].mcoahno;
                             $scope.list.header.mcoahname = result.rows[0].mcoahname;
-                            $scope.list.header.saldoAwal = parseInt(result.rows[0].saldo_a);
+                            $scope.list.header.saldoAwal = 0;
+                            for(var ids in result.rows){
+                                $scope.list.header.saldoAwal += parseInt(result.rows[ids].saldo_a);
+                            }
+
+                            // $scope.list.header.saldoAwal = parseInt(result.rows[0].saldo_a);
                             $scope.list.rows = result.rows;
                             $scope.list.header.saldoAkhir = parseInt($scope.list.header.saldoAwal);
                             for(var idx in result.rows){
@@ -280,7 +287,7 @@ define(['app'], function (app) {
                                 $scope.list.rows[idx]['saldo'] = $scope.list.header.saldoAkhir;
                             }
                             // $scope.list.header.saldoAkhir = result.rows[0].saldo_a;
-                            console.log($scope.list.rows);
+                            // console.log($scope.list.rows);
                         }else{
                             $scope.list.header.mcoahno = $routeParams.id;
                             $scope.list.header.mcoahname = '';
@@ -298,7 +305,8 @@ define(['app'], function (app) {
                     getById({
                         id : $routeParams.id,
                         date_start : $scope.filter.date_start,
-                        date_end : $scope.filter.date_end
+                        date_end : $scope.filter.date_end,
+                        sekolahid : authService.getSekolahProfile().sekolahid
                     });
                 }
             }
