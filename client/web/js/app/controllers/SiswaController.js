@@ -168,6 +168,28 @@ define(['app'], function (app) {
             });
         }
 
+        $scope.onDeleteClick = function(rowdata){
+            function deleteData(id){
+                cfpLoadingBar.start();
+                $resourceApi.delete(id)
+                .then(function(result){
+                    toastr.success('Data telah dihapus', 'Success');
+                    cfpLoadingBar.complete();
+                    $scope.getList({
+                        page : 1,
+                        'per-page' : 20,
+                        sekolahid : authService.getSekolahProfile().sekolahid
+                    });
+                    
+                }, errorHandle);
+            }
+
+            var del = confirm("Anda yakin akan menghapus data `" + rowdata.nama_siswa + "`");
+            if (del == true) {
+                deleteData(rowdata.id);
+            }
+        }
+
 		$scope.$on('$viewContentLoaded', function(){
 			init();
 		});
@@ -220,6 +242,7 @@ define(['app'], function (app) {
             jarak_ke_sekolah : '',
             sarana_transportasi : '',
             keterangan : '',
+            sekolahid : authService.getSekolahProfile().sekolahid
         }
 
 		function initEdit(id){
@@ -267,9 +290,54 @@ define(['app'], function (app) {
                     $scope.form.jarak_ke_sekolah = result.rows.jarak_ke_sekolah;
                     $scope.form.sarana_transportasi = result.rows.sarana_transportasi;
                     $scope.form.keterangan = result.rows.keterangan;
+                    $scope.form.sekolahid = result.rows.sekolahid;
                 }
                 cfpLoadingBar.complete();
             }, errorHandle);
+        }
+
+        function reset(){
+            $scope.form.id = '';
+            $scope.form.nis = '';
+            $scope.form.nisn = '';
+            $scope.form.nama_siswa = '';
+            $scope.form.nama_panggilan = '';
+            $scope.form.jk = '';
+            $scope.form.agama = '';
+            $scope.form.tempat_lahir = '';
+            $scope.form.tanggal_lahir = '';
+            $scope.form.anak_ke = '';
+            $scope.form.jml_saudara = '';
+            $scope.form.asal_sekolah = '';
+            $scope.form.alamat = '';
+            $scope.form.kelurahan = '';
+            $scope.form.kecamatan = '';
+            $scope.form.kota = '';
+            $scope.form.kodepos = '';
+            $scope.form.tlp_rumah = '';
+            $scope.form.nama_ayah = '';
+            $scope.form.hp_ayah = '';
+            $scope.form.pekerjaan_ayah = '';
+            $scope.form.tempat_kerja_ayah = '';
+            $scope.form.jabatan_ayah = '';
+            $scope.form.pendidikan_ayah = '';
+            $scope.form.email_ayah = '';
+            $scope.form.nama_ibu = '';
+            $scope.form.hp_ibu = '';
+            $scope.form.pekerjaan_ibu = '';
+            $scope.form.tempat_kerja_ibu = '';
+            $scope.form.jabatan_ibu = '';
+            $scope.form.pendidikan_ibu = '';
+            $scope.form.email_ibu = '';
+            $scope.form.berat = '';
+            $scope.form.tinggi = '';
+            $scope.form.gol_darah = '';
+            $scope.form.riwayat_kesehatan = '';
+            $scope.form.jenis_tempat_tinggal = '';
+            $scope.form.jarak_ke_sekolah = '';
+            $scope.form.sarana_transportasi = '';
+            $scope.form.keterangan = '';
+            $scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
         }
 
 		function init(){
@@ -280,6 +348,38 @@ define(['app'], function (app) {
             }
 		}
 		
+        $scope.onSaveClick = function(event){
+            if($scope.form.nis == '' || $scope.form.nis == null){
+                toastr.warning('NIS tidak boleh kosong.', 'Warning');
+                return false;
+            }
+
+            if($scope.form.nama_siswa == '' || $scope.form.nama_siswa == null){
+                toastr.warning('Nama Siswa tidak boleh kosong.', 'Warning');
+                return false;
+            }
+
+            function successHandle(result){
+                if(result.success){
+                    toastr.success('Data telah tersimpan', 'Success');
+                    reset();
+                    cfpLoadingBar.complete();
+                    $location.path( "/master/siswa/");
+                }else{
+                    toastr.error('Data gagal tersimpan.' + result.message, 'Error');
+                    cfpLoadingBar.complete();
+                }
+            }
+            cfpLoadingBar.start();
+            if($scope.form.id != ''){
+                $resourceApi.update($scope.form)
+                .then(successHandle, errorHandle);
+            }else{
+                $resourceApi.insert($scope.form)
+                .then(successHandle, errorHandle);
+            }
+        }
+
 		$scope.onAddClick = function(event){
 			// alert('tambah');
 			$location.path( "/master/siswa/add");
