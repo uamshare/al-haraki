@@ -104,7 +104,7 @@ define(['app'], function (app) {
             $scope.form.id = '';
             $scope.form.kelas = '';
             $scope.form.nama_kelas = '';
-            $scope.form.sekolahid = authService.getSekolahProfile().sekolahid
+            $scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
         }
 
         $scope.getList = function (paramdata){
