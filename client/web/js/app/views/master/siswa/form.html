@@ -38,6 +38,7 @@
                   <label for="nis" class="col-sm-3 control-label">NIS</label>
                   <div class="col-sm-8">
                     <input type="hidden" id="id" name="id" ng-model="form.id">
+                    <input type="hidden" id="sekolahid" name="sekolahid" ng-model="form.sekolahid">
                     <input type="text" class="form-control" id="nis" name="nis" placeholder="NIS" ng-model="form.nis">
                   </div>
                 </div>
@@ -327,7 +328,7 @@
           <br>
           <div class="form-group">
               <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                <button type="submit" class="btn btn-primary" ng-click="onSaveClick($event)"><i class="fa fa-save"></i> Simpan</button>
                 <button type="submit" class="btn btn-danger"><i class="fa fa-close"></i> Batal</button>
               </div>
           </div>
