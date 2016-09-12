@@ -41,18 +41,29 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
     }
     
     public function actionIndex(){
-        $model = new $this->modelClass();
+        $model = new \rest\models\KwitansiPengeluaranD; //new $this->modelClass();
         $request = Yii::$app->getRequest();
         $date_start = $request->getQueryParam('date_start', false);
         $date_end = $request->getQueryParam('date_end', false);
+        $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
+                       ->select('h.*,d.id,d.kode,d.rincian,d.jumlah')
+                       ->from('kwitansi_pengeluaran_h h')
+                       ->innerJoin('kwitansi_pengeluaran_d d', 'd.`no_kwitansi` = `h`.`no_kwitansi`')
+                       ->where('1=1')
                        ->orderBy(['tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
                        ->asArray();
 
-        if($date_start && $date_end){
-            $query->where(['between','tgl_kwitansi', $date_start, $date_end]);
+
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
         }
+
+        if($date_start && $date_end){
+            $query->andWhere(['between','tgl_kwitansi', $date_start, $date_end]);
+        }
+        // var_dump($query->createCommand()->rawSql);exit();
         return $this->prepareDataProvider($query);
     }
 
@@ -105,7 +116,9 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
                 ];
                 $total += isset($rows['jumlah']) ? (int)$rows['jumlah'] : 0;
             }else if($rows['flag'] == '0'){
-                $flagdelete[] = $rows['id'];
+                if(isset($rows['id'])){
+                    $flagdelete[] = $rows['id'];
+                }
             }
         }
 
@@ -124,6 +137,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
             'description'          => 'Transaksi Kwitansi Pengeluaran NO . ' . $form['no_kwitansi'],
             'sekolahid'            => $form['sekolahid'],
             'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
+            'fk_id'                => substr($form['no_kwitansi'], -5),
             'created_at'           => $form['created_at'],   
             'updated_at'           => $form['updated_at'],
             'created_by'           => $form['created_by'],   

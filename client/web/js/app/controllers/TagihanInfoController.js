@@ -221,8 +221,6 @@ define(['app'], function (app) {
 			toastr.warning(msg, 'Warning');
 		}
 
-		
-
 		function getDataInfo(paramdata){
 			cfpLoadingBar.start();
 			$resourceApi.getListActive(paramdata)
@@ -245,6 +243,7 @@ define(['app'], function (app) {
                 	}
 					
 				}
+				$scope.kelas.selected = $routeParams.idkelas;
 				cfpLoadingBar.complete();
             }, errorHandle);
 		}
@@ -272,6 +271,42 @@ define(['app'], function (app) {
 				}
 				cfpLoadingBar.complete();
             }, errorHandle);
+		}
+
+		function getTahuunAjaran(){
+			TahunAjaranService.getList()
+			.then(function (result) {
+	            if(result.success){
+		            $scope.tahun_ajaran_list = result.rows;
+				}
+	        }, function(error){
+	        	toastr.warning('Tahun Ajaran tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+	        });
+		}
+
+		function getkelas(params){
+			KelasService.getList(params)
+			.then(function (result) {
+	            if(result.success){
+		            // var header = header();
+					if(result.success){
+						$scope.kelas.options = result.rows;
+					}
+
+					if($routeParams.idkelas){
+						// $scope.kelas.selected = $routeParams.idkelas;
+						$scope.month_start.selected = $routeParams.month;
+			            $scope.month_start.year = sekolahProfil.tahun_awal;
+			            $scope.month_end.selected = 6;
+			            $scope.month_end.year = sekolahProfil.tahun_akhir;
+					}else{
+						$scope.month.selected = helperService.getMonthId(date.getMonth());
+						$scope.month.year = date.getFullYear();
+					}
+				}
+	        }, function(error){
+	        	toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+	        });
 		}
 
 		/**
@@ -317,12 +352,16 @@ define(['app'], function (app) {
 							$scope.row.ekskul;
 				}
 				$scope.profil = authService.getProfile();
-				$scope.monthPrint = date.getMonth();
-				$scope.monthYear = date.getFullYear();
+				// $scope.monthPrint = date.getMonth();
+				// $scope.monthYear = date.getFullYear();
+				$scope.tanggal  = date.getDate() + ' ' + 
+                            helperService.getMonthName(date.getMonth()) + ' ' + 
+                            date.getFullYear();
+				$scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
 
 		        ngDialog.open({
 		            template: $scope.viewdir + 'print.html',
-		            className: 'ngdialog-theme-flat',
+		            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
 		            scope: $scope
 		        });
 			},
@@ -342,19 +381,30 @@ define(['app'], function (app) {
 					}
 				}
 				$scope.profil = authService.getProfile();
-				$scope.monthPrint = date.getMonth();
-				$scope.monthYear = date.getFullYear();
+				$scope.tanggal  = date.getDate() + ' ' + 
+                            helperService.getMonthName(date.getMonth()) + ' ' + 
+                            date.getFullYear();
+				$scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
 
 				if($scope.rows.length > 0){
 					ngDialog.open({
 			            template: $scope.viewdir + 'printMultiple.html',
-			            className: 'ngdialog-theme-flat',
+			            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
 			            scope: $scope
 			        });
 				}
 		        
 			}
 		};
+		// $scope.settings = {
+		// 	note : '<span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 {{month.options[month.selected].name}} {{month.year}}</strong></span>' +
+  //                   '<ol>' +
+  //                       '<li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>' +
+  //                       '<li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>' +
+  //                       '<li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>' +
+  //                       '<li>Mohon maaf jika ada kekeliruan pada informasi ini</li>' +
+  //                   '</ol>',
+  //       }
 
 		$scope.onSearchClick = function (event) {
 			if($scope.kelas.selected == null || $scope.kelas.selected == ''){
@@ -379,6 +429,10 @@ define(['app'], function (app) {
     		});
     	}
 		
+		$scope.onKelasChange = function(event){
+			$location.path( "/keuangan/info-tagihan/" + $scope.kelas.selected + '/' + $scope.month_start.selected );
+		}
+
 		$scope.onSetInfoClick = function(event){
 			if(!$scope.kelas.selected){
 				alert('Silahkan pilih kelas');
@@ -394,6 +448,13 @@ define(['app'], function (app) {
 		$scope.onSaveClick = function(event){
 			// console.log($scope.gridDirtyRows);
 			// return;
+			var periode_awal = parseInt($scope.month_start.selected) + (parseInt($scope.month_start.year) * 12);
+			var periode_akhir = parseInt($scope.month_end.selected) + (parseInt($scope.month_end.year) * 12);
+			console.log(periode_awal + '>' + periode_akhir);
+			if(periode_awal > periode_akhir){
+				toastr.warning('Periode yang anda pilih belum sesuai. Periode awal lebih besar dari Periode akhir', 'Warning');
+				return;
+			}
 			if($scope.gridDirtyRows != null && $scope.gridDirtyRows.length > 0){
 				var params ={
 					rows : $scope.gridDirtyRows,
@@ -406,10 +467,11 @@ define(['app'], function (app) {
 					tahun_ajaran_id : $scope.tahun_ajaran_id,
 					sekolahid : authService.getSekolahProfile().sekolahid
 				}
+				// console.log(params);return;
 				saveAll(params);
 			}else{
 				// alert('And belum melakukan perubahan. Silahkan ubah data info tagihan');
-				toastr.info('And belum melakukan perubahan. Silahkan ubah data info tagihan', 'Info');
+				toastr.info('Anda belum melakukan perubahan. Silahkan ubah data info tagihan', 'Info');
 			}
 		}
 
@@ -552,47 +614,12 @@ define(['app'], function (app) {
     		});
 		}
 
-		function getTahuunAjaran(){
-			TahunAjaranService.getList()
-			.then(function (result) {
-	            if(result.success){
-		            $scope.tahun_ajaran_list = result.rows;
-				}
-	        }, function(error){
-	        	toastr.warning('Tahun Ajaran tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
-	        });
-		}
-
-		function getkelas(params){
-			KelasService.getList(params)
-			.then(function (result) {
-	            if(result.success){
-		            // var header = header();
-					if(result.success){
-						$scope.kelas.options = result.rows;
-					}
-
-					if($routeParams.idkelas){
-						$scope.kelas.selected = $routeParams.idkelas;
-						$scope.month_start.selected = $routeParams.month;
-			            $scope.month_start.year = sekolahProfil.tahun_awal;
-			            $scope.month_end.selected = 6;
-			            $scope.month_end.year = sekolahProfil.tahun_akhir;
-					}else{
-						$scope.month.selected = helperService.getMonthId(date.getMonth());
-						$scope.month.year = date.getFullYear();
-					}
-					
-				}
-	        }, function(error){
-	        	toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
-	        });
-		}
+		
 
 		function init(){
 			getkelas({
 				sekolahid : authService.getSekolahProfile().sekolahid,
-				kelasid : $routeParams.idkelas,
+				// kelasid : $routeParams.idkelas,
 				'per-page' : 0,
 			})
 

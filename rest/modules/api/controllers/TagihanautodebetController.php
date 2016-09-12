@@ -13,44 +13,51 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
     public function actions()
     {
         $actions = parent::actions();
+        unset($actions['index']);
         unset($actions['create']);
         unset($actions['delete']);
         return $actions;
     }
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'         => ['get'],
-                        'newnokwitansi' => ['get'],
-                        'findbyno'      => ['get'],
-                        'create'        => ['post'],
-                        'update'        => ['put'],
-                        'delete'        => ['delete'],
-                    ],
-                ],
-            ]
-        );
-    }
+    // public function behaviors()
+    // {
+    //     $behaviors = parent::behaviors();
+    //     return array_merge($behaviors, 
+    //         [
+    //             'verbFilter' => [
+    //                 'class' => \yii\filters\VerbFilter::className(),
+    //                 'actions' => [
+    //                     'index'         => ['get'],
+    //                     'newnokwitansi' => ['get'],
+    //                     'findbyno'      => ['get'],
+    //                     'create'        => ['post'],
+    //                     'update'        => ['put'],
+    //                     'delete'        => ['delete'],
+    //                 ],
+    //             ],
+    //         ]
+    //     );
+    // }
     
     public function actionIndex(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
         $date_start = $request->getQueryParam('date_start', false);
         $date_end = $request->getQueryParam('date_end', false);
+        $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
+                       ->where('1=1')
                        ->orderBy(['tahun_ajaran_id' => SORT_DESC, 'no_transaksi' => SORT_DESC])
                        ->asArray();
 
-        if($date_start && $date_end){
-            $query->where(['between','tgl_transaksi', $date_start, $date_end]);
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
         }
+        if($date_start && $date_end){
+            $query->andWhere(['between','tgl_transaksi', $date_start, $date_end]);
+        }
+        // var_dump($query->createCommand()->rawSql);exit();
         return $this->prepareDataProvider($query);
     }
 
@@ -87,6 +94,7 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
         $this->response = Yii::$app->getResponse();
         $attrvalue = [];
         $pembayaran = [];
+        $tagihanvalue = [];
         $total = 0;
         extract($post);
         $date = date('Y-m-d H:i:s');
@@ -145,27 +153,37 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
                 'created_at' => isset($form['created_at']) ? $form['created_at'] : $date,   
                 'updated_at' => $date
             ];
+
+            // Set posting value
+            $postingValue[$k] = [
+                'date'                 => $form['tgl_transaksi'],
+                'noref'                => $form['no_transaksi'],        
+                'value'                => 0,
+                'description'          => 'Transaksi Autodebet NO . ' . $form['no_transaksi'] . ' rombel ' . $rows['idrombel'],
+                'sekolahid'            => $form['sekolahid'],
+                'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
+                'fk_id'                => isset($attrvalue[$k]['idrombel']) ? $attrvalue[$k]['idrombel'] : 
+                                            substr($rows['no_transaksi'], -5),
+                'created_at'           => $form['created_at'],   
+                'updated_at'           => $form['updated_at'],
+                'created_by'           => $form['created_by'],   
+                'updated_by'           => $form['updated_by']
+            ];
+            $tagihanvalue[$k]['spp'] = (int)$attrvalue[$k]['spp'];
+            $tagihanvalue[$k]['komite_sekolah'] = (int)$attrvalue[$k]['komite_sekolah'];
+            $tagihanvalue[$k]['catering'] = (int)$attrvalue[$k]['catering'];
+            $tagihanvalue[$k]['keb_siswa'] = (int)$attrvalue[$k]['keb_siswa'];
+            $tagihanvalue[$k]['ekskul'] = (int)$attrvalue[$k]['ekskul'];
         }
 
-        // Set posting value
-        $postingValue = [
-            'date'                 => $form['tgl_transaksi'],
-            'noref'                => $form['no_transaksi'],        
-            'value'                => $total,
-            'description'          => 'Transaksi Autodebet NO . ' . $form['no_transaksi'],
-            'sekolahid'            => $form['sekolahid'],
-            'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
-            'created_at'           => $form['created_at'],   
-            'updated_at'           => $form['updated_at'],
-            'created_by'           => $form['created_by'],   
-            'updated_by'           => $form['updated_by']
-        ];
+
 
         $result = $model->saveAndPosting([
             'rowHeader' => $form,
             'rowDetail' => $attrvalue,
             'rowPembayaran' => $pembayaran,
-            'postingValue' => $postingValue
+            'postingValue' => $postingValue,
+            'tagihanvalue' => $tagihanvalue
         ]);
         
         if($result !== true){

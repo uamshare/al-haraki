@@ -80,7 +80,7 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getKwitansiPembayaranDs()
+    public function getDetails()
     {
         return $this->hasMany(KwitansiPembayaranD::className(), ['no_kwitansi' => 'no_kwitansi']);
     }
@@ -126,7 +126,7 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
      * @param $params, Array parameter post
      * 
      */
-    public function saveAndPosting($params){
+    public function saveAndPosting($params, $id = false){
         extract($params);
         $DB = $this->getDb();
         $transaction = $DB->beginTransaction();
@@ -177,30 +177,50 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
                 $columnD, 
                 $rowDetail
             );
-            $savedD->setSql($savedD->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnD));
+            $savedD->setSql($savedD->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnD,['id']));
             // echo $savedD->rawSql. '<br/>';
             $savedD->execute();
 
             if($rowPembayaran != false){
-                $savedP = $DB->createCommand()->insert(
-                    'tagihan_pembayaran',
-                    $rowPembayaran
-                );
-                $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
+                if($id){
+                    $savedP = $DB->createCommand()->update(
+                        'tagihan_pembayaran',
+                        $rowPembayaran,
+                        ['no_ref' => $id]
+                    );
+                }else{
+                    $savedP = $DB->createCommand()->insert(
+                        'tagihan_pembayaran',
+                        $rowPembayaran
+                    );
+                }
+                
+                // $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
                 $savedP->execute();
                 // echo $savedD->rawSql;exit();
             }
             
             $GL = new \rest\models\Rgl();
-            $autoPosting = $GL->AutoPosting('01', $postingValue);
-            $autoPosting['unposting']->execute();
-            $autoPosting['posting']->execute();
+            if($rowHeader['sumber_kwitansi'] == 1){
+                foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {
+                    $postingValue['value'] = isset($tagihanvalue[$tagihan]) ? $tagihanvalue[$tagihan] : 0;
+                    $postingValue['description'] = 'Kwitansi Pembayaran (' .$tagihan. ') NO . ' . $rowHeader['no_kwitansi'];
+                    $autoPosting = $GL->AutoPosting('01', $postingValue, $tagihan);
+                    $autoPosting['posting']->execute();
+                }
+            }else{
+                $autoPosting = $GL->AutoPosting('01', $postingValue, 'none');
+                $autoPosting['unposting']->execute();
+                // var_dump($autoPosting['posting']->rawSql);exit();
+                $autoPosting['posting']->execute();
+            }
 
             $this->created_at = $rowHeader['created_at'];
             $this->saveLogs([
                 'rowHeader' => $rowHeader,
                 'rowDetail' => $rowDetail
             ]);
+            
             $transaction->commit();
             return true;
         } catch(\Exception $e) {
@@ -274,10 +294,11 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
         }
     }
 
-    private function setOnDuplicateValue($column){
+    private function setOnDuplicateValue($column, $colesc = array()){
         $values = [];
+        $colesc[] = 'created_at';
         foreach($column as $col){
-            if($col != 'cretaed_at'){
+            if(!in_array($col, $colesc)){
                 $values[]= '`'.$col.'` = VALUES(' . $col .')';
             }
         }

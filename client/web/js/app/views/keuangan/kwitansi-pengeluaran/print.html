@@ -1,3 +1,43 @@
+<style type="text/css">
+    .print-kwitansi-bayar hr {
+        margin-top: 0;
+        margin-bottom: 0;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+    .printStyle-box .note {
+        font-size: 8pt;
+    }
+    @media print {
+        /*@page {
+            margin: 0.5cm 1cm 0.5cm 1cm;
+        }*/
+        @page {
+            size: 14.8cm 21cm;
+            /*size: A5;*/
+            margin: 0;
+        }
+        /* 21.59 x 27.94 centimetres */
+        .print-kwitansi-bayar{
+            float: left;
+            width: 14cm; /*14.8cm;*/
+            height: 18cm; /*21cm;*/
+            margin:10px !important;
+            padding:2px;
+            font-size:9pt;
+            line-height:9pt;
+        }
+        .title h2{
+            font-size : 14pt;
+            line-height: 12pt;
+        }
+        #footer {
+           clear: both;
+           position: relative;
+           /*page-break-after: auto;*/
+        }
+    }
+</style>
 <div class="row">
     <div class="con-xs-12 col-md-12 no-print pull-right">
         <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-kwitansi-pengeluaran')" >
@@ -6,7 +46,6 @@
     </div>
 </div>
 <div id="print-kwitansi-pengeluaran" >
-    <link rel="stylesheet" type="text/css" href="css/print-style-2.css" />
     <div class="printStyle-box">
         <table cellpadding="0" cellspacing="0">
             <tr class="top">
@@ -68,14 +107,14 @@
                         <tr>
                             <td></td>
                             <td>
-                                Depok, {{month.options[monthPrint].name}} {{monthYear}}<br>
+                                Depok, {{tanggal}}<br>
                                 <br>
                                 <br/>
                                 <br>
                                 <br/>
                                 <span class="profil-name">{{profil.fullname}}</span><br/>
                                 -----------------------------<br/>
-                                <span class="profil-jabatan">{{profil.jabatan ? profil.jabatan : 'Adm. Keuangan'}}</span>
+                                <span class="profil-jabatan">{{titleadmin}}</span>
                             </td>
                         </tr>
                     </table>

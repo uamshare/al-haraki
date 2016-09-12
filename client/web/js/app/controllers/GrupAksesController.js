@@ -211,7 +211,7 @@ define(['app'], function (app) {
 	                    grouping: { groupPriority: 1 }, 
 	                    width: 150,
 	                },
-					{ name: 'name', displayName: 'ID', visible: false,  width : 150, enableCellEdit: false},
+					{ name: 'name', displayName: 'ID', visible: true,  width : 150, enableCellEdit: false},
 					{ name: 'description', displayName: 'Menu Akses', visible: true,  enableCellEdit: false},
 					{ 
 						name: 'create', displayName: 'Tambah', width : '100', visible: true, enableCellEdit: false,
@@ -258,7 +258,7 @@ define(['app'], function (app) {
 			$scope.noAction = function(rowentity, action){
 				var controller = [
 					'tagihaninfoinput_list',
-					'tagihaninfoinput_listbayar',
+					'tagihanpembayaran_listbayar',
 					'rgl'
 				];
 

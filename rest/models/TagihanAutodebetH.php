@@ -192,9 +192,21 @@ class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRec
             }
             
             $GL = new \rest\models\Rgl();
-            $autoPosting = $GL->AutoPosting('03', $postingValue);
-            $autoPosting['unposting']->execute();
-            $autoPosting['posting']->execute();
+            $sqlRawInsert = '';
+            foreach($postingValue as $k => $value){
+                foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tg) {
+                    $value['value'] = isset($tagihanvalue[$k][$tg]) ? $tagihanvalue[$k][$tg] : 0;
+                    $value['noref2'] = $value['fk_id'];
+                    $value['description'] = 'Transaksi Autodebet (' . $value['noref'] . ') (' . $tg . ')' .
+                                            ' rombel ' . $value['fk_id'];
+                    $autoPosting = $GL->AutoPosting('03', $value, $tg);
+                    // $autoPosting['posting']->execute();
+                    $sqlRawInsert .= $autoPosting['posting']->rawSql . ';';
+                }
+            }
+
+            // var_dump($sqlRawInsert);exit();
+            $DB->createCommand($sqlRawInsert)->execute();
 
             $this->created_at = $rowHeader['created_at'];
             $this->saveLogs([
@@ -277,7 +289,7 @@ class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRec
     private function setOnDuplicateValue($column){
         $values = [];
         foreach($column as $col){
-            if($col != 'cretaed_at'){
+            if($col != 'created_at'){
                 $values[]= '`'.$col.'` = VALUES(' . $col .')';
             }
         }

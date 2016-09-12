@@ -16,7 +16,8 @@ define(['app'], function (app) {
             'RglService',
             'cfpLoadingBar',
             'toastr',
-            'helperService'
+            'helperService',
+            'COAService'
         ];
 
     var RglController = function (
@@ -31,7 +32,8 @@ define(['app'], function (app) {
             RglService,
             cfpLoadingBar,
             toastr,
-            helperService
+            helperService,
+            COAService
         ) 
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'akuntansi/rgl/';
@@ -134,7 +136,15 @@ define(['app'], function (app) {
                             var romnum = index + 1;
                             result.rows[index]["index"] = romnum;
                         })
-                        $scope.grid.data = result.rows;
+                        for(var idx in result.rows){
+                            // Only Show with total not zero
+                            // var total = parseInt(result.rows[idx].saldo_a) + parseInt(result.rows[idx].saldo_c) + parseInt(result.rows[idx].saldo_e);
+                            // if(total > 0){
+                            //     $scope.grid.data[idx] = result.rows[idx];
+                            // }
+                            $scope.grid.data = result.rows;
+                        }
+                        
                     }
                     cfpLoadingBar.complete();
                 }, errorHandle);
@@ -262,7 +272,14 @@ define(['app'], function (app) {
                 },
                 rows : []
             }
+
+            $scope.mcoad = {
+                data : [],
+                select : ''
+            };
+
             function getById(paramdata){
+                paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
                 cfpLoadingBar.start();
                 $resourceApi.getById(paramdata)
                 .then(function (result) {
@@ -272,9 +289,10 @@ define(['app'], function (app) {
                             $scope.list.header.mcoahno = result.rows[0].mcoahno;
                             $scope.list.header.mcoahname = result.rows[0].mcoahname;
                             $scope.list.header.saldoAwal = 0;
-                            for(var ids in result.rows){
-                                $scope.list.header.saldoAwal += parseInt(result.rows[ids].saldo_a);
-                            }
+                            // for(var ids in result.rows){
+                            //     $scope.list.header.saldoAwal += parseInt(result.rows[ids].saldo_a);
+                            // }
+                            $scope.list.header.saldoAwal = parseInt(result.rows[0].saldo_a);
 
                             // $scope.list.header.saldoAwal = parseInt(result.rows[0].saldo_a);
                             $scope.list.rows = result.rows;
@@ -283,7 +301,12 @@ define(['app'], function (app) {
                                 $scope.list.rows[idx]['index'] = parseInt(idx) + 1;
                                 $scope.list.rows[idx]['debet_c'] = parseInt($scope.list.rows[idx]['debet_c']);
                                 $scope.list.rows[idx]['credit_c'] = parseInt($scope.list.rows[idx]['credit_c']);
-                                $scope.list.header.saldoAkhir +=  $scope.list.rows[idx]['debet_c'] - $scope.list.rows[idx]['credit_c'];
+                                if($scope.list.rows[idx]['postgl'] == 'NRC'){
+                                    $scope.list.header.saldoAkhir +=  $scope.list.rows[idx]['debet_c'] - $scope.list.rows[idx]['credit_c'];
+                                }else if($scope.list.rows[idx]['postgl'] == 'LR'){
+                                    $scope.list.header.saldoAkhir +=  $scope.list.rows[idx]['credit_c'] - $scope.list.rows[idx]['debet_c'];
+                                }
+                                
                                 $scope.list.rows[idx]['saldo'] = $scope.list.header.saldoAkhir;
                             }
                             // $scope.list.header.saldoAkhir = result.rows[0].saldo_a;
@@ -300,13 +323,26 @@ define(['app'], function (app) {
                 }, errorHandle);
             }
 
+            function getMcoad(paramdata){
+                cfpLoadingBar.start();
+                COAService.getList(paramdata)
+                .then(function (result) {
+                    if(result.success){
+                        $scope.mcoad.data = result.rows;
+                    }
+                    cfpLoadingBar.complete();
+                }, errorHandle);
+            }
+
             this.init = function(){
                 if($routeParams.id){
                     getById({
                         id : $routeParams.id,
                         date_start : $scope.filter.date_start,
-                        date_end : $scope.filter.date_end,
-                        sekolahid : authService.getSekolahProfile().sekolahid
+                        date_end : $scope.filter.date_end
+                    });
+                    getMcoad({
+                        mcoahno : $routeParams.id
                     });
                 }
             }
@@ -324,7 +360,8 @@ define(['app'], function (app) {
                 getById({
                     id : $routeParams.id,
                     date_start : $scope.filter.date_start,
-                    date_end : $scope.filter.date_end
+                    date_end : $scope.filter.date_end,
+                    mcoadno : $scope.filter.mcoadno
                 });
             }
 

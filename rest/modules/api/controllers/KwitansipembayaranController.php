@@ -47,13 +47,21 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         $request = Yii::$app->getRequest();
         $date_start = $request->getQueryParam('date_start', false);
         $date_end = $request->getQueryParam('date_end', false);
+        $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
-                       ->orderBy(['tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
+                       ->select('h.*,s.nama_siswa,s.nis')
+                       ->from('kwitansi_pembayaran_h h')
+                       ->leftJoin('siswa_rombel sr', 'sr.`id` = `h`.`idrombel`')
+                       ->leftJoin('siswa s', 's.`id` = sr.`siswaid`')
+                       ->where('1=1')
+                       ->orderBy(['h.tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
                        ->asArray();
-
+        if($sekolahid){
+            $query->andWhere(['h.sekolahid' => $sekolahid]);
+        }
         if($date_start && $date_end){
-            $query->where(['between','tgl_kwitansi', $date_start, $date_end]);
+            $query->andWhere(['between','tgl_kwitansi', $date_start, $date_end]);
         }
         return $this->prepareDataProvider($query);
     }
@@ -79,7 +87,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
     public function actionUpdate($id){
         $post = Yii::$app->getRequest()->getBodyParams();
         if($post){
-            return $this->saveAndPosting($post);
+            return $this->saveAndPosting($post, $id);
         }else{
             $this->response->setStatusCode(400, 'Data is empty.');
             return [
@@ -88,11 +96,12 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         }
     }
 
-    private function saveAndPosting($post){
+    private function saveAndPosting($post, $id = false){
         $this->response = Yii::$app->getResponse();
         $attrvalue = [];
         $flagdelete = [];
         $total = 0;
+        $tagihanvalue = [];
         extract($post);
         $date = date('Y-m-d H:i:s');
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
@@ -130,11 +139,10 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                     'updated_at'            => $date
                 ];
                 $total += isset($rows['jumlah']) ? (int)$rows['jumlah'] : 0;
-
-            }else if($rows['flag'] == '0'){
+                $tagihanvalue[$rows['kode']] = $rows['jumlah'];
+            }else if($rows['flag'] == '0' && isset($rows['id'])){
                 $flagdelete[] = $rows['id'];
             }
-
             
             if($pembayaran && isset($pembayaran[$rows['kode'].'_debet'])){
                 $pembayaran[$rows['kode'].'_debet'] = ($rows['flag'] == 1) ? $rows['jumlah'] : 0;
@@ -160,9 +168,10 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'date'                 => $form['tgl_kwitansi'],
             'noref'                => $form['no_kwitansi'],        
             'value'                => $total,
-            'description'          => 'Transaksi Kwitansi Pembayaran NO . ' . $form['no_kwitansi'],
+            'description'          => 'Kwitansi Pembayaran NO . ' . $form['no_kwitansi'],
             'sekolahid'            => $form['sekolahid'],
             'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
+            'fk_id'                => isset($form['idrombel']) ? $form['idrombel'] : substr($form['no_kwitansi'], -5),
             'created_at'           => $form['created_at'],   
             'updated_at'           => $form['updated_at'],
             'created_by'           => $form['created_by'],   
@@ -174,8 +183,9 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'rowDetail' => $attrvalue,
             'rowDetailDel' => $flagdelete,
             'rowPembayaran' => $pembayaran,
-            'postingValue' => $postingValue
-        ]);
+            'postingValue' => $postingValue,
+            'tagihanvalue' => $tagihanvalue
+        ], $id);
         
         if($result !== true){
             $this->response->setStatusCode(422, 'Data Validation Failed.');

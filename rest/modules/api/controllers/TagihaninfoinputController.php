@@ -60,7 +60,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
             if($result !== true){
                 $this->response->setStatusCode(422, 'Data Validation Failed.');
             }else{
-                $res = [
+                $result = [
                     'result' => $result,
                     'posting' => $this->createPostingData([
                         'tahun_ajaran_id' => (isset($post['tahun_ajaran_id'])) ? $post['tahun_ajaran_id'] : false,
@@ -70,7 +70,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
 
                 $this->response->setStatusCode(201, 'Created.');
             }
-            return $res;
+            return $result;
         }else{
             $this->response->setStatusCode(400, 'Data is empty.');
             return [
@@ -117,7 +117,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                     'tahun_ajaran'          => $post['tahun_ajaran_id'],    
                     'no_ref'                => 't_info_2_' . $post['tahun_ajaran_id'],  
                     'ket_ref'               => 'Tagihan Info Tahunan idrombel = ' . $row['idrombel'],
-                    'keterangan'            => '',   
+                    'keterangan'            => $row['keterangan'],   
                     'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
                     'updated_at'            => $date,
                 ];
@@ -180,7 +180,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                 'bulan'                 => $month, 
                 'tahun'                 => $year,
                 'tahun_ajaran'          => $tahun_ajaran_id,    
-                'no_ref'                => 't_info_1_' . $tahun_ajaran_id,  
+                'no_ref'                => 't_info_1_' . $month . '_' . $tahun_ajaran_id,  
                 'ket_ref'               => 'Tagihan Info bulan ' . $month . ' idrombel = ' . $row['idrombel'],
                 'keterangan'            => $row['keterangan'],   
                 'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,

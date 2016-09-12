@@ -47,6 +47,7 @@ class McoadController extends \rest\modules\api\ActiveController //\yii\rest\Act
         return $model->getList([
             'query' => $request->getQueryParam('query', false),
             'mcoadno' => $request->getQueryParam('mcoadno', false),
+            'mcoahno' => $request->getQueryParam('mcoahno', false),
             'mcoadname' => $request->getQueryParam('mcoadname', false)
         ])->All();
     }

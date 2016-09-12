@@ -7,6 +7,19 @@
     background-size: 16px 16px !important;*/
 }
 
+.skin-blue .content-header {
+    background: #FFFFFF;
+}
+.content-header {
+    padding: 10px;
+}
+.content-header>h1 {
+    font-size: 16px;
+}
+.content-header>.breadcrumb {
+    top: 0;
+}
+
 .box.box-no-margin {
     margin-bottom: 0 !important;
     border-radius: 0;
@@ -102,6 +115,12 @@ input[type=radio].custome1 + .lbl {
     width: 100%;
 }
 
+.ngdialog.ngdialog-theme-flat.custom-width-80 .ngdialog-content {
+    width: 80%;
+}
+.ngdialog.ngdialog-theme-flat.custom-width-75 .ngdialog-content {
+    width: 75%;
+}
 .ngdialog.ngdialog-theme-flat.custom-width-50 .ngdialog-content {
     width: 50%;
 }
@@ -112,4 +131,16 @@ input[type=radio].custome1 + .lbl {
 .navbar-brand select{
     margin-top: -8px;
     padding-left: 0;
+}
+
+.dialog-black .ngdialog-content{
+    background: #222D32 !important;
+}
+.dialog-gray .ngdialog-content{
+    background: gray !important;
+}
+.dialog-custom1 .ngdialog-content{
+    /*position: absolute !important;
+    top : 0;*/
+    margin-top : -100px !important;
 }

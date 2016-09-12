@@ -53,11 +53,11 @@
                             'url' => '$',
                             'items' => [
                                 ['label' => 'Info Tagihan', 'icon' => 'fa fa-info-circle', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput'],'url' => ['/#keuangan/info-tagihan']],
-                                ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipembayaran'], 'url' => ['#keuangan/kwitansi-pembayaran/add']],
-                                ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput_listbayar'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
+                                ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipembayaran_create'], 'url' => ['#keuangan/kwitansi-pembayaran/add']],
+                                ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran_listbayar'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],
                                 ['label' => 'Rekap Outstanding Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput_list'],'url' => ['/#keuangan/rekap-outstanding-tagihan']],
-                                ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipengeluaran'],'url' => ['/#keuangan/kwitansi-pengeluaran/add']],
-                                ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['/#keuangan/kwitansi-pengeluaran']],
+                                ['label' => 'Kwitansi Pengeluaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipengeluaran_create'],'url' => ['/#keuangan/kwitansi-pengeluaran/add']],
+                                ['label' => 'Rekap Pengeluaran', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.kwitansipengeluaran'], 'url' => ['/#keuangan/kwitansi-pengeluaran']],
                                 ['label' => 'Rekonsiliasi Autodebet', 'icon' => 'fa fa-cc-mastercard', 'options' => ['ng-show' => 'menuprivileges.tagihanautodebet'], 'url' => ['#keuangan/rekonsiliasi-autodebet/add']]
                             ],
                         ],

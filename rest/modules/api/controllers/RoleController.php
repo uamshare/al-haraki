@@ -10,7 +10,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
     public $Auth;
     protected $authname_extra = [
         'tagihaninfoinput_list',
-        'tagihaninfoinput_listbayar'
+        'tagihanpembayaran_listbayar'
     ];
     public function actions()
     {
@@ -22,27 +22,6 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         return $actions;
     }
     
-    // public function behaviors()
-    // {
-    //     $behaviors = parent::behaviors();
-    //     return array_merge($behaviors, 
-    //         [
-    //             'verbFilter' => [
-    //                 'class' => \yii\filters\VerbFilter::className(),
-    //                 'actions' => [
-    //                     'index'                 => ['get'],
-    //                     'listpermissions'       => ['get'],
-    //                     'menuprivileges'        => ['get'],
-    //                     'list'                  => ['get'],
-    //                     'create'                => ['post','put'],
-    //                     'assign'                => ['post'],
-    //                     // 'remove'   => ['delete']
-    //                 ],
-    //             ],
-    //         ]
-    //     );
-    // }
-
     public function init(){
     	parent::init();
     }
@@ -126,6 +105,8 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
         $list = [];
         $this->response = Yii::$app->getResponse();
         
+        $this->authname_extra[] = 'kwitansipembayaran_create';
+        $this->authname_extra[] = 'kwitansipengeluaran_create';
         if($userid){
             $permission =  $Auth->getPermissionsByUser($userid);
             foreach ($permission as $key => $value) {
@@ -185,8 +166,8 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 
             ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput', 'description' => 'Info Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'KEUANGAN','name' => 'kwitansipembayaran', 'description' => 'Kwitansi Pembayaran', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput_list', 'description' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
-            ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput_listbayar', 'description' => 'Rekap Outstanding Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 4],
+            ['parent_name' => 'KEUANGAN','name' => 'tagihanpembayaran_listbayar', 'description' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
+            ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput_list', 'description' => 'Rekap Outstanding Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 4],
             ['parent_name' => 'KEUANGAN','name' => 'kwitansipengeluaran', 'description' => 'Kwitansi Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 3],
             // ['parent_name' => 'KEUANGAN','name' => 'kwitansipengeluaran', 'description' => 'Rekap Pengeluaran', 'leaf' => true, 'parent' => 1, 'order' => 4],
             ['parent_name' => 'KEUANGAN','name' => 'tagihanautodebet', 'description' => 'Reonsiliasi Autodebet', 'leaf' => true, 'parent' => 1, 'order' => 3],

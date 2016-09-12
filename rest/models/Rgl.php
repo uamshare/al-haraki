@@ -119,7 +119,7 @@ class Rgl extends \yii\db\ActiveRecord
     private function setOnDuplicateValue($column){
         $values = [];
         foreach($column as $col){
-            if($col != 'cretaed_at'){
+            if($col != 'created_at'){
                 $values[]= '`'.$col.'` = VALUES(' . $col .')';
             }
         }
@@ -229,11 +229,11 @@ class Rgl extends \yii\db\ActiveRecord
                 'rgldt'                => $values['date'], 
                 'mcoadno'              => $AccoutNo,
                 'noref'                => $values['noref'],        
-                'noref2'               => $values['noref'], 
+                'noref2'               => (isset($values['noref2'])) ? $values['noref2'] : $values['noref'], 
                 'rglin'                => ($pos == 1) ? $values['value'] : 0,
                 'rglout'               => ($pos == 2) ? $values['value'] : 0,
                 'rgldesc'              => $values['description'],
-                'fk_id'                => null,
+                'fk_id'                => isset($values['fk_id']) ? $values['fk_id'] : null,
                 'sekolahid'            => $values['sekolahid'],
                 'tahun_ajaran_id'      => $values['tahun_ajaran_id'],
                 'created_at'           => $values['created_at'],   
@@ -245,19 +245,24 @@ class Rgl extends \yii\db\ActiveRecord
         return false;
     }
 
-    private function where($data){
+    private function where($data, &$bound = false, $name = false){
         $commaData = explode(",", $data);
         $impl = array();
         for($i=0; $i<count($commaData); $i++){
             $impl[$i] = "'{$commaData[$i]}'";
         }
 
+        
         $implode = implode(",", $impl);
-
-        if(count($impl) > 1)
-            return " IN ($implode) ";
-        else
-            return " = $implode";
+        if($bound && $name){
+            $bound[$name] = (count($impl) > 1) ? $implode : $data;
+        }
+        if(count($impl) > 1){
+            return " IN (:$name) ";
+        }
+        else{
+            return " = :$name";
+        }
     }
 
     /**
@@ -266,8 +271,8 @@ class Rgl extends \yii\db\ActiveRecord
      */
     public function getList($params){
         extract($params);
-        $where = 'WHERE 1=1';
-
+        $where = 'WHERE 1=1 AND saldo_e > 0 ';
+        $bound[':sekolahid'] = $sekolahid;
         if($date_start && $date_end){
             $bound[':date1'] = $date_start;
             $bound[':date2'] = $date_end;
@@ -281,42 +286,59 @@ class Rgl extends \yii\db\ActiveRecord
             $where .= ' AND mcoahname ' . $this->where($mcoahname);
         }
 
-        
-        $bound[':sekolahid'] = $sekolahid;
-
-        // if($query){
-        //     $where .= " AND (nama_siswa LIKE '%$query%' OR keterangan LIKE '%$query%')";
-        // } 
-
         $sqlCustoms = "SELECT * FROM 
             (SELECT 
               h.`mcoahno`,
               h.`mcoahname`,
+              IFNULL(b.`saldo_a`,0) AS `saldo_a`,
+              IFNULL(a.`saldo_c`,0) AS `saldo_c`,
+              (IFNULL(b.`saldo_a`,0)) + IFNULL(a.`saldo_c`,0) AS `saldo_e`
+            FROM mcoah h
+            LEFT JOIN 
+            (SELECT 
+              h.`mcoahno`,
               d.`mcoadno`,
-              SUM(IFNULL(b.`saldo_a`,0)) AS `saldo_a`,
-              SUM(IFNULL(a.`saldo_c`,0)) AS `saldo_c`,
-              (SUM(IFNULL(b.`saldo_a`,0)) + SUM(IFNULL(a.`saldo_c`,0))) AS `saldo_e`
+              h.mcoahname,
+              (CASE
+                WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+              END) AS `saldo_c`
             FROM mcoah h
             INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
-            LEFT JOIN (SELECT 
-                  `rgldt`,
-                  `mcoadno`,
-                  ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_c`,
-                  `sekolahid`,
-                  `tahun_ajaran_id`
-                FROM `rgl` WHERE rgldt BETWEEN :date1 AND :date2
-                AND sekolahid = :sekolahid
-                GROUP BY mcoadno) a ON a.`mcoadno` = d.`mcoadno`
-            LEFT JOIN (SELECT 
-                  `rgldt`,
-                  `mcoadno`,
-                  ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_a`,
-                  `sekolahid`,
-                  `tahun_ajaran_id`
-                FROM `rgl` WHERE rgldt < :date1
-                AND sekolahid = :sekolahid
-                GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno` 
-            GROUP BY h.`mcoahno`) AS q_gl ";
+            LEFT JOIN 
+                (SELECT `rgldt`,
+                    `mcoadno`,
+                    rglin,
+                    rglout,
+                    `sekolahid`,
+                    `tahun_ajaran_id`
+                FROM `rgl` a 
+                WHERE rgldt BETWEEN :date1 AND :date2 AND sekolahid = :sekolahid
+                ) a ON a.`mcoadno` = d.mcoadno
+            GROUP BY h.`mcoahno`) a ON a.`mcoahno` = h.`mcoahno`
+            LEFT JOIN 
+              (SELECT 
+              h.`mcoahno`,
+              d.`mcoadno`,
+              h.mcoahname,
+                (CASE
+                WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+              END) AS `saldo_a`
+            FROM mcoah h
+            INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
+            LEFT JOIN 
+                (SELECT `rgldt`,
+                    `mcoadno`,
+                    rglin,
+                    rglout,
+                    `sekolahid`,
+                    `tahun_ajaran_id`
+                FROM `rgl` a 
+                WHERE rgldt < :date1 AND sekolahid = :sekolahid
+                ) a ON a.`mcoadno` = d.mcoadno
+            GROUP BY h.`mcoahno`) b ON b.`mcoahno` = h.`mcoahno`
+            ) AS q_gl ";
 
         $connection = $this->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms . $where, $bound);
@@ -331,26 +353,34 @@ class Rgl extends \yii\db\ActiveRecord
     public function getListDetail($params){
         extract($params);
         // $where = 'WHERE 1=1 AND rgldt IS NOT NULL';
-        $where = 'WHERE 1=1';
+        // $where = 'WHERE (IFNULL(debet_c,0) + IFNULL(`credit_c`,0)) > 0 ';
+        $where = 'WHERE 1=1 ';
+        $where_sq = '';
 
         if($date_start && $date_end){
             $bound[':date1'] = $date_start;
             $bound[':date2'] = $date_end;
         }
+        $bound[':sekolahid'] = $sekolahid;
 
         if($mcoahno){
-            $where .= ' AND mcoahno ' . $this->where($mcoahno);
+            $where .= ' AND mcoahno ' . $this->where($mcoahno, $bound, 'mcoahno');
+        }
+
+        if($mcoadno){
+            $cond = ' AND mcoadno ' . $this->where($mcoadno, $bound, 'mcoadno');
+            $where .= $cond;
+            $where_sq .= $cond;
         }
 
         if($mcoahname){
-            $where .= ' AND mcoahname ' . $this->where($mcoahname);
+            $where .= ' AND mcoahname ' . $this->where($mcoahname, $bound, 'mcoahname');
         }
-
-        $bound[':sekolahid'] = $sekolahid;
         
         $sqlCustoms = "SELECT * FROM 
                 (SELECT 
                   h.`mcoahno`,
+                  h.`postgl`,
                   h.`mcoahname`,
                   a.`rgldt`,
                   a.noref,
@@ -365,33 +395,47 @@ class Rgl extends \yii\db\ActiveRecord
                 FROM mcoah h
                 INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
                 LEFT JOIN (SELECT 
-                      a.`rgldt`,
-                      a.noref,
-                      a.noref2,
-                      a.`rgldesc`,
-                      a.`mcoadno`,
-                      a.`rglin` AS `debet_c`,
-                      a.`rglout` AS `credit_c`,
-                      a.`sekolahid`,
-                      a.`tahun_ajaran_id`
-                    FROM `rgl` a
-                    WHERE rgldt BETWEEN :date1 AND :date2) a ON a.`mcoadno` = d.`mcoadno`
-                    AND sekolahid = :sekolahid
+                          a.`rgldt`,
+                          a.noref,
+                          a.noref2,
+                          a.`rgldesc`,
+                          a.`mcoadno`,
+                          a.`rglin` AS `debet_c`,
+                          a.`rglout` AS `credit_c`,
+                          a.`sekolahid`,
+                          a.`tahun_ajaran_id`
+                        FROM `rgl` a
+                        WHERE rgldt BETWEEN :date1 AND :date2 AND sekolahid = :sekolahid $where_sq
+                    ) a ON a.`mcoadno` = d.`mcoadno` 
                 LEFT JOIN (SELECT 
-                      `rgldt`,
-                      `mcoadno`,
-                      ABS(SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0))) AS `saldo_a`,
-                      `sekolahid`,
-                      `tahun_ajaran_id`
-                    FROM `rgl` WHERE rgldt <= :date1
-                    AND sekolahid = :sekolahid
-                    GROUP BY mcoadno) b ON b.`mcoadno` = d.`mcoadno`
+                          h.`mcoahno`,
+                          d.`mcoadno`,
+                          h.mcoahname,
+                          (CASE
+                            WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                            WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+                          END) AS `saldo_a`
+                        FROM mcoah h
+                        INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
+                        LEFT JOIN 
+                            (SELECT `rgldt`,
+                                `mcoadno`,
+                                rglin,
+                                rglout,
+                                `sekolahid`,
+                                `tahun_ajaran_id`
+                            FROM `rgl` a 
+                            WHERE rgldt < :date1 AND sekolahid = :sekolahid $where_sq
+                            ) a ON a.`mcoadno` = d.mcoadno
+                        GROUP BY h.`mcoahno`
+                    ) b ON b.`mcoahno` = h.`mcoahno`
                 ) AS q_gl_detail 
                 $where
                 ORDER BY rgldt,sekolahid,mcoahno, noref, mcoadno ";
+        
 
-        $connection = $this->getDb();
-        $customeQuery = $connection->createCommand($sqlCustoms, $bound);
+        $conn = $this->getDb();
+        $customeQuery = $conn->createCommand($sqlCustoms, $bound);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }

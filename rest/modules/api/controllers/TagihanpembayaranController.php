@@ -7,6 +7,16 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
 {
     public $modelClass = 'rest\models\TagihanPembayaran';
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index']);
+        unset($actions['create']);
+        unset($actions['update']);
+        unset($actions['delete']);
+        return $actions;
+    }
+    
     public function behaviors()
     {
         $behaviors = parent::behaviors();

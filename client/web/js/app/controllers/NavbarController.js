@@ -126,8 +126,10 @@ define(['app'], function (app) {
             tagihaninfoinput : false,
             tagihaninfoinput_list : false,
             tagihaninfoinput_listbayar : false,
-            kwitansipembayaran : false,
-            tagihanpembayaran : false,
+            kwitansipembayaran_create : false,
+            // tagihanpembayaran : false,
+            tagihanpembayaran_listbayar : false,
+            kwitansipengeluaran_create : false,
             kwitansipengeluaran : false,
             tagihanautodebet : false,
 

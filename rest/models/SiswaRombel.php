@@ -20,7 +20,7 @@ use Yii;
  * @property TagihanInfoInput[] $tagihanInfoInputs
  * @property TagihanPembayaran[] $tagihanPembayarans
  */
-class SiswaRombel extends \yii\db\ActiveRecord
+class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

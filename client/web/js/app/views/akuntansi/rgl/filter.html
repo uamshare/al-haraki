@@ -30,6 +30,21 @@
 								bs-datepicker />
 						</div>
 					</div>
+					<div class="form-group">
+						<label class="col-xs-4 col-md-3 control-label">No Akun</label>
+						<div class="col-xs-8 col-md-9">
+							<select 
+                  				name="mcoahno" 
+                  				class="form-control" 
+                  				ng-model="filter.mcoadno"
+                  			>
+                  				<option value="">All</option>
+								<option ng-repeat="item in mcoad.data track by item.mcoadno" value="{{item.mcoadno}}">
+								{{item.mcoadno}} - {{item.mcoadname}}
+								</option>
+							</select>
+						</div>
+					</div>
 				</div>
 			</div>
 		</form>

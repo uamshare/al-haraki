@@ -148,6 +148,10 @@ class Mcoad extends \yii\db\ActiveRecord
                 $customeQuery->andWhere(['a.mcoadno' => $mcoadno]);
             }
 
+            if(isset($mcoahno) && $mcoahno){
+                $customeQuery->andWhere(['a.mcoahno' => $mcoahno]);
+            }
+
             if(isset($mcoadname) && $mcoadname){
                 $customeQuery->andWhere(['a.mcoadname' => $mcoadname]);
             }

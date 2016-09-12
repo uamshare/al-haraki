@@ -12,11 +12,20 @@
 			<div class="col-lg-2">
 				<div class="form-group">
 					<label>Kelas</label>
-					<input type="hidden" name="kelasid" class="form-control" ng-model="kelas.options[0].id" />
-					<input type="hidden" name="kelasid" class="form-control" 
+					<!-- <input type="hidden" name="kelasid" class="form-control" ng-model="kelas.options[0].id" />
+					<input type="hidden" name="nama_kelas" class="form-control" 
 						ng-model="kelas.options[0].nama_kelas" />
 					<input type="text" name="nama_kelas" class="form-control" 
-						value="{{kelas.options[0].kelas}} - {{kelas.options[0].nama_kelas}}" />
+						value="{{kelas.options[0].kelas}} - {{kelas.options[0].nama_kelas}}" /> -->
+					<select name="kelasid" class="form-control" 
+						ng-model="kelas.selected"
+						required="Silahkan pilih kelas"
+						ng-change="onKelasChange($event)"
+					>
+						<option ng-repeat="item in kelas.options track by item.id" value="{{item.id}}">
+						{{item.kelas}} - {{item.nama_kelas}}
+						</option>
+					</select>
 				</div>
 			</div>
 			<div class="col-lg-2">
@@ -106,9 +115,8 @@
 	</div>
 	<div class="box-footer">
 		<div class="box-tools pull-right">
-			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
-				data-original-title="Reset Data">
-				<i class="fa fa-refresh"></i> Batal
+			<a href="#keuangan/info-tagihan" class="btn btn-danger btn-sm btn-flat">
+				<i class="fa fa-refresh"></i> Kembali
 			</a>
 			<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Simpan Data">

@@ -71,9 +71,13 @@
 	</div>
 	<div class="box-footer">
 		<div class="box-tools pull-left">
-			<a href="#keuangan/kwitansi-pengeluaran/add" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+			<a href="#keuangan/kwitansi-pengeluaran/add" ng-click="onAddClick()" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Tambah Kwitansi Pembayaran">
 				<i class="fa fa-plus-circle"></i> Tambah Data
+			</a>
+			<a class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Cetak Data" ng-click="onPrintClick(form)">
+				<i class="fa fa-print"></i> Cetak
 			</a>
 			<a href="#keuangan/kwitansi-pengeluaran" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Rekap Data Kwitansi Pembayaran">

@@ -164,7 +164,7 @@ class ActiveController extends \yii\rest\ActiveController
                 'profile',
                 'menuprivileges',
                 'avatar'
-            ])
+            ])  && !in_array($this->id . '_' . $action, ['tagihaninfoinput_list','tagihanpembayaran_listbayar'])
         ){
             $action = $actiontransform[$method];
         }

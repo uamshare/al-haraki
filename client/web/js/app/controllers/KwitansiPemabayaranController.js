@@ -58,7 +58,9 @@ define(['app'], function (app) {
 					{ name: 'sekolahid', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
 					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120',  enableCellEdit: false},
-					{ name: 'nama_pembayar', displayName: 'Nama Pembayar', visible: false, enableCellEdit: false},
+					// { name: 'nama_pembayar', displayName: 'Nama Pembayar', visible: false, enableCellEdit: false},
+					{ name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, enableCellEdit: false},
+					{ name: 'nis', displayName: 'NIS', visible: false, enableCellEdit: false},
 					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
 					{ name: 'bulan', displayName: 'Bulan', visible: false, enableCellEdit: false},
 					{ name: 'tahun', displayName: 'Tahun', visible: false, enableCellEdit: false},
@@ -139,17 +141,20 @@ define(['app'], function (app) {
 			}
 
 			function get(paramdata){
+				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
 				cfpLoadingBar.start();
 				$resourceApi.get(paramdata)
 				.then(function (result) {
 	                if(result.success){
+	                	var curpage = paramdata.page;
 						angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
+							var romnum = (curpage > 1) ? (((curpage - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
 			                result.rows[index]["index"] = romnum;
 			            })
 			            $scope.grid.data = result.rows;
-			            // $scope.gridApi.grid.minRowsToShow = 5; //paramdata.perPage;
-			            // $scope.gridApi.grid.gridHeight =500;
+			            $scope.grid.totalItems = result.total;
+						$scope.grid.paginationCurrentPage = curpage;
 					}
 					cfpLoadingBar.complete();
 	            }, errorHandle);
@@ -170,21 +175,6 @@ define(['app'], function (app) {
 						date_end : $scope.filter.date_end
 					});
 	            }, errorHandle);
-			}
-
-			function printElement(elem) {
-				var domClone = elem.cloneNode(true);
-
-				var $printSection = document.getElementById("printSection");
-
-				if (!$printSection) {
-					var $printSection = document.createElement("div");
-					$printSection.id = "printSection";
-					document.body.appendChild($printSection);
-				}
-				$printSection.innerHTML = "";
-
-				$printSection.appendChild(domClone);
 			}
 
 			this.init = function(){
@@ -211,11 +201,6 @@ define(['app'], function (app) {
 					});
 				});
 		    }
-
-			$scope.print = function(divName){
-				printElement(document.getElementById(divName));
-				window.print();
-			}
 
 			$scope.onAddClick = function(event){
 				setFormCollapse(false);
@@ -258,127 +243,153 @@ define(['app'], function (app) {
 				    deleteData(rowdata.no_kwitansi);
 				} 
 			}
-
-			function terbilang(bilangan) {
-
-				bilangan    = String(bilangan);
-				var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
-				var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
-				var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
-
-				var panjang_bilangan = bilangan.length, 
-					i, 
-					j, 
-					kaLimat = '';
-
-				/* pengujian panjang bilangan */
-				if (panjang_bilangan > 15) {
-					kaLimat = "Diluar Batas";
-					return kaLimat;
-				}
-
-				/* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
-				for (i = 1; i <= panjang_bilangan; i++) {
-					angka[i] = bilangan.substr(-(i),1);
-				}
-
-				i = 1;
-				j = 0;
-				kaLimat = "";
-				/* mulai proses iterasi terhadap array angka */
-				while (i <= panjang_bilangan) {
-					var subkaLimat = "",
-					kata1 = "",
-					kata2 = "",
-					kata3 = "";
-
-					/* untuk Ratusan */
-					if (angka[i+2] != "0") {
-						if (angka[i+2] == "1") {
-						kata1 = "Seratus";
-						} else {
-						kata1 = kata[angka[i+2]] + " Ratus";
-						}
-					}
-
-					/* untuk Puluhan atau Belasan */
-					if (angka[i+1] != "0") {
-						if (angka[i+1] == "1") {
-							if (angka[i] == "0") {
-								kata2 = "Sepuluh";
-							}else if (angka[i] == "1") {
-								kata2 = "Sebelas";
-							}else {
-								kata2 = kata[angka[i]] + " Belas";
-							}
-						}else {
-							kata2 = kata[angka[i+1]] + " Puluh";
-						}
-					}
-
-					/* untuk Satuan */
-					if (angka[i] != "0") {
-						if (angka[i+1] != "1") {
-							kata3 = kata[angka[i]];
-						}
-					}
-
-					/* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
-					if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")) {
-						subkaLimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
-					}
-
-					/* gabungkan variabe sub kaLimat (untuk Satu blok 3 angka) ke variabel kaLimat */
-					kaLimat = subkaLimat + kaLimat;
-					i = i + 3;
-					j = j + 1;
-				}
-
-				/* mengganti Satu Ribu jadi Seribu jika diperlukan */
-				if ((angka[5] == "0") && (angka[6] == "0")) {
-					kaLimat = kaLimat.replace("Satu Ribu","Seribu");
-				}
-
-				return kaLimat + "Rupiah";
-			}
-
-			$scope.onPrintClick = function(rowdata){
-				var date = new Date();
-				cfpLoadingBar.start();
-				$resourceApi.getDetail({
-					no_kwitansi : rowdata.no_kwitansi
-				})
-				.then(function (result) {
-		            if(result.success){
-		            	$scope.rowHeader = rowdata;
-		            	$scope.rowDetail = result.rows;
-		            	$scope.profil = authService.getProfile();
-		            	$scope.rowPrintTotal = function(){
-		            		var total = 0;
-		            		for(var idx in $scope.rowDetail){
-		            			total += parseInt( $scope.rowDetail[idx].jumlah );
-		            		}
-							return  total;
-						}
-						$scope.rowTerbilang = terbilang($scope.rowPrintTotal());
-						$scope.monthPrint = date.getMonth();
-						$scope.monthYear = date.getFullYear();
-
-				        ngDialog.open({
-				            template: $scope.viewdir + 'print.html',
-				            className: 'ngdialog-theme-flat',
-				            scope: $scope,
-				            width: '100%',
-				            height: '100%'
-				        });
-					}
-					cfpLoadingBar.complete();
-		        }, function(error){
-		        	toastr.warning('Rincian Kwitansi tidak bisa dimuat.', 'Warning');
-		        	cfpLoadingBar.complete();
-		        });
-			}
     	}
+
+    	function printElement(elem) {
+			var domClone = elem.cloneNode(true);
+
+			var $printSection = document.getElementById("printSection");
+
+			if (!$printSection) {
+				var $printSection = document.createElement("div");
+				$printSection.id = "printSection";
+				document.body.appendChild($printSection);
+			}
+			$printSection.innerHTML = "";
+
+			$printSection.appendChild(domClone);
+		}
+
+    	function terbilang(bilangan) {
+
+			bilangan    = String(bilangan);
+			var angka   = new Array('0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0');
+			var kata    = new Array('','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan');
+			var tingkat = new Array('','Ribu','Juta','Milyar','Triliun');
+
+			var panjang_bilangan = bilangan.length, 
+				i, 
+				j, 
+				kaLimat = '';
+
+			/* pengujian panjang bilangan */
+			if (panjang_bilangan > 15) {
+				kaLimat = "Diluar Batas";
+				return kaLimat;
+			}
+
+			/* mengambil angka-angka yang ada dalam bilangan, dimasukkan ke dalam array */
+			for (i = 1; i <= panjang_bilangan; i++) {
+				angka[i] = bilangan.substr(-(i),1);
+			}
+
+			i = 1;
+			j = 0;
+			kaLimat = "";
+			/* mulai proses iterasi terhadap array angka */
+			while (i <= panjang_bilangan) {
+				var subkaLimat = "",
+				kata1 = "",
+				kata2 = "",
+				kata3 = "";
+
+				/* untuk Ratusan */
+				if (angka[i+2] != "0") {
+					if (angka[i+2] == "1") {
+					kata1 = "Seratus";
+					} else {
+					kata1 = kata[angka[i+2]] + " Ratus";
+					}
+				}
+
+				/* untuk Puluhan atau Belasan */
+				if (angka[i+1] != "0") {
+					if (angka[i+1] == "1") {
+						if (angka[i] == "0") {
+							kata2 = "Sepuluh";
+						}else if (angka[i] == "1") {
+							kata2 = "Sebelas";
+						}else {
+							kata2 = kata[angka[i]] + " Belas";
+						}
+					}else {
+						kata2 = kata[angka[i+1]] + " Puluh";
+					}
+				}
+
+				/* untuk Satuan */
+				if (angka[i] != "0") {
+					if (angka[i+1] != "1") {
+						kata3 = kata[angka[i]];
+					}
+				}
+
+				/* pengujian angka apakah tidak nol semua, lalu ditambahkan tingkat */
+				if ((angka[i] != "0") || (angka[i+1] != "0") || (angka[i+2] != "0")) {
+					subkaLimat = kata1+" "+kata2+" "+kata3+" "+tingkat[j]+" ";
+				}
+
+				/* gabungkan variabe sub kaLimat (untuk Satu blok 3 angka) ke variabel kaLimat */
+				kaLimat = subkaLimat + kaLimat;
+				i = i + 3;
+				j = j + 1;
+			}
+
+			/* mengganti Satu Ribu jadi Seribu jika diperlukan */
+			if ((angka[5] == "0") && (angka[6] == "0")) {
+				kaLimat = kaLimat.replace("Satu Ribu","Seribu");
+			}
+
+			return kaLimat + "Rupiah";
+		}
+
+		function printClick(rowdata){
+			var date = new Date();
+			cfpLoadingBar.start();
+			$resourceApi.getDetail({
+				no_kwitansi : rowdata.no_kwitansi
+			})
+			.then(function (result) {
+	            if(result.success){
+	            	$scope.rowHeader = rowdata;
+	            	$scope.rowDetail = result.rows;
+	            	$scope.profil = authService.getProfile();
+	            	$scope.rowPrintTotal = function(){
+	            		var total = 0;
+	            		for(var idx in $scope.rowDetail){
+	            			total += parseInt( $scope.rowDetail[idx].jumlah );
+	            		}
+						return  total;
+					}
+					$scope.rowTerbilang = terbilang($scope.rowPrintTotal());
+					$scope.tanggal  = date.getDate() + ' ' + 
+                            helperService.getMonthName(date.getMonth()) + ' ' + 
+                            date.getFullYear();
+                    $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
+
+			        ngDialog.open({
+			            template: $scope.viewdir + 'print.html',
+			            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+			            scope: $scope,
+			            width: '100%',
+			            height: '100%'
+			        });
+				}
+				cfpLoadingBar.complete();
+	        }, function(error){
+	        	toastr.warning('Rincian Kwitansi tidak bisa dimuat.', 'Warning');
+	        	cfpLoadingBar.complete();
+	        });
+		}
+
+		$scope.print = function(divName){
+			printElement(document.getElementById(divName));
+			window.print();
+		}
+
+		$scope.onPrintClick = function(rowdata){
+			printClick(rowdata);
+		}
 
     	var addEditController = function(){
     		$scope.month = helperService.month().options;
@@ -386,6 +397,7 @@ define(['app'], function (app) {
 				no_kwitansi : '',
 				tgl_kwitansi : '',
 				nama_pembayar : '',
+				nama_siswa : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
 				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
 				idrombel : '',
@@ -544,6 +556,8 @@ define(['app'], function (app) {
 							$scope.rombel_typehead.select = (idx == -1) ? '' : $scope.rombel_typehead.data[idx];
 							$scope.rombel_typehead.nis = (idx == -1) ? '' : $scope.rombel[idx].nis;
 							$scope.rombel_typehead.kelas = (idx == -1) ? '' : $scope.rombel[idx].kelas + ' - ' + $scope.rombel[idx].nama_kelas;
+
+							$scope.form.nama_siswa = $scope.rombel_typehead.select;
 			            }
 					}
 					cfpLoadingBar.complete();
@@ -606,7 +620,8 @@ define(['app'], function (app) {
 			            	jumlah : parseInt(row.ekskul)
 			            });
 			            angular.forEach($scope.gridDetail.data, function(rowEntity, index) {
-			                $scope.gridDetailDirtyRows.push(rowEntity);
+			                // $scope.gridDetailDirtyRows.push(rowEntity);
+			                $scope.gridDetailDirtyRows[rowEntity.index] = rowEntity;
 			            })
 					}
 					cfpLoadingBar.complete();
@@ -664,6 +679,7 @@ define(['app'], function (app) {
 						$scope.form.created_by = rowdata.created_by;
 						$scope.form.created_at = rowdata.created_at;
 						
+
 						getRombel({
 							sekolahid : authService.getSekolahProfile().sekolahid
 						});
@@ -673,18 +689,18 @@ define(['app'], function (app) {
 					cfpLoadingBar.complete();
 	            }, errorHandle);
 			}
-
 			this.init = function(){
 				if($routeParams.id){
+					$scope.isEdit = true;
 	                getById($routeParams.id);
 	            }else{
+	            	$scope.isEdit = false;
 	                refreshNo();
 					reset();
 					getRombel({
 						sekolahid : authService.getSekolahProfile().sekolahid
 					});
 	            }
-	            
 			}
 
 			$scope.onSaveClick = function(event){
@@ -708,6 +724,7 @@ define(['app'], function (app) {
 					return false;
 				}
 
+				// console.log($scope.gridDetailDirtyRows);return;
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
@@ -717,11 +734,11 @@ define(['app'], function (app) {
 				function success(result){
 					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
-						reset();
-						refreshNo();
+						printClick($scope.form);
+						// reset();
+						// refreshNo();
 						cfpLoadingBar.complete();
-						$location.path( "/keuangan/kwitansi-pembayaran/");
-						cfpLoadingBar.complete();
+						// $location.path( "/keuangan/kwitansi-pembayaran/");
 					}else{
 						toastr.error('Data gagal tersimpan.' + result.message, 'Error');
 						cfpLoadingBar.complete();
@@ -758,12 +775,17 @@ define(['app'], function (app) {
 				}
 			}
 
+			$scope.onAddClick = function(){
+				refreshNo();
+				reset();
+			}
+
 			$scope.onNamaChange = function(index){
 				var index = $scope.rombel_typehead.data.indexOf($scope.rombel_typehead.select);
 				$scope.rombel_typehead.nis = ($scope.rombel[index]) ? $scope.rombel[index].nis : '';
 				$scope.rombel_typehead.kelas = ($scope.rombel[index]) ? $scope.rombel[index].kelas + ' - ' + $scope.rombel[index].nama_kelas : '';
 				$scope.form.idrombel = ($scope.rombel[index]) ? $scope.rombel[index].id : '';
-
+				$scope.form.nama_siswa = $scope.rombel_typehead.select;
 				if($scope.form.sumber_kwitansi == '1'){
 					getInfoTagihan();
 				}
@@ -772,10 +794,6 @@ define(['app'], function (app) {
 			$scope.onSKSelect = function(value){
 				$scope.form.sumber_kwitansi = value;
 				if(value =='1'){
-					// if($scope.form.idrombel == '' || $scope.form.idrombel == null){
-					// 	toastr.warning('NIS siswa belum diisi.', 'Warning');
-					// 	return false;
-					// }
 					$scope.form.year = ($scope.form.month >= 1 &&  $scope.form.month <= 6) ? 
 										(date.getFullYear() + 1) : date.getFullYear();
 					getInfoTagihan();

@@ -6,7 +6,7 @@ define(['app'], function (app) {
 			'helperService',
     		'$scope', 
     		'toastr',
-    		// 'toastrConfig',
+    		'uiGridGroupingConstants',
     		'$location', 
     		'$routeParams', 
     		'$http', 
@@ -24,7 +24,7 @@ define(['app'], function (app) {
 		helperService,
 		$scope, 
 		toastr,
-		// toastrConfig,
+		uiGridGroupingConstants,
 		$location, 
 		$routeParams, 
 		$http, 
@@ -49,11 +49,49 @@ define(['app'], function (app) {
     	var indexController = function(){
     		var gridOptions = {
 	    		columnDefs : [
-					{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
-					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
-					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120',  enableCellEdit: false},
-					{ name: 'nama_penerima', displayName: 'Nama Penerima', enableCellEdit: false},
+					{ name: 'index', displayName : 'No', width : '50', visible: false,enableFiltering : false ,  enableCellEdit: false},
+					// { name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
+					{ 
+	                    name: 'no_kwitansi', 
+	                    grouping: { groupPriority: 1 }, 
+	                    sort: { priority: 1, direction: 'asc' }, 
+	                    width: '200',
+	                },
+					{ 
+						name: 'tgl_kwitansi', 
+						displayName: 'Tgl Kwitansi', 
+						enableCellEdit: false,
+						customTreeAggregationFinalizerFn: function( aggregation ) {
+	                        aggregation.rendered = aggregation.value;
+	                    },
+					},
+					{ 
+						name: 'nama_penerima', 
+						displayName: 'Nama Penerima', 
+						enableCellEdit: false,
+						customTreeAggregationFinalizerFn: function( aggregation ) {
+	                        aggregation.rendered = aggregation.value;
+	                    },
+					},
 					{ name: 'nik', displayName: 'NIK', visible: false, enableCellEdit: false},
+					{ name: 'kode', displayName: 'Kode', visible: false, enableCellEdit: false},
+					{ name: 'rincian', displayName: 'Rincian', visible: true, enableCellEdit: false},
+					{ name: 'jumlah', displayName: 'Jumlah', visible: true, enableCellEdit: false},
+					{ 
+	                    name: 'jumlah', 
+	                    displayName: 'Jumlah', 
+	                    width : '100', 
+	                    type: 'number', 
+	                    cellFilter: 'number: 0',
+	                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+	                    customTreeAggregationFinalizerFn: function( aggregation ) {
+	                        aggregation.rendered = aggregation.value;
+	                    },
+	                    headerCellClass : 'grid-align-right',
+	                    cellClass: 'grid-align-right',
+	                    footerCellClass : 'grid-align-right',
+	                    footerCellFilter : 'number: 0'
+	                },
 					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
 					{ name: 'sekolahid', displayName: 'SekolahId', visible: false, enableCellEdit: false},
 					{ name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, enableCellEdit: false},
@@ -96,6 +134,11 @@ define(['app'], function (app) {
 	            virtualizationThreshold: $CONST_VAR.pageSize,
 	            enableFiltering: true,
 				columnDefs : gridOptions.columnDefs,
+				treeRowHeaderAlwaysVisible: false,
+
+	            showGridFooter: true,
+	            showColumnFooter: true,
+	            enableExpandAll  : true,
 			};
 
 			$scope.filter = {
@@ -133,17 +176,19 @@ define(['app'], function (app) {
 			}
 
 			function get(paramdata){
+				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
 				cfpLoadingBar.start();
 				$resourceApi.get(paramdata)
 				.then(function (result) {
 	                if(result.success){
+	                	var curpage = paramdata.page;
 						angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
 			            })
 			            $scope.grid.data = result.rows;
-			            // $scope.gridApi.grid.minRowsToShow = 5; //paramdata.perPage;
-			            // $scope.gridApi.grid.gridHeight =500;
+			            $scope.grid.totalItems = result.total;
+						$scope.grid.paginationCurrentPage = curpage;
 					}
 					cfpLoadingBar.complete();
 	            }, errorHandle);
@@ -162,21 +207,6 @@ define(['app'], function (app) {
 						perPage : $CONST_VAR.pageSize
 					});
 	            }, errorHandle);
-			}
-
-			function printElement(elem) {
-				var domClone = elem.cloneNode(true);
-
-				var $printSection = document.getElementById("printSection");
-
-				if (!$printSection) {
-					var $printSection = document.createElement("div");
-					$printSection.id = "printSection";
-					document.body.appendChild($printSection);
-				}
-				$printSection.innerHTML = "";
-
-				$printSection.appendChild(domClone);
 			}
 
 			this.init = function(){
@@ -202,12 +232,11 @@ define(['app'], function (app) {
 						date_end : $scope.filter.date_end
 					});
 				});
+				$scope.gridApi.grid.registerDataChangeCallback(function(e) {
+                    $scope.gridApi.treeBase.expandAllRows();
+                    // setGridToContentXLS(gridApi);
+                });
 		    }
-
-			$scope.print = function(divName){
-				printElement(document.getElementById(divName));
-				window.print();
-			}
 
 			$scope.onAddClick = function(event){
 				setFormCollapse(false);
@@ -250,45 +279,70 @@ define(['app'], function (app) {
 				    deleteData(rowdata.no_kwitansi);
 				} 
 			}
-
-			$scope.onPrintClick = function(rowdata){
-				var date = new Date();
-				cfpLoadingBar.start();
-				$resourceApi.getDetail({
-					no_kwitansi : rowdata.no_kwitansi
-				})
-				.then(function (result) {
-		            if(result.success){
-		            	$scope.rowHeader = rowdata;
-		            	$scope.rowDetail = result.rows;
-		            	$scope.rowPrintTotal = function(){
-		            		var total = 0;
-		            		for(var idx in $scope.rowDetail){
-		            			total += parseInt( $scope.rowDetail[idx].jumlah );
-		            		}
-							return  total;
-						}
-						$scope.rowTerbilang = helperService.terbilang($scope.rowPrintTotal());
-						$scope.profil = authService.getProfile();
-						$scope.monthPrint = date.getMonth();
-						$scope.monthYear = date.getFullYear();
-
-				        ngDialog.open({
-				            template: $scope.viewdir + 'print.html',
-				            className: 'ngdialog-theme-flat',
-				            scope: $scope,
-				            width: '100%',
-				            height: '100%'
-				        });
-					}
-					cfpLoadingBar.complete();
-		        }, function(error){
-		        	toastr.warning('Rincian Kwitansi tidak bisa dimuat.', 'Warning');
-		        	cfpLoadingBar.complete();
-		        });
-			}
     	}
 
+    	function printElement(elem) {
+			var domClone = elem.cloneNode(true);
+
+			var $printSection = document.getElementById("printSection");
+
+			if (!$printSection) {
+				var $printSection = document.createElement("div");
+				$printSection.id = "printSection";
+				document.body.appendChild($printSection);
+			}
+			$printSection.innerHTML = "";
+
+			$printSection.appendChild(domClone);
+		}
+
+		$scope.print = function(divName){
+			printElement(document.getElementById(divName));
+			window.print();
+		}
+
+		function printClick(rowdata){
+			var date = new Date();
+			cfpLoadingBar.start();
+			$resourceApi.getDetail({
+				no_kwitansi : rowdata.no_kwitansi
+			})
+			.then(function (result) {
+	            if(result.success){
+	            	$scope.rowHeader = rowdata;
+	            	$scope.rowDetail = result.rows;
+	            	$scope.rowPrintTotal = function(){
+	            		var total = 0;
+	            		for(var idx in $scope.rowDetail){
+	            			total += parseInt( $scope.rowDetail[idx].jumlah );
+	            		}
+						return  total;
+					}
+					$scope.rowTerbilang = helperService.terbilang($scope.rowPrintTotal());
+					$scope.profil = authService.getProfile();
+					$scope.tanggal  = date.getDate() + ' ' + 
+                            helperService.getMonthName(date.getMonth()) + ' ' + 
+                            date.getFullYear();
+                    $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
+			        ngDialog.open({
+			            template: $scope.viewdir + 'print.html',
+			            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+			            scope: $scope,
+			            width: '100%',
+			            height: '100%'
+			        });
+				}
+				cfpLoadingBar.complete();
+	        }, function(error){
+	        	toastr.warning('Rincian Kwitansi tidak bisa dimuat.', 'Warning');
+	        	cfpLoadingBar.complete();
+	        });
+		}
+
+		$scope.onPrintClick = function(rowdata){
+			printClick(rowdata);
+		}
+    	
     	var addEditController = function(){
     		$scope.month = helperService.month().options;
 	    	$scope.form = {
@@ -340,17 +394,6 @@ define(['app'], function (app) {
 					{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
 					{ name: 'flag', displayName: '', visible: false, width : '100',  enableCellEdit: false}
 				],
-				// data : [
-				// 	{
-				// 		index : 1,
-				// 		kode : '',
-				// 		no_kwitansi : $scope.form.no_kwitansi,
-				// 		rincian : '',
-				// 		jumlah : 0,
-				// 		flag : 1
-				// 	}
-				// ],
-				//Export
 			    onRegisterApi: function(gridApi){
 					$scope.gridApi = gridApi;
 					gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
@@ -515,11 +558,11 @@ define(['app'], function (app) {
 				function success(result){
 					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
-						reset();
-						refreshNo();
+						printClick($scope.form);
+						// reset();
+						// refreshNo();
 						cfpLoadingBar.complete();
-						$location.path( "/keuangan/kwitansi-pengeluaran/");
-						cfpLoadingBar.complete();
+						// $location.path( "/keuangan/kwitansi-pengeluaran/");
 					}else{
 						toastr.error('Data gagal tersimpan.<br/>' + result.message, 'Error');
 						cfpLoadingBar.complete();
@@ -552,6 +595,11 @@ define(['app'], function (app) {
 				if($scope.gridDetailDirtyRows.length > 0){
 					$scope.gridDetailDirtyRows[idxdirty].flag = 0;
 				}
+			}
+
+			$scope.onAddClick = function(){
+				refreshNo();
+				reset();
 			}
     	}
 

@@ -51,6 +51,7 @@ class RglController extends \rest\modules\api\ActiveController //\yii\rest\Activ
             'date_start' => $request->getQueryParam('date_start', '0000-00-00'),
             'date_end' => $request->getQueryParam('date_end', '0000-00-00'),
             'mcoahno' => $id ? $id : $request->getQueryParam('mcoahno', false),
+            'mcoadno' => $request->getQueryParam('mcoadno', false),
             'mcoahname' => $request->getQueryParam('mcoahname', false),
         ]);
     }

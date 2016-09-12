@@ -289,6 +289,7 @@ define(['app'], function (app) {
             $scope.filter.year = date.getFullYear();
             $scope.filter.date_start = helperService.date(date).firstDay;
             $scope.filter.date_end = date;
+            $scope.grid.data = [];
         }
 
         $scope.onBulanChange = function(){
@@ -327,8 +328,9 @@ define(['app'], function (app) {
                         return { 
                             color: 'black',
                             margin: 25,
-                            text: currentPage.toString() + ' of ' + pageCount, 
-                            alignment: 'right', //(currentPage % 2) ? 'left' : 'right' 
+                            fontSize: 8,
+                            text: currentPage.toString() + '/' + pageCount, 
+                            alignment: 'center', //(currentPage % 2) ? 'left' : 'right' 
                         };
                     },
                     styles: {
@@ -393,7 +395,7 @@ define(['app'], function (app) {
                 return download('print-oustanding');
             },
 
-            _title : 'DATA OUTSTANDING SPP ' + authService.getSekolahProfile().nama_sekolah + ' AL HARAKI',
+            _title : 'DATA OUTSTANDING SPP ' + authService.getSekolahProfile().nama_sekolah,
             _titleDate : 'PER - ' + helperService.formatDateID(date),
         }
 

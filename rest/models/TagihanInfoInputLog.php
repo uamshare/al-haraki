@@ -149,10 +149,8 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
             'idrombel' => $idrombel,
             'kelasid' => $kelasid,
             'tahun_ajaran_id' => $tahun_ajaran_id,
-            // 'periode' => (int)$periode,
             'month_start' => ($jenis_tagihan == '1') ? (int)$month_start : 7,
-            // 'jenis_tagihan' => $jenis_tagihan
-            'no_ref' => 't_info_' .$jenis_tagihan. '_' . $tahun_ajaran_id
+            'noref_like' => ($jenis_tagihan == '1') ? 't_info_1%' : 't_info_2%',
         ]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
@@ -191,7 +189,7 @@ class TagihanInfoInputLog extends \yii\db\ActiveRecord
                 a.`created_at`,
                 a.`updated_at`
                 FROM `tagihan_pembayaran` a
-                WHERE tahun_ajaran = :tahun_ajaran_id AND no_ref = :no_ref
+                WHERE no_ref LIKE :noref_like AND tahun_ajaran = :tahun_ajaran_id 
                 AND `bulan` = :month_start) b ON a.`id` = b.`idrombel`) AS q_info_tagihan";
     }
 }

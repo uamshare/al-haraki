@@ -94,7 +94,7 @@ class KwitansiPembayaranD extends \yii\db\ActiveRecord
                           `created_at`,
                           `updated_at` 
                         FROM
-                          `kwitansi_pembayaran_d` $where";
+                          `kwitansi_pembayaran_d` $where ORDER BY id";
 
         $connection = $this->getDb();
         $customeQuery = $connection->createCommand($sqlCustoms, $bound);

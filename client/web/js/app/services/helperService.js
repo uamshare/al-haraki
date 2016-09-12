@@ -58,7 +58,7 @@ define(['app'], function (app) {
             var day = date.getDate();
             var monthIndex = date.getMonth();
             var year = date.getFullYear();
-
+            delimeter = (typeof delimeter == 'undefined') ? ' ' : delimeter;
             // console.log(day + delimeter + factory.getMonthName(monthIndex) + delimeter + year);
             return day + delimeter + factory.getMonthName(monthIndex) + delimeter + year
         }

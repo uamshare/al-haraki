@@ -59,9 +59,9 @@ define(['app'], function (app) {
                     { name: 'sekolahid', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
                     { name: 'no_transaksi', displayName: 'No Transaksi', width : '120',  enableCellEdit: false},
                     { name: 'tgl_transaksi', displayName: 'Tgl Transaksi', width : '120',  enableCellEdit: false},
-                    { name: 'bulan', displayName: 'Bln', visible: false, enableCellEdit: false},
-                    { name: 'namabulan', displayName: 'Bulan', visible: true, enableCellEdit: false},
-                    { name: 'tahun', displayName: 'Tahun', visible: true, enableCellEdit: false},
+                    { name: 'bulan', displayName: 'Bln', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'namabulan', displayName: 'Bulan', visible: true, width : '150', enableCellEdit: false},
+                    { name: 'tahun', displayName: 'Tahun', visible: true, width : '120', enableCellEdit: false},
                     { name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
                     { name: 'created_by', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
                     { name: 'updated_by', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
@@ -89,6 +89,7 @@ define(['app'], function (app) {
                 width : '100',
                 enableSorting : false,
                 enableCellEdit: false,
+                cellClass: 'grid-align-right',
                 cellTemplate : columnActionTpl
             }); 
 
@@ -141,16 +142,20 @@ define(['app'], function (app) {
             }
 
             function get(paramdata){
+                paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
                 cfpLoadingBar.start();
                 $resourceApi.get(paramdata)
                 .then(function (result) {
                     if(result.success){
+                        var curpage = paramdata.page;
                         angular.forEach(result.rows, function(dt, index) {
                             var romnum = index + 1;
                             result.rows[index]["index"] = romnum;
                             result.rows[index]["namabulan"] = helperService.getMonthName(result.rows[index]["bulan"] - 1);
                         })
                         $scope.grid.data = result.rows;
+                        $scope.grid.totalItems = result.total;
+                        $scope.grid.paginationCurrentPage = curpage;
                     }
                     cfpLoadingBar.complete();
                 }, errorHandle);
@@ -422,12 +427,12 @@ define(['app'], function (app) {
                         displayName: 'Kelas',
                         grouping: { groupPriority: 1 }, 
                         sort: { priority: 1, direction: 'asc' }, 
-                        width: '200',
+                        width: '175',
                     },
                     { name: 'no_transaksi', displayName: 'No Transaksi', visible: false, width : '120',  enableCellEdit: false},
                     { name: 'nis', displayName: 'NIS', width : '120', visible: false, enableCellEdit: false},
                     { name: 'nisn', displayName: 'NISN', width : '120', visible: false, enableCellEdit: false},
-                    { name: 'nama_siswa', displayName: 'Nama Siswa', width : '200', enableCellEdit: false},
+                    { name: 'nama_siswa', displayName: 'Nama Siswa', width : '300', enableCellEdit: false},
                     { 
                         name: 'spp', 
                         displayName: 'SPP', 
@@ -531,6 +536,9 @@ define(['app'], function (app) {
                     //     }
                     //     $scope.$apply();
                     // });
+                    $scope.gridApi.grid.registerDataChangeCallback(function(e) {
+                        $scope.gridApi.treeBase.expandAllRows();
+                    });
                 }
             };
 
@@ -628,6 +636,7 @@ define(['app'], function (app) {
             }
 
             function mergeXlsdataAndRombel(params, xlsdata){
+                params['sekolahid'] = authService.getSekolahProfile().sekolahid;
                 cfpLoadingBar.start();
                 SiswaRombelService.getList(params)
                 .then(function (result) {
@@ -638,23 +647,27 @@ define(['app'], function (app) {
                             rowdata[result.rows[idx].nis] = result.rows[idx];
                         }
                         for(var nis in xlsdata){
-                            rowdata[result.rows[idx].nis] = result.rows[idx];
-                            $scope.gridDetail.data.push({
-                                index : xlsdata[nis].index,
-                                idrombel : rowdata[nis].id,
-                                kelasid : rowdata[nis].kelasid,
-                                nama_kelas : rowdata[nis].kelas + ' - ' + rowdata[nis].nama_kelas,
-                                no_transaksi : xlsdata[nis].no_transaksi,
-                                nis : xlsdata[nis].nis,
-                                nisn : xlsdata[nis].nisn,
-                                nama_siswa : xlsdata[nis].nama_siswa,
-                                spp : xlsdata[nis].spp,
-                                komite_sekolah : xlsdata[nis].komite_sekolah,
-                                catering : xlsdata[nis].catering,
-                                keb_siswa : xlsdata[nis].keb_siswa,
-                                ekskul : xlsdata[nis].ekskul,
-                                total : xlsdata[nis].total
-                            });
+                            if(typeof rowdata[nis] !='undefined' && rowdata[nis] != null && rowdata[nis] != ''){
+                                // rowdata[result.rows[idx].nis] = result.rows[idx];
+                                $scope.gridDetail.data.push({
+                                    index : xlsdata[nis].index,
+                                    idrombel : rowdata[nis].id,
+                                    kelasid : rowdata[nis].kelasid,
+                                    nama_kelas : rowdata[nis].kelas + ' - ' + rowdata[nis].nama_kelas,
+                                    no_transaksi : xlsdata[nis].no_transaksi,
+                                    nis : xlsdata[nis].nis,
+                                    nisn : xlsdata[nis].nisn,
+                                    nama_siswa : xlsdata[nis].nama_siswa,
+                                    spp : xlsdata[nis].spp,
+                                    komite_sekolah : xlsdata[nis].komite_sekolah,
+                                    catering : xlsdata[nis].catering,
+                                    keb_siswa : xlsdata[nis].keb_siswa,
+                                    ekskul : xlsdata[nis].ekskul,
+                                    total : xlsdata[nis].total
+                                });
+                            }else{
+                                toastr.warning('NIS ' + nis + ' tidak ditemukan.', 'Warning');
+                            }
                         }
                         
                     }
