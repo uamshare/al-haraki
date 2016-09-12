@@ -12,28 +12,51 @@ class JurnalharianController extends \rest\modules\api\ActiveController
     {
         $actions = parent::actions();
         unset($actions['create']);
+        unset($actions['index']);
         unset($actions['update']);
         unset($actions['delete']);
         return $actions;
     }
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'  => ['get'],
-                        'newnotransaksi'   => ['get'],
-                        'create' => ['put', 'post'],
-                        'findbyno' => ['get'],
-                        'delete' => ['delete'],
-                    ],
-                ],
-            ]
-        );
+    // public function behaviors()
+    // {
+    //     $behaviors = parent::behaviors();
+    //     return array_merge($behaviors, 
+    //         [
+    //             'verbFilter' => [
+    //                 'class' => \yii\filters\VerbFilter::className(),
+    //                 'actions' => [
+    //                     'index'  => ['get'],
+    //                     'newnotransaksi'   => ['get'],
+    //                     'create' => ['put', 'post'],
+    //                     'findbyno' => ['get'],
+    //                     'delete' => ['delete'],
+    //                 ],
+    //             ],
+    //         ]
+    //     );
+    // }
+    
+    public function actionIndex(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $date_start = $request->getQueryParam('date_start', false);
+        $date_end = $request->getQueryParam('date_end', false);
+        $sekolahid = $request->getQueryParam('sekolahid', false);
+
+        $query = $model->find()
+                       ->where('1=1')
+                       ->orderBy(['tahun_ajaran_id' => SORT_DESC, 'tjmhno' => SORT_DESC])
+                       ->asArray();
+
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
+        }
+        if($date_start && $date_end){
+            $query->andWhere(['between','tjmhdt', $date_start, $date_end]);
+        }
+        // var_dump($query->createCommand()->rawSql);exit();
+        return $this->prepareDataProvider($query);
     }
     
     public function actionCreate(){

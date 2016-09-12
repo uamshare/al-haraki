@@ -38,96 +38,104 @@
         }
     }
 </style>
-<div class="row">
-    <div class="con-xs-12 col-md-12 no-print pull-right">
-        <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-kwitansi-pengeluaran')" >
-            <i class="fa fa-print"></i> Cetak
-        </a>
-    </div>
-</div>
-<div id="print-kwitansi-pengeluaran" >
-    <div class="printStyle-box">
-        <table cellpadding="0" cellspacing="0">
-            <tr class="top">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td class="title" style="text-align : center;">
-                                <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
-                                <h1>BUKTI PENGELUARAN</h1>
-                            </td>
-                        </tr>
-                        <tr class="information">
-                            <td colspan="2">
-                                <table>
-                                    <tr>
-                                        <td> </td>
-                                        <td>Nomor : {{rowHeader.no_kwitansi}}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <hr/>
-                </td>
-            </tr>
-        </table>
-        <br/>
 
-        <table>
-            <tr class="item">
-                <td style="width : 150px">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_penerima}}</td>
-            </tr>
-        </table>
-        <br/>
-        <table>
-            <tr class="heading">
-                <td>Untuk pengeluaran dengan perincian sebagai berikut :</td>
-            </tr>
-        </table>
-        <br/>
-        <table>
-            <tr class="item" ng-repeat="row in rowDetail track by row.id">
-                <td style="width : 150px">{{row.rincian}}</td>
-                <td style="width : 10px">:</td>
-                <td style="text-align : right;">{{row.jumlah | number:0}}</td>
-            </tr>
-            <tr class="total">
-                <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
-            </tr>
-            <tr class="total">
-                <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;"><b>{{rowTerbilang}}</b></td>
-            </tr>
-        </table>
-        <br>
-        <table>
-            <tr class="information">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td></td>
-                            <td>
-                                Depok, {{tanggal}}<br>
-                                <br>
-                                <br/>
-                                <br>
-                                <br/>
-                                <span class="profil-name">{{profil.fullname}}</span><br/>
-                                -----------------------------<br/>
-                                <span class="profil-jabatan">{{titleadmin}}</span>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-        <div class="note"></div>
+<div class="box box-no-margin box-default box-solid print-container">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-print"></i> Print Area</h3>
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat btn-tool" ng-click="print('print-kwitansi-pengeluaran')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="con-xs-12 col-md-12 no-print pull-right">
-        <a href="" class="btn btn-default btn-sm btn-flat" ng-click="print('print-kwitansi-pengeluaran')" >
-            <i class="fa fa-print"></i> Cetak
-        </a>
+    <div class="box-body">
+        <div id="print-kwitansi-pengeluaran" >
+            <div class="printStyle-box">
+                <table cellpadding="0" cellspacing="0">
+                    <tr class="top">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td class="title" style="text-align : center;">
+                                        <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
+                                        <h1>BUKTI PENGELUARAN</h1>
+                                    </td>
+                                </tr>
+                                <tr class="information">
+                                    <td colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td> </td>
+                                                <td>Nomor : {{rowHeader.no_kwitansi}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <hr/>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+
+                <table>
+                    <tr class="item">
+                        <td style="width : 150px">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_penerima}}</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr class="heading">
+                        <td>Untuk pengeluaran dengan perincian sebagai berikut :</td>
+                    </tr>
+                </table>
+                <br/>
+                <table>
+                    <tr class="item" ng-repeat="row in rowDetail track by row.id">
+                        <td style="width : 150px">{{row.rincian}}</td>
+                        <td style="width : 10px">:</td>
+                        <td style="text-align : right;">{{row.jumlah | number:0}}</td>
+                    </tr>
+                    <tr class="total">
+                        <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
+                    </tr>
+                    <tr class="total">
+                        <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;"><b>{{rowTerbilang}}</b></td>
+                    </tr>
+                </table>
+                <br>
+                <table>
+                    <tr class="information">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        Depok, {{tanggal}}<br>
+                                        <br>
+                                        <br/>
+                                        <br>
+                                        <br/>
+                                        <span class="profil-name">{{profil.fullname}}</span><br/>
+                                        -----------------------------<br/>
+                                        <span class="profil-jabatan">{{titleadmin}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="note"></div>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat" ng-click="print('print-kwitansi-pengeluaran')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+        </div>
     </div>
 </div>

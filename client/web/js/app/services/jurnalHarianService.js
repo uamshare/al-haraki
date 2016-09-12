@@ -8,8 +8,13 @@ define(['app'], function (app) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
-        factory.get = function (pageIndex, pageSize) {
-            return getResource('jurnalharians', pageIndex, pageSize);
+        factory.get = function (paramdata) {
+            // return getResource('jurnalharians', pageIndex, pageSize);
+            return $http.get(serviceBase + 'jurnalharians',{
+                params : paramdata
+            }).then(function (results) {
+                return (results.data) ? results.data : null;
+            });
         };
 
         factory.getNewNoKwitansi = function (paramdata) {

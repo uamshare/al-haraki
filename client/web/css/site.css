@@ -144,3 +144,7 @@ input[type=radio].custome1 + .lbl {
     top : 0;*/
     margin-top : -100px !important;
 }
+
+.print-container .box-header .btn-tool{
+    color: #FFFFFF !important;
+}

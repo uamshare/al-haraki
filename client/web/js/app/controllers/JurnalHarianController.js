@@ -85,18 +85,17 @@ define(['app'], function (app) {
 			});	
 
 	    	$scope.grid = { 
+			    paginationPageSizes: [20, 30, 50, 100, 200],
+	            paginationPageSize: $CONST_VAR.pageSize,
+	            pageNumber : 1,
+	            useExternalPagination : true,
 	    		enableMinHeightCheck : true,
-				minRowsToShow : 20,
-				enableGridMenu: true,
-				enableSelectAll: true,
-				virtualizationThreshold: 20,
-				enableFiltering: true,
-				enableCellEditOnFocus: true,
+	    		minRowsToShow : $CONST_VAR.pageSize,
+	            enableGridMenu: true,
+	            enableSelectAll: true,
+	            virtualizationThreshold: $CONST_VAR.pageSize,
+	            enableFiltering: true,
 				columnDefs : gridOptions.columnDefs,
-				//Export
-			    onRegisterApi: function(gridApi){
-			      $scope.gridApi = gridApi;
-			    }
 			};
 
 			function setGridCollapse(collapse){
@@ -129,17 +128,19 @@ define(['app'], function (app) {
 			}
 
 			function get(paramdata){
+				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
 				cfpLoadingBar.start();
-				$resourceApi.get(paramdata.page, paramdata.perPage)
+				$resourceApi.get(paramdata)
 				.then(function (result) {
 	                if(result.success){
+	                	var curpage = paramdata.page;
 						angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
 			            })
 			            $scope.grid.data = result.rows;
-			            // $scope.gridApi.grid.minRowsToShow = 5; //paramdata.perPage;
-			            // $scope.gridApi.grid.gridHeight =500;
+			            $scope.grid.totalItems = result.total;
+						$scope.grid.paginationCurrentPage = curpage;
 					}
 					cfpLoadingBar.complete();
 	            }, errorHandle);
@@ -182,6 +183,22 @@ define(['app'], function (app) {
 				});
 			}
 
+			$scope.grid.onRegisterApi = function(gridApi){
+				$scope.gridApi = gridApi;
+				gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+					$scope.grid.pageNumber = newPage;
+					$scope.grid.pageSize = pageSize;
+					$scope.grid.virtualizationThreshold = pageSize; 
+
+					get({
+						page : newPage,
+						'per-page' : $scope.grid.virtualizationThreshold,
+						date_start : $scope.filter.date_start,
+						date_end : $scope.filter.date_end
+					});
+				});
+		    }
+		    
 			$scope.print = function(divName){
 				printElement(document.getElementById(divName));
 				window.print();
