@@ -18,30 +18,6 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         return $actions;
     }
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors = array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'         => ['get'],
-                        'newnokwitansi' => ['get'],
-                        'findbyno'      => ['get'],
-                        'create'        => ['post'],
-                        'update'        => ['put'],
-                        'delete'        => ['delete'],
-                    ],
-                ],
-            ]
-        );
-        // var_dump($behaviors);exit();
-        return $behaviors;
-    }
-    
-    
-
     public function actionIndex(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
@@ -54,6 +30,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                        ->from('kwitansi_pembayaran_h h')
                        ->leftJoin('siswa_rombel sr', 'sr.`id` = `h`.`idrombel`')
                        ->leftJoin('siswa s', 's.`id` = sr.`siswaid`')
+                       ->with('details')
                        ->where('1=1')
                        ->orderBy(['h.tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
                        ->asArray();

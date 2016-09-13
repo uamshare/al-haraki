@@ -19,6 +19,9 @@ define(['services/routeResolver'], function () {
             'ui.grid.edit',
             'ui.grid.cellNav',
             'ui.grid.grouping',
+            'ui.grid.expandable', 
+            'ui.grid.selection',
+            'ui.grid.pinning',
             'chieffancypants.loadingBar',
             'ngDialog',
             'blueimp.fileupload'

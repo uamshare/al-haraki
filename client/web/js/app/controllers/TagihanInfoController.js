@@ -51,16 +51,16 @@ define(['app'], function (app) {
 
     	var gridOptions = {
     		columnDefs : [
-    			{ 
-    				name: 'isCheck', 
-    				displayName: 'Check', 
-    				type: 'boolean',
-    				headerCellTemplate: '<div style="padding : 5px;">' + 
-    										'<input class="custome1" type="checkbox" ng-model="parentCheck" ' +
-    											'ng-change="grid.appScope.toggleSelectAll(parentCheck)"/>' +
-    									'</div>',
-    				cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck"">'
-    			},
+    			// { 
+    			// 	name: 'isCheck', 
+    			// 	displayName: 'Check', 
+    			// 	type: 'boolean',
+    			// 	headerCellTemplate: '<div style="padding : 5px;">' + 
+    			// 							'<input class="custome1" type="checkbox" ng-model="parentCheck" ' +
+    			// 								'ng-change="grid.appScope.toggleSelectAll(parentCheck)"/>' +
+    			// 						'</div>',
+    			// 	cellTemplate: '<input type="checkbox" ng-model="row.entity.isCheck"">'
+    			// },
 				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
 				{ name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
 				{ name: 'idrombel', displayName: 'Id Rombel', visible: false, width : '50',  enableCellEdit: false},
@@ -113,34 +113,20 @@ define(['app'], function (app) {
 			enableFiltering: true,
 			enableCellEditOnFocus: true,
 			columnDefs : gridOptions.columnDefs,
-			//Export
-			exporterCsvFilename: 'coa.csv',
-		    exporterPdfDefaultStyle: {
-		    	fontSize: 9
-		   	},
-		    exporterPdfTableStyle: {
-		    	margin: [0, 5, 0, 15]
-		    },
-		    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: '#000'},
-		    exporterPdfHeader: { 
-		    	text: "My Header", 
-		    	style: 'headerStyle' 
-		   	},
-		    exporterPdfFooter: function ( currentPage, pageCount ) {
-		      return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
-		    },
-		    exporterPdfCustomFormatter: function ( docDefinition ) {
-		      docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
-		      docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
-		      return docDefinition;
-		    },
-		    exporterPdfOrientation: 'portrait',
-		    exporterPdfPageSize: 'LETTER',
-		    exporterPdfMaxGridWidth: 500,
-		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
-		    
+			
+			enableRowSelection: true,
+
 		    onRegisterApi: function(gridApi){
-		      $scope.gridApi = gridApi;
+		      	$scope.gridApi = gridApi;
+				gridApi.selection.on.rowSelectionChanged($scope,function(row){
+					var msg = 'row selected ' + row.isSelected;
+					$log.log(row);
+				});
+
+				gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+					var msg = 'rows changed ' + rows.length;
+					$log.log(rows);
+				});
 		    }
 		};
 
@@ -368,18 +354,39 @@ define(['app'], function (app) {
 			onPrintSelectedClick : function(event){
 				var date = new Date();
 				$scope.rows = [];
-				var index = 0;
-				for(var idx in $scope.grid.data){
-					if($scope.grid.data[idx].isCheck){
-						$scope.rows[index] = $scope.grid.data[idx];
-						$scope.rows[index].total = $scope.rows[index].spp + 
-									$scope.rows[index].komite_sekolah +
-									$scope.rows[index].catering +
-									$scope.rows[index].keb_siswa +
-									$scope.rows[index].ekskul;
-						index++;
-					}
+				var index = 0,
+					isEmptyCheck = true;
+				var selectedRows = $scope.gridApi.selection.getSelectedRows();
+				isEmptyCheck = (selectedRows.length > 0) ? false : true;
+				console.log(selectedRows.length);
+				// return;
+				// for(var idx in $scope.grid.data){
+				// 	if($scope.grid.data[idx].isCheck ){
+				// 		$scope.rows[index] = $scope.grid.data[idx];
+				// 		$scope.rows[index].total = $scope.rows[index].spp + 
+				// 					$scope.rows[index].komite_sekolah +
+				// 					$scope.rows[index].catering +
+				// 					$scope.rows[index].keb_siswa +
+				// 					$scope.rows[index].ekskul;
+				// 		index++;
+				// 		isEmptyCheck = false;
+				// 	}
+				// }
+				for(var idx in selectedRows){
+					$scope.rows[index] = selectedRows[idx];
+					$scope.rows[index].total = $scope.rows[index].spp + 
+								$scope.rows[index].komite_sekolah +
+								$scope.rows[index].catering +
+								$scope.rows[index].keb_siswa +
+								$scope.rows[index].ekskul;
+					index++;
 				}
+
+				if(isEmptyCheck){
+					toastr.warning('Tidak ada data yang terpilih', 'Warning');
+					return;
+				}
+
 				$scope.profil = authService.getProfile();
 				$scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
@@ -613,8 +620,6 @@ define(['app'], function (app) {
 				'year_start' : $scope.month_start.year
     		});
 		}
-
-		
 
 		function init(){
 			getkelas({

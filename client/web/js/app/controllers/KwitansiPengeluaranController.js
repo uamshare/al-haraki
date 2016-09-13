@@ -49,50 +49,26 @@ define(['app'], function (app) {
     	var indexController = function(){
     		var gridOptions = {
 	    		columnDefs : [
-					{ name: 'index', displayName : 'No', width : '50', visible: false,enableFiltering : false ,  enableCellEdit: false},
-					// { name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
-					{ 
-	                    name: 'no_kwitansi', 
-	                    grouping: { groupPriority: 1 }, 
-	                    sort: { priority: 1, direction: 'asc' }, 
-	                    width: '200',
-	                },
-					{ 
-						name: 'tgl_kwitansi', 
-						displayName: 'Tgl Kwitansi', 
-						enableCellEdit: false,
-						customTreeAggregationFinalizerFn: function( aggregation ) {
-	                        aggregation.rendered = aggregation.value;
-	                    },
-					},
-					{ 
-						name: 'nama_penerima', 
-						displayName: 'Nama Penerima', 
-						enableCellEdit: false,
-						customTreeAggregationFinalizerFn: function( aggregation ) {
-	                        aggregation.rendered = aggregation.value;
-	                    },
-					},
+					{ name: 'index', displayName : 'No', width : '50', visible: true,enableFiltering : false ,  enableCellEdit: false},
+					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
+					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120', enableCellEdit: false},
+					{ name: 'nama_penerima', displayName: 'Nama Penerima', enableCellEdit: false},
 					{ name: 'nik', displayName: 'NIK', visible: false, enableCellEdit: false},
-					{ name: 'kode', displayName: 'Kode', visible: false, enableCellEdit: false},
-					{ name: 'rincian', displayName: 'Rincian', visible: true, enableCellEdit: false},
-					{ name: 'jumlah', displayName: 'Jumlah', visible: true, enableCellEdit: false},
+					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
 					{ 
-	                    name: 'jumlah', 
-	                    displayName: 'Jumlah', 
+	                    name: 'total', 
+	                    displayName: 'Total', 
 	                    width : '100', 
 	                    type: 'number', 
 	                    cellFilter: 'number: 0',
-	                    treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-	                    customTreeAggregationFinalizerFn: function( aggregation ) {
-	                        aggregation.rendered = aggregation.value;
-	                    },
+	                    aggregationType: uiGridConstants.aggregationTypes.sum, 
+	                    aggregationHideLabel: true,
 	                    headerCellClass : 'grid-align-right',
 	                    cellClass: 'grid-align-right',
 	                    footerCellClass : 'grid-align-right',
 	                    footerCellFilter : 'number: 0'
 	                },
-					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
+					
 					{ name: 'sekolahid', displayName: 'SekolahId', visible: false, enableCellEdit: false},
 					{ name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, enableCellEdit: false},
 					{ name: 'created_by', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
@@ -119,6 +95,7 @@ define(['app'], function (app) {
 				width : '100',
 				enableSorting : false,
 				enableCellEdit: false,
+				cellClass: 'grid-align-right',
 				cellTemplate : columnActionTpl
 			});	
 
@@ -134,11 +111,14 @@ define(['app'], function (app) {
 	            virtualizationThreshold: $CONST_VAR.pageSize,
 	            enableFiltering: true,
 				columnDefs : gridOptions.columnDefs,
-				treeRowHeaderAlwaysVisible: false,
-
-	            showGridFooter: true,
+				
+				// treeRowHeaderAlwaysVisible: false,
+	            // showGridFooter: true,
 	            showColumnFooter: true,
-	            enableExpandAll  : true,
+	            // enableExpandAll  : true,	
+
+	            expandableRowTemplate: '<div ui-grid="row.entity.subGridOptions" style="height:{{(row.entity.subGridOptions.data.length * 30) + 50}}px"></div>',
+    			expandableRowHeight: 150,
 			};
 
 			$scope.filter = {
@@ -182,10 +162,44 @@ define(['app'], function (app) {
 				.then(function (result) {
 	                if(result.success){
 	                	var curpage = paramdata.page;
-						angular.forEach(result.rows, function(dt, index) {
-							var romnum = index + 1;
-			                result.rows[index]["index"] = romnum;
-			            })
+	
+						for(var idx in result.rows){
+							var romnum = parseInt(idx) + 1,
+								total = 0;
+			                result.rows[idx]["index"] = romnum;
+							result.rows[idx].subGridOptions = {
+								// showGridFooter: true,
+					   			// showColumnFooter: true,
+					            minRowsToShow : 5,
+								columnDefs: [ 
+									{ name: 'index', displayName : 'No', width : '50', visible: true,enableFiltering : false ,  enableCellEdit: false},
+									{ name: 'nik', displayName: 'NIK', visible: false, enableCellEdit: false},
+									{ name: 'kode', displayName: 'Kode', visible: false, enableCellEdit: false},
+									{ name: 'rincian', displayName: 'Rincian', visible: true, enableCellEdit: false},
+									{ 
+					                    name: 'jumlah', 
+					                    displayName: 'Jumlah', 
+					                    width : '100', 
+					                    type: 'number', 
+					                    cellFilter: 'number: 0',
+					                    aggregationType: uiGridConstants.aggregationTypes.sum, 
+					                    aggregationHideLabel: true,
+					                    headerCellClass : 'grid-align-right',
+					                    cellClass: 'grid-align-right',
+					                    footerCellClass : 'grid-align-right',
+					                    footerCellFilter : 'number: 0'
+					                },
+								],
+								// data: result.rows[idx].details
+							}
+							for(var index in result.rows[idx].details){
+								var subromnum = parseInt(index) + 1;
+								result.rows[idx].details[index]["index"] = subromnum;
+								total += parseInt(result.rows[idx].details[index].jumlah);
+							}
+							result.rows[idx].subGridOptions.data = result.rows[idx].details;
+							result.rows[idx]["total"] = total;
+						}
 			            $scope.grid.data = result.rows;
 			            $scope.grid.totalItems = result.total;
 						$scope.grid.paginationCurrentPage = curpage;
@@ -232,10 +246,9 @@ define(['app'], function (app) {
 						date_end : $scope.filter.date_end
 					});
 				});
-				$scope.gridApi.grid.registerDataChangeCallback(function(e) {
-                    $scope.gridApi.treeBase.expandAllRows();
-                    // setGridToContentXLS(gridApi);
-                });
+				gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {               
+		            row.expandedRowHeight = (row.entity.subGridOptions.data.length * 30) + 51;
+		        });
 		    }
 
 			$scope.onAddClick = function(event){

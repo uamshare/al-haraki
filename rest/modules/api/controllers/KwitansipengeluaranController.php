@@ -20,37 +20,29 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         return $actions;
     }
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'         => ['get'],
-                        'newnokwitansi' => ['get'],
-                        'findbyno'      => ['get'],
-                        'create'        => ['post'],
-                        'update'        => ['put'],
-                        'delete'        => ['delete'],
-                    ],
-                ],
-            ]
-        );
-    }
-    
     public function actionIndex(){
-        $model = new \rest\models\KwitansiPengeluaranD; //new $this->modelClass();
+        // $model = new \rest\models\KwitansiPengeluaranD; //new $this->modelClass();
+        // $request = Yii::$app->getRequest();
+        // $date_start = $request->getQueryParam('date_start', false);
+        // $date_end = $request->getQueryParam('date_end', false);
+        // $sekolahid = $request->getQueryParam('sekolahid', false);
+
+        // $query = $model->find()
+        //                ->select('h.*,d.id,d.kode,d.rincian,d.jumlah')
+        //                ->from('kwitansi_pengeluaran_h h')
+        //                ->innerJoin('kwitansi_pengeluaran_d d', 'd.`no_kwitansi` = `h`.`no_kwitansi`')
+        //                ->where('1=1')
+        //                ->orderBy(['tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
+        //                ->asArray();
+
+        $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
         $date_start = $request->getQueryParam('date_start', false);
         $date_end = $request->getQueryParam('date_end', false);
         $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
-                       ->select('h.*,d.id,d.kode,d.rincian,d.jumlah')
-                       ->from('kwitansi_pengeluaran_h h')
-                       ->innerJoin('kwitansi_pengeluaran_d d', 'd.`no_kwitansi` = `h`.`no_kwitansi`')
+                       ->with('details')
                        ->where('1=1')
                        ->orderBy(['tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])
                        ->asArray();
