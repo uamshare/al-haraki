@@ -115,7 +115,7 @@ class TagihanInfoInput extends TagihanPembayaran
         ->innerJoin('siswa_rombel sr', 'sr.`id` = a.`idrombel`')
         ->innerJoin('siswa s', 's.`id` = sr.`siswaid`')
         ->groupBy(['a.`tahun_ajaran`, s.`sekolahid`, a.`tahun`, a.`bulan`'])
-        ->where('1=1');
+        ->where(['LIKE','no_ref','t_info']);
 
         if(is_array($params)){
             extract($params);

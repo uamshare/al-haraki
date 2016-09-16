@@ -38,16 +38,23 @@ define(['app'], function (app) {
         
         var grid = {
             columnDefs : [
-                { name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
+                { name: 'index', displayName : 'No', width : '50', visible: false, enableFiltering : false ,  enableCellEdit: false},
                 { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
-                { name: 'kelas', displayName: 'Kelas', visible: true, width : '75',  enableCellEdit: false},
+                { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
+                { 
+                    name: 'kelasRender', 
+                    displayName: 'Kelas',
+                    grouping: { groupPriority: 1 }, 
+                    sort: { priority: 1, direction: 'asc' }, 
+                    width: '200',
+                },
                 { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, enableCellEdit: false},
                 { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
                 { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
                 { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
             ]
         }
-        var columnActionTpl =   '<div class="col-action">' + 
+        var columnActionTpl =   '<div class="col-action" ng-show="row.entity.id">' + 
                                     '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
                                         '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
                                     '</a>&nbsp;' +
@@ -61,7 +68,11 @@ define(['app'], function (app) {
             width : '75',
             enableSorting : false,
             enableCellEdit: false,
-            cellTemplate : columnActionTpl
+            cellTemplate : columnActionTpl,
+            cellClass: 'grid-align-right',
+            customTreeAggregationFinalizerFn: function( aggregation ) {
+                aggregation.rendered = aggregation.value;
+            },
         }); 
 
         $scope.grid = { 
@@ -115,6 +126,7 @@ define(['app'], function (app) {
                     angular.forEach(result.rows, function(dt, index) {
                         var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
                         result.rows[index]["index"] = romnum;
+                        result.rows[index]["kelasRender"] = 'Kelas - ' + result.rows[index].kelas;
                     })
                     $scope.grid.data = result.rows;
                     $scope.grid.totalItems = result.total;
@@ -218,6 +230,9 @@ define(['app'], function (app) {
                     sekolahid : authService.getSekolahProfile().sekolahid
                 });
             });
+            $scope.gridApi.grid.registerDataChangeCallback(function(e) {
+                $scope.gridApi.treeBase.expandAllRows();
+            });
         }
 
         function initIndex(){
@@ -228,8 +243,7 @@ define(['app'], function (app) {
             });
         }
 
-        function initAdd(){
-            
+        function initAdd(){ 
         }
 
         function initEdit(id){

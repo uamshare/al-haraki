@@ -20,6 +20,7 @@ require(
         'services/COAService',
         'services/jurnalHarianService',
         'services/RglService',
+        'services/CashflowService',
         // Pengaturan
         'services/GrupAksesService',
         'services/UserService',

@@ -136,14 +136,7 @@ define(['app'], function (app) {
                             var romnum = index + 1;
                             result.rows[index]["index"] = romnum;
                         })
-                        for(var idx in result.rows){
-                            // Only Show with total not zero
-                            // var total = parseInt(result.rows[idx].saldo_a) + parseInt(result.rows[idx].saldo_c) + parseInt(result.rows[idx].saldo_e);
-                            // if(total > 0){
-                            //     $scope.grid.data[idx] = result.rows[idx];
-                            // }
-                            $scope.grid.data = result.rows;
-                        }
+                        $scope.grid.data = result.rows;
                         
                     }
                     cfpLoadingBar.complete();
@@ -367,10 +360,12 @@ define(['app'], function (app) {
 
         }
 
+        $scope.isDetail = false;
         var controller;
         switch($location.$$url){
             case '/akuntansi/rgl/detail/' + $routeParams.id:
                 controller = new detailController();
+                $scope.isDetail = true;
                 break;
             default : 
                 controller = new indexController();

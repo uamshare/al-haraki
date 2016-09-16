@@ -244,7 +244,7 @@ define(['app'], function (app) {
 							var rowdata = rowEntity;
 							$scope.gridDetailDirtyRows[rowEntity.index] = rowdata;
 						}
-						console.log($scope.gridDetailDirtyRows);
+						// console.log($scope.gridDetailDirtyRows);
 						$scope.$apply();
 					});
 
@@ -259,7 +259,8 @@ define(['app'], function (app) {
 				var controller = [
 					'tagihaninfoinput_list',
 					'tagihanpembayaran_listbayar',
-					'rgl'
+					'rgl',
+					'cashflow'
 				];
 
 				var actions = ['create','update','delete'];

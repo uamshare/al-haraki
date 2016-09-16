@@ -131,7 +131,8 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $model = new $this->modelClass();
         $date = date('Y-m-d H:i:s');
         $outstanding = $model->getSummaryOutsForPosting($params)->All();
-
+        // var_dump($outstanding);exit();
+        
         $GL = new \rest\models\Rgl();
         foreach($outstanding as $key => $row){
             foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {

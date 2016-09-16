@@ -138,6 +138,7 @@ define(['app'], function (app) {
             postingmap : false,
             jurnalharian : false,
             rgl : false,
+            cashflow : false,
 
             pengaturan : '',
             user : false,

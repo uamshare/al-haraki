@@ -176,6 +176,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             // ['parent_name' => 'AKUNTANSI','name' => 'postingmap', 'description' => 'Pemetaan Posting', 'leaf' => true, 'parent' => 1, 'order' => 2],
             ['parent_name' => 'AKUNTANSI','name' => 'jurnalharian', 'description' => 'Jurnal Harian', 'leaf' => true, 'parent' => 1, 'order' => 3],
             ['parent_name' => 'AKUNTANSI','name' => 'rgl', 'description' => 'Buku Besar', 'leaf' => true, 'parent' => 1, 'order' => 4],
+            ['parent_name' => 'AKUNTANSI','name' => 'cashflow', 'description' => 'Rekap Arus Kas', 'leaf' => true, 'parent' => 1, 'order' => 4],
 
             ['parent_name' => 'PENGATURAN','name' => 'user', 'description' => 'Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'PENGATURAN','name' => 'role', 'description' => 'Grup Akses Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 2],

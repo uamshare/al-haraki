@@ -204,7 +204,7 @@ define(['app'], function (app) {
                                             parseInt(result.rows[index]["catering"]) +
                                             parseInt(result.rows[index]["keb_siswa"]) +
                                             parseInt(result.rows[index]["ekskul"]);
-                        if(checkZeroData > 0){
+                        if(checkZeroData != 0){
                             result.rows[index]["index"] = romnum;
                             result.rows[index]["spp"] = parseInt(result.rows[index]["spp"]);
                             result.rows[index]["komite_sekolah"] = parseInt(result.rows[index]["komite_sekolah"]);

@@ -344,6 +344,14 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
+                .when('/akuntansi/cashflow', 
+                    routeCustome.resolve(
+                        'akuntansi/cashflow/index', 
+                        'CashflowController',
+                        true
+                    )
+                )
+
 
                 //Pengaturan
                 .when('/pengaturan/user/add', 

@@ -300,8 +300,8 @@ class Rgl extends \yii\db\ActiveRecord
               d.`mcoadno`,
               h.mcoahname,
               (CASE
-                WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
-                WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+                WHEN h.`postbalance` = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                WHEN h.`postbalance` = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
               END) AS `saldo_c`
             FROM mcoah h
             INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
@@ -322,8 +322,8 @@ class Rgl extends \yii\db\ActiveRecord
               d.`mcoadno`,
               h.mcoahname,
                 (CASE
-                WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
-                WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+                WHEN h.`postbalance` = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                WHEN h.`postbalance` = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
               END) AS `saldo_a`
             FROM mcoah h
             INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
@@ -412,8 +412,8 @@ class Rgl extends \yii\db\ActiveRecord
                           d.`mcoadno`,
                           h.mcoahname,
                           (CASE
-                            WHEN h.postbalance = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
-                            WHEN h.postbalance = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
+                            WHEN h.`postbalance` = 'D' THEN (SUM(IFNULL(`rglin`,0) - IFNULL(`rglout`,0)))
+                            WHEN h.`postbalance` = 'K' THEN (SUM(IFNULL(`rglout`,0) - IFNULL(`rglin`,0)))
                           END) AS `saldo_a`
                         FROM mcoah h
                         INNER JOIN mcoad d ON h.`mcoahno` = d.`mcoahno`
@@ -439,5 +439,4 @@ class Rgl extends \yii\db\ActiveRecord
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
-
 }

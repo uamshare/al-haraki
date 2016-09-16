@@ -158,7 +158,8 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                   a.`updated_at` 
                 FROM
                   `tagihan_pembayaran` a
-                LEFT JOIN kwitansi_pembayaran_h b ON a.`no_ref` = b.`no_kwitansi` $filter2
+                LEFT JOIN kwitansi_pembayaran_h b ON TRIM(a.`no_ref`) = TRIM(b.`no_kwitansi`) $filter2
+                LEFT JOIN tagihan_autodebet_h c ON TRIM(a.`no_ref`) = TRIM(c.`no_transaksi`)
                 WHERE $filter
                 GROUP BY idrombel
                 ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
@@ -243,7 +244,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         if($date_end){
             $param1 = date('m', strtotime($date_end)) + (12 * date('Y', strtotime($date_end)));
             $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
-            $filter2 = " AND DATE_FORMAT(a.`updated_at`,'%Y-%m-%d') <= :param2 ";
+            $filter2 = " AND DATE_FORMAT(b.`tgl_kwitansi`,'%Y-%m-%d') <= :param2 ";
             $bound = [':param1' => $param1, ':param2' => $date_end];
         }else{
             $param1 = $month + (12 * $year);
