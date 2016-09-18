@@ -19,8 +19,10 @@ use yii\db\Query;
  * @property Mcoah $mcoahno0
  * @property Tjmd[] $tjmds
  */
-class Mcoad extends \yii\db\ActiveRecord
+class Mcoad extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
+
     /**
      * @inheritdoc
      */
@@ -52,7 +54,7 @@ class Mcoad extends \yii\db\ActiveRecord
         return [
             [['mcoadno', 'mcoadname', 'mcoahno', 'created_at'], 'required'],
             [['active'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at'], 'safe'],
             [['mcoadno', 'mcoahno'], 'string', 'max' => 6],
             [['mcoadname'], 'string', 'max' => 50],
             [['mcoahno'], 'exist', 'skipOnError' => true, 'targetClass' => Mcoah::className(), 'targetAttribute' => ['mcoahno' => 'mcoahno']],

@@ -59,8 +59,10 @@ use yii\db\Query;
  * @property Sekolah $sekolah
  * @property User[] $users
  */
-class Pegawai extends \yii\db\ActiveRecord
+class Pegawai extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
+
     /**
      * @inheritdoc
      */
@@ -78,7 +80,7 @@ class Pegawai extends \yii\db\ActiveRecord
             [['nama_pegawai', 'sekolahid'], 'required'],
             [['sekolahid', 'berat', 'tinggi', 'jumlah_anak', 'jumlah_saudara'], 'integer'],
             [['jk', 'kependidikan', 'avatar'], 'string'],
-            [['tanggal_lahir', 'tanggal_mulai_bertugas', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal_lahir', 'tanggal_mulai_bertugas', 'created_at'], 'safe'],
             [['jarak_dari_rumah'], 'number'],
             [['nik', 'nuptk', 'agama', 'status_rumah', 'status_pernikahan', 'jabatan'], 'string', 'max' => 15],
             [['nama_pegawai', 'pengalaman_kerja'], 'string', 'max' => 100],

@@ -34,7 +34,7 @@ class KwitansiPengeluaranD extends \yii\db\ActiveRecord
     {
         return [
             [['jumlah'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at'], 'safe'],
             [['no_kwitansi', 'kode'], 'string', 'max' => 20],
             [['rincian'], 'string', 'max' => 50],
             [['no_kwitansi'], 'exist', 'skipOnError' => true, 'targetClass' => KwitansiPengeluaranH::className(), 'targetAttribute' => ['no_kwitansi' => 'no_kwitansi']],

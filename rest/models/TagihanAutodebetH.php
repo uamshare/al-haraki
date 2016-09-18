@@ -212,7 +212,7 @@ class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRec
             $this->saveLogs([
                 'rowHeader' => $rowHeader,
                 'rowDetail' => $rowDetail
-            ]);
+            ], $rowHeader['sekolahid']);
 
             $transaction->commit();
             return true;
@@ -270,7 +270,7 @@ class TagihanAutodebetH extends \rest\models\AppActiveRecord //\yii\db\ActiveRec
             $this->created_at = date('Y-m-d H:i:s A');
             $this->saveLogs([
                 'no_kwitansi' => $no
-            ]);
+            ], substr($no, 4,2));
 
             $transaction->commit();
             return true;

@@ -49,7 +49,7 @@ class Mcoac extends \yii\db\ActiveRecord
         return [
             [['mcoaclassification', 'mcoagid'], 'required'],
             [['mcoagid'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at'], 'safe'],
             [['mcoaclassification'], 'string', 'max' => 100],
             [['mcoagid'], 'exist', 'skipOnError' => true, 'targetClass' => Mcoag::className(), 'targetAttribute' => ['mcoagid' => 'mcoagid']],
         ];

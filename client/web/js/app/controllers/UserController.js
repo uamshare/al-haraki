@@ -122,6 +122,7 @@ define(['app'], function (app) {
 				width : '100',
 				enableSorting : false,
 				enableCellEdit: false,
+				cellClass: 'grid-align-right',
 				cellTemplate : columnActionTpl
 			});	
 

@@ -180,7 +180,7 @@ class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             $this->saveLogs([
                 'rowHeader' => $rowHeader,
                 'rowDetail' => $rowDetail
-            ]);
+            ], $rowHeader['sekolahid']);
             
             $transaction->commit();
             return true;
@@ -225,7 +225,7 @@ class Tjmh extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             $GL = new \rest\models\Rgl();
             $unpostingGL = $GL->unposting($DB, [
                 'noref' => $no
-            ]);
+            ], substr($no, 4,2));
             $unpostingGL->execute();
             
             $transaction->commit();

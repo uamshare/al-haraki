@@ -33,6 +33,8 @@ require(
         'services/SiswaRombelService',
         'services/TagihanInfoService',
         'services/tagihanAutodebetService',
+
+        'services/LogsService',
         
         'controllers/NavbarController'
     ],

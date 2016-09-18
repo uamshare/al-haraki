@@ -115,6 +115,14 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
+                .when('/logs/:id', 
+                    routeCustome.resolve(
+                        'logs/index',
+                        'LogsController',
+                        true
+                    )
+                )
+
                 // MASTER SISWA
                 .when('/master/siswa', 
                     routeCustome.resolve(

@@ -164,11 +164,6 @@ define(['app'], function (app) {
 				.then(function (result) {
 	                if(result.success){
 	                	var curpage = paramdata.page;
-						// angular.forEach(result.rows, function(dt, index) {
-						// 	var romnum = index + 1;
-						// 	var romnum = (curpage > 1) ? (((curpage - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
-			   //              result.rows[index]["index"] = romnum;
-			   //          })
 			            for(var idx in result.rows){
 							var romnum = parseInt(idx) + 1,
 								total = 0;

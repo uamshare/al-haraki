@@ -17,8 +17,10 @@ use Yii;
  * @property Sekolah $sekolah
  * @property SiswaRombel[] $siswaRombels
  */
-class Kelas extends \yii\db\ActiveRecord
+class Kelas extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
+
     /**
      * @inheritdoc
      */
@@ -50,7 +52,7 @@ class Kelas extends \yii\db\ActiveRecord
         return [
             [['kelas', 'sekolahid'], 'required'],
             [['kelas', 'sekolahid'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at'], 'safe'],
             [['nama_kelas'], 'string', 'max' => 50],
             [['sekolahid'], 'exist', 'skipOnError' => true, 'targetClass' => Sekolah::className(), 'targetAttribute' => ['sekolahid' => 'id']],
         ];

@@ -12,7 +12,12 @@ class AppActiveRecord extends \yii\db\ActiveRecord
 	public function beforeSave($insert){
         if(parent::beforeSave($insert)){
             if($this->isAutoSaveLog){
-                $this->saveLogs();
+                $user = \Yii::$app->user;
+                $request = Yii::$app->getRequest();
+
+                $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
+                $sekolahid = $request->getQueryParam('sekolahid', $sekolahid);
+                $this->saveLogs(null, $sekolahid);
             }
             return true;
         } else {
@@ -20,21 +25,47 @@ class AppActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
-    public function saveLogs($dirtyAttributes = null){
+    public function beforeDelete()
+    {
+        if (parent::beforeDelete()) {
+            if($this->isAutoSaveLog){
+                $user = \Yii::$app->user;
+                $request = Yii::$app->getRequest();
+
+                $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
+                $sekolahid = $request->getQueryParam('sekolahid', $sekolahid);
+                $this->saveLogs(null, $sekolahid);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function saveLogs($dirtyAttributes = null, $sekolahid = null){
         $logs = new \rest\models\Logs();
         $logs->controller_id = \Yii::$app->controller->id;
         $logs->action_id = \Yii::$app->controller->action->id;
         $logs->tablename = $this->tableName();
         $dirty_attributes = (is_null($dirtyAttributes)) ? $this->dirtyAttributes : $dirtyAttributes;
         $date = date('Y-m-d H:i:s');
-        $dirty_attributes['created_at'] = $date;
-        $dirty_attributes['updated_at'] = $date;
-        $logs->dirty_attributes = json_encode($dirty_attributes);
-        $logs->created_at = $this->created_at;
-        $logs->created_by = \Yii::$app->user->getId();
 
-        if(!$logs->save()){
-            // var_dump($logs->getErrors());
+        if($dirty_attributes){
+            $dirty_attributes['created_at'] = $date;
+            $dirty_attributes['updated_at'] = $date;
+            $logs->dirty_attributes = json_encode($dirty_attributes);
+            $logs->created_at = $this->updated_at;
+            $logs->created_by = \Yii::$app->user->getId();
+
+            $user = \Yii::$app->user;
+            $request = Yii::$app->getRequest();
+            $_sekolahid = $request->getQueryParam('sekolahid', null);
+            $logs->sekolahid = (!is_null($sekolahid) ? $sekolahid : $_sekolahid);
+
+            if(!$logs->save()){
+                // var_dump($logs->getErrors());
+            }
         }
+        
     }
 }

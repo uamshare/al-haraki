@@ -12,6 +12,7 @@ use Yii;
  * @property string $tablename
  * @property string $controller_id
  * @property string $action_id
+ * @property integer $sekolahid
  * @property string $created_at
  * @property integer $created_by
  */
@@ -32,8 +33,9 @@ class Logs extends \yii\db\ActiveRecord
     {
         return [
             [['dirty_attributes'], 'string'],
+            [['sekolahid'], 'required'],
+            [['sekolahid', 'created_by'], 'integer'],
             [['created_at'], 'safe'],
-            [['created_by'], 'integer'],
             [['tablename', 'controller_id', 'action_id'], 'string', 'max' => 35],
         ];
     }
@@ -49,6 +51,7 @@ class Logs extends \yii\db\ActiveRecord
             'tablename' => Yii::t('app', 'Tablename'),
             'controller_id' => Yii::t('app', 'Controller ID'),
             'action_id' => Yii::t('app', 'Action ID'),
+            'sekolahid' => Yii::t('app', 'Sekolahid'),
             'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),
         ];

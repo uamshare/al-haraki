@@ -19,25 +19,6 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
         return $actions;
     }
 
-    // public function behaviors()
-    // {
-    //     $behaviors = parent::behaviors();
-    //     return array_merge($behaviors, 
-    //         [
-    //             'verbFilter' => [
-    //                 'class' => \yii\filters\VerbFilter::className(),
-    //                 'actions' => [
-    //                     'index'  => ['get'],
-    //                     'view'   => ['get'],
-    //                     'create' => ['post'],
-    //                     'update' => ['put'],
-    //                     'delete' => ['delete'],
-    //                 ],
-    //             ],
-    //         ]
-    //     );
-    // }
-
     public function actionIndex(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
@@ -75,24 +56,25 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
 
         $post['auth_key'] = Yii::$app->getSecurity()->generateRandomString();
         $post['password_hash'] = Yii::$app->security->generatePasswordHash($post['password_hash']);
-        $post['pegawai_id'] = (isset($post['pegawai_id'])) ? (int)$post['pegawai_id'] : null;
+        $post['pegawai_id'] = (isset($post['pegawai_id']) && !empty($post['pegawai_id'])) ? 
+                                (int)$post['pegawai_id'] : null;
         $post['sekolahid'] = (isset($post['sekolahid'])) ? (int)$post['sekolahid'] : null;
 
         $model->load($post, '');
-
-        if ($model->save()) {
+        $save = $model->save();
+        if ($save) {
             if($post['role']){
                 $this->AssignRole($model->id, $post['role']);
             }
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
-            $id = implode(',', array_values($model->getPrimaryKey(true)));
+            // $id = implode(',', array_values($model->getPrimaryKey(true)));
             // $response->getHeaders()->set('Location', Url::toRoute([$this->viewAction, 'id' => $id], true));
         } elseif (!$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
         }
 
-        return $model->getList($model->id)->one();
+        return ($save) ? $model->getList($model->id)->one() : $model;
     }
 
     private function AssignRole($userid, $rolename){

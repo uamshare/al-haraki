@@ -40,7 +40,7 @@ class kwitansiPengeluaranH extends \rest\models\AppActiveRecord //\yii\db\Active
     {
         return [
             [['no_kwitansi'], 'required'],
-            [['tgl_kwitansi', 'created_at', 'updated_at'], 'safe'],
+            [['tgl_kwitansi', 'created_at'], 'safe'],
             [['nik', 'sekolahid', 'created_by', 'updated_by'], 'integer'],
             [['no_kwitansi'], 'string', 'max' => 20],
             [['nama_penerima'], 'string', 'max' => 50],
@@ -183,7 +183,7 @@ class kwitansiPengeluaranH extends \rest\models\AppActiveRecord //\yii\db\Active
             $this->saveLogs([
                 'rowHeader' => $rowHeader,
                 'rowDetail' => $rowDetail
-            ]);
+            ], $rowHeader['sekolahid']);
 
             $transaction->commit();
             return true;
@@ -234,7 +234,7 @@ class kwitansiPengeluaranH extends \rest\models\AppActiveRecord //\yii\db\Active
             $this->created_at = date('Y-m-d H:i:s A');
             $this->saveLogs([
                 'no_kwitansi' => $no
-            ]);
+            ], substr($no, 4,2));
 
             $transaction->commit();
             return true;
