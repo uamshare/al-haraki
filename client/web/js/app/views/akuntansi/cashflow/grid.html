@@ -1,4 +1,25 @@
 <div id="cashflow-form" class="box box-no-margin box-primary box-solid">
+	<div class="box-footer with-border">
+		<div class="box-tools-left">
+			<div class="btn-group">
+			  <button type="button" class="btn bg-gray btn-sm btn-flat">Export</button>
+			  <button type="button" class="btn bg-gray btn-sm btn-flat dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			    <li><a ng-click="onExport('pdf')"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+			    <li>
+			    	<a ng-click="onExport('xls')"
+			    		id="downloader" 
+			    		download="tagihan_pembayaran.xlsx">
+			    			<i class="fa fa-file-excel-o"></i> Excel
+			    	</a>
+			    </li>
+			  </ul>
+			</div>
+		</div>
+	</div>
 	<div class="box-header with-border">
 		<h3 class="box-title"><i class="fa fa-plus-circle"></i> Arus Kas</h3>
 		<div class="box-tools pull-right">
@@ -6,7 +27,7 @@
 		</button>
 		</div>
 	</div>
-	<div class="box-body">
+	<div id="print-cashflow" class="box-body">
 		<table id="grid-cashflow" class="table table-hover table-bordered table-striped">
 			<thead>
 				<tr style="background-color: #CCC;">
@@ -74,29 +95,31 @@
 					<th style="text-align : right">{{data.sum.pengeluaran.total | number:0}}</th>
 				</tr>
 				<tr>
-					<td colspan="9"></td>
+					<td colspan="{{rangeWeek.length + 4}}"></td>
 				</tr>
 				<tr style="background-color: #CCC;">
 					<th></th>
-					<th><strong>OUTSTANDING</strong></th>
-					<th>{{data.outstanding[0].mcoahno}}</th>
-					<th style="text-align : right" ng-repeat="range in rangeWeek">
+					<th colspan="{{rangeWeek.length + 2}}"><strong>OUTSTANDING</strong></th>
+					<!-- <th>{{data.outstanding[0].mcoahno}}</th> -->
+					<!-- <th style="text-align : right" ng-repeat="range in rangeWeek">
 						{{data.outstanding[0]['saldo_w' + ($index + 1)] | number:0}}
-					</th>
+					</th> -->
 					<th style="text-align : right">{{data.outstanding[0].total | number:0}}</th>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="9"></td>
+					<td colspan="{{rangeWeek.length + 4}}"></td>
 				</tr>
 				<tr style="background-color: #CCC;">
 					<th></th>
-					<td style="text-align : left"><strong>SALDO </strong></td>
-					<th></th>
+					<td colspan="{{rangeWeek.length + 2}}" style="text-align : left">
+						<strong>SALDO {{nama_sekolah}}</strong>
+					</td>
+					<!-- <th></th>
 					<th style="text-align : right" ng-repeat="range in rangeWeek">
 						{{data.sum.footer['saldo_w' + ($index + 1)] | number:0}}
-					</th>
+					</th> -->
 					<th style="text-align : right">{{data.sum.footer.total | number:0}}</th>
 				</tr>
 			</tfoot>

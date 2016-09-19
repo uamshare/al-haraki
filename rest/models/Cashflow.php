@@ -162,38 +162,23 @@ class Cashflow extends \yii\db\ActiveRecord
                         h.`mcoahno`,
                         h.`mcoahname`,
                         h.`mcoahname` `name`,
-                        SUM(IF(rgldt <= :w_end1, (CASE
+                        0 AS saldo_w1,
+                        0 AS saldo_w2,
+                        0 AS saldo_w3,
+                        0 AS saldo_w4,
+                        0 AS saldo_w5,
+                        SUM(CASE
                             WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
                             WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w1,
-                        SUM(IF(rgldt <= :w_end2, (CASE
-                            WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
-                            WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w2,
-                        SUM(IF(rgldt <= :w_end3, (CASE
-                            WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
-                            WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w3,
-                        SUM(IF(rgldt <= :w_end4, (CASE
-                            WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
-                            WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w4,
-                        SUM(IF(rgldt <= :w_end5, (CASE
-                            WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
-                            WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w5,
-                        SUM(IF(rgldt <= :w_end6, (CASE
-                            WHEN h.`postbalance` = 'D' THEN IFNULL(`rglin`,0) - IFNULL(`rglout`,0)
-                            WHEN h.`postbalance` = 'K' THEN IFNULL(`rglout`,0) - IFNULL(`rglin`,0)
-                        END),0)) AS saldo_w6,
+                        END) AS saldo_w6,
                         a.`sekolahid`,
                         a.`tahun_ajaran_id`
                     FROM mcoad d
                     INNER JOIN mcoah h ON h.`mcoahno` = d.`mcoahno`
                     LEFT JOIN rgl a ON a.`mcoadno` = d.`mcoadno` AND a.`tahun_ajaran_id` = :tahun_ajaran_id
-                        AND a.`sekolahid` = :sekolahid AND rgldt <= :m_end
+                        AND a.`sekolahid` = :sekolahid AND rgldt < :m_start
                     WHERE h.`mcoahno` = '110300'
-                    GROUP BY a.`sekolahid`,h.`mcoahno`) q_cs ORDER BY t_type,mcoadno,name";
+                    GROUP BY a.`sekolahid`,h.`mcoahno`) q_cs ORDER BY t_type,mcoadno,`name`";
 
         return $sqlCustoms;
     }
