@@ -73,6 +73,15 @@ class Kelas extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
         ];
     }
 
+    public function extraFields()
+    {
+        return [ 
+            'siswacount' => function($model) {
+                return ($model->siswaRombels) ? $model->siswaRombels->count() : 0;
+            }
+        ];
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -90,7 +99,7 @@ class Kelas extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
     }
 
     public function getList($param){
-        $customeQuery = self::find();
+        $customeQuery = self::find()->with('siswaRombels');
         extract($param);
         
         $customeQuery->where('1=1');

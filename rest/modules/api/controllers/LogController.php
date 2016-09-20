@@ -44,7 +44,7 @@ class LogController extends \rest\modules\api\ActiveController
                        ->leftJoin('user u', 'a.`created_by` = `u`.`id`')
                        ->leftJoin('pegawai p', 'u.`pegawai_id` = `p`.`id`')
                        ->where('1=1')
-                       ->orderBy(['created_at' => SORT_DESC])
+                       ->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC])
                        ->asArray();
         if($sekolahid){
             $query->andWhere(['a.sekolahid' => $sekolahid]);

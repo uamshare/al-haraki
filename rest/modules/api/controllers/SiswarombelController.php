@@ -1,29 +1,66 @@
 <?php
 namespace rest\modules\api\controllers;
 use Yii;
-use yii\data\ActiveDataProvider;
 
 class SiswarombelController extends \rest\modules\api\ActiveController //\yii\rest\ActiveController // 
 {
     public $modelClass = 'rest\models\SiswaRombel';
 
-    public function behaviors()
+    public function actions()
     {
-        $behaviors = parent::behaviors();
-        return array_merge($behaviors, 
-            [
-                'verbFilter' => [
-                    'class' => \yii\filters\VerbFilter::className(),
-                    'actions' => [
-                        'index'  => ['get'],
-                        'list'   => ['get'],
-                        // 'create' => ['put', 'post'],
-                        // 'update' => ['get', 'put', 'post'],
-                        // 'delete' => ['delete'],
-                    ],
-                ],
-            ]
-        );
+        $actions = parent::actions();
+        // unset($actions['create']);
+        // unset($actions['update']);
+        // unset($actions['delete']);
+        unset($actions['index']);
+        unset($actions['view']);
+        return $actions;
+    }
+
+    public function actionIndex(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $sekolahid = $request->getQueryParam('sekolahid', false);
+        $tahun_ajaran_id = $request->getQueryParam('tahun_ajaran_id', false);
+        $kelasid = $request->getQueryParam('kelasid', false);
+
+        $query = $model->find()
+                       ->select([
+                            'a.`id`',
+                            'a.`siswaid`',
+                            'b.`nis`',
+                            'b.`nisn`',
+                            'b.`nama_siswa`',
+                            'a.`kelasid`',
+                            'c.kelas',
+                            'c.`nama_kelas`',
+                            'b.`sekolahid`',
+                            'a.`tahun_ajaran_id`',
+                            'a.`created_at`',
+                            'a.`updated_at`'
+                        ])
+                       ->from('siswa_rombel a')
+                       ->innerJoin('siswa b', 'a.`siswaid` = b.`id`')
+                       ->leftJoin('kelas c', 'a.`kelasid` = c.`id`')
+                       ->where('1=1')
+                       ->orderBy([
+                            'b.`nama_siswa`' => SORT_ASC, 
+                            'b.`nis`' => SORT_ASC, 
+                            'a.`kelasid`' => SORT_ASC, 
+                            'b.`sekolahid`' => SORT_ASC
+                        ])
+                       ->asArray();
+        if($sekolahid){
+            $query->andWhere(['b.sekolahid' => $sekolahid]);
+        }
+        if($kelasid){
+            $query->andWhere(['a.kelasid' => $kelasid]);
+        }
+        if($tahun_ajaran_id){
+            $query->andWhere(['a.tahun_ajaran_id' => $tahun_ajaran_id]);
+        }
+
+        return $this->prepareDataProvider($query);
     }
     
     /**
@@ -33,8 +70,8 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
     public function actionList(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
-        $tahun_ajaran_id = '201617';
-        $sekolahid = 2;
+        $tahun_ajaran_id = '';
+        $sekolahid = 0;
         return $model->getList([
             'query' => $request->getQueryParam('query', false),
             'nis' => $request->getQueryParam('nis', false),
@@ -44,24 +81,6 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             'nama_kelas' => $request->getQueryParam('nama_kelas', false),
             'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $tahun_ajaran_id),
             'sekolahid' => $request->getQueryParam('sekolahid', $sekolahid)
-        ]);
-    }
-
-    /**
-     * Prepares the data provider that should return the requested collection of the models.
-     * @return ActiveDataProvider
-     */
-    protected function prepareDataProvider($query)
-    {
-        $request = Yii::$app->getRequest();
-        $perpage = $request->getQueryParam('per-page', 20);
-        $pagination = [
-            'pageSize' => $perpage
-        ];
-
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ($perpage > 0) ? $pagination : false
         ]);
     }
 }

@@ -29,28 +29,38 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
     public function actionList(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
-        return $this->prepareDataProvider($model->getList([
-            'id' => $request->getQueryParam('kelasid', false),
-            'sekolahid' => $request->getQueryParam('sekolahid', false),
-            'query' => $request->getQueryParam('query', false)
-        ]));
-    }
+        $kelasid = $request->getQueryParam('kelasid', false);
+        $sekolahid = $request->getQueryParam('sekolahid', false);
+        $query = $request->getQueryParam('query', false);
+        
+        $queryM = $model->find()
+                       ->select([
+                            'k.*',
+                            'COUNT(sr.id) as `siswacount`'
+                        ])
+                       ->from('kelas k')
+                       ->leftJoin('siswa_rombel sr', 'sr.`kelasid` = `k`.`id`')
+                       ->where('1=1')
+                       ->groupBy('k.id')
+                       ->orderBy(['k.kelas' => SORT_ASC,'k.id' => SORT_ASC])
+                       ->asArray();
 
-    /**
-     * Prepares the data provider that should return the requested collection of the models.
-     * @return ActiveDataProvider
-     */
-    protected function prepareDataProvider($query)
-    {
-        $request = Yii::$app->getRequest();
-        $perpage = $request->getQueryParam('per-page', 20);
-        $pagination = [
-            'pageSize' => $perpage
-        ];
+        if($kelasid){
+            $queryM->andWhere(['id' => $kelasid]);
+        }
 
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => ($perpage > 0) ? $pagination : false
-        ]);
+        if($sekolahid){
+            $queryM->andWhere(['sekolahid' => $sekolahid]);
+        }
+
+        if($query){
+            $queryM->andFilterWhere([
+                'or',
+                ['like', 'nama_kelas', $query]
+            ]);
+        }
+            
+        // var_dump($queryM->createCommand()->rawSql);exit();
+        return $this->prepareDataProvider($queryM);
     }
 }

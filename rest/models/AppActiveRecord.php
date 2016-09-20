@@ -34,7 +34,7 @@ class AppActiveRecord extends \yii\db\ActiveRecord
 
                 $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
                 $sekolahid = $request->getQueryParam('sekolahid', $sekolahid);
-                $this->saveLogs(null, $sekolahid);
+                $this->saveLogs($this->attributes, $sekolahid);
             }
             return true;
         } else {

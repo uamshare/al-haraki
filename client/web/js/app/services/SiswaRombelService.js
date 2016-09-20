@@ -8,8 +8,13 @@ define(['app'], function (app) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
-        factory.get = function (pageIndex, pageSize) {
-            return getResource('siswarombels', pageIndex, pageSize);
+        factory.get = function (paramdata) {
+            // return getResource('siswarombels', pageIndex, pageSize);
+            return $http.get(serviceBase + 'siswarombels',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
         };
 
         factory.getList = function(paramdata) {
