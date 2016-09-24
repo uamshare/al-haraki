@@ -414,8 +414,9 @@ define(['app'], function (app) {
 			}
 			
 			this.init = function(){
+				var session = new authService.session();
 				getByProfile();
-				$scope.options.headers['access-token'] = sessionStorage.getItem('accessToken');
+				$scope.options.headers['access-token'] = session.get('accessToken'); //sessionStorage.getItem('accessToken');
 			}
 
 			$scope.onSavePegawaiClick = function(event){
@@ -500,10 +501,11 @@ define(['app'], function (app) {
 			}
 
 			// File Upload Config
+			var session = new authService.session();
 			$scope.options = {
                 url: BASEAPIURL + 'pegawais/avatar',
                 headers : {
-                	'access-token' : sessionStorage.getItem('accessToken')
+                	'access-token' : session.get('accessToken') //sessionStorage.getItem('accessToken')
                 },
                 done : function (e, data) {
 					var result = data.result;

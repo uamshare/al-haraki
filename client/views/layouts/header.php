@@ -15,8 +15,8 @@ use yii\helpers\Html;
             <span class="sr-only">Toggle navigation</span>
         </a>
         <div class="navbar-brand">
-            <span ng-hide="profil.sekolahid == 0">{{sekolahProfile.nama_sekolah}}</span>
-            <select ng-hide="profil.sekolahid != 0" name="sekolahid" class="form-control" 
+            <span ng-hide="profile.sekolahid == 0">{{sekolahProfile.nama_sekolah}}</span>
+            <select ng-hide="profile.sekolahid != 0" name="sekolahid" class="form-control" 
                 ng-model="sekolahid_selected" 
                 ng-change="onSekolahidChange(sekolahid_selected)" >
                 <option value="1">1 - SDIT AL Haraki</option>
@@ -29,16 +29,16 @@ use yii\helpers\Html;
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img ng-src="{{profil.avatar}}" class="user-image" alt="User Image"/>
-                        <span class="hidden-xs">{{profil.fullname}}</span>
+                        <img ng-src="{{profile.avatar}}" class="user-image" alt="User Image"/>
+                        <span class="hidden-xs">{{profile.fullname}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            <img ng-src="{{profil.avatar}}" class="img-circle"  alt="User Image"/>
+                            <img ng-src="{{profile.avatar}}" class="img-circle"  alt="User Image"/>
                             <p>
-                                {{profil.fullname}}
-                                <small>{{profil.jabatan}}</small>
+                                {{profile.fullname}}
+                                <small>{{profile.jabatan}}</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->

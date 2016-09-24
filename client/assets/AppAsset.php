@@ -30,6 +30,7 @@ class AppAsset extends AssetBundle
         'plugins/angular/angular-touch.min.js',
         'plugins/angular-route/angular-route.min.js',
         'plugins/angular-animate/angular-animate.min.js',
+        'plugins/angular-cookies/angular-cookies.min.js',
         'plugins/angular-toastr/angular-toastr.tpls.min.js',
         'plugins/angular-sanitize/angular-sanitize.js',
         'plugins/angular-strap/dist/angular-strap.js',

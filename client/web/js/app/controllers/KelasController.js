@@ -103,6 +103,8 @@ define(['app'], function (app) {
             };
 
             $scope.getList = function (paramdata){
+                paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
+                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
                 cfpLoadingBar.start();
                 $resourceApi.getList(paramdata)
                 .then(function (result) {
@@ -139,8 +141,7 @@ define(['app'], function (app) {
                             cfpLoadingBar.complete();
                             $scope.getList({
                                 page : 1,
-                                'per-page' : 20,
-                                sekolahid : authService.getSekolahProfile().sekolahid
+                                'per-page' : 20
                             });
                         }else{
                             toastr.error('Data gagal dihapus.' + result.message, 'Error');
@@ -164,8 +165,7 @@ define(['app'], function (app) {
                     $scope.grid.virtualizationThreshold = pageSize; 
                     $scope.getList({
                         page : newPage,
-                        'per-page' : pageSize,
-                        sekolahid : authService.getSekolahProfile().sekolahid
+                        'per-page' : pageSize
                     });
                 });
                 $scope.gridApi.grid.registerDataChangeCallback(function(e) {
@@ -176,8 +176,7 @@ define(['app'], function (app) {
             this.init = function(){
                 $scope.getList({
                     page : 1,
-                    'per-page' : 20,
-                    sekolahid : authService.getSekolahProfile().sekolahid
+                    'per-page' : 20
                 });
             }
         }
@@ -215,7 +214,7 @@ define(['app'], function (app) {
                 id : '',
                 kelas : '',
                 nama_kelas : '',
-                sekolahid : '',
+                sekolahid : authService.getSekolahProfile().sekolahid,
                 created_at : '',
                 updated_at : ''
             }
@@ -237,7 +236,7 @@ define(['app'], function (app) {
                 paramdata['page'] = 1;
                 paramdata['per-page'] = 0;
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
-                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id,
+                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
 
                 cfpLoadingBar.start();
                 SiswaRombelService.get(paramdata)
@@ -311,6 +310,7 @@ define(['app'], function (app) {
             }
 
             this.init = function(){
+                $scope.form.sekolahid = authService.getSekolahProfile().sekolahid.toString();
                 if($routeParams.id){
                     initEdit($routeParams.id);
                     getSiswa({

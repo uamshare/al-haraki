@@ -22,8 +22,10 @@ define(['app'], function (app) {
         };
 
         $scope.loginOrOut = function () {
-            // setLoginLogoutText();
-            var isAuthenticated = sessionStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
+            var session = new authService.session();
+            var isAuthenticated = (session.get('isAuthValid') == true) ? true : false;
+            
+            // var isAuthenticated = sessionStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
             if (isAuthenticated) { //logout 
                 authService.logout().then(function () {
                     // $location.path('/#');
@@ -43,8 +45,8 @@ define(['app'], function (app) {
         }
 
         function getUserProfile(){
-            $scope.profil = authService.getProfile();
-            $scope.profil.avatar = ($scope.profil.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.profil.avatar;
+            $scope.profile = authService.getProfile();
+            $scope.profile.avatar = ($scope.profile.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.profile.avatar;
             // $scope.$root.avatar = $scope.profil.avatar;
         }
 
@@ -61,6 +63,8 @@ define(['app'], function (app) {
 
         function setLoginLogoutText(loggedIn) {
             $scope.loginLogoutText = (authService.user.isAuthenticated) ? 'Logout' : 'Login';
+            var session = new authService.session();
+            var loggedIn = (typeof loggedIn != 'undefined') ? loggedIn : session.get('isAuthValid'); // sessionStorage.getItem('isAuthValid')
             if(loggedIn){
                 initLogin();
             }
@@ -107,8 +111,8 @@ define(['app'], function (app) {
         });
 
         $scope.$on('profileChanged', function (brodcastname, value) {
-            console.log(value);
-            $scope.profil.avatar = value;
+            // console.log(value);
+            $scope.profile.avatar = value;
             $route.reload();
         });
 
@@ -146,7 +150,7 @@ define(['app'], function (app) {
             sekolah : false
         }
 
-        setLoginLogoutText(sessionStorage.getItem('isAuthValid'));
+        setLoginLogoutText();
 
         $scope.$on('$viewContentLoaded', function(){
             // getMenuPrivileges();

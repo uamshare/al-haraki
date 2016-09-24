@@ -5,11 +5,11 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img ng-src="{{profil.avatar}}" class="img-circle" alt="User Image"/>
+                <img ng-src="{{profile.avatar}}" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
-                <p>{{profil.fullname}}</p>
-                <a href="#"><i class="fa fa-circle text-success"></i> {{profil.jabatan}}</a>
+                <p>{{profile.fullname}}</p>
+                <a href="#"><i class="fa fa-circle text-success"></i> {{profile.jabatan}}</a>
             </div>
         </div>
 

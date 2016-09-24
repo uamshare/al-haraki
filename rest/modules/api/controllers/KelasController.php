@@ -31,6 +31,7 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
         $request = Yii::$app->getRequest();
         $kelasid = $request->getQueryParam('kelasid', false);
         $sekolahid = $request->getQueryParam('sekolahid', false);
+        $tahun_ajaran_id = $request->getQueryParam('tahun_ajaran_id', false);
         $query = $request->getQueryParam('query', false);
         
         $queryM = $model->find()
@@ -39,7 +40,7 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
                             'COUNT(sr.id) as `siswacount`'
                         ])
                        ->from('kelas k')
-                       ->leftJoin('siswa_rombel sr', 'sr.`kelasid` = `k`.`id`')
+                       ->leftJoin('siswa_rombel sr', 'sr.`kelasid` = `k`.`id` AND tahun_ajaran_id ="'. $tahun_ajaran_id . '"')
                        ->where('1=1')
                        ->groupBy('k.id')
                        ->orderBy(['k.kelas' => SORT_ASC,'k.id' => SORT_ASC])

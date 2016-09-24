@@ -7,6 +7,7 @@ define(['services/routeResolver'], function () {
             'ngTouch',
             'ngRoute', 
             'ngAnimate', 
+            'ngCookies',
             'toastr',
             'routeResolverServices', 
             // 'service',
@@ -33,6 +34,7 @@ define(['services/routeResolver'], function () {
         viewsDirectory : 'js/app/views/',
         restDirectory : BASEAPIURL,
         pageSize : 20,
+        cookieskey : 'apps-juToIBSCKeHHxeWuKmfZOhUcU2U4Mh3j'
     });
 
     app.config([
@@ -46,6 +48,8 @@ define(['services/routeResolver'], function () {
         'toastrConfig',
         'cfpLoadingBarProvider',
         '$datepickerProvider',
+        '$CONST_VAR',
+        // 'authService',
         // 'ChartJsProvider',
         function (
             $routeProvider,
@@ -57,7 +61,8 @@ define(['services/routeResolver'], function () {
             $httpProvider, 
             toastrConfig,
             cfpLoadingBarProvider,
-            $datepickerProvider
+            $datepickerProvider,
+            $CONST_VAR
             // ChartJsProvider
         ) 
         {
@@ -452,15 +457,19 @@ define(['services/routeResolver'], function () {
             $httpProvider.defaults.headers.common['access-token'] = null;
             $httpProvider.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
 
-            $httpProvider.interceptors.push(function ($q, $rootScope, $location) {
+            $httpProvider.interceptors.push(function ($q, $rootScope, $location, $cookieStore, $CONST_VAR) {
                 if ($rootScope.activeCalls == undefined) {
                     $rootScope.activeCalls = 0;
                 }
+                
 
                 return {
                     request: function (config) {
-                        // console.log(config);
-                        config.headers['access-token'] = sessionStorage.getItem('accessToken');
+                        var _key = $CONST_VAR.cookieskey,
+                        sessions = (typeof $cookieStore.get(_key) != 'undefined' && $cookieStore.get(_key) !='') ? $cookieStore.get(_key) : false;
+                        sessions = (sessions && sessions != '') ? JSON.parse(sessions) : '';
+                        
+                        config.headers['access-token'] = sessions['__access_token__'];
                         return config;
                     },
                     requestError: function (rejection) {
@@ -489,7 +498,7 @@ define(['services/routeResolver'], function () {
         }
     ]);
     
-    app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar', 
+    app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar',
         function ($rootScope, $location, authService, $templateCache, cfpLoadingBar) {
             
             //Client-side security. Server-side framework MUST add it's 
@@ -498,8 +507,11 @@ define(['services/routeResolver'], function () {
                 cfpLoadingBar.start();
                 $rootScope.fakeIntro = true;
                 if (next && next.$$route && next.$$route.secure) {
-                    var isLogin = (sessionStorage.getItem('isAuthValid') == 'true') ? true : false;
-                    if (!isLogin) {
+                    // var isLogin = (sessionStorage.getItem('isAuthValid') == 'true') ? true : false;
+                    var session = new authService.session();
+                    // console.log(session.get('isAuthValid')); 
+                    var loggedIn = (session.get('isAuthValid') == true) ? true : false;
+                    if (!loggedIn) {
                         $rootScope.$evalAsync(function () {
                             authService.redirectToLogin();
                         });
