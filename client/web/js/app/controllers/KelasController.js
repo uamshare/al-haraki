@@ -6,11 +6,11 @@ define(['app'], function (app) {
 
     var injectParams = [
             '$CONST_VAR',
-            '$scope', 
-            '$location', 
-            '$routeParams', 
-            '$http', 
-            '$log', 
+            '$scope',
+            '$location',
+            '$routeParams',
+            '$http',
+            '$log',
             '$timeout',
             'authService',
             'KelasService',
@@ -21,24 +21,24 @@ define(['app'], function (app) {
 
     var KelasController = function (
             $CONST_VAR,
-            $scope, 
-            $location, 
-            $routeParams, 
-            $http, 
-            $log, 
+            $scope,
+            $location,
+            $routeParams,
+            $http,
+            $log,
             $timeout,
             authService,
             KelasService,
             cfpLoadingBar,
             toastr,
             SiswaRombelService
-        ) 
+        )
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'master/kelas/';
         var $resourceApi = KelasService;
         //========================Grid Config =======================
-        
-        
+
+
 
         function errorHandle(error){
             var msg = error.data.name;
@@ -51,11 +51,11 @@ define(['app'], function (app) {
                     { name: 'index', displayName : 'No', width : '50', visible: false, enableFiltering : false ,  enableCellEdit: false},
                     { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
                     { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
-                    { 
-                        name: 'kelasRender', 
+                    {
+                        name: 'kelasRender',
                         displayName: 'Kelas',
-                        grouping: { groupPriority: 1 }, 
-                        sort: { priority: 1, direction: 'asc' }, 
+                        grouping: { groupPriority: 1 },
+                        sort: { priority: 1, direction: 'asc' },
                         width: '200',
                     },
                     { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, enableCellEdit: false},
@@ -65,12 +65,12 @@ define(['app'], function (app) {
                     { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
                 ]
             }
-            var columnActionTpl =   '<div class="col-action" ng-show="row.entity.id">' + 
-                                        '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
-                                            '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
+            var columnActionTpl =   '<div class="col-action" ng-show="row.entity.id">' +
+                                        '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' +
+                                            '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' +
                                         '</a>&nbsp;' +
-                                        '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
-                                            '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+                                        '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' +
+                                            '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' +
                                         '</a>' +
                                     '</div>';
             grid.columnDefs.push({
@@ -84,14 +84,13 @@ define(['app'], function (app) {
                 customTreeAggregationFinalizerFn: function( aggregation ) {
                     aggregation.rendered = aggregation.value;
                 },
-            }); 
+            });
 
-            $scope.grid = { 
+            $scope.grid = {
                 paginationPageSizes: [20, 30, 50, 100, 200],
                 paginationPageSize: 20,
                 pageNumber : 1,
                 useExternalPagination : true,
-
                 enableMinHeightCheck : true,
                 minRowsToShow : 20,
                 enableGridMenu: true,
@@ -147,7 +146,7 @@ define(['app'], function (app) {
                             toastr.error('Data gagal dihapus.' + result.message, 'Error');
                             cfpLoadingBar.complete();
                         }
-                        
+
                     }, errorHandle);
                 }
 
@@ -162,7 +161,7 @@ define(['app'], function (app) {
                 gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                     $scope.grid.pageNumber = newPage;
                     $scope.grid.pageSize = pageSize;
-                    $scope.grid.virtualizationThreshold = pageSize; 
+                    $scope.grid.virtualizationThreshold = pageSize;
                     $scope.getList({
                         page : newPage,
                         'per-page' : pageSize
@@ -200,7 +199,7 @@ define(['app'], function (app) {
                 ]
             }
 
-            $scope.gridSiswa = { 
+            $scope.gridSiswa = {
                 enableMinHeightCheck : true,
                 minRowsToShow : 35,
                 enableGridMenu: true,
@@ -318,11 +317,11 @@ define(['app'], function (app) {
                     });
                 }
             }
-            
+
         }
 
         var detailController = function(){
-            
+
         }
 
         var controller;
@@ -333,7 +332,7 @@ define(['app'], function (app) {
             case '/master/kelas/edit/' + $routeParams.id:
                 controller = new addEditController();
                 break;
-            default : 
+            default :
                 controller = new indexController();
                 break;
         }

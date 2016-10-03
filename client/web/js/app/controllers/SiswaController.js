@@ -1,20 +1,16 @@
 'use strict';
 
-// app.controller('CoaController', function ($scope, $http, $window, toaster, ngDialog, $injector, $httpParamSerializer) {
-//     var $validationProvider = $injector.get('$validation');
-//     $http.defaults.headers.patch['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
-// });
 
 define(['app'], function (app) {
 
     var injectParams = [
 			'$CONST_VAR',
-    		'$scope', 
-    		'$location', 
-    		'$routeParams', 
-    		'$http', 
-    		'$log', 
+    		'$scope',
+    		'$location',
+    		'$routeParams',
+    		'$http',
+    		'$log',
     		'$timeout',
             'authService',
             'SiswaService',
@@ -24,17 +20,17 @@ define(['app'], function (app) {
 
     var SiswaController = function (
     		$CONST_VAR,
-    		$scope, 
-    		$location, 
-    		$routeParams, 
-    		$http, 
-    		$log, 
+    		$scope,
+    		$location,
+    		$routeParams,
+    		$http,
+    		$log,
     		$timeout,
     		authService,
             SiswaService,
             cfpLoadingBar,
             toastr
-    	) 
+    	)
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'master/siswa/';
     	var $resourceApi = SiswaService;
@@ -52,12 +48,12 @@ define(['app'], function (app) {
 			]
     	}
 
-    	var columnActionTpl =   '<div class="col-action">' + 
-                                    '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
-                                        '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
+    	var columnActionTpl =   '<div class="col-action">' +
+                                    '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' +
+                                        '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' +
                                     '</a>&nbsp;' +
-                                    '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
-                                        '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
+                                    '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' +
+                                        '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' +
                                     '</a>' +
                                 '</div>';
 
@@ -68,13 +64,13 @@ define(['app'], function (app) {
             enableSorting : false,
             enableCellEdit: false,
             cellTemplate : columnActionTpl
-        }); 
+        });
 
         $scope.onEditClick = function(rowdata){
             $location.path( "/master/siswa/edit/" + rowdata.id);
         }
 
-    	$scope.grid = { 
+    	$scope.grid = {
     		paginationPageSizes: [20, 30, 50, 100, 200],
             paginationPageSize: 20,
             pageNumber : 1,
@@ -97,9 +93,9 @@ define(['app'], function (app) {
 		    	margin: [5, 5, 5, 5]
 		    },
 		    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: '#000'},
-		    exporterPdfHeader: { 
-		    	text: "My Header", 
-		    	style: 'headerStyle' 
+		    exporterPdfHeader: {
+		    	text: "My Header",
+		    	style: 'headerStyle'
 		   	},
 		    exporterPdfFooter: function ( currentPage, pageCount ) {
 		      return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
@@ -114,9 +110,9 @@ define(['app'], function (app) {
 		    exporterPdfMaxGridWidth: 500,
 		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location"))
 		};
-		
+
 		/*
-		$scope.grid = { 
+		$scope.grid = {
             paginationPageSizes: [20, 30, 50, 100, 200],
             paginationPageSize: 20,
             pageNumber : 1,
@@ -160,7 +156,7 @@ define(['app'], function (app) {
             gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                 $scope.grid.pageNumber = newPage;
                 $scope.grid.pageSize = pageSize;
-                $scope.grid.virtualizationThreshold = pageSize; 
+                $scope.grid.virtualizationThreshold = pageSize;
                 $scope.getList({
                     page : newPage,
                     perPage : pageSize
@@ -180,7 +176,7 @@ define(['app'], function (app) {
                         'per-page' : 20,
                         sekolahid : authService.getSekolahProfile().sekolahid
                     });
-                    
+
                 }, errorHandle);
             }
 
@@ -347,7 +343,7 @@ define(['app'], function (app) {
                 initIndex();
             }
 		}
-		
+
         $scope.onSaveClick = function(event){
             if($scope.form.nis == '' || $scope.form.nis == null){
                 toastr.warning('NIS tidak boleh kosong.', 'Warning');

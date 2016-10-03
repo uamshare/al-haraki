@@ -2,16 +2,16 @@
 
 define(['services/routeResolver'], function () {
 
-    var app = angular.module('alHaraki', 
+    var app = angular.module('alHaraki',
         [
             'ngTouch',
-            'ngRoute', 
-            'ngAnimate', 
+            'ngRoute',
+            'ngAnimate',
             'ngCookies',
             'toastr',
-            'routeResolverServices', 
+            'routeResolverServices',
             // 'service',
-            // 'ui.bootstrap', 
+            // 'ui.bootstrap',
             'mgcrea.ngStrap',
             'ui.grid',
             'ui.grid.pagination',
@@ -20,7 +20,7 @@ define(['services/routeResolver'], function () {
             'ui.grid.edit',
             'ui.grid.cellNav',
             'ui.grid.grouping',
-            'ui.grid.expandable', 
+            'ui.grid.expandable',
             'ui.grid.selection',
             'ui.grid.pinning',
             'chieffancypants.loadingBar',
@@ -38,12 +38,12 @@ define(['services/routeResolver'], function () {
     });
 
     app.config([
-        '$routeProvider', 
-        'routeResolverProvider', 
+        '$routeProvider',
+        'routeResolverProvider',
         '$controllerProvider',
-        '$compileProvider', 
-        '$filterProvider', 
-        '$provide', 
+        '$compileProvider',
+        '$filterProvider',
+        '$provide',
         '$httpProvider',
         'toastrConfig',
         'cfpLoadingBarProvider',
@@ -53,18 +53,18 @@ define(['services/routeResolver'], function () {
         // 'ChartJsProvider',
         function (
             $routeProvider,
-            routeResolverProvider, 
+            routeResolverProvider,
             $controllerProvider,
-            $compileProvider, 
-            $filterProvider, 
-            $provide, 
-            $httpProvider, 
+            $compileProvider,
+            $filterProvider,
+            $provide,
+            $httpProvider,
             toastrConfig,
             cfpLoadingBarProvider,
             $datepickerProvider,
             $CONST_VAR
             // ChartJsProvider
-        ) 
+        )
         {
             app.register =
             {
@@ -78,7 +78,7 @@ define(['services/routeResolver'], function () {
             angular.extend(toastrConfig, {
                 autoDismiss: false,
                 containerId: 'toast-container',
-                maxOpened: 0,    
+                maxOpened: 0,
                 newestOnTop: true,
                 positionClass: 'toast-bottom-right',
                 preventDuplicates: false,
@@ -112,7 +112,7 @@ define(['services/routeResolver'], function () {
             var routeCustome = routeResolverProvider.routeCustome;
 
             $routeProvider
-                .when('/', 
+                .when('/',
                     routeCustome.resolve(
                         'main/index',
                         'MainController',
@@ -120,7 +120,7 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
-                .when('/logs/:id', 
+                .when('/logs/:id',
                     routeCustome.resolve(
                         'logs/index',
                         'LogsController',
@@ -129,237 +129,245 @@ define(['services/routeResolver'], function () {
                 )
 
                 // MASTER SISWA
-                .when('/master/siswa', 
+                .when('/master/siswa',
                     routeCustome.resolve(
-                        'master/siswa/index', 
+                        'master/siswa/index',
                         'SiswaController',
                         true
                     )
                 )
 
 
-                .when('/master/siswa/add', 
+                .when('/master/siswa/add',
                     routeCustome.resolve(
-                        'master/siswa/form', 
+                        'master/siswa/form',
                         'SiswaController',
                         true
                     )
                 )
 
-                .when('/master/siswa/edit/:id', 
+                .when('/master/siswa/edit/:id',
                     routeCustome.resolve(
-                        'master/siswa/form', 
+                        'master/siswa/form',
                         'SiswaController',
                         true
                     )
                 )
 
                 // MASTER PEGAWAI
-                .when('/master/karyawan', 
+                .when('/master/karyawan',
                     routeCustome.resolve(
-                        'master/karyawan/index', 
+                        'master/karyawan/index',
                         'PegawaiController',
                         true
                     )
                 )
 
 
-                .when('/master/karyawan/add', 
+                .when('/master/karyawan/add',
                     routeCustome.resolve(
-                        'master/karyawan/form', 
+                        'master/karyawan/form',
+                        'PegawaiController',
+                        true
+                    )
+                )
+
+                .when('/master/karyawan/edit/:id',
+                    routeCustome.resolve(
+                        'master/karyawan/form',
                         'PegawaiController',
                         true
                     )
                 )
 
                 // MASTER KELAS
-                .when('/master/kelas', 
+                .when('/master/kelas',
                     routeCustome.resolve(
-                        'master/kelas/index', 
+                        'master/kelas/index',
                         'KelasController',
                         true
                     )
                 )
 
-                .when('/master/kelas/edit/:id', 
+                .when('/master/kelas/edit/:id',
                     routeCustome.resolve(
-                        'master/kelas/form', 
+                        'master/kelas/form',
                         'KelasController',
                         true
                     )
                 )
 
 
-                .when('/master/kelas/add', 
+                .when('/master/kelas/add',
                     routeCustome.resolve(
-                        'master/kelas/form', 
+                        'master/kelas/form',
                         'KelasController',
                         true
                     )
                 )
-        
+
                 // KEUANGAN
                 // Info Tagihan
-                .when('/keuangan/info-tagihan', 
+                .when('/keuangan/info-tagihan',
                     routeCustome.resolve(
-                        'keuangan/info-tagihan/index', 
+                        'keuangan/info-tagihan/index',
                         'TagihanInfoController',
                         true
                     )
                 )
-                .when('/keuangan/info-tagihan/:idkelas/:month', 
+                .when('/keuangan/info-tagihan/:idkelas/:month',
                     routeCustome.resolve(
-                        'keuangan/info-tagihan/edit', 
+                        'keuangan/info-tagihan/edit',
                         'TagihanInfoController',
                         true
                     )
                 )
 
                 // Kwitansi Pembayaran
-                .when('/keuangan/kwitansi-pembayaran', 
+                .when('/keuangan/kwitansi-pembayaran',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/index', 
+                        'keuangan/kwitansi-pembayaran/index',
                         'KwitansiPemabayaranController',
                         true
                     )
                 )
 
                 // Kwitansi Pembayaran
-                .when('/keuangan/kwitansi-pembayaran/add', 
+                .when('/keuangan/kwitansi-pembayaran/add',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/add', 
+                        'keuangan/kwitansi-pembayaran/add',
                         'KwitansiPemabayaranController',
                         true
                     )
                 )
-                .when('/keuangan/kwitansi-pembayaran/edit/:id', 
+                .when('/keuangan/kwitansi-pembayaran/edit/:id',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pembayaran/add', 
+                        'keuangan/kwitansi-pembayaran/add',
                         'KwitansiPemabayaranController',
                         true
                     )
                 )
-                .when('/keuangan/rekap-pembayaran-tagihan', 
+                .when('/keuangan/rekap-pembayaran-tagihan',
                     routeCustome.resolve(
-                        'keuangan/rekap-tagihan/index', 
+                        'keuangan/rekap-tagihan/index',
                         'RekapTagihanController',
                         true
                     )
                 )
-                .when('/keuangan/rekap-outstanding-tagihan', 
+                .when('/keuangan/rekap-outstanding-tagihan',
                     routeCustome.resolve(
-                        'keuangan/rekap-outstanding-tagihan/index', 
+                        'keuangan/rekap-outstanding-tagihan/index',
                         'RekapOutstandingTagihanController',
                         true
                     )
                 )
-                .when('/keuangan/rekonsiliasi-autodebet', 
+                .when('/keuangan/rekonsiliasi-autodebet',
                     routeCustome.resolve(
-                        'keuangan/rekonsiliasi-autodebet/index', 
+                        'keuangan/rekonsiliasi-autodebet/index',
                         'TagihanAutodebetController',
                         true
                     )
                 )
-                .when('/keuangan/rekonsiliasi-autodebet/add', 
+                .when('/keuangan/rekonsiliasi-autodebet/add',
                     routeCustome.resolve(
-                        'keuangan/rekonsiliasi-autodebet/add', 
+                        'keuangan/rekonsiliasi-autodebet/add',
                         'TagihanAutodebetController',
                         true
                     )
                 )
-                .when('/keuangan/rekonsiliasi-autodebet/edit/:id', 
+                .when('/keuangan/rekonsiliasi-autodebet/edit/:id',
                     routeCustome.resolve(
-                        'keuangan/rekonsiliasi-autodebet/add', 
+                        'keuangan/rekonsiliasi-autodebet/add',
                         'TagihanAutodebetController',
                         true
                     )
                 )
-                
-                .when('/keuangan/kwitansi-pengeluaran/add', 
+
+                .when('/keuangan/kwitansi-pengeluaran/add',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pengeluaran/add', 
+                        'keuangan/kwitansi-pengeluaran/add',
                         'KwitansiPengeluaranController',
                         true
                     )
                 )
-                .when('/keuangan/kwitansi-pengeluaran/edit/:id', 
+                .when('/keuangan/kwitansi-pengeluaran/edit/:id',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pengeluaran/add', 
+                        'keuangan/kwitansi-pengeluaran/add',
                         'KwitansiPengeluaranController',
                         true
                     )
                 )
-                .when('/keuangan/kwitansi-pengeluaran', 
+                .when('/keuangan/kwitansi-pengeluaran',
                     routeCustome.resolve(
-                        'keuangan/kwitansi-pengeluaran/index', 
+                        'keuangan/kwitansi-pengeluaran/index',
                         'KwitansiPengeluaranController',
                         true
                     )
                 )
-                
+
 
                 // AKUNTANSI
-                .when('/akuntansi/coa', 
+                .when('/akuntansi/coa',
                     routeCustome.resolve(
-                        'akuntansi/coa/index', 
+                        'akuntansi/coa/index',
                         'CoaController',
                         true
                     )
                 )
-                .when('/akuntansi/coa/edit/:id', 
+                .when('/akuntansi/coa/edit/:id',
                     routeCustome.resolve(
-                        'akuntansi/coa/add', 
+                        'akuntansi/coa/add',
                         'CoaController',
                         true
                     )
                 )
-                .when('/akuntansi/coa/add', 
+                .when('/akuntansi/coa/add',
                     routeCustome.resolve(
-                        'akuntansi/coa/add', 
+                        'akuntansi/coa/add',
                         'CoaController',
                         true
                     )
                 )
 
-                .when('/akuntansi/jurnal-harian/add', 
+                .when('/akuntansi/jurnal-harian/add',
                     routeCustome.resolve(
-                        'akuntansi/jurnal-harian/add', 
+                        'akuntansi/jurnal-harian/add',
                         'JurnalHarianController',
                         true
                     )
                 )
-                .when('/akuntansi/jurnal-harian/edit/:id', 
+                .when('/akuntansi/jurnal-harian/edit/:id',
                     routeCustome.resolve(
-                        'akuntansi/jurnal-harian/add', 
+                        'akuntansi/jurnal-harian/add',
                         'JurnalHarianController',
                         true
                     )
                 )
-                .when('/akuntansi/jurnal-harian', 
+                .when('/akuntansi/jurnal-harian',
                     routeCustome.resolve(
-                        'akuntansi/jurnal-harian/index', 
+                        'akuntansi/jurnal-harian/index',
                         'JurnalHarianController',
                         true
                     )
                 )
-                .when('/akuntansi/rgl/detail/:id', 
+                .when('/akuntansi/rgl/detail/:id',
                     routeCustome.resolve(
-                        'akuntansi/rgl/detail', 
+                        'akuntansi/rgl/detail',
                         'RglController',
                         true
                     )
                 )
-                .when('/akuntansi/rgl', 
+                .when('/akuntansi/rgl',
                     routeCustome.resolve(
-                        'akuntansi/rgl/index', 
+                        'akuntansi/rgl/index',
                         'RglController',
                         true
                     )
                 )
 
-                .when('/akuntansi/cashflow', 
+                .when('/akuntansi/cashflow',
                     routeCustome.resolve(
-                        'akuntansi/cashflow/index', 
+                        'akuntansi/cashflow/index',
                         'CashflowController',
                         true
                     )
@@ -367,85 +375,85 @@ define(['services/routeResolver'], function () {
 
 
                 //Pengaturan
-                .when('/pengaturan/user/add', 
+                .when('/pengaturan/user/add',
                     routeCustome.resolve(
-                        'pengaturan/user/add', 
+                        'pengaturan/user/add',
                         'UserController',
                         true
                     )
                 )
-                .when('/pengaturan/user/edit/:id', 
+                .when('/pengaturan/user/edit/:id',
                     routeCustome.resolve(
-                        'pengaturan/user/add', 
+                        'pengaturan/user/add',
                         'UserController',
                         true
                     )
                 )
-                .when('/profile', 
+                .when('/profile',
                     routeCustome.resolve(
-                        'pengaturan/user/profil', 
-                        'UserController',
-                        true
-                    )
-                )
-
-                .when('/pengaturan/user', 
-                    routeCustome.resolve(
-                        'pengaturan/user/index', 
+                        'pengaturan/user/profil',
                         'UserController',
                         true
                     )
                 )
 
-                .when('/pengaturan/grup-akses/add', 
+                .when('/pengaturan/user',
                     routeCustome.resolve(
-                        'pengaturan/grup-akses/add', 
+                        'pengaturan/user/index',
+                        'UserController',
+                        true
+                    )
+                )
+
+                .when('/pengaturan/grup-akses/add',
+                    routeCustome.resolve(
+                        'pengaturan/grup-akses/add',
                         'GrupAksesController',
                         true
                     )
                 )
-                .when('/pengaturan/grup-akses/edit/:id', 
+                .when('/pengaturan/grup-akses/edit/:id',
                     routeCustome.resolve(
-                        'pengaturan/grup-akses/add', 
+                        'pengaturan/grup-akses/add',
                         'GrupAksesController',
                         true
                     )
                 )
-                .when('/pengaturan/grup-akses', 
+                .when('/pengaturan/grup-akses',
                     routeCustome.resolve(
-                        'pengaturan/grup-akses/index', 
+                        'pengaturan/grup-akses/index',
                         'GrupAksesController',
                         true
                     )
                 )
-                .when('/pengaturan/sekolah', 
+                .when('/pengaturan/sekolah',
                     routeCustome.resolve(
-                        'pengaturan/sekolah/index', 
+                        'pengaturan/sekolah/index',
                         'SekolahController',
                         true
                     )
                 )
-                
-                .when('/login', 
+
+                .when('/login',
                     routeCustome.resolve(
                         'login',
                         'LoginController'
                     )
                 )
 
-                .when('/login/:redirect*?', 
+                .when('/login/:redirect*?',
                     routeCustome.resolve(
                         'login',
                         'LoginController'
                     )
                 )
 
-                .when('/404', 
+                .when('/404',
                     routeCustome.resolve(
                         '404'
                     )
                 )
-                .when('/403', 
+                .when('/403',
                     routeCustome.resolve(
                         '403'
                     )
@@ -461,14 +469,14 @@ define(['services/routeResolver'], function () {
                 if ($rootScope.activeCalls == undefined) {
                     $rootScope.activeCalls = 0;
                 }
-                
+
 
                 return {
                     request: function (config) {
                         var _key = $CONST_VAR.cookieskey,
                         sessions = (typeof $cookieStore.get(_key) != 'undefined' && $cookieStore.get(_key) !='') ? $cookieStore.get(_key) : false;
                         sessions = (sessions && sessions != '') ? JSON.parse(sessions) : '';
-                        
+
                         config.headers['access-token'] = sessions['__access_token__'];
                         return config;
                     },
@@ -486,7 +494,7 @@ define(['services/routeResolver'], function () {
                             case 403 :
                                 $location.path( "/403");
                                 break;
-                            // default : 
+                            // default :
                             //     $location.path( "/404");
                             //     break;
                         }
@@ -497,11 +505,11 @@ define(['services/routeResolver'], function () {
             });
         }
     ]);
-    
+
     app.run(['$rootScope', '$location','authService','$templateCache','cfpLoadingBar',
         function ($rootScope, $location, authService, $templateCache, cfpLoadingBar) {
-            
-            //Client-side security. Server-side framework MUST add it's 
+
+            //Client-side security. Server-side framework MUST add it's
             //own security as well since client-based security is easily hacked
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 cfpLoadingBar.start();
@@ -509,7 +517,7 @@ define(['services/routeResolver'], function () {
                 if (next && next.$$route && next.$$route.secure) {
                     // var isLogin = (sessionStorage.getItem('isAuthValid') == 'true') ? true : false;
                     var session = new authService.session();
-                    // console.log(session.get('isAuthValid')); 
+                    // console.log(session.get('isAuthValid'));
                     var loggedIn = (session.get('isAuthValid') == true) ? true : false;
                     if (!loggedIn) {
                         $rootScope.$evalAsync(function () {
@@ -529,8 +537,3 @@ define(['services/routeResolver'], function () {
 
     return app;
 });
-
-
-
-
-
