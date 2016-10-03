@@ -1,80 +1,84 @@
-<!-- firms -->
 <section class="content-header">
       <h1>
-        Form Pegawai
+        Form Karyawan
       	<small>Profile Karyaawan</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="http://localhost:8012/al-haraki/client/web/#/master/siswa">Pegawai</a></li>
-        <li class="active">Form Pegawai</li>
+        <li><a href="#/master/karyawan">Karyawan</a></li>
+        <li class="active">Form Karyawan</li>
       </ol>
 </section>
+
 <section class="content">
 	<div class="row">
-    	<form class="form-horizontal">
-		    <div class="col-md-3">
+		<form class="form-horizontal form-custome">
+			<div class="col-md-3 col-xs-12">
 		        <!-- Profile Image -->
-		        <div class="box box-primary">
+		        <div class="box box-no-margin box-primary">
 		          <div class="box-body box-profile">
-		            <img class="profile-user-img img-responsive img-circle" src="../../asset/img/user-profile.jpg" alt="User profile picture">
+		            <img class="profile-user-img img-responsive img-circle" 
+							ng-src="{{profilAvatar}}" alt="User profile picture">
 
-		            <h3 class="profile-username text-center">Nina Mcintire Nina Mcintire Nina Mcintire</h3>
+		            <h3 class="profile-username text-center">{{form.nama_pegawai}}</h3>
 
-		            <p class="text-muted text-center">Sekolah Al-amak</p>
+		            <p class="text-muted text-center">{{form.nama_panggilan}}</p>
 		      		<br/>
 		            <a href="#" class="btn btn-primary btn-block"><b>Photo</b></a>
 		          </div> <!-- /.box-body -->
 		        </div><!-- /.box -->
 		    </div><!-- /.col -->
-      		<div class="col-md-9">
-      			<div class="box box-success ">
-	              	<div class="box-header">
-	                	<h3 class="box-title"></h3>
-	              	</div>
-	              	<div class="box-body">
-	                	<div class="form-group">
+			<div class="col-md-9 col-xs-12">
+				<div class="box box-no-margin box-primary box-solid">
+					<div class="box-header with-border">
+						<h3 class="box-title"><i class="fa fa-th-list"></i> Biodata</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>
+
+					<div class="box-body">
+						<div class="form-group">
 	                  		<label for="nis" class="col-sm-2 control-label">NIK</label>
 		                  	<div class="col-sm-8">
-		                   		 <input type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
+		                   		 <input type="text" class="form-control" ng-model="form.nik" id="nik" name="nik" placeholder="NIK">
 		                  	</div>
 		                </div>
 	                	<div class="form-group">
 	                  		<label for="nisn" class="col-sm-2 control-label">NUPTK</label>
 	                 		<div class="col-sm-8">
-		                    	<input type="text" class="form-control" id="nisn" name="nisn" placeholder="NISN">
+		                    	<input type="text" ng-model="form.nuptk" class="form-control" id="nuptk" name="nuptk" placeholder="NUPTK">
 		                 	</div>
 	                	</div>
 	               		<div class="form-group">
 	                  		<label for="namaSiswa" class="col-sm-2 control-label">Nama Pegawai</label>
 	                 	 	<div class="col-sm-8">
-	                    		<input type="text" class="form-control" id="namaSiswa" name="nama_siswa" placeholder="Nama Siswa">
+	                    		<input type="text" ng-model="form.nama_pegawai" class="form-control" id="namaPegawai" name="nama_pegawai" placeholder="Nama Pegawai">
 	                  		</div>
 	                	</div>
 	                	<div class="form-group">
-	                  		<label for="sekolahid" class="col-sm-2 control-label">Sekolah</label>
-	                  		<div class="col-sm-8">
-	                    		<select class="form-control select2" style="width: 100%;" name="sekolahid" data-placeholder="Pendidikan Ibu">
-				                    <option>S1</option>
-				                    <option>S2</option>
-				                    <option>D3</option>
-				                    <option>D2</option>
-				                    <option>D1</option>
-				                    <option>SMA</option>
-				                    <option>SMP</option>
-			                    </select>
+	                  		<label for="namaSiswa" class="col-sm-2 control-label">Nama Panggilan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nama_panggilan" class="form-control" id="nama_panggilan" name="nama_panggilan" placeholder="Nama Panggilan">
 	                  		</div>
 	                	</div>
-	          			<br>
-	          			<div class="form-group">
-				            <div class="col-sm-10">
-				                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
-				                <button type="submit" class="btn btn-danger"><i class="fa fa-close"></i> Batal</button>
-				            </div>
-	          			</div>
-      				</div><!-- /box-body -->
-      			</div>
-      	    </div>
-    	</form><!--endform -->
+					</div>
+
+					<div class="box-footer">
+						<div class="box-tools pull-right">
+							<a href="#/master/karyawan" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+								data-original-title="Reset Data">
+								<i class="fa fa-refresh"></i> Batal
+							</a>
+							<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
+								data-original-title="Simpan Data">
+								<i class="fa fa-save"></i> Simpan
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+	    </form><!--endform -->
   	</div><!-- /.row -->
 </section>

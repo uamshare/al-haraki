@@ -238,6 +238,7 @@ define(['app'], function (app) {
             jarak_ke_sekolah : '',
             sarana_transportasi : '',
             keterangan : '',
+            avatar : '',
             sekolahid : authService.getSekolahProfile().sekolahid
         }
 
@@ -292,6 +293,8 @@ define(['app'], function (app) {
             }, errorHandle);
         }
 
+        $scope.profilAvatar = ($scope.form.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.form.avatar;
+        
         function reset(){
             $scope.form.id = '';
             $scope.form.nis = '';

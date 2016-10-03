@@ -56,8 +56,25 @@ use yii\db\Query;
  * @property Sekolah $sekolah
  * @property SiswaRombel[] $siswaRombels
  */
-class Siswa extends \yii\db\ActiveRecord
+class Siswa extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            [
+            'class' => \yii\behaviors\TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new \yii\db\Expression('NOW()'),
+            ]
+        ];
+    }
+    
     /**
      * @inheritdoc
      */

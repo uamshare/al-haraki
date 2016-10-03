@@ -38,8 +38,6 @@ define(['app'], function (app) {
         var $resourceApi = KelasService;
         //========================Grid Config =======================
 
-
-
         function errorHandle(error){
             var msg = error.data.name;
             toastr.warning(msg, 'Warning');

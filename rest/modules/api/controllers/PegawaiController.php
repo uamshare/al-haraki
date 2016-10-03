@@ -9,6 +9,15 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
 {
     public $modelClass = 'rest\models\Pegawai';
     private $profile_path = 'profile/pegawai/';
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        // unset($actions['index']);
+        unset($actions['view']);
+        return $actions;
+    }
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -24,10 +33,29 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
         );
     }
 
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function actionView($id){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $query = $request->getQueryParam('query', false);
+        
+        $queryM = $model->find()
+                       ->where(['id' => $id])
+                       // ->asArray()
+                       ->One();
+        
+        $queryM->avatar = $queryM->avatarPath;
+        return $queryM;
+    }
+
     public function actionList(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();
-        return $this->prepareDataProvider($model->getList([
+
+        $query = $model->getList([
             'id' => $request->getQueryParam('id', false),
             'nik' => $request->getQueryParam('nik', false),
             'nuptk' => $request->getQueryParam('nuptk', false),
@@ -35,7 +63,9 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
             'nama_panggilan' => $request->getQueryParam('nama_panggilan', false),
             'sekolahid' => $request->getQueryParam('sekolahid', ''),
             'query' => $request->getQueryParam('query', false)
-        ]));
+        ]);
+
+        return $this->prepareDataProvider($query);
     }
 
     public function actionAvatar(){
@@ -64,21 +94,4 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
         }
     }
 
-    /**
-     * Prepares the data provider that should return the requested collection of the models.
-     * @return ActiveDataProvider
-     */
-    // protected function prepareDataProvider($query)
-    // {
-    //     $request = Yii::$app->getRequest();
-    //     $perpage = $request->getQueryParam('per-page', 20);
-    //     $pagination = [
-    //         'pageSize' => $perpage
-    //     ];
-
-    //     return new ActiveDataProvider([
-    //         'query' => $query,
-    //         'pagination' => ($perpage > 0) ? $pagination : false
-    //     ]);
-    // }
 }

@@ -48,13 +48,15 @@ class AppActiveRecord extends \yii\db\ActiveRecord
         $logs->action_id = \Yii::$app->controller->action->id;
         $logs->tablename = $this->tableName();
         $dirty_attributes = (is_null($dirtyAttributes)) ? $this->dirtyAttributes : $dirtyAttributes;
+
         $date = date('Y-m-d H:i:s');
 
         if($dirty_attributes){
+
             $dirty_attributes['created_at'] = $date;
             $dirty_attributes['updated_at'] = $date;
             $logs->dirty_attributes = json_encode($dirty_attributes);
-            $logs->created_at = $this->updated_at;
+            $logs->created_at = isset($this->updated_at) ? $this->updated_at : $date;
             $logs->created_by = \Yii::$app->user->getId();
 
             $user = \Yii::$app->user;
@@ -63,9 +65,8 @@ class AppActiveRecord extends \yii\db\ActiveRecord
             $logs->sekolahid = (!is_null($sekolahid) ? $sekolahid : $_sekolahid);
 
             if(!$logs->save()){
-                // var_dump($logs->getErrors());
+                var_dump($logs->getErrors());
             }
         }
-        
     }
 }

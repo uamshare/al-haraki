@@ -1,14 +1,14 @@
-<div class="box box-primary box-solid">
+<div class="box box-no-margin box-primary box-solid">
 	<div class="box-footer">
 		<div class="box-tools-left">
-			<a href="" ng-click="onAddClick($event)" class="btn btn-primary btn-sm" data-toggle="tooltip"
+			<a href="" ng-click="onAddClick($event)" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
 				data-original-title="Tambah Data">
-				<i class="fa fa-plus"></i>
+				<i class="fa fa-plus-circle"></i> Tambah
 			</a>
-			<a href="#/keuangan/info-tagihan/log" class="btn btn-primary btn-sm" data-toggle="tooltip"
-				data-original-title="Tambah Data">
-				<i class="fa fa-history"></i>
+			<a href="#/logs/pegawai" class="btn btn-default btn-sm btn-flat" >
+				<i class="fa fa-history"></i> Log
 			</a>
+
 			<div class="btn-group">
 			  <ul class="dropdown-menu" role="menu">
 			    <li><a href="#"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
@@ -18,7 +18,7 @@
 		</div>
 	</div>
 </div>
-<div class="box box-primary box-solid">
+<div class="box box-no-margin box-primary box-solid">
 	<div class="box-header with-border">
 		<h3 class="box-title"><i class="fa fa-th-list"></i> Grid</h3>
 		<div class="box-tools pull-right">
@@ -32,7 +32,7 @@
 				<div id="grid1" ui-grid="grid" 
 					ui-grid-resize-columns 
 		            ui-grid-selection 
-		            ui-grid-exporter 
+		            ui-grid-pagination
 		            ui-grid-cellNav
 		            class="grid">
 		        </div>
