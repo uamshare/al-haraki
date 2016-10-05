@@ -70,7 +70,7 @@
                                 <table>
                                     <tr><td>Nama</td><td>:</td><td>{{row.nama_siswa}}</td></tr>
                                     <tr><td>Bulan</td><td>:</td>
-                                        <td>{{month.options[month.selected].name}} {{month.year}}</td>
+                                        <td>{{month.options[ month.selected - 1 ].name}} {{month.year}}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -123,16 +123,7 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="note">
-                        <i>Note :</i><br/>
-                        <span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 {{month.options[month.selected].name}} {{month.year}}</strong></span>
-                        <ol>
-                            <li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>
-                            <li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>
-                            <li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>
-                            <li>Mohon maaf jika ada kekeliruan pada informasi ini</li>
-                        </ol>
-                    </div>
+                    <div class="note" ng-bind-html="notesPrint"></div>
                 </div>
                 <div id="footer" ng-show="($index + 1) % 4 == 0"></div>
                 <div ng-show="($index + 1) % 4 == 0" style="display: block; page-break-after: always;"></div>

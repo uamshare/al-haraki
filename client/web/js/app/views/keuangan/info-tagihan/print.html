@@ -33,32 +33,6 @@
         }
     }
 </style>
-<div class="box box-no-margin box-default box-solid collapsed-box">
-    <div class="box-header with-border">
-        <h3 class="box-title"><i class="fa fa-cogs"></i></h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="box-body">
-        <div class="form-group">
-            <label>Note :</label>
-            <textarea 
-                class="form-control"
-                rows="10"
-                ng-model="settings.note">
-            </textarea>
-        </div>
-    </div>
-    <div class="box-footer">
-        <div class="box-tools pull-right">
-            <a href="" ng-click="onSetNoteClick($event)" class="btn btn-primary btn-sm btn-flat" >
-                <i class="fa fa-save"></i>
-            </a>
-        </div>
-    </div>
-</div>
 <div class="box box-no-margin box-default box-solid print-container">
     <div class="box-header with-border">
         <h3 class="box-title"><i class="fa fa-print"></i> Print Area</h3>
@@ -95,7 +69,7 @@
                             <table>
                                 <tr><td>Nama</td><td>:</td><td>{{row.nama_siswa}}</td></tr>
                                 <tr><td>Bulan</td><td>:</td>
-                                    <td>{{month.options[month.selected].name}} {{month.year}}</td>
+                                    <td>{{month.options[ month.selected - 1 ].name}} {{month.year}}</td>
                                 </tr>
                             </table>
                         </td>
@@ -148,15 +122,15 @@
                         </td>
                     </tr>
                 </table>
-                <div class="note">
-                    <i>Note :</i><br/>
+                <div class="note" ng-bind-html="notesPrint">
+                    <!-- <i>Note :</i><br/>
                     <span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 {{month.options[month.selected].name}} {{month.year}}</strong></span>
                     <ol>
                         <li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>
                         <li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>
                         <li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>
                         <li>Mohon maaf jika ada kekeliruan pada informasi ini</li>
-                    </ol>
+                    </ol> -->
                 </div>
             </div>
         </div>

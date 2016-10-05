@@ -35,6 +35,7 @@ require(
         'services/tagihanAutodebetService',
 
         'services/LogsService',
+        'services/PengaturanService',
         
         'controllers/NavbarController'
     ],

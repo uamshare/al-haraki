@@ -21,23 +21,24 @@ class AppAsset extends AssetBundle
         'plugins/ng-dialog/css/ngDialog-theme-default.min.css',
         'plugins/ng-dialog/css/ngDialog-theme-flat.css',
         'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload.css',
+        'plugins/ngWYSIWYG-master/editor.min.css',
         'css/print-style-2.css',
         'css/site.css'
     ];
 
     public $js = [
-        'plugins/angular/angular.js',
+        'plugins/angular/angular.min.js',
         'plugins/angular/angular-touch.min.js',
         'plugins/angular-route/angular-route.min.js',
         'plugins/angular-animate/angular-animate.min.js',
         'plugins/angular-cookies/angular-cookies.min.js',
         'plugins/angular-toastr/angular-toastr.tpls.min.js',
-        'plugins/angular-sanitize/angular-sanitize.js',
-        'plugins/angular-strap/dist/angular-strap.js',
+        'plugins/angular-sanitize/angular-sanitize.min.js',
+        'plugins/angular-strap/dist/angular-strap.min.js',
         'plugins/angular-strap/dist/angular-strap.tpl.min.js',
         'plugins/angular-loading-bar-master/loading-bar.min.js',
 
-        'plugins/chartjs/Chart.min.js',
+        // 'plugins/chartjs/Chart.min.js',
         // 'plugins/angular-chart/Chart.min.js',
         // 'plugins/angular-chart/angular-chart.js',
         'plugins/pdfmake/pdfmake.min.js',
@@ -51,7 +52,9 @@ class AppAsset extends AssetBundle
         'plugins/jQuery-File-Upload-9.12.5/jquery.ui.widget.js',
         'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload.js',
         'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload-process.js',
-        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload-angular.js'
+        'plugins/jQuery-File-Upload-9.12.5/jquery.fileupload-angular.js',
+
+        'plugins/ngWYSIWYG-master/wysiwyg.min.js'
         
     ];
 

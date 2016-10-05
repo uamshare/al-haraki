@@ -25,7 +25,8 @@ define(['services/routeResolver'], function () {
             'ui.grid.pinning',
             'chieffancypants.loadingBar',
             'ngDialog',
-            'blueimp.fileupload'
+            'blueimp.fileupload',
+            'ngWYSIWYG'
             // 'chart.js'
         ]
     );

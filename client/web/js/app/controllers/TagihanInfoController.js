@@ -18,7 +18,8 @@ define(['app'], function (app) {
     		'TagihanInfoService',
     		'authService',
     		'KelasService',
-    		'TahunAjaranService'
+    		'TahunAjaranService',
+    		'PengaturanService'
     	];
 
     var TagihanInfoController = function (
@@ -38,7 +39,8 @@ define(['app'], function (app) {
 		TagihanInfoService,
 		authService,
 		KelasService,
-		TahunAjaranService
+		TahunAjaranService,
+		PengaturanService
 	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/info-tagihan/';
@@ -295,6 +297,56 @@ define(['app'], function (app) {
 	        });
 		}
 
+		function getNotes(params){
+			if(typeof params == 'undefined')params = [];
+			params['sekolahid'] = authService.getSekolahProfile().sekolahid;
+			params['pjudul'] = 'notes_t';
+			PengaturanService.get(params)
+			.then(function (result) {
+	            if(result.success){
+					if(result.success){
+						$scope.settings.pid = result.rows[0].pid;
+						$scope.settings.pjudul = result.rows[0].pjudul;
+						$scope.settings.pdeskripsi = result.rows[0].pdeskripsi;
+						$scope.settings.sekolahid = authService.getSekolahProfile().sekolahid;
+						$scope.settings.updated_at = result.rows[0].updated_at;
+					}
+				}
+	        }, function(error){
+	        	toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+	        });
+		}
+		$scope.settings = {
+			pid : '',
+			pjudul: '',
+			pdeskripsi: '',
+			sekolahid: '',
+			updated_at: date,
+			// note : '<i>Note :</i><br/>' +
+			// 		'<span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 [month] [year]</strong></span>' +
+   //                  '<ol>' +
+   //                      '<li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>' +
+   //                      '<li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>' +
+   //                      '<li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>' +
+   //                      '<li>Mohon maaf jika ada kekeliruan pada informasi ini</li>' +
+   //                  '</ol>',
+        }
+
+        $scope.onSetNoteClick = function(){
+        	var params = $scope.settings;
+        	cfpLoadingBar.start();
+			PengaturanService.update(params)
+			.then(function (result) {
+                if(result.success){
+					toastr.success('Data berhasil disimpan', 'Success');
+		    		cfpLoadingBar.complete();
+				}else{
+					toastr.warning('Data gagal tersimpan.<br/>' + result.message, 'Warning');
+					cfpLoadingBar.complete();
+				}
+            }, errorHandle);
+        }
+
 		/**
 		 * Save data 
 		 * @param gridData Object, all dirty grid data
@@ -326,6 +378,16 @@ define(['app'], function (app) {
 	        }
 	    };
 		
+		$scope.editor = {
+			config : {
+				fontAwesome: true
+			},
+			// content : '<h1>Hello world!</h1>',
+			api : {
+				scope : $scope
+			}
+		}
+
 		$scope.gridAction = {
 			onPrintClick : function(rowdata){
 				var date = new Date();
@@ -344,7 +406,9 @@ define(['app'], function (app) {
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();
 				$scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
-
+				var notes = $scope.settings.pdeskripsi;
+				$scope.notesPrint = notes.replace("[month]", $scope.month.options[ $scope.month.selected - 1 ].name)
+									.replace("[year]", $scope.month.year);
 		        ngDialog.open({
 		            template: $scope.viewdir + 'print.html',
 		            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
@@ -358,20 +422,6 @@ define(['app'], function (app) {
 					isEmptyCheck = true;
 				var selectedRows = $scope.gridApi.selection.getSelectedRows();
 				isEmptyCheck = (selectedRows.length > 0) ? false : true;
-				console.log(selectedRows.length);
-				// return;
-				// for(var idx in $scope.grid.data){
-				// 	if($scope.grid.data[idx].isCheck ){
-				// 		$scope.rows[index] = $scope.grid.data[idx];
-				// 		$scope.rows[index].total = $scope.rows[index].spp + 
-				// 					$scope.rows[index].komite_sekolah +
-				// 					$scope.rows[index].catering +
-				// 					$scope.rows[index].keb_siswa +
-				// 					$scope.rows[index].ekskul;
-				// 		index++;
-				// 		isEmptyCheck = false;
-				// 	}
-				// }
 				for(var idx in selectedRows){
 					$scope.rows[index] = selectedRows[idx];
 					$scope.rows[index].total = $scope.rows[index].spp + 
@@ -392,6 +442,9 @@ define(['app'], function (app) {
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();
 				$scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
+				var notes = $scope.settings.pdeskripsi;
+				$scope.notesPrint = notes.replace("[month]", $scope.month.options[ $scope.month.selected - 1 ].name)
+									.replace("[year]", $scope.month.year);
 
 				if($scope.rows.length > 0){
 					ngDialog.open({
@@ -400,18 +453,10 @@ define(['app'], function (app) {
 			            scope: $scope
 			        });
 				}
-		        
 			}
 		};
-		// $scope.settings = {
-		// 	note : '<span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 {{month.options[month.selected].name}} {{month.year}}</strong></span>' +
-  //                   '<ol>' +
-  //                       '<li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>' +
-  //                       '<li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>' +
-  //                       '<li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>' +
-  //                       '<li>Mohon maaf jika ada kekeliruan pada informasi ini</li>' +
-  //                   '</ol>',
-  //       }
+
+		
 
 		$scope.onSearchClick = function (event) {
 			if($scope.kelas.selected == null || $scope.kelas.selected == ''){
@@ -643,8 +688,11 @@ define(['app'], function (app) {
 				$scope.gridEdit.columnDefs[8].visible = true;
 				$scope.gridEdit.columnDefs[9].visible = true;
 				$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
+        	}else{
+        		getNotes();
         	}
 		}
+
 		$scope.$on('$viewContentLoaded', function(){
 			// init();
 		});
