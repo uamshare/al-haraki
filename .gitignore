@@ -3,7 +3,7 @@
 
 # phpstorm project files
 .idea
-
+/client/views/layouts/main.php
 # netbeans project files
 nbproject
 
