@@ -186,11 +186,7 @@ define(['app'], function (app) {
     	
     	/*********************** Filter Grid ******************************/
 		$scope.kelas = {
-			options: [
-				{id: 24, nama_kelas: 'Al Kautsar'},
-				{id: 25, nama_kelas: 'An Naba'},
-				{id: 26, nama_kelas: 'Ash Shafaat'}
-			],
+			options: [],
 			selected: null
 		};
 		
@@ -210,6 +206,7 @@ define(['app'], function (app) {
 		}
 
 		function getDataInfo(paramdata){
+			paramdata['tahun_ajaran_id'] = sekolahProfil.tahun_ajaran_id;
 			cfpLoadingBar.start();
 			$resourceApi.getListActive(paramdata)
 			.then(function (result) {
@@ -237,6 +234,7 @@ define(['app'], function (app) {
 		}
 
 		function getData(paramdata){
+			paramdata['tahun_ajaran_id'] = sekolahProfil.tahun_ajaran_id;
 			cfpLoadingBar.start();
 			$resourceApi.getList(paramdata)
 			.then(function (result) {
@@ -322,14 +320,6 @@ define(['app'], function (app) {
 			pdeskripsi: '',
 			sekolahid: '',
 			updated_at: date,
-			// note : '<i>Note :</i><br/>' +
-			// 		'<span><strong>AUTODEBET DILAKUKAN TGL 1 dan 8 [month] [year]</strong></span>' +
-   //                  '<ol>' +
-   //                      '<li>Saldo Minimum setelah pendebetan di Rek. BSM Rp. 20.000,-</li>' +
-   //                      '<li>Jika ingin ikut catering atau off mohon konfirmasi diakhir bulan</li>' +
-   //                      '<li><b>Outstanding Catering lebih darai 2 bulan, akan di Off-kan sampai melakukan pembayaran</b></li>' +
-   //                      '<li>Mohon maaf jika ada kekeliruan pada informasi ini</li>' +
-   //                  '</ol>',
         }
 
         $scope.onSetNoteClick = function(){
@@ -455,8 +445,6 @@ define(['app'], function (app) {
 				}
 			}
 		};
-
-		
 
 		$scope.onSearchClick = function (event) {
 			if($scope.kelas.selected == null || $scope.kelas.selected == ''){

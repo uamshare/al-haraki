@@ -637,6 +637,7 @@ define(['app'], function (app) {
 
             function mergeXlsdataAndRombel(params, xlsdata){
                 params['sekolahid'] = authService.getSekolahProfile().sekolahid;
+                params['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
                 cfpLoadingBar.start();
                 SiswaRombelService.getList(params)
                 .then(function (result) {

@@ -207,7 +207,23 @@ define(['services/routeResolver'], function () {
                     )
                 )
 
+                .when('/master/rombel/kelola',
+                    routeCustome.resolve(
+                        'master/rombel/edit',
+                        'RombelController',
+                        true
+                    )
+                )
+
                 // KEUANGAN
+                // dashboard
+                .when('/keuangan/dashboard',
+                    routeCustome.resolve(
+                        'main/dashboard',
+                        'MainController',
+                        true
+                    )
+                )
                 // Info Tagihan
                 .when('/keuangan/info-tagihan',
                     routeCustome.resolve(

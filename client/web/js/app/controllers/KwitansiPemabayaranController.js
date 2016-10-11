@@ -584,6 +584,7 @@ define(['app'], function (app) {
 			}
 
 			function getRombel(paramdata){
+				paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
 				cfpLoadingBar.start();
 				SiswaRombelService.getList(paramdata)
 				.then(function (result) {

@@ -52,6 +52,7 @@
                             'options' => ['ng-show' => 'menuprivileges.keuangan'],
                             'url' => '$',
                             'items' => [
+                                ['label' => 'Dashboard', 'icon' => 'fa fa-dashboard', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran_summaryouts'],'url' => ['/#keuangan/dashboard']],
                                 ['label' => 'Info Tagihan', 'icon' => 'fa fa-info-circle', 'options' => ['ng-show' => 'menuprivileges.tagihaninfoinput'],'url' => ['/#keuangan/info-tagihan']],
                                 ['label' => 'Kwitansi Pembayaran', 'icon' => 'fa fa-edit', 'options' => ['ng-show' => 'menuprivileges.kwitansipembayaran_create'], 'url' => ['#keuangan/kwitansi-pembayaran/add']],
                                 ['label' => 'Rekap Pembayaran Tagihan', 'icon' => 'fa fa-print', 'options' => ['ng-show' => 'menuprivileges.tagihanpembayaran_listbayar'], 'url' => ['/#keuangan/rekap-pembayaran-tagihan']],

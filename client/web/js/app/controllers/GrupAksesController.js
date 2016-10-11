@@ -211,7 +211,7 @@ define(['app'], function (app) {
 	                    grouping: { groupPriority: 1 }, 
 	                    width: 150,
 	                },
-					{ name: 'name', displayName: 'ID', visible: true,  width : 150, enableCellEdit: false},
+					{ name: 'name', displayName: 'ID', visible: false,  width : 150, enableCellEdit: false},
 					{ name: 'description', displayName: 'Menu Akses', visible: true,  enableCellEdit: false},
 					{ 
 						name: 'create', displayName: 'Tambah', width : '100', visible: true, enableCellEdit: false,
@@ -259,6 +259,7 @@ define(['app'], function (app) {
 				var controller = [
 					'tagihaninfoinput_list',
 					'tagihanpembayaran_listbayar',
+					'tagihanpembayaran_summaryouts',
 					'rgl',
 					'cashflow'
 				];

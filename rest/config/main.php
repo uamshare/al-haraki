@@ -55,7 +55,7 @@ return [
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
 
-                if(in_array($response->statusCode, [200,201,202])){
+                if(in_array($response->statusCode, [200,201,202,203,204])){
                     $header = $response->getHeaders();
                     if ($response->data !== null && Yii::$app->request->get('rsp_type')) {
                         if(Yii::$app->request->get('rsp_type') == 1){

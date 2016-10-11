@@ -10,7 +10,8 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
     public $Auth;
     protected $authname_extra = [
         'tagihaninfoinput_list',
-        'tagihanpembayaran_listbayar'
+        'tagihanpembayaran_listbayar',
+        'tagihanpembayaran_summaryouts'
     ];
     public function actions()
     {
@@ -112,27 +113,32 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             foreach ($permission as $key => $value) {
                 if(in_array($key, $this->authname_extra)){
                     $list[] = $key;
+                    $checklist[] = $key;
                 }else{
-                    if(preg_match('/_index/', $key)){
+                    if(preg_match('/_index/', $key) && !in_array($key, ['pengaturan_index'])){
                         $list[] = str_replace('_index', '', $key);
+                        $checklist[] = str_replace('index', '', $key);
                     }
                 }
             }
 
-            $checklist = implode(',', $list);
-            if(preg_match('/(kelas|siswa|pegawai)/', $checklist)){
+            $checklist = implode(',', $checklist);
+            // var_dump($list);exit();
+            // $m_checklist = $checklist;
+            // unset($m_checklist['siswarombel']);
+            if(preg_match('/(kelas_|siswa_|pegawai_)/', $checklist)){
                 $list[] = 'master';
             }
 
-            if(preg_match('/(tagihaninfoinput|kwitansipembayaran|tagihanpembayaran|kwitansipengeluaran|tagihanautodebet)/', $checklist)){
+            if(preg_match('/(tagihaninfoinput_|kwitansipembayaran_|tagihanpembayaran_|kwitansipengeluaran_|tagihanautodebet_)/', $checklist)){
                 $list[] = 'keuangan';
             }
 
-            if(preg_match('/(mcoad|postingmap|jurnalharian|rgl)/', $checklist)){
+            if(preg_match('/(mcoad_|postingmap_|jurnalharian_|rgl_)/', $checklist)){
                 $list[] = 'akuntansi';
             }
 
-            if(preg_match('/(user|role|setting)/', $checklist)){
+            if(preg_match('/(user_|role_|setting_)/', $checklist)){
                 $list[] = 'pengaturan';
             }
         }else{
@@ -164,6 +170,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
             ['parent_name' => 'MASTER DATA','name' => 'pegawai', 'description' => 'Data Karyawan', 'leaf' => true, 'parent' => 0, 'order' => 2],
             ['parent_name' => 'MASTER DATA','name' => 'kelas', 'description' => 'Data Kelas', 'leaf' => true, 'parent' => 0, 'order' => 3],
 
+            ['parent_name' => 'KEUANGAN','name' => 'tagihanpembayaran_summaryouts', 'description' => 'Dashboard', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'KEUANGAN','name' => 'tagihaninfoinput', 'description' => 'Info Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'KEUANGAN','name' => 'kwitansipembayaran', 'description' => 'Kwitansi Pembayaran', 'leaf' => true, 'parent' => 1, 'order' => 2],
             ['parent_name' => 'KEUANGAN','name' => 'tagihanpembayaran_listbayar', 'description' => 'Rekap Pembayaran Tagihan', 'leaf' => true, 'parent' => 1, 'order' => 3],
@@ -180,7 +187,7 @@ class RoleController extends \rest\modules\api\ActiveController //\yii\rest\Acti
 
             ['parent_name' => 'PENGATURAN','name' => 'user', 'description' => 'Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 1],
             ['parent_name' => 'PENGATURAN','name' => 'role', 'description' => 'Grup Akses Pengguna', 'leaf' => true, 'parent' => 1, 'order' => 2],
-            ['parent_name' => 'PENGATURAN','name' => 'sekolah', 'description' => 'Sekolah', 'leaf' => true, 'parent' => 1, 'order' => 3],
+            ['parent_name' => 'PENGATURAN','name' => 'setting', 'description' => 'Sekolah', 'leaf' => true, 'parent' => 1, 'order' => 3],
         ];
 
         return  $setPermissions;

@@ -160,7 +160,7 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                   `tagihan_pembayaran` a
                 LEFT JOIN kwitansi_pembayaran_h b ON TRIM(a.`no_ref`) = TRIM(b.`no_kwitansi`) $filter2
                 LEFT JOIN tagihan_autodebet_h c ON TRIM(a.`no_ref`) = TRIM(c.`no_transaksi`)
-                WHERE $filter
+                WHERE (a.bulan <> 0 AND a.bulan is not null) AND $filter
                 GROUP BY idrombel
                 ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
         return $sqlCustoms;
@@ -287,8 +287,14 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
                 $customeQuery->andWhere(['a.tahun_ajaran' => $tahun_ajaran_id]);
             }
 
+            // if($date){
+            //     $customeQuery->andWhere(['<=','a.updated_at',$date]);
+            // }
             if($date){
-                $customeQuery->andWhere(['<=','a.updated_at',$date]);
+                $month = date('m', strtotime($date));
+                $year = date('Y', strtotime($date));
+                $param = $month + (12 * $year);
+                $customeQuery->andWhere(['<=', '(a.bulan + (12 * a.tahun))', $param]);
             }
         }else if(is_string($params) || is_int($params)){
             $customeQuery->andWhere(['a.id' => $params]);
@@ -309,6 +315,12 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
         if(is_array($params)){
             extract($params);
 
+            if($date){
+                $month = date('m', strtotime($date));
+                $year = date('Y', strtotime($date));
+                $param = $month + (12 * $year);
+            }
+
             $customeQuery
             ->select([
                 '`kelas`',
@@ -324,8 +336,8 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
             ->innerJoin('siswa_rombel sr', 'sr.`kelasid` = k.`id`')
             ->leftJoin(
                 'tagihan_pembayaran p', 
-                'sr.`id` = p.`idrombel` AND p.`tahun_ajaran` = :tahun_ajaran_id AND p.updated_at <= :date',
-                [ 'tahun_ajaran_id' => $tahun_ajaran_id, 'date' => $date ]
+                'sr.`id` = p.`idrombel` AND p.`tahun_ajaran` = :tahun_ajaran_id AND (p.bulan + (12 * p.tahun)) <= :param',
+                [ 'tahun_ajaran_id' => $tahun_ajaran_id, 'param' => $param ]
             )
             ->groupBy(['k.`sekolahid`','k.`kelas`'])
             ->where('1=1');

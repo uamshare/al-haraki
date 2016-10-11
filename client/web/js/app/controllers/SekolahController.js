@@ -212,7 +212,8 @@ define(['app'], function (app) {
 			
 			function success(result){
 				if(result.success){
-					toastr.success('Data telah tersimpan', 'Success');
+					toastr.success('Data telah tersimpan.', 'Success');
+					toastr.info('Perubahan akan diterapkan setelah aplikasi dimuat ulang', 'Info');
 					// $location.path( "/pengaturan/user/");
 					cfpLoadingBar.complete();
 

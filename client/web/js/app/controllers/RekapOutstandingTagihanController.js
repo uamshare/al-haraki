@@ -191,6 +191,7 @@ define(['app'], function (app) {
         $scope.month = helperService.month().options;
 
         function getData(paramdata){
+            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
             cfpLoadingBar.start();
             $resourceApi.getList(paramdata)
             .then(function (result) {

@@ -22,6 +22,7 @@ use Yii;
  */
 class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
     /**
      * @inheritdoc
      */
@@ -195,5 +196,55 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
         $customeQuery = $conn->createCommand($sqlCustoms);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->queryAll();
+    }
+
+    /**
+     * Insert / Update SiswRombel
+     * @param $params, Array parameter post
+     * 
+     */
+    public function batchInsert($params){
+        extract($params);
+        $DB = $this->getDb();
+        $transaction = $DB->beginTransaction();
+        $column = $this->attributes();
+        try {
+            $saved = $DB->createCommand()->batchInsert(
+                self::tableName(),
+                $column, 
+                $rows
+            );
+            $saved->setSql($saved->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column,['id']));
+            // echo $savedD->rawSql. '<br/>';
+            $saved->execute();
+
+            $this->created_at = $rows[0]['created_at'];
+            $this->saveLogs([
+                'rows' => $rows
+            ], $sekolahid);
+            
+            $transaction->commit();
+            return true;
+        } catch(\Exception $e) {
+            $msg =  (string)($e) . ' on ' . __METHOD__;
+            \Yii::error(date('Y-m-d H:i:s A') . ' Error during save data. ' . $msg);
+            $transaction->rollBack();
+            return [
+                'name' => 'Error during save data.',
+                'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error',
+                'log' => $msg
+            ];
+        }
+    }
+
+    private function setOnDuplicateValue($column, $colesc = array()){
+        $values = [];
+        $colesc[] = 'created_at';
+        foreach($column as $col){
+            if(!in_array($col, $colesc)){
+                $values[]= '`'.$col.'` = VALUES(' . $col .')';
+            }
+        }
+        return implode(',', $values);
     }
 }

@@ -127,6 +127,7 @@ define(['app'], function (app) {
             pegawai : false,
 
             keuangan : false,
+            tagihanpembayaran_summaryouts : false,
             tagihaninfoinput : false,
             tagihaninfoinput_list : false,
             tagihaninfoinput_listbayar : false,

@@ -104,7 +104,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         }
 
         foreach($grid as $k => $rows){
-            $model = new $this->modelClass;
+            
             if($rows['flag'] == '1'){
                 $attrvalue[] = [
                     'id'                    => isset($rows['id']) ? $rows['id'] : '', 
@@ -155,6 +155,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'updated_by'           => $form['updated_by']
         ];
 
+        $model = new $this->modelClass;
         $result = $model->saveAndPosting([
             'rowHeader' => $form,
             'rowDetail' => $attrvalue,

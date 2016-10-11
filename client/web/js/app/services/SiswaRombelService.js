@@ -47,6 +47,16 @@ define(['app'], function (app) {
             });
         };
 
+        /** 
+         * Delete rombel by selection
+         * @var id, array id rombel
+         */
+        factory.deleteRombelBySelection = function (id) {
+            return $http.delete(serviceBase + 'siswarombels/0000?scenario=1&rombelid=' + id).then(function (status) {
+                return status.data;
+            });
+        };
+
         factory.getById = function (id) {
             //then does not unwrap data so must go through .data property
             //success unwraps data automatically (no need to call .data property)

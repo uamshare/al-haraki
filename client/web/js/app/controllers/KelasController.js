@@ -11,6 +11,7 @@ define(['app'], function (app) {
             '$routeParams',
             '$http',
             '$log',
+            'ngDialog',
             '$timeout',
             'authService',
             'KelasService',
@@ -26,6 +27,7 @@ define(['app'], function (app) {
             $routeParams,
             $http,
             $log,
+            ngDialog,
             $timeout,
             authService,
             KelasService,
@@ -197,6 +199,21 @@ define(['app'], function (app) {
                 ]
             }
 
+            var columnActionTpl =   '<div class="col-action" ng-show="row.entity.id">' +
+                                        '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' +
+                                            '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' +
+                                        '</a>&nbsp;' +
+                                    '</div>';
+            grid.columnDefs.push({
+                name :' ',
+                enableFiltering : false,
+                width : '75',
+                enableSorting : false,
+                enableCellEdit: false,
+                cellTemplate : columnActionTpl,
+                cellClass: 'grid-align-right'
+            });
+
             $scope.gridSiswa = {
                 enableMinHeightCheck : true,
                 minRowsToShow : 35,
@@ -206,6 +223,7 @@ define(['app'], function (app) {
                 enableCellEditOnFocus: true,
                 columnDefs : grid.columnDefs
             };
+
 
             $scope.form = {
                 id : '',
@@ -217,10 +235,24 @@ define(['app'], function (app) {
             }
 
             $scope.kelasList = [1,2,3,4,5,6,7,8,9];
+            $scope.kelas = [];
             $scope.sekolah = [
                 {id : '1', nama : 'SDIT'},
                 {id : '2', nama : 'SMPIT'}
             ];
+
+            function getkelas(params){
+                KelasService.getList(params)
+                .then(function (result) {
+                    if(result.success){
+                        if(result.success){
+                            $scope.kelas = result.rows;
+                        }
+                    }   
+                }, function(error){
+                    toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+                });
+            }
 
             function reset(){
                 $scope.form.id = '';
@@ -290,6 +322,67 @@ define(['app'], function (app) {
                 reset();
             }
 
+            $scope.formEdit = {
+                id : '',
+                siswaid : '',
+                nama_siswa : '',
+                kelasid : '',
+                sekolahid : authService.getSekolahProfile().sekolahid,
+                tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+            }
+
+            $scope.onEditClick = function(rowdata){
+                $scope.formEdit.id = parseInt(rowdata.id);
+                $scope.formEdit.siswaid = parseInt(rowdata.siswaid);
+                $scope.formEdit.nama_siswa = rowdata.nama_siswa;
+                $scope.formEdit.kelasid = parseInt(rowdata.kelasid);
+
+                // console.log($scope.formEdit.kelasid);
+
+                ngDialog.open({
+                    template: $scope.viewdir + 'edit_form.html',
+                    className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+                    scope: $scope,
+                    width: '100%',
+                    height: '100%'
+                });
+                $scope.formEdit.kelasid = rowdata.kelasid;
+            }
+
+            $scope.onCancelEditClick = function(){
+                $scope.formEdit.kelasid = 2;
+                // ngDialog.close();
+            }
+
+            $scope.onSaveEditClick = function(){
+                if($scope.formEdit.siswaid == '' || $scope.formEdit.siswaid == null){
+                    toastr.warning('Siswa tidak boleh kosong.', 'Warning');
+                    return false;
+                }
+
+                if($scope.formEdit.kelasid == '' || $scope.formEdit.kelasid == null){
+                    toastr.warning('Kelas tidak boleh kosong.', 'Warning');
+                    return false;
+                }
+
+                function successHandle(result){
+                    if(result.success){
+                        toastr.success('Data telah tersimpan', 'Success');
+                        ngDialog.close();
+                        cfpLoadingBar.complete();
+                        getSiswa({
+                            kelasid : $routeParams.id
+                        });
+                    }else{
+                        toastr.error('Data gagal tersimpan.' + result.message, 'Error');
+                        cfpLoadingBar.complete();
+                    }
+                }
+                cfpLoadingBar.start();
+                SiswaRombelService.update($scope.formEdit)
+                .then(successHandle, errorHandle);
+            }
+
             function initEdit(id){
                 cfpLoadingBar.start();
                 $resourceApi.getById(id)
@@ -312,6 +405,11 @@ define(['app'], function (app) {
                     initEdit($routeParams.id);
                     getSiswa({
                         kelasid : $routeParams.id
+                    });
+                    getkelas({
+                        page : 1,
+                        "per-page" : 0,
+                        sekolahid : authService.getSekolahProfile().sekolahid
                     });
                 }
             }
