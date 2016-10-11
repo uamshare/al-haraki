@@ -42,9 +42,8 @@ define(['app'], function (app) {
 				{ name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
 				{ name: 'nis', displayName: 'NIS', visible: true, width : '100',  enableCellEdit: false},
 				{ name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, width : '300',  enableCellEdit: false},
-				{ name: 'nama_panggilan', displayName: 'Nama Panggilan', visible: true, width : '200',  enableCellEdit: false},
-				{ name: 'jk', displayName: 'JK', width : '50',  enableCellEdit: false},
-				{ name: 'agama', displayName: 'Agama', width : '100',  enableCellEdit: false}
+				{ name: 'tanggal_lahir', displayName: 'Tanggal Lahir', visible: true, width : '150',  enableCellEdit: false},
+				{ name: 'jk', displayName: 'Jenis Kelamin', width : '150',  enableCellEdit: false}
 			]
     	}
 
