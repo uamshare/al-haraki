@@ -191,7 +191,15 @@ define(['app'], function (app) {
                     { name: 'nama_kelas', displayName: 'Nama Kelas', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'nis', displayName: 'NIS', visible: true, width : '120', enableCellEdit: false},
                     { name: 'nisn', displayName: 'NISN', visible: true, width : '120', enableCellEdit: false},
-                    { name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, enableCellEdit: false},
+                    { 
+                        name: 'nama_siswa', 
+                        displayName: 'Nama Siswa', 
+                        visible: true, 
+                        enableCellEdit: false,
+                        cellTemplate:'<div class="ui-grid-cell-contents ng-binding ng-scope">' +
+                                   '<a class="column-link" href="#/master/siswa/view/{{row.entity.siswaid}}">{{row.entity.nama_siswa}}</a>' +
+                                   '</div>'
+                    },
                     { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
@@ -401,7 +409,7 @@ define(['app'], function (app) {
 
             this.init = function(){
                 $scope.form.sekolahid = authService.getSekolahProfile().sekolahid.toString();
-                if($routeParams.id){
+                if($routeParams.id || $location.$$url == '/master/kelas/view'){
                     initEdit($routeParams.id);
                     getSiswa({
                         kelasid : $routeParams.id
@@ -426,6 +434,9 @@ define(['app'], function (app) {
                 controller = new addEditController();
                 break;
             case '/master/kelas/edit/' + $routeParams.id:
+                controller = new addEditController();
+                break;
+            case '/master/kelas/view':
                 controller = new addEditController();
                 break;
             default :

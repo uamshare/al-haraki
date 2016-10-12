@@ -110,24 +110,6 @@ define(['app'], function (app) {
 		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location"))
 		};
 
-		/*
-		$scope.grid = {
-            paginationPageSizes: [20, 30, 50, 100, 200],
-            paginationPageSize: 20,
-            pageNumber : 1,
-            useExternalPagination : true,
-
-            enableMinHeightCheck : true,
-            minRowsToShow : 20,
-            enableGridMenu: true,
-            enableSelectAll: true,
-            virtualizationThreshold: 20,
-            enableFiltering: true,
-            enableCellEditOnFocus: true,
-            columnDefs : grid.columnDefs
-        };
-		*/
-
 		$scope.getList = function (paramdata){
             cfpLoadingBar.start();
             $resourceApi.get(paramdata.page, paramdata.perPage)
@@ -241,6 +223,7 @@ define(['app'], function (app) {
             sekolahid : authService.getSekolahProfile().sekolahid
         }
 
+        // $scope.formAction = '';
 		function initEdit(id){
             cfpLoadingBar.start();
             $resourceApi.getById(id)
@@ -341,6 +324,12 @@ define(['app'], function (app) {
 		function init(){
 			if($routeParams.id){
                 initEdit($routeParams.id);
+                if($location.$$url == '/master/siswa/view/' + $routeParams.id){
+                    $scope.formAction = 'view';
+                }else{
+                    $scope.formAction = 'edit';
+                }
+                console.log($scope.formAction);
             }else{
                 initIndex();
             }

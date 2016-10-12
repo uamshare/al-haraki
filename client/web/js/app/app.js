@@ -137,8 +137,6 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
-
-
                 .when('/master/siswa/add',
                     routeCustome.resolve(
                         'master/siswa/form',
@@ -146,8 +144,14 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
-
                 .when('/master/siswa/edit/:id',
+                    routeCustome.resolve(
+                        'master/siswa/form',
+                        'SiswaController',
+                        true
+                    )
+                )
+                .when('/master/siswa/view/:id',
                     routeCustome.resolve(
                         'master/siswa/form',
                         'SiswaController',
