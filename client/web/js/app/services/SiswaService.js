@@ -15,8 +15,10 @@ define(['app'], function (app) {
             return getResource('siswas', pageIndex, pageSize);
         };
 
-        factory.getList = function() {
-            return $http.get(serviceBase + 'siswas/list').then(function (results) {
+        factory.getList = function(paramdata) {
+            return $http.get(serviceBase + 'siswas', {
+                params : paramdata
+            }).then(function (results) {
                 return results.data;
             });
         };

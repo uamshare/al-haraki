@@ -56,7 +56,7 @@ class AppActiveRecord extends \yii\db\ActiveRecord
             $dirty_attributes['created_at'] = $date;
             $dirty_attributes['updated_at'] = $date;
             $logs->dirty_attributes = json_encode($dirty_attributes);
-            $logs->created_at = isset($this->updated_at) ? $this->updated_at : $date;
+            $logs->created_at = $date; //isset($this->updated_at) ? $this->updated_at : $date;
             $logs->created_by = \Yii::$app->user->getId();
 
             $user = \Yii::$app->user;

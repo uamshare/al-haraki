@@ -298,7 +298,7 @@ define(['app'], function (app) {
                         , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
 
                         var table = document.getElementById(id);
-                        var ctx = { worksheet : name || 'Rekap Arus Kas ' + postfix, table : table.innerHTML }
+                        var ctx = { worksheet : name || 'Cashflow ' + postfix, table : table.innerHTML }
                         // window.location.href = uri + base64(format(template, ctx));
                         // var win = window.open( uri + base64(format(template, ctx)) ,'_blank') ;
                         // win.document.title = 'oustanding_' + postfix + '.xlsx';

@@ -93,6 +93,10 @@ define(['app'], function (app) {
                 date_end : date
             }
 
+            function cleanJsonString(){
+
+            }
+            
             function get(paramdata){
                 var controllerid = $routeParams.id.replace(/[\. ,:-]+/g, '');
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
@@ -105,18 +109,18 @@ define(['app'], function (app) {
                             var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
                             
                             result.rows[index]["index"] = romnum;
-                            var dirty_attributes = JSON.parse(result.rows[index].dirty_attributes);
-                            if(typeof dirty_attributes.rowHeader != 'undefined' && dirty_attributes.rowHeader.no_kwitansi){
-                                result.rows[index]["no_trans"] = dirty_attributes.rowHeader.no_kwitansi;
-                            }else if(typeof dirty_attributes.rowHeader != 'undefined' && dirty_attributes.rowHeader.no_transaksi){
-                                result.rows[index]["no_trans"] = dirty_attributes.rowHeader.no_transaksi;
-                            }else if(typeof dirty_attributes.no_kwitansi != ''){
-                                result.rows[index]["no_trans"] = dirty_attributes.no_kwitansi;
-                            }else if(typeof dirty_attributes.no_transaksi != ''){
-                                result.rows[index]["no_trans"] = dirty_attributes.no_transaksi;
-                            }else{
-                                result.rows[index]["no_trans"] = '';
-                            }
+                            // var dirty_attributes = JSON.parse(result.rows[index].dirty_attributes);
+                            // if(typeof dirty_attributes.rowHeader != 'undefined' && dirty_attributes.rowHeader.no_kwitansi){
+                            //     result.rows[index]["no_trans"] = dirty_attributes.rowHeader.no_kwitansi;
+                            // }else if(typeof dirty_attributes.rowHeader != 'undefined' && dirty_attributes.rowHeader.no_transaksi){
+                            //     result.rows[index]["no_trans"] = dirty_attributes.rowHeader.no_transaksi;
+                            // }else if(typeof dirty_attributes.no_kwitansi != ''){
+                            //     result.rows[index]["no_trans"] = dirty_attributes.no_kwitansi;
+                            // }else if(typeof dirty_attributes.no_transaksi != ''){
+                            //     result.rows[index]["no_trans"] = dirty_attributes.no_transaksi;
+                            // }else{
+                            //     result.rows[index]["no_trans"] = '';
+                            // }
                         })
                         $scope.grid.data = result.rows;
                         $scope.grid.totalItems = result.total;

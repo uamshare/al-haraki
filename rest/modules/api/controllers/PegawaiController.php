@@ -71,9 +71,20 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
     public function actionAvatar(){
         $path = Yii::getAlias('@webroot') . \Yii::$app->params['profile_pegawai_path'];
         $pegawai = Yii::$app->user->identity->pegawai;
-        $pegawai->scenario = 'avatar';
+        
+        if(!$pegawai){
+            $id = \Yii::$app->getRequest()->post('id', \Yii::$app->getRequest()->get('id', false));
+            if(!$id) throw new \yii\web\ServerErrorHttpException('Id siswa must be set.');
+            $model = $this->modelClass;
+            $pegawai = $model::findOne($id);
+        }
+
+        if(!$pegawai) throw new \yii\web\ServerErrorHttpException('Failed to find data.');
 
         $fileupload = UploadedFile::getInstancesByName('photo');
+
+        if(count($fileupload) <= 0) throw new \yii\web\ServerErrorHttpException('File name must be "photo".');
+        
         if (!file_exists( $path )) {
             $a = mkdir( $path , 0777, true);
         } 
@@ -81,6 +92,7 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
         $saveUpload = $fileupload->saveAs( $path . 'avatar_' . $pegawai->id . '.' . $fileupload->extension);
 
         if($saveUpload){
+            $pegawai->scenario = 'avatar';
             $pegawai->avatar = 'avatar_' . $pegawai->id . '.' . $fileupload->extension;
             if(!$pegawai->save()){
                 return $pegawai->errors;

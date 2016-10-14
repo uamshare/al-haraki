@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 define(['app'], function (app) {
 
     var injectParams = [
@@ -15,7 +13,8 @@ define(['app'], function (app) {
             'authService',
             'SiswaService',
             'cfpLoadingBar',
-            'toastr'
+            'toastr',
+            'ngDialog',
     	];
 
     var SiswaController = function (
@@ -29,7 +28,8 @@ define(['app'], function (app) {
     		authService,
             SiswaService,
             cfpLoadingBar,
-            toastr
+            toastr,
+            ngDialog
     	)
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'master/siswa/';
@@ -38,12 +38,46 @@ define(['app'], function (app) {
 
     	var grid = {
     		columnDefs : [
-				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
-				{ name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
-				{ name: 'nis', displayName: 'NIS', visible: true, width : '100',  enableCellEdit: false},
-				{ name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, width : '300',  enableCellEdit: false},
-				{ name: 'tanggal_lahir', displayName: 'Tanggal Lahir', visible: true, width : '150',  enableCellEdit: false},
-				{ name: 'jk', displayName: 'Jenis Kelamin', width : '150',  enableCellEdit: false}
+				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false, enableColumnMenu : false},
+                { name: 'id', displayName: 'ID', visible: false, width : '50', enableCellEdit: false, enableColumnMenu : false},
+                { name: 'nis', displayName: 'NIS', visible: true, width : '100', enableCellEdit: true},
+                { name: 'nisn', displayName: 'NISN', visible: true, width : '100', enableCellEdit: true},
+                { name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, enableCellEdit: false},
+                { name: 'nama_panggilan', displayName: 'Nama Panggilan', visible: false, width : '150', enableCellEdit: false},
+                { name: 'jk', displayName: 'JK', visible: true, width : '50', enableCellEdit: false},
+                { name: 'asal_sekolah', displayName : 'Sekolah Asal', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                { name: 'tempat_lahir', displayName: 'Tempat Lahir', visible: true, width : '150' , enableCellEdit: false},
+                { name: 'tanggal_lahir', displayName: 'Tanggal Lahir', visible: true, width : '150', enableCellEdit: false},
+                { name: 'anak_ke', displayName: 'Anak Ke', visible: false, width : '300', enableCellEdit: false},
+                { name: 'jml_saudara', displayName: 'Jml Saudara', visible: false, width : '150', enableCellEdit: false},
+                { name: 'berat', displayName: 'Berat', visible: false, width : '150', enableCellEdit: false},
+                { name: 'tinggi', displayName : 'Tinggi', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                { name: 'gol_darah', displayName: 'Gol Darag', visible: false, width : '50' , enableCellEdit: false},
+                { name: 'riwayat_kesehatan', displayName: 'Riwayat Kesehatan', visible: false, width : '300', enableCellEdit: false},
+                { name: 'alamat', displayName: 'Alamat', visible: false, width : '300', enableCellEdit: false},
+                { name: 'kelurahan', displayName: 'Kelurahan', visible: false, width : '150', enableCellEdit: false},
+                { name: 'kecamatan', displayName: 'Kecamatan', visible: false, width : '150', enableCellEdit: false},
+                { name: 'kota', displayName : 'Kota', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                { name: 'kodepos', displayName: 'Kode POS', visible: false, width : '50' , enableCellEdit: false},
+                { name: 'tlp_rumah', displayName: 'Tlp Rumah', visible: false, width : '100', enableCellEdit: false},
+                { name: 'nama_ayah', displayName: 'Ayah', visible: false, width : '300', enableCellEdit: false},
+                { name: 'hp_ayah', displayName: 'HP', visible: false, width : '150', enableCellEdit: false},
+                { name: 'pekerjaan_ayah', displayName: 'Pekerjaan', visible: false, width : '150', enableCellEdit: false},
+                { name: 'tempat_kerja_ayah', displayName : 'Tempat Kerja', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                { name: 'jabatan_ayah', displayName: 'Jabatan', visible: false, width : '50' , enableCellEdit: false},
+                { name: 'pendidikan_ayah', displayName: 'Pendidikan', visible: false, width : '100', enableCellEdit: false},
+                { name: 'email_ayah', displayName: 'Email', visible: false, width : '300', enableCellEdit: false},
+                { name: 'nama_ibu', displayName: 'Ibu', visible: false, width : '150', enableCellEdit: false},
+                { name: 'hp_ibu', displayName: 'HP', visible: false, width : '150', enableCellEdit: false},
+                { name: 'pekerjaan_ibu', displayName : 'Pekerjaan', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                { name: 'tempat_kerja_ibu', displayName: 'Tempat Kerja', visible: false, width : '50' , enableCellEdit: false},
+                { name: 'jabatan_ibu', displayName: 'Jabatan', visible: false, width : '100', enableCellEdit: false},
+                { name: 'pendidikan_ibu', displayName: 'Pendidikan', visible: false, width : '300', enableCellEdit: false},
+                { name: 'email_ibu', displayName: 'Email', visible: false, width : '150', enableCellEdit: false},
+                { name: 'jenis_tempat_tinggal', displayName: 'Tempat Tinggal', visible: false, width : '150', enableCellEdit: false},
+                { name: 'jarak_ke_sekolah', displayName: 'Jarak (km)', visible: false, width : '150', enableCellEdit: false},
+                { name: 'sarana_transportasi', displayName: 'Transportasi', visible: false, width : '150', enableCellEdit: false},
+                { name: 'keterangan', displayName: 'Keterangan', visible: false, width : '350', enableCellEdit: false}
 			]
     	}
 
@@ -62,7 +96,8 @@ define(['app'], function (app) {
             width : '75',
             enableSorting : false,
             enableCellEdit: false,
-            cellTemplate : columnActionTpl
+            cellTemplate : columnActionTpl,
+            cellClass: 'grid-align-right'
         });
 
         $scope.onEditClick = function(rowdata){
@@ -70,7 +105,7 @@ define(['app'], function (app) {
         }
 
     	$scope.grid = {
-    		paginationPageSizes: [20, 30, 50, 100, 200],
+    		paginationPageSizes: [20, 30, 50, 100, 200, 500, 1000, 2000],
             paginationPageSize: 20,
             pageNumber : 1,
             useExternalPagination : true,
@@ -82,32 +117,9 @@ define(['app'], function (app) {
 			virtualizationThreshold: 20,
 			enableFiltering: true,
 			enableCellEditOnFocus: true,
+            exporterCsvFilename: 'siswa_all.csv',
+            exporterMenuPdf : false,
 			columnDefs : grid.columnDefs,
-			//Export
-			exporterCsvFilename: 'coa.csv',
-		    exporterPdfDefaultStyle: {
-		    	fontSize: 9
-		   	},
-		    exporterPdfTableStyle: {
-		    	margin: [5, 5, 5, 5]
-		    },
-		    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: '#000'},
-		    exporterPdfHeader: {
-		    	text: "My Header",
-		    	style: 'headerStyle'
-		   	},
-		    exporterPdfFooter: function ( currentPage, pageCount ) {
-		      return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
-		    },
-		    exporterPdfCustomFormatter: function ( docDefinition ) {
-		      docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
-		      docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
-		      return docDefinition;
-		    },
-		    exporterPdfOrientation: 'portrait',
-		    exporterPdfPageSize: 'LETTER',
-		    exporterPdfMaxGridWidth: 500,
-		    exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location"))
 		};
 
 		$scope.getList = function (paramdata){
@@ -115,10 +127,10 @@ define(['app'], function (app) {
             $resourceApi.get(paramdata.page, paramdata.perPage)
             .then(function (result) {
                 if(result.success){
-                    angular.forEach(result.rows, function(dt, index) {
-                        var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
+                    for(var index in result.rows){
+                        var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + parseInt(index) + 1) : (parseInt(index) + 1);
                         result.rows[index]["index"] = romnum;
-                    })
+                    }
                     $scope.grid.data = result.rows;
                     $scope.grid.totalItems = result.total;
                     $scope.grid.paginationCurrentPage = paramdata.page;
@@ -229,54 +241,13 @@ define(['app'], function (app) {
             $resourceApi.getById(id)
             .then(function (result) {
                 if(result.success){
-                    $scope.form.id = result.rows.id;
-                    $scope.form.nis = result.rows.nis;
-                    $scope.form.nisn = result.rows.nisn;
-                    $scope.form.nama_siswa = result.rows.nama_siswa;
-                    $scope.form.nama_panggilan = result.rows.nama_panggilan;
-                    $scope.form.jk = result.rows.jk;
-                    $scope.form.agama = result.rows.agama;
-                    $scope.form.tempat_lahir = result.rows.tempat_lahir;
-                    $scope.form.tanggal_lahir = result.rows.tanggal_lahir;
-                    $scope.form.anak_ke = result.rows.anak_ke;
-                    $scope.form.jml_saudara = result.rows.jml_saudara;
-                    $scope.form.asal_sekolah = result.rows.asal_sekolah;
-                    $scope.form.alamat = result.rows.alamat;
-                    $scope.form.kelurahan = result.rows.kelurahan;
-                    $scope.form.kecamatan = result.rows.kecamatan;
-                    $scope.form.kota = result.rows.kota;
-                    $scope.form.kodepos = result.rows.kodepos;
-                    $scope.form.tlp_rumah = result.rows.tlp_rumah;
-                    $scope.form.nama_ayah = result.rows.nama_ayah;
-                    $scope.form.hp_ayah = result.rows.hp_ayah;
-                    $scope.form.pekerjaan_ayah = result.rows.pekerjaan_ayah;
-                    $scope.form.tempat_kerja_ayah = result.rows.tempat_kerja_ayah;
-                    $scope.form.jabatan_ayah = result.rows.jabatan_ayah;
-                    $scope.form.pendidikan_ayah = result.rows.pendidikan_ayah;
-                    $scope.form.email_ayah = result.rows.email_ayah;
-                    $scope.form.nama_ibu = result.rows.nama_ibu;
-                    $scope.form.hp_ibu = result.rows.hp_ibu;
-                    $scope.form.pekerjaan_ibu = result.rows.pekerjaan_ibu;
-                    $scope.form.tempat_kerja_ibu = result.rows.tempat_kerja_ibu;
-                    $scope.form.jabatan_ibu = result.rows.jabatan_ibu;
-                    $scope.form.pendidikan_ibu = result.rows.pendidikan_ibu;
-                    $scope.form.email_ibu = result.rows.email_ibu;
-                    $scope.form.berat = result.rows.berat;
-                    $scope.form.tinggi = result.rows.tinggi;
-                    $scope.form.gol_darah = result.rows.gol_darah;
-                    $scope.form.riwayat_kesehatan = result.rows.riwayat_kesehatan;
-                    $scope.form.jenis_tempat_tinggal = result.rows.jenis_tempat_tinggal;
-                    $scope.form.jarak_ke_sekolah = result.rows.jarak_ke_sekolah;
-                    $scope.form.sarana_transportasi = result.rows.sarana_transportasi;
-                    $scope.form.keterangan = result.rows.keterangan;
-                    $scope.form.sekolahid = result.rows.sekolahid;
+                    $scope.form = result.rows;
                 }
+                $scope.profilAvatar = ($scope.form.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.form.avatar;
                 cfpLoadingBar.complete();
             }, errorHandle);
         }
 
-        $scope.profilAvatar = ($scope.form.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.form.avatar;
-        
         function reset(){
             $scope.form.id = '';
             $scope.form.nis = '';
@@ -329,7 +300,6 @@ define(['app'], function (app) {
                 }else{
                     $scope.formAction = 'edit';
                 }
-                console.log($scope.formAction);
             }else{
                 initIndex();
             }
@@ -371,6 +341,65 @@ define(['app'], function (app) {
 			// alert('tambah');
 			$location.path( "/master/siswa/add");
 		}
+
+        if($routeParams.id){
+            $scope.onPhotoClick = function(){
+                ngDialog.open({
+                    template: $scope.viewdir + 'upload.html',
+                    className: 'ngdialog-theme-flat custom-width-50',
+                    scope: $scope
+                });
+            }
+
+            // File Upload Config
+            var session = new authService.session();
+            $scope.options = {
+                url: BASEAPIURL + 'siswas/avatar?id=' + $routeParams.id,
+                headers : {
+                    'access-token' : session.get('accessToken') //sessionStorage.getItem('accessToken')
+                },
+                done : function (e, data) {
+                    var result = data.result;
+                    if(result.success){
+                        ngDialog.close();
+                        toastr.success('Silahkan muat ulang aplikasi untuk melihat hasilnya.', 'Success');
+                    }else{
+                        toastr.warning('Upload Photo gagal.', 'Warning');
+                    }
+                    
+                }
+            };
+
+            $scope.loadingFiles = true;
+
+            var file = $scope.file,
+                state;
+            if (file && file.url) {
+                file.$state = function () {
+                    return state;
+                };
+                file.$destroy = function () {
+                    state = 'pending';
+                    return $http({
+                        url: file.deleteUrl,
+                        method: file.deleteType
+                    }).then(
+                        function () {
+                            state = 'resolved';
+                            $scope.clear(file);
+                        },
+                        function () {
+                            state = 'rejected';
+                        }
+                    );
+                };
+            } else if (file && !file.$cancel && !file._index) {
+                file.$cancel = function () {
+                    $scope.clear(file);
+                };
+            }
+        }
+        
     }
     SiswaController.$inject = injectParams;
 

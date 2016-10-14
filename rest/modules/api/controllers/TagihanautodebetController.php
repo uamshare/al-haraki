@@ -18,26 +18,6 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
         unset($actions['delete']);
         return $actions;
     }
-
-    // public function behaviors()
-    // {
-    //     $behaviors = parent::behaviors();
-    //     return array_merge($behaviors, 
-    //         [
-    //             'verbFilter' => [
-    //                 'class' => \yii\filters\VerbFilter::className(),
-    //                 'actions' => [
-    //                     'index'         => ['get'],
-    //                     'newnokwitansi' => ['get'],
-    //                     'findbyno'      => ['get'],
-    //                     'create'        => ['post'],
-    //                     'update'        => ['put'],
-    //                     'delete'        => ['delete'],
-    //                 ],
-    //             ],
-    //         ]
-    //     );
-    // }
     
     public function actionIndex(){
         $model = new $this->modelClass();
@@ -111,7 +91,7 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
         $form['updated_at'] = $date;
 
         foreach($grid as $k => $rows){
-            $model = new $this->modelClass;
+            
             $attrvalue[$k] = [
                 'id'                    => isset($rows['id']) ? $rows['id'] : '', 
                 'no_transaksi'          => isset($form['no_transaksi']) ? $form['no_transaksi'] : null,
@@ -175,9 +155,7 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
             $tagihanvalue[$k]['keb_siswa'] = (int)$attrvalue[$k]['keb_siswa'];
             $tagihanvalue[$k]['ekskul'] = (int)$attrvalue[$k]['ekskul'];
         }
-
-
-
+        $model = new $this->modelClass;
         $result = $model->saveAndPosting([
             'rowHeader' => $form,
             'rowDetail' => $attrvalue,

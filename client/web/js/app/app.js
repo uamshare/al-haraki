@@ -151,6 +151,13 @@ define(['services/routeResolver'], function () {
                         true
                     )
                 )
+                .when('/master/siswa/import',
+                    routeCustome.resolve(
+                        'master/siswa/import',
+                        'SiswaImportController',
+                        true
+                    )
+                )
                 .when('/master/siswa/view/:id',
                     routeCustome.resolve(
                         'master/siswa/form',

@@ -420,7 +420,6 @@ define(['app'], function (app) {
 			}
 
 			$scope.onSavePegawaiClick = function(event){
-
 				var params = $scope.form.pegawai;
 				cfpLoadingBar.start();
 				function success(result){

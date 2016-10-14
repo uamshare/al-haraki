@@ -729,6 +729,7 @@ define(['app'], function (app) {
                                         total : checkZeroData
                                 }
                                 paramsRombel.push(XLSdata[idx][1]);
+                                num++;
                             }
                         }
                         

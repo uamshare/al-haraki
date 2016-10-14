@@ -240,11 +240,12 @@ define(['app'], function (app) {
                 $resourceApi.getById(id)
                 .then(function (result) {
                     if(result.success){
-                        for(var key in result.rows){
-                            if(typeof $scope.form[key] != 'undefined'){
-                                $scope.form[key] = result.rows[key]
-                            }
-                        }
+                        // for(var key in result.rows){
+                        //     if(typeof $scope.form[key] != 'undefined'){
+                        //         $scope.form[key] = result.rows[key]
+                        //     }
+                        // }
+                        $scope.form = result.rows;
                     }
                     cfpLoadingBar.complete();
                 }, errorHandle);

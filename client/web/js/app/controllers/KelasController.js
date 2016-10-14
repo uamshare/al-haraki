@@ -17,7 +17,8 @@ define(['app'], function (app) {
             'KelasService',
             'cfpLoadingBar',
             'toastr',
-            'SiswaRombelService'
+            'SiswaRombelService',
+            'helperService'
         ];
 
     var KelasController = function (
@@ -33,7 +34,8 @@ define(['app'], function (app) {
             KelasService,
             cfpLoadingBar,
             toastr,
-            SiswaRombelService
+            SiswaRombelService,
+            helperService
         )
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'master/kelas/';
@@ -183,14 +185,16 @@ define(['app'], function (app) {
         var addEditController = function(){
             var grid = {
                 columnDefs : [
-                    { name: 'index', displayName : 'No', width : '50', visible: true, enableFiltering : false ,  enableCellEdit: false},
-                    { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
+                    { name: 'index', displayName : 'No', width : '50', enableFiltering : false, enableColumnMenu : false},
+                    { name: 'id', displayName: 'ID', visible: false, width : '50', enableCellEdit: false, enableColumnMenu : false},
                     { name: 'kelasid', displayName: 'KelasID', visible: false, width : '50' ,  enableCellEdit: false},
                     { name: 'siswaid', displayName: 'SiswaID', visible: false, width : '50' ,  enableCellEdit: false},
                     { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'nama_kelas', displayName: 'Nama Kelas', visible: false, width : '75',  enableCellEdit: false},
-                    { name: 'nis', displayName: 'NIS', visible: true, width : '120', enableCellEdit: false},
-                    { name: 'nisn', displayName: 'NISN', visible: true, width : '120', enableCellEdit: false},
+
+                    { name: 'nis', displayName: 'NIS', visible: true, width : '100', enableCellEdit: true},
+                    { name: 'nisn', displayName: 'NISN', visible: true, width : '100', enableCellEdit: true},
+                    // { name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, enableCellEdit: false},
                     { 
                         name: 'nama_siswa', 
                         displayName: 'Nama Siswa', 
@@ -200,6 +204,41 @@ define(['app'], function (app) {
                                    '<a class="column-link" href="#/master/siswa/view/{{row.entity.siswaid}}">{{row.entity.nama_siswa}}</a>' +
                                    '</div>'
                     },
+                    { name: 'nama_panggilan', displayName: 'Nama Panggilan', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'jk', displayName: 'JK', visible: true, width : '50', enableCellEdit: false},
+                    { name: 'asal_sekolah', displayName : 'Sekolah Asal', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                    { name: 'tempat_lahir', displayName: 'Tempat Lahir', visible: true, width : '150' , enableCellEdit: false},
+                    { name: 'tanggal_lahir', displayName: 'Tanggal Lahir', visible: true, width : '150', enableCellEdit: false},
+                    { name: 'anak_ke', displayName: 'Anak Ke', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'jml_saudara', displayName: 'Jml Saudara', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'berat', displayName: 'Berat', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'tinggi', displayName : 'Tinggi', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                    { name: 'gol_darah', displayName: 'Gol Darag', visible: false, width : '50' , enableCellEdit: false},
+                    { name: 'riwayat_kesehatan', displayName: 'Riwayat Kesehatan', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'alamat', displayName: 'Alamat', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'kelurahan', displayName: 'Kelurahan', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'kecamatan', displayName: 'Kecamatan', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'kota', displayName : 'Kota', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                    { name: 'kodepos', displayName: 'Kode POS', visible: false, width : '50' , enableCellEdit: false},
+                    { name: 'tlp_rumah', displayName: 'Tlp Rumah', visible: false, width : '100', enableCellEdit: false},
+                    { name: 'nama_ayah', displayName: 'Ayah', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'hp_ayah', displayName: 'HP', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'pekerjaan_ayah', displayName: 'Pekerjaan', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'tempat_kerja_ayah', displayName : 'Tempat Kerja', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                    { name: 'jabatan_ayah', displayName: 'Jabatan', visible: false, width : '50' , enableCellEdit: false},
+                    { name: 'pendidikan_ayah', displayName: 'Pendidikan', visible: false, width : '100', enableCellEdit: false},
+                    { name: 'email_ayah', displayName: 'Email', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'nama_ibu', displayName: 'Ibu', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'hp_ibu', displayName: 'HP', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'pekerjaan_ibu', displayName : 'Pekerjaan', visible: false, width : '50', enableFiltering : true , enableCellEdit: false},
+                    { name: 'tempat_kerja_ibu', displayName: 'Tempat Kerja', visible: false, width : '50' , enableCellEdit: false},
+                    { name: 'jabatan_ibu', displayName: 'Jabatan', visible: false, width : '100', enableCellEdit: false},
+                    { name: 'pendidikan_ibu', displayName: 'Pendidikan', visible: false, width : '300', enableCellEdit: false},
+                    { name: 'email_ibu', displayName: 'Email', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'jenis_tempat_tinggal', displayName: 'Tempat Tinggal', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'jarak_ke_sekolah', displayName: 'Jarak (km)', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'sarana_transportasi', displayName: 'Transportasi', visible: false, width : '150', enableCellEdit: false},
+                    { name: 'keterangan', displayName: 'Keterangan', visible: false, width : '350', enableCellEdit: false},
                     { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, width : '75',  enableCellEdit: false},
                     { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
@@ -222,6 +261,7 @@ define(['app'], function (app) {
                 cellClass: 'grid-align-right'
             });
 
+
             $scope.gridSiswa = {
                 enableMinHeightCheck : true,
                 minRowsToShow : 35,
@@ -229,6 +269,8 @@ define(['app'], function (app) {
                 enableSelectAll: true,
                 enableFiltering: true,
                 enableCellEditOnFocus: true,
+                exporterCsvFilename: 'siswa.csv',
+                exporterMenuPdf : false,
                 columnDefs : grid.columnDefs
             };
 
@@ -274,6 +316,7 @@ define(['app'], function (app) {
                 paramdata['per-page'] = 0;
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
                 paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+                paramdata['scenario'] = '1' // include all siswa;
 
                 cfpLoadingBar.start();
                 SiswaRombelService.get(paramdata)
@@ -402,9 +445,45 @@ define(['app'], function (app) {
                         $scope.form.sekolahid = result.rows.sekolahid;
                         $scope.form.created_at = result.rows.created_at;
                         $scope.form.updated_at = result.rows.updated_at;
+                        $scope.gridSiswa.exporterCsvFilename = result.rows.kelas + "_" + result.rows.nama_kelas + '.csv';
                     }
                     cfpLoadingBar.complete();
                 }, errorHandle);
+            }
+
+            var exportTo = {
+                pdf : function (griddata, rangeWeek){
+                },
+                xls : function(griddata){
+                    function download(id){
+                        var dt = new Date();
+                        var day = dt.getDate();
+                        var month = dt.getMonth() + 1;
+                        var year = dt.getFullYear();
+                        var hour = dt.getHours();
+                        var mins = dt.getMinutes();
+                        var postfix = year.toString() + month.toString() + day.toString() + '-' + hour.toString() + mins.toString();
+
+                        var uri = 'data:application/vnd.ms-excel;base64,'
+                        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+                        , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                        , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+
+                        var table = document.getElementById(id);
+                        var ctx = { worksheet : name || 'Siswa ' + postfix, table : table.innerHTML }
+
+                        var a = document.createElement('a');
+                        a.href = uri + base64(format(template, ctx));
+                        a.download = 'cashflow' + postfix + '.xls';
+                        a.click();
+                        // return false;
+                    }
+                    return download('grid2');
+                }
+            }
+
+            $scope.onExport = function(type){
+                exportTo[type]($scope.data, $scope.rangeWeek);  
             }
 
             this.init = function(){

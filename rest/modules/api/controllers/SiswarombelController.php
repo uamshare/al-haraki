@@ -25,16 +25,148 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
         $kelasid = $request->getQueryParam('kelasid', false);
         $scenario = $request->getQueryParam('scenario', false);
 
+        // var_dump($scenario);exit();
+        if($scenario && $scenario == '1'){
+            return $this->getAllInfoSiswa([
+                'kelasid' => $request->getQueryParam('kelasid', false),
+                'sekolahid' => $request->getQueryParam('sekolahid', $sekolahid),
+                'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $tahun_ajaran_id),
+            ]);
+        }else{
+            $query = $model->find()
+                           ->select([
+                                'a.`id`',
+                                'a.`siswaid`',
+                                'b.`nis`',
+                                'b.`nisn`',
+                                'b.`nama_siswa`',
+                                'a.`kelasid`',
+                                'c.kelas',
+                                'c.`nama_kelas`',
+                                'b.`sekolahid`',
+                                'a.`tahun_ajaran_id`',
+                                'a.`created_at`',
+                                'a.`updated_at`'
+                            ])
+                           ->from('siswa_rombel a')
+                           ->innerJoin('siswa b', 'a.`siswaid` = b.`id`')
+                           ->leftJoin('kelas c', 'a.`kelasid` = c.`id`')
+                           ->where('1=1')
+                           ->asArray();
+            if($sekolahid){
+                $query->andWhere(['b.sekolahid' => $sekolahid]);
+            }
+            if($kelasid){
+                $query->andWhere(['a.kelasid' => $kelasid]);
+            }
+            if($tahun_ajaran_id){
+                $query->andWhere(['a.tahun_ajaran_id' => $tahun_ajaran_id]);
+            }
+
+            $query->orderBy([
+                'b.`sekolahid`' => SORT_ASC,
+                'a.`kelasid`' => SORT_ASC, 
+                'b.`nama_siswa`' => SORT_ASC, 
+                'b.`nis`' => SORT_ASC
+            ]);
+            if($scenario && $scenario == 'rombel_old'){
+                $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='201718') sr", 'a.siswaid = sr.`siswaid`')
+                    ->andWhere(['IS', 'sr.`siswaid`', new \yii\db\Expression('Null')])
+                    ->orderBy([
+                        '`sekolahid`' => SORT_ASC,
+                        '`kelasid`' => SORT_ASC, 
+                        '`nama_siswa`' => SORT_ASC, 
+                        '`nis`' => SORT_ASC
+                    ]);
+                $query = $this->unionWithNewSiswa($query);
+            }
+
+            // var_dump($query->createCommand()->rawSql);exit();
+            return $this->prepareDataProvider($query);
+        }
+    }
+    
+    /**
+     * Get List input Info Tagihan
+     *
+     */
+    public function actionList(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $tahun_ajaran_id = '';
+        $sekolahid = 0;
+        $scenario =  $request->getQueryParam('scenario', false);
+
+        
+        if($scenario && $scenario =='1'){ // scenari that include all information siwa
+            return $this->getAllInfoSiswa([
+                'kelasid' => $request->getQueryParam('kelasid', false),
+                'sekolahid' => $request->getQueryParam('sekolahid', $sekolahid),
+                'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $tahun_ajaran_id),
+            ]);
+        }else{
+            return $model->getList([
+                'query' => $request->getQueryParam('query', false),
+                'nis' => $request->getQueryParam('nis', false),
+                'nisn' => $request->getQueryParam('nisn', false),
+                'nama_siswa' => $request->getQueryParam('nama_siswa', false),
+                'kelas' => $request->getQueryParam('kelas', false),
+                'nama_kelas' => $request->getQueryParam('nama_kelas', false),
+                'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $tahun_ajaran_id),
+                'sekolahid' => $request->getQueryParam('sekolahid', $sekolahid)
+            ]);
+        }
+        
+    }
+
+    private function getAllInfoSiswa($params){
+        extract($params);
+        $model = new $this->modelClass();
         $query = $model->find()
                        ->select([
                             'a.`id`',
                             'a.`siswaid`',
-                            'b.`nis`',
-                            'b.`nisn`',
-                            'b.`nama_siswa`',
                             'a.`kelasid`',
                             'c.kelas',
                             'c.`nama_kelas`',
+                            'b.nis',
+                            'nisn',
+                            'nama_siswa',
+                            'nama_panggilan',
+                            'jk',
+                            'asal_sekolah',
+                            'tempat_lahir',
+                            'tanggal_lahir',
+                            'anak_ke',
+                            'jml_saudara',
+                            'berat',
+                            'tinggi',
+                            'gol_darah',
+                            'riwayat_kesehatan',
+                            'alamat',
+                            'kelurahan',
+                            'kecamatan',
+                            'kota',
+                            'kodepos',
+                            'tlp_rumah',
+                            'nama_ayah',
+                            'hp_ayah',
+                            'pekerjaan_ayah',
+                            'tempat_kerja_ayah',
+                            'jabatan_ayah',
+                            'pendidikan_ayah',
+                            'email_ayah',
+                            'nama_ibu',
+                            'hp_ibu',
+                            'pekerjaan_ibu',
+                            'tempat_kerja_ibu',
+                            'jabatan_ibu',
+                            'pendidikan_ibu',
+                            'email_ibu',
+                            'jenis_tempat_tinggal',
+                            'jarak_ke_sekolah',
+                            'sarana_transportasi',
+                            'keterangan',
                             'b.`sekolahid`',
                             'a.`tahun_ajaran_id`',
                             'a.`created_at`',
@@ -61,42 +193,9 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             'b.`nama_siswa`' => SORT_ASC, 
             'b.`nis`' => SORT_ASC
         ]);
-        if($scenario && $scenario == 'rombel_old'){
-            $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='201718') sr", 'a.siswaid = sr.`siswaid`')
-                ->andWhere(['IS', 'sr.`siswaid`', new \yii\db\Expression('Null')])
-                ->orderBy([
-                    '`sekolahid`' => SORT_ASC,
-                    '`kelasid`' => SORT_ASC, 
-                    '`nama_siswa`' => SORT_ASC, 
-                    '`nis`' => SORT_ASC
-                ]);
-            $query = $this->unionWithNewSiswa($query);
-            
-        }
 
         // var_dump($query->createCommand()->rawSql);exit();
         return $this->prepareDataProvider($query);
-    }
-    
-    /**
-     * Get List input Info Tagihan
-     *
-     */
-    public function actionList(){
-        $model = new $this->modelClass();
-        $request = Yii::$app->getRequest();
-        $tahun_ajaran_id = '';
-        $sekolahid = 0;
-        return $model->getList([
-            'query' => $request->getQueryParam('query', false),
-            'nis' => $request->getQueryParam('nis', false),
-            'nisn' => $request->getQueryParam('nisn', false),
-            'nama_siswa' => $request->getQueryParam('nama_siswa', false),
-            'kelas' => $request->getQueryParam('kelas', false),
-            'nama_kelas' => $request->getQueryParam('nama_kelas', false),
-            'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', $tahun_ajaran_id),
-            'sekolahid' => $request->getQueryParam('sekolahid', $sekolahid)
-        ]);
     }
 
     /**

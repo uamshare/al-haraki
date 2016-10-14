@@ -163,6 +163,18 @@ class Siswa extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
         ];
     }
 
+    public function scenarios(){
+        $scenarios = parent::scenarios();
+        $scenarios['avatar'] = ['avatar'];//Scenario Values Only Accepted
+        return $scenarios;
+    }
+
+    public function getAvatarPath()
+    {
+        $baseurl = Yii::$app->urlManager->createAbsoluteUrl(\Yii::$app->params['profile_siswa_path'] . $this->avatar);
+        return (isset($this->avatar) && !empty($this->avatar)) ? $baseurl : '';
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -177,5 +189,103 @@ class Siswa extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
     public function getSiswaRombels()
     {
         return $this->hasMany(SiswaRombel::className(), ['siswaid' => 'id']);
+    }
+
+    /**
+     * Save header data, detail data and posting to buku besar
+     * @param $params, Array parameter post
+     * 
+     */
+    public function saveBatch($params)
+    {
+        extract($params);
+        $DB = $this->getDb();
+        $transaction = $DB->beginTransaction();
+        $column = $this->attributes();
+        unset($column[0]);
+
+        $column = [
+            // 'id',
+            'nis',
+            'nisn',
+            'nama_siswa',
+            'nama_panggilan',
+            'jk',
+            'asal_sekolah',
+            'tempat_lahir',
+            'tanggal_lahir',
+            'anak_ke',
+            'jml_saudara',
+            'berat',
+            'tinggi',
+            'gol_darah',
+            'riwayat_kesehatan',
+            'alamat',
+            'kelurahan',
+            'kecamatan',
+            'kota',
+            'kodepos',
+            'tlp_rumah',
+            'nama_ayah',
+            'hp_ayah',
+            'pekerjaan_ayah',
+            'tempat_kerja_ayah',
+            'jabatan_ayah',
+            'pendidikan_ayah',
+            'email_ayah',
+            'nama_ibu',
+            'hp_ibu',
+            'pekerjaan_ibu',
+            'tempat_kerja_ibu',
+            'jabatan_ibu',
+            'pendidikan_ibu',
+            'email_ibu',
+            'jenis_tempat_tinggal',
+            'jarak_ke_sekolah',
+            'sarana_transportasi',
+            'keterangan',
+            'sekolahid',
+            'created_at',
+            'updated_at'
+        ];
+
+        try {
+
+            $saved = $DB->createCommand()->batchInsert(
+                self::tableName(),
+                $column, 
+                $rowDetail
+            );
+            $saved->setSql($saved->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($column));
+            // echo $saved->rawSql. '<br/>';
+            $saved->execute();
+
+            $this->created_at = $created_at;
+            $this->saveLogs([
+                'rows' => $rowDetail
+            ], $sekolahid);
+
+            $transaction->commit();
+            return true;
+        } catch(\Exception $e) {
+            $msg =  (string)($e) . ' on ' . __METHOD__;
+            \Yii::error(date('Y-m-d H:i:s A') . ' Error during save data. ' . $msg);
+            $transaction->rollBack();
+            return [
+                'name' => 'Error during save data.',
+                'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error',
+                'log' => $msg
+            ];
+        }
+    }
+
+    private function setOnDuplicateValue($column){
+        $values = [];
+        foreach($column as $col){
+            if($col != 'created_at'){
+                $values[]= '`'.$col.'` = VALUES(' . $col .')';
+            }
+        }
+        return implode(',', $values);
     }
 }

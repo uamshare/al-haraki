@@ -58,7 +58,7 @@ define(['app'], function (app) {
 					{ name: 'sekolahid', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 					{ name: 'no_kwitansi', displayName: 'No Kwitansi', width : '120',  enableCellEdit: false},
 					{ name: 'tgl_kwitansi', displayName: 'Tgl Kwitansi', width : '120',  enableCellEdit: false},
-					// { name: 'nama_pembayar', displayName: 'Nama Pembayar', visible: false, enableCellEdit: false},
+					{ name: 'nama_pembayar', displayName: 'Nama Pembayar', visible: false, enableCellEdit: false},
 					{ name: 'nama_siswa', displayName: 'Nama Siswa', visible: true, enableCellEdit: false},
 					{ name: 'nis', displayName: 'NIS', visible: false, enableCellEdit: false},
 					{ name: 'keterangan', displayName: 'Keterangan', enableCellEdit: false},
@@ -200,7 +200,14 @@ define(['app'], function (app) {
 							}
 							result.rows[idx].subGridOptions.data = result.rows[idx].details;
 							result.rows[idx]["total"] = total;
+
+							if(result.rows[idx].nama_pembayar == '' || result.rows[idx].nama_pembayar == null){
+				            	result.rows[idx].nama_pembayar = result.rows[idx].nama_siswa;
+				            }else if(result.rows[idx].nama_siswa == '' || result.rows[idx].nama_siswa == null){
+				            	result.rows[idx].nama_siswa = result.rows[idx].nama_pembayar;
+				            }
 						}
+
 			            $scope.grid.data = result.rows;
 			            $scope.grid.totalItems = result.total;
 						$scope.grid.paginationCurrentPage = curpage;
@@ -404,6 +411,7 @@ define(['app'], function (app) {
 			.then(function (result) {
 	            if(result.success){
 	            	$scope.rowHeader = rowdata;
+	            	$scope.rowHeader.keterangan = $scope.rowHeader.keterangan.replace(/(?:\r\n|\r|\n)/g, '<br />');
 	            	$scope.rowDetail = result.rows;
 	            	$scope.profil = authService.getProfile();
 	            	$scope.rowPrintTotal = function(){
@@ -611,6 +619,13 @@ define(['app'], function (app) {
 							$scope.rombel_typehead.kelas = (idx == -1) ? '' : $scope.rombel[idx].kelas + ' - ' + $scope.rombel[idx].nama_kelas;
 
 							$scope.form.nama_siswa = $scope.rombel_typehead.select;
+							if($scope.form.nama_pembayar == ''){
+								$scope.form.nama_pembayar = $scope.rombel_typehead.select;
+							}else if($scope.form.nama_siswa == ''){
+								$scope.form.nama_siswa = $scope.form.nama_pembayar;
+								$scope.rombel_typehead.select = $scope.form.nama_pembayar;
+							}
+							
 			            }
 					}
 					cfpLoadingBar.complete();
@@ -742,6 +757,7 @@ define(['app'], function (app) {
 					cfpLoadingBar.complete();
 	            }, errorHandle);
 			}
+
 			this.init = function(){
 				if($routeParams.id){
 					$scope.isEdit = true;
@@ -778,6 +794,8 @@ define(['app'], function (app) {
 				}
 
 				// console.log($scope.gridDetailDirtyRows);return;
+				$scope.form.nama_pembayar = $scope.form.nama_siswa;
+				// console.log($scope.form.nama_pembayar);return;
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
@@ -854,9 +872,11 @@ define(['app'], function (app) {
 					$scope.gridDetail.data = [
 						{
 							index : 1,
+							kode : '',
 							no_kwitansi : $scope.form.no_kwitansi,
 							rincian : '',
-							jumlah : 0
+							jumlah : 0,
+							flag : 1
 						}
 					]
 				}
