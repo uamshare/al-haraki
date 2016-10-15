@@ -68,7 +68,7 @@ class AppAsset extends AssetBundle
         $this->js = array_merge($this->js, [
             [
                 'js/require.js', 
-                'data-main' => '/keuangan/client/web/js/main.js?v=' . date('Ymdhis')
+                'data-main' => '/al-haraki/client/web/js/main.js?v=' . date('Ymdhis')
             ],
             
         ]);
