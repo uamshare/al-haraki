@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Yii form widget.
+ *
+ * This is the JavaScript widget used by the yii\widgets\ActiveForm widget.
+ *
+ * @author Uam <uamshare@gmail.com>
+ * @since 1.0
+ */
 namespace rest\models;
 
 use Yii;
