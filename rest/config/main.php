@@ -20,6 +20,13 @@ return [
         // 'cache' => [
         //     'class' => 'yii\caching\FileCache',
         // ],
+        'formatter' => [
+           'dateFormat' => 'Y-m-d',
+           'datetimeFormat' => 'Y-m-d H:i:s',
+           'timeFormat' => 'H:i:s',
+
+           'defaultTimeZone' => 'Asia/Jakarta', // time zone
+        ],
         'request' => [
             'csrfParam' => '_csrf-rest',
             'parsers' => [
