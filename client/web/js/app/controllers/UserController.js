@@ -233,6 +233,12 @@ define(['app'], function (app) {
 						$scope.form.sekolahid = rowdata.sekolahid;
 						$scope.form.created_at = rowdata.created_at;
 						$scope.form.updated_at = rowdata.updated_at;
+
+						getPegawai({
+							// sekolahid : authService.getSekolahProfile().sekolahid,
+							'per-page' : 0
+						});
+						getRoles();
 					}else{
 						toastr.warning('Tidak ada data.', 'Warning');
 					}
@@ -250,6 +256,7 @@ define(['app'], function (app) {
 			                $scope.pegawai.id[idx] = result.rows[idx].id;
 			            }
 			            if($routeParams.id){
+			            	console.log($scope.form.pegawai_id);
 							setPegawai($scope.form.pegawai_id);
 						}
 					}
@@ -272,6 +279,7 @@ define(['app'], function (app) {
 			                index++;
 			            }
 			            if($routeParams.id){
+			            	console.log($scope.form.role);
 							setRoles($scope.form.role);
 						}
 					}
@@ -307,11 +315,7 @@ define(['app'], function (app) {
 					$scope.isEdit = true;
 	                getById($routeParams.id);
 	            }
-	            getPegawai({
-					sekolahid : authService.getSekolahProfile().sekolahid,
-					'per-page' : 0
-				});
-				getRoles();
+	            
 			}
 
 			$scope.onSaveClick = function(event){
