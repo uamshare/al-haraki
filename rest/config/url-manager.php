@@ -41,6 +41,7 @@ return [
                         'POST profile' => 'changeprofile',
                         'PUT profile' => 'changeprofile',
                         'OPTIONS profile' => 'options',
+                        'OPTIONS profile/{id}' => 'options',
                         'POST avatar' => 'avatar',
                         'OPTIONS avatar' => 'options',
                     ]
