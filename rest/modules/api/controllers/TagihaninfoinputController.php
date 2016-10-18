@@ -135,24 +135,26 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         
         $GL = new \rest\models\Rgl();
         foreach($outstanding as $key => $row){
-            foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {
-                $postingValue = [
-                    'date'                 => $row['dt'],
-                    'noref'                => 't_info_' .$row['bulan']. '_' .  $row['tahun_ajaran'],        
-                    'value'                => $row[$tagihan],
-                    'description'          => 'Info Tagihan ' .$tagihan. ' Bulan  ' .$row['bulan']. ' Tahun ' . 
-                                                $row['tahun_ajaran'],
-                    'sekolahid'            => $row['sekolahid'],
-                    'tahun_ajaran_id'      => $row['tahun_ajaran'],
-                    'created_at'           => isset($post['created_at']) ? $post['created_at'] : $date, 
-                    'updated_at'           => $date,
-                    'created_by'           => (isset($post['created_by']) && !empty($post['created_by'])) ? 
-                                                    $form['created_by'] : \Yii::$app->user->getId(),  
-                    'updated_by'           => \Yii::$app->user->getId(),
-                ];
-                $autoPosting = $GL->AutoPosting('00', $postingValue, $tagihan);
-                // $autoPosting['unposting']->execute();
-                $autoPosting['posting']->execute();
+            if($row['bulan'] > 0 && $row['bulan'] < 13){
+                foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {
+                    $postingValue = [
+                        'date'                 => $row['dt'],
+                        'noref'                => 't_info_' .$row['bulan']. '_' .  $row['tahun_ajaran'],        
+                        'value'                => $row[$tagihan],
+                        'description'          => 'Info Tagihan ' .$tagihan. ' Bulan  ' .$row['bulan']. ' Tahun ' . 
+                                                    $row['tahun_ajaran'],
+                        'sekolahid'            => $row['sekolahid'],
+                        'tahun_ajaran_id'      => $row['tahun_ajaran'],
+                        'created_at'           => isset($post['created_at']) ? $post['created_at'] : $date, 
+                        'updated_at'           => $date,
+                        'created_by'           => (isset($post['created_by']) && !empty($post['created_by'])) ? 
+                                                        $form['created_by'] : \Yii::$app->user->getId(),  
+                        'updated_by'           => \Yii::$app->user->getId(),
+                    ];
+                    $autoPosting = $GL->AutoPosting('00', $postingValue, $tagihan);
+                    // $autoPosting['unposting']->execute();
+                    $autoPosting['posting']->execute();
+                }
             }
         }
         // var_dump($outstanding);exit();
@@ -172,28 +174,31 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $year = (int)$year_start;
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
-        for($i; $i <= $count; $i++){
-            $attrvalue[] = [              
-                'idrombel'              => $row['idrombel'],  
-                'spp_kredit'            => $row['spp'],
-                'komite_sekolah_kredit' => $row['komite_sekolah'],
-                'catering_kredit'       => $row['catering'],
-                'bulan'                 => $month, 
-                'tahun'                 => $year,
-                'tahun_ajaran'          => $tahun_ajaran_id,    
-                'no_ref'                => 't_info_1_' . $month . '_' . $tahun_ajaran_id,  
-                'ket_ref'               => 'Tagihan Info bulan ' . $month . ' idrombel = ' . $row['idrombel'],
-                'keterangan'            => $row['keterangan'],   
-                'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
-                'updated_at'            => $date,
-            ];
-            if($month == 12){
-                $month = 1;
-                $year = (int)$year_end;
-            }else{
-                $month++;
+        if($month > 0 && $month < 13){
+            for($i; $i <= $count; $i++){
+                $attrvalue[] = [              
+                    'idrombel'              => $row['idrombel'],  
+                    'spp_kredit'            => $row['spp'],
+                    'komite_sekolah_kredit' => $row['komite_sekolah'],
+                    'catering_kredit'       => $row['catering'],
+                    'bulan'                 => $month, 
+                    'tahun'                 => $year,
+                    'tahun_ajaran'          => $tahun_ajaran_id,    
+                    'no_ref'                => 't_info_1_' . $month . '_' . $tahun_ajaran_id,  
+                    'ket_ref'               => 'Tagihan Info bulan ' . $month . ' idrombel = ' . $row['idrombel'],
+                    'keterangan'            => $row['keterangan'],   
+                    'created_at'            => isset($row['created_at']) ? $row['created_at'] : $date,
+                    'updated_at'            => $date,
+                ];
+                if($month == 12){
+                    $month = 1;
+                    $year = (int)$year_end;
+                }else{
+                    $month++;
+                }
             }
         }
+        
         return $attrvalue;
     }
 

@@ -250,6 +250,9 @@ define(['app'], function (app) {
                                         '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' +
                                             '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' +
                                         '</a>&nbsp;' +
+                                        '<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' +
+                                            '<span class="badge bg-red"><i class="fa fa-remove"></i></span>' +
+                                        '</a>' +
                                     '</div>';
             grid.columnDefs.push({
                 name :' ',
@@ -397,12 +400,12 @@ define(['app'], function (app) {
                     width: '100%',
                     height: '100%'
                 });
-                $scope.formEdit.kelasid = rowdata.kelasid;
+                // $scope.formEdit.kelasid = rowdata.kelasid;
             }
 
             $scope.onCancelEditClick = function(){
-                $scope.formEdit.kelasid = 2;
-                // ngDialog.close();
+                // $scope.formEdit.kelasid = 2;
+                ngDialog.close();
             }
 
             $scope.onSaveEditClick = function(){
@@ -434,6 +437,50 @@ define(['app'], function (app) {
                 .then(successHandle, errorHandle);
             }
 
+            $scope.onDeleteClick = function(rowdata){
+                function deleteData(id){
+                    cfpLoadingBar.start();
+                    SiswaRombelService.delete(id)
+                    .then(function(result){
+                        if(result.success){
+                            // if(result.rows.scenario == 'confirm_delete_keep'){
+                            //     $scope.formEdit.id = parseInt(rowdata.id);
+                            //     $scope.formEdit.siswaid = parseInt(rowdata.siswaid);
+                            //     $scope.formEdit.nama_siswa = rowdata.nama_siswa;
+                            //     $scope.formEdit.kelasid = parseInt(rowdata.kelasid);
+                            //     ngDialog.open({
+                            //         template: $scope.viewdir + 'confirm_delete_form.html',
+                            //         className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+                            //         scope: $scope,
+                            //         width: '100%',
+                            //         height: '100%'
+                            //     });
+                            // }else{
+                                toastr.success('Data telah dihapus', 'Success');
+                                getSiswa({
+                                    kelasid : $routeParams.id
+                                });
+                            // }
+                            cfpLoadingBar.complete();
+                        }else{
+                            toastr.error('Data gagal dihapus.' + result.message, 'Error');
+                            cfpLoadingBar.complete();
+                        }
+
+                    }, errorHandle);
+                }
+
+                var del = confirm("Semua data transaksi yang berhubungan akan dihapus, Anda yakin akan menghapus data `" + rowdata.nama_siswa + "`");
+                // var del = confirm("Anda yakin akan menghapus data `" + rowdata.nama_siswa + "`");
+                if (del == true) {
+                    deleteData(rowdata.id);
+                }
+            }
+
+            $scope.onRemoveEditClick = function(){
+
+            }
+            
             function initEdit(id){
                 cfpLoadingBar.start();
                 $resourceApi.getById(id)

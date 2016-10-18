@@ -1,0 +1,47 @@
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Hapus Rombel Siswa</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+	    	<form class="form-horizontal form-custome">
+	      		<div class="col-xs-12 col-md-12 direct-chat-danger">
+	      			<div class="form-group">
+                  		<label for="nama_siswa" class="col-sm-3 control-label">Nama Siswa</label>
+                 		<div class="col-xs-12 col-md-9">
+                 			<input type="hidden" class="form-control" name="id" ng-model="formEdit.id">
+	                    	<input type="text" class="form-control" name="nama_kelas" readonly="" 
+	                    		ng-model="formEdit.nama_siswa" placeholder="Nama Siswa">
+	                 	</div>
+                	</div>
+                	<div class="direct-chat-msg right">
+						<div class="direct-chat-text">
+							Semua data transaksi yang berhubungan akan dihapus, Anda yakin akan menghapus data ?
+						</div>
+					</div>
+	      			<!-- <div class="form-group">
+                  		<label for="kelas" class="col-sm-3 control-label">Tgl Keluar</label>
+                  		<div class="col-sm-9">
+							<input type="text" class="form-control input-sm" 
+								ng-model="formEdit.tgl_keluar" name="date" bs-datepicker date-format="M-yyyy"/>
+						</div>
+					</div> -->
+	      	    </div>
+	    	</form><!--endform -->
+	  	</div><!-- /.row -->
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-right">
+			<a href="" ng-click="onRemoveEditClick()" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Simpan Data">
+				<i class="fa fa-remove"></i> Hapus
+			</a>
+		</div>
+	</div>
+</div>
+
+

@@ -31,8 +31,9 @@ use yii\db\Query;
  *
  * @property SiswaRombel $idrombel0
  */
-class TagihanPembayaran extends \yii\db\ActiveRecord
+class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
 {
+    protected $isAutoSaveLog = true;
     /**
      * @inheritdoc
      */
@@ -516,4 +517,5 @@ class TagihanPembayaran extends \yii\db\ActiveRecord
       }
       return implode(',', $values);
     }
+
 }
