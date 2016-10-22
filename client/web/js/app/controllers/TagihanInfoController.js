@@ -556,21 +556,36 @@ define(['app'], function (app) {
 		function printElement(elem) {
 			var domClone = elem.cloneNode(true);
 
-			var $printSection = document.getElementById("printSection");
+			// var $printSection = document.getElementById("printSection");
 
-			if (!$printSection) {
-				var $printSection = document.createElement("div");
+			// if (!$printSection) {
+			// 	var $printSection = document.createElement("div");
+			// 	$printSection.id = "printSection";
+			// 	document.body.appendChild($printSection);
+			// }
+			// $printSection.innerHTML = "";
+
+			// $printSection.appendChild(domClone);
+
+			// var domClone = elem.cloneNode(true);
+
+			var $printSection = document.getElementById("printSection");
+			if ($printSection) {
+				$printSection.innerHTML = "";
+			}else{
+				$printSection = document.createElement("div");
 				$printSection.id = "printSection";
 				document.body.appendChild($printSection);
 			}
-			$printSection.innerHTML = "";
-
-			$printSection.appendChild(domClone);
+			
+			// $printSection.appendChild(domClone);
+			$printSection.innerHTML = domClone.innerHTML;
+			window.print();
 		}
 
 		$scope.print = function(divName){
 			printElement(document.getElementById(divName));
-			window.print();
+			// window.print();
 		}
 
 		$scope.onJenisTagihanChange = function(value){

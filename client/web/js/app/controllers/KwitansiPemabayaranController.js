@@ -308,15 +308,17 @@ define(['app'], function (app) {
 			var domClone = elem.cloneNode(true);
 
 			var $printSection = document.getElementById("printSection");
-
-			if (!$printSection) {
-				var $printSection = document.createElement("div");
+			if ($printSection) {
+				$printSection.innerHTML = "";
+			}else{
+				$printSection = document.createElement("div");
 				$printSection.id = "printSection";
 				document.body.appendChild($printSection);
 			}
-			$printSection.innerHTML = "";
-
-			$printSection.appendChild(domClone);
+			
+			// $printSection.appendChild(domClone);
+			$printSection.innerHTML = domClone.innerHTML;
+			window.print();
 		}
 
     	function terbilang(bilangan) {
@@ -429,7 +431,7 @@ define(['app'], function (app) {
 
 			        ngDialog.open({
 			            template: $scope.viewdir + 'print.html',
-			            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+			            className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-80',
 			            scope: $scope,
 			            width: '100%',
 			            height: '100%'
@@ -444,7 +446,6 @@ define(['app'], function (app) {
 
 		$scope.print = function(divName){
 			printElement(document.getElementById(divName));
-			window.print();
 		}
 
 		$scope.onPrintClick = function(rowdata){

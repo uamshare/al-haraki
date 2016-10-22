@@ -127,6 +127,10 @@ input[type=radio].custome1 + .lbl {
 .ngdialog.ngdialog-theme-flat.custom-width-50 .ngdialog-content {
     width: 50%;
 }
+.ngdialog.ngdialog-theme-flat.custom-width-kwitansi .ngdialog-content {
+    width: 21cm;
+    height: 14.8cm;
+}
 
 .navbar-brand select{
     margin-top: -8px;
