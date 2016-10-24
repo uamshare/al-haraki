@@ -3,29 +3,38 @@
         margin-top: 0;
         margin-bottom: 0;
         border: 0;
-        border-top: 1px solid #eee;
+        border-top: 1.5px solid #000;
     }
     .printStyle-box .note {
         font-size: 8pt;
     }
+    /*@page {
+        size: 21cm 14.8cm;
+        margin: 0.5cm;
+    }*/
     @media print {
-        /*@page {
-            margin: 0.5cm 1cm 0.5cm 1cm;
-        }*/
-        @page {
-            size: 14.8cm 21cm;
-            /*size: A5;*/
-            margin: 0;
+        body{
+            font-family: "Sans Serif", "Times New Roman", Georgia, Serif;
+            letter-spacing: 0.1cm;
+            font-size:6pt !important;
+            /*line-height:9pt !important;*/
         }
-        /* 21.59 x 27.94 centimetres */
+        @page {
+            size: auto;
+            margin: 0.05cm;
+        }
         .print-kwitansi-bayar{
             float: left;
-            width: 14cm; /*14.8cm;*/
-            height: 18cm; /*21cm;*/
+            width: 20.1cm;
+            /*height: 14cm;*/
             margin:10px !important;
-            padding:2px;
             font-size:9pt;
-            line-height:9pt;
+            /*line-height:9pt;*/
+            padding: 0 20px !important;
+        }
+        .print-kwitansi-bayar table td {
+            padding: 0 2px 0 2px !important;
+            font-size: 6pt !important;
         }
         .title h2{
             font-size : 14pt;
@@ -59,7 +68,15 @@
                                 <tr>
                                     <td class="title" style="text-align : center;">
                                         <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
+<<<<<<< HEAD
                                         <h1>BUKTI PENERIMAAN</h1>
+=======
+                                        <h1 style="font-size: 18pt;
+                                                    margin: 0;
+                                                    line-height: 20pt;
+                                                    text-align: right;
+                                                    font-weight: bold;">BUKTI PENERIMAAN</h1>
+>>>>>>> 4eddeea15e7b0a6b1a79d10b108b4cdfa709dc2e
                                     </td>
                                 </tr>
                                 <tr class="information">
@@ -77,23 +94,19 @@
                         </td>
                     </tr>
                 </table>
-                <br/>
-
                 <table>
                     <tr class="item">
-                        <td style="width : 150px">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_pembayar}}</td>
+                        <td style="width : 150px;font-size: 8pt;">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_pembayar}}</td>
                     </tr>
                 </table>
-                <br/>
                 <table>
-                    <tr class="heading">
+                    <tr class="heading" style="background-color: #eee;">
                         <td>Untuk Pembayaran dengan perincian sebagai berikut :</td>
                     </tr>
                 </table>
-                <br/>
                 <table>
                     <tr class="item" ng-repeat="row in rowDetail track by row.id">
-                        <td style="width : 150px">{{row.rincian}}</td>
+                        <td style="width : 150px;">{{row.rincian}}</td>
                         <td style="width : 10px">:</td>
                         <td style="text-align : right;">{{row.jumlah | number:0}}</td>
                     </tr>
@@ -101,27 +114,23 @@
                         <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
                     </tr>
                     <tr class="total">
-                        <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;"><b>{{rowTerbilang}}</b></td>
+                        <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;background-color: #eee;"><b>{{rowTerbilang}}</b></td>
                     </tr>
                 </table>
-                <br>
                 <table>
                     <tr class="information">
                         <td colspan="2">
                             <table>
                                 <tr>
-                                    <td style="border : solid 1px #eee;width : 65%;font-size : 10pt;">
-                                        <!-- <span>Keterangan :</span> -->
+                                    <td style="height: 2.5cm !important;border : solid 1px #eee;width : 65%;font-size : 10pt;">
                                         <p ng-bind-html="rowHeader.keterangan"></p>
                                     </td>
                                     <td>
                                         Depok, {{tanggal}}<br>
                                         <br>
                                         <br/>
-                                        <br>
-                                        <br/>
                                         <span class="profil-name">{{profil.fullname}}</span><br/>
-                                        -----------------------------<br/>
+                                        ----------------------<br/>
                                         <span class="profil-jabatan">{{titleadmin}}</span>
                                     </td>
                                 </tr>

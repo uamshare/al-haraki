@@ -256,7 +256,6 @@ define(['app'], function (app) {
 			                $scope.pegawai.id[idx] = result.rows[idx].id;
 			            }
 			            if($routeParams.id){
-			            	console.log($scope.form.pegawai_id);
 							setPegawai($scope.form.pegawai_id);
 						}
 					}
@@ -279,7 +278,6 @@ define(['app'], function (app) {
 			                index++;
 			            }
 			            if($routeParams.id){
-			            	console.log($scope.form.role);
 							setRoles($scope.form.role);
 						}
 					}
@@ -314,6 +312,11 @@ define(['app'], function (app) {
 				if($routeParams.id){
 					$scope.isEdit = true;
 	                getById($routeParams.id);
+	            }else{
+	            	getPegawai({
+						'per-page' : 0
+					});
+					getRoles();
 	            }
 	            
 			}
