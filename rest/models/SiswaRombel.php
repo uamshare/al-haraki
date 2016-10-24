@@ -237,49 +237,6 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
         }
     }
 
-    public function deleteWithAllForeignKeys(){
-        $tagihanInfoInput = new TagihanInfoInput();
-        return $tagihanInfoInput->getSummaryOutsForPosting([
-                'tahun_ajaran_id' => $this->tahun_ajaran_id,
-                'sekolahid' => $this->siswa->sekolahid
-            ]);
-
-        $transaction = $this->getDb()->beginTransaction();
-        $this->getDb()->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
-        try {
-            $sekolahid = $this->siswa->sekolahid;
-            $dirtyAttr = TagihanInfoInput::find()
-                                    ->where(['idrombel' => $this->id])
-                                    ->asArray()->all();
-            TagihanInfoInput::deleteAll(['idrombel' => $this->id]);
-            $tagihanInfoInput = new TagihanInfoInput();
-            $tagihanInfoInput->updatePostingData([
-                'tahun_ajaran_id' => $this->tahun_ajaran_id,
-                'sekolahid' => $sekolahid
-            ]);
-
-            $this->delete();
-
-            $this->created_at = date('Y-m-d H:i:s A');
-            $this->saveLogs($dirtyAttr, $sekolahid);
-
-            $transaction->commit();
-            $result = true;
-        } catch(\Exception $e) {
-            $msg =  (string)($e) . ' on ' . __METHOD__;
-            \Yii::error(date('Y-m-d H:i:s A') . ' Error during delete data. ' . $msg);
-            $transaction->rollBack();
-            $result = [
-                'name' => 'Error during save data.',
-                'message' => (isset($e->errorInfo)) ? $e->errorInfo : 'Undefined error',
-                'log' => $msg
-            ];
-        }
-        $this->getDb()->createCommand('SET FOREIGN_KEY_CHECKS = 1;')->execute();
-
-        return $result;
-    }
-
     private function setOnDuplicateValue($column, $colesc = array()){
         $values = [];
         $colesc[] = 'created_at';

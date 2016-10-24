@@ -311,7 +311,6 @@ define(['app'], function (app) {
         var exportTo = {
             pdf : function (gridApi){
                 var pdfdata = setGridToContentPdf(gridApi);
-                // console.log(pdfdata);
                 var docDefinition = {
                     pageSize: 'LETTER',
                     // pageOrientation: 'landscape',
@@ -414,6 +413,7 @@ define(['app'], function (app) {
                 if((typeof val !='undefined' && parseInt(val))){
                     return $filter('number')(val, 0);
                 }
+
                 return '';
             }
 
@@ -542,6 +542,7 @@ define(['app'], function (app) {
             for(var idx in gt){
                 content.push(setTableLabel(gt[idx].aggregations[0].groupVal));
                 content.push(setTableData(gt[idx]));
+                
             }
 
             // Set Content Summary

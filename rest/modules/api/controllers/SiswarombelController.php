@@ -255,7 +255,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
 
             $id = explode(',', $rombelid);
 
-            // $model = $this->modelClass;
+            $model = $this->modelClass;
             $del = \rest\models\SiswaRombel::deleteAll(['in', 'id', $id]);
 
             if ( $del === false ) {
@@ -267,42 +267,14 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
         }
 
         if($id && !empty($id) && $id != 'undefined' && !$scenario){
-            $model = $this->modelClass;
-            $model = $model::findOne($id);
+            $model = new $this->modelClass;
 
-            if($model){
-                try{
-                    $del = $model->delete();
-                } catch(\Exception $e) {
-                    // var_dump($e->errorInfo);exit();
-                    if(isset($e->errorInfo[0])){
-                        switch ($e->errorInfo[0]) {
-                            case '23000':
-                                $del = $model->deleteWithAllForeignKeys();
-                                Yii::$app->getResponse()->setStatusCode(200, 'OK');
-                                return [
-                                    'data' => $model,
-                                    'scenario' => 'confirm_delete_keep',
-                                    'message' => 'data is deleted'
-                                ];
-                                break;
-                            default:
-                                $del = false;
-                                break;
-                        }
-                    }
-                }
-                
-                if ($del === true) {
-                    // throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
-                    Yii::$app->getResponse()->setStatusCode(200, 'OK');
-                    return ['message' => 'data is deleted'];
-                }else{
-                    Yii::$app->getResponse()->setStatusCode(422, 'Data Validation Failed.');
-                    return $del;
-                }
+            $model = $this->findModel($id);
+            if ($model->delete() === false) {
+                throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
             }
-            
+            Yii::$app->getResponse()->setStatusCode(200, 'OK');
+            return ['message' => 'data is deleted'];
         }
 
         Yii::$app->getResponse()->setStatusCode(400, 'Data is empty.');

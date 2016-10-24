@@ -642,7 +642,7 @@ define(['app'], function (app) {
                 SiswaRombelService.getList(params)
                 .then(function (result) {
                     if(result.success){
-                        var rowdata = {}; //result.rows;
+                        var rowdata = []; //result.rows;
                         $scope.gridDetail.data = [];
                         for(var idx in result.rows){
                             rowdata[result.rows[idx].nis] = result.rows[idx];
