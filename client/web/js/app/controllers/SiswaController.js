@@ -169,6 +169,18 @@ define(['app'], function (app) {
                         'per-page' : 20,
                         sekolahid : authService.getSekolahProfile().sekolahid
                     });
+                    // if(result.success){
+                    //     toastr.success('Data telah dihapus', 'Success');
+                    //     cfpLoadingBar.complete();
+                    //     $scope.getList({
+                    //         page : 1,
+                    //         'per-page' : 20,
+                    //         sekolahid : authService.getSekolahProfile().sekolahid
+                    //     });
+                    // }else{
+                    //     toastr.error('Data gagal dihapus.' + result.message, 'Error');
+                    //     cfpLoadingBar.complete();
+                    // }
 
                 }, errorHandle);
             }

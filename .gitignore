@@ -34,3 +34,5 @@ phpunit.phar
 /common/config/main-local.php.ori
 /client/views/layouts/main.php
 /client/assets/AppAsset.php
+/rest/web/uploads
+/client/views/layouts/main.php

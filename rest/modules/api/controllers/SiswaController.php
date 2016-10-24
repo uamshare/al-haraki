@@ -13,7 +13,7 @@ class SiswaController extends \rest\modules\api\ActiveController //\yii\rest\Act
         $actions = parent::actions();
         unset($actions['create']);
         // unset($actions['update']);
-        unset($actions['delete']);
+        // unset($actions['delete']);
         unset($actions['index']);
         unset($actions['view']);
         return $actions;
@@ -69,7 +69,7 @@ class SiswaController extends \rest\modules\api\ActiveController //\yii\rest\Act
         $post = Yii::$app->getRequest()->getBodyParams();
         $scenario = \Yii::$app->getRequest()->getQueryParam('scenario', false);
         if(!$scenario){
-        	$scenario = $post['scenario'];
+        	$scenario = isset($post['scenario']) ? $post['scenario'] : false;
         }
 
         if($scenario && $scenario == '1'){
@@ -86,9 +86,7 @@ class SiswaController extends \rest\modules\api\ActiveController //\yii\rest\Act
      */
     private function create($post)
     {
-        $model = new $this->modelClass([
-            'scenario' => $this->scenario,
-        ]);
+        $model = new $this->modelClass();
 
         $model->load($post, '');
 

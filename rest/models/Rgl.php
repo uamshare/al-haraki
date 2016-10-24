@@ -119,7 +119,7 @@ class Rgl extends \yii\db\ActiveRecord
     private function setOnDuplicateValue($column){
         $values = [];
         foreach($column as $col){
-            if($col != 'created_at'){
+            if(!in_array($col, ['created_at','created_by'])){
                 $values[]= '`'.$col.'` = VALUES(' . $col .')';
             }
         }

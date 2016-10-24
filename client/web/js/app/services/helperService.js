@@ -67,7 +67,8 @@ define(['app'], function (app) {
             if(str == null || typeof str == 'undefined' || str == ''){
                 return 0;
             }
-            str = str.replace(',', '').replace('.', '');
+            str = str.replace(/,/g, '');
+            str = str.replace(/\./g, '');
             return (parseInt(str)) ? parseInt(str) : 0;
         }
 

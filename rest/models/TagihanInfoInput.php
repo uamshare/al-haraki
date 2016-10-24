@@ -115,7 +115,8 @@ class TagihanInfoInput extends TagihanPembayaran
         ->innerJoin('siswa_rombel sr', 'sr.`id` = a.`idrombel`')
         ->innerJoin('siswa s', 's.`id` = sr.`siswaid`')
         ->groupBy(['a.`tahun_ajaran`, s.`sekolahid`, a.`tahun`, a.`bulan`'])
-        ->where(['LIKE','no_ref','t_info']);
+        ->where(['LIKE','no_ref','t_info'])
+        ->andWhere(['>','a.bulan', 0]);
 
         if(is_array($params)){
             extract($params);
@@ -132,5 +133,42 @@ class TagihanInfoInput extends TagihanPembayaran
         // var_dump($customeQuery->createCommand()->rawSql);exit();
 
         return $customeQuery;
+    }
+
+    public function updatePostingData($params){
+        // $model = new $this->modelClass();
+        $date = date('Y-m-d H:i:s');
+        $outstanding = $this->getSummaryOutsForPosting($params)->All();
+        // var_dump($outstanding);exit();
+        
+        $GL = new \rest\models\Rgl();
+        foreach($outstanding as $key => $row){
+            if($row['bulan'] > 0 && $row['bulan'] < 13){
+                foreach (['spp','komite_sekolah','catering','keb_siswa','ekskul'] as $tagihan) {
+                    $postingValue = [
+                        'date'                 => $row['dt'],
+                        'noref'                => 't_info_' .$row['bulan']. '_' .  $row['tahun_ajaran'],        
+                        'value'                => $row[$tagihan],
+                        'description'          => 'Info Tagihan ' .$tagihan. ' Bulan  ' .$row['bulan']. ' Tahun ' . 
+                                                    $row['tahun_ajaran'],
+                        'sekolahid'            => $row['sekolahid'],
+                        'tahun_ajaran_id'      => $row['tahun_ajaran'],
+                        'created_at'           => null,
+                        'created_by'           => null,
+                        'updated_at'           => $date,
+                        'updated_by'           => \Yii::$app->user->getId(),
+                    ];
+                    $autoPosting = $GL->AutoPosting('00', $postingValue, $tagihan);
+                    // $autoPosting['unposting']->execute();
+                    $autoPosting['posting']->execute();
+                }
+            }
+        }
+        // var_dump($outstanding);exit();
+        $rest = \rest\models\Rgl::find()->where(['LIKE','noref','t_info_'])
+                                       ->andWhere([ 'tahun_ajaran_id' => $row['tahun_ajaran']])
+                                       ->All();
+        // var_dump($rest->createCommand()->rawSql);exit();
+        return $rest;
     }
 }

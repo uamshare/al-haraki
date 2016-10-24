@@ -151,7 +151,7 @@ define(['app'], function (app) {
                     }, errorHandle);
                 }
 
-                var del = confirm("Anda yakin akan menghapus data `" + rowdata.nama_kelas + "`");
+                var del = confirm("Anda yakin akan menghapus data `" + rowdata.nama_pegawai + "`");
                 if (del == true) {
                     deleteData(rowdata.id);
                 }
