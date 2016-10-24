@@ -279,12 +279,18 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
                         switch ($e->errorInfo[0]) {
                             case '23000':
                                 $del = $model->deleteWithAllForeignKeys();
-                                Yii::$app->getResponse()->setStatusCode(200, 'OK');
-                                return [
-                                    'data' => $model,
-                                    'scenario' => 'confirm_delete_keep',
-                                    'message' => 'data is deleted'
-                                ];
+                                if($del === true){
+                                    Yii::$app->getResponse()->setStatusCode(200, 'OK');
+                                    return [
+                                        'data' => $model,
+                                        'scenario' => 'confirm_delete_keep',
+                                        'message' => 'data is deleted'
+                                    ];
+                                }else{
+                                    Yii::$app->getResponse()->setStatusCode(422, 'Data Validation Failed.');
+                                    return $del;
+                                }
+                                
                                 break;
                             default:
                                 $del = false;

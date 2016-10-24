@@ -238,11 +238,6 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
     }
 
     public function deleteWithAllForeignKeys(){
-        $tagihanInfoInput = new TagihanInfoInput();
-        return $tagihanInfoInput->getSummaryOutsForPosting([
-                'tahun_ajaran_id' => $this->tahun_ajaran_id,
-                'sekolahid' => $this->siswa->sekolahid
-            ]);
 
         $transaction = $this->getDb()->beginTransaction();
         $this->getDb()->createCommand('SET FOREIGN_KEY_CHECKS = 0;')->execute();
@@ -258,8 +253,7 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
                 'sekolahid' => $sekolahid
             ]);
 
-            $this->delete();
-
+            $a = $this->delete();
             $this->created_at = date('Y-m-d H:i:s A');
             $this->saveLogs($dirtyAttr, $sekolahid);
 
