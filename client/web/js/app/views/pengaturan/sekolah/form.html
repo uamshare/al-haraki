@@ -19,7 +19,7 @@
                                 ng-change="onTahunAjaranChange(form.tahun_ajaran_id)"
                                 required="Silahkan pilih tahun ajaran"
                             >
-                                <option ng-repeat="item in tahunAjaran track by item.id" value="{{item.id}}">
+                                <option ng-repeat="item in tahunAjaran" value="{{item.id}}">
                                 {{item.tahun_ajaran}}
                                 </option>
                             </select>

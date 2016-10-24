@@ -64,7 +64,11 @@ define(['app'], function (app) {
 				{ name: 'index', displayName : 'No', width : '50', enableFiltering : false ,  enableCellEdit: false},
                 { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
                 { name: 'nama', displayName: 'Nama', visible: true, width : '150',  enableCellEdit: true},
-                { name: 'alamat', displayName: 'Alamat', visible: true, enableCellEdit: true},
+                { 
+                	name: 'alamat', displayName: 'Alamat', visible: true, enableCellEdit: true,
+                	// editableCellTemplate: '<div><form name="inputForm"><input type="number" ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></form></div>'
+                	// editableCellTemplate: '<div><form name="inputForm"><textarea ng-class="\'colt\' + col.uid" ui-grid-editor ng-model="MODEL_COL_FIELD"></textarea></form></div>'
+                },
                 { 
                 	name: 'tingkatan', 
                 	displayName: 'Tingkatan', 
@@ -256,8 +260,6 @@ define(['app'], function (app) {
 			if(value != $scope.formOld.tahun_ajaran_id && $scope.gridDetailDirtyRows.length <= 0){
 				$scope.gridDetailDirtyRows = $scope.gridDetail.data;
 			}
-			console.log(value);
-			console.log($scope.formOld.tahun_ajaran_id);
 		}
 
 		$scope.$on('$viewContentLoaded', function(){

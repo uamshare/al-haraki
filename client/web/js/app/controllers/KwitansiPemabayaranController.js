@@ -416,6 +416,7 @@ define(['app'], function (app) {
 	            	$scope.rowHeader.keterangan = $scope.rowHeader.keterangan.replace(/(?:\r\n|\r|\n)/g, '<br />');
 	            	$scope.rowDetail = result.rows;
 	            	$scope.profil = authService.getProfile();
+	            	$scope.sekolahProfil = authService.getSekolahProfile();
 	            	$scope.rowPrintTotal = function(){
 	            		var total = 0;
 	            		for(var idx in $scope.rowDetail){

@@ -334,6 +334,7 @@ define(['app'], function (app) {
 					}
 					$scope.rowTerbilang = helperService.terbilang($scope.rowPrintTotal());
 					$scope.profil = authService.getProfile();
+					$scope.sekolahProfil = authService.getSekolahProfile();
 					$scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();

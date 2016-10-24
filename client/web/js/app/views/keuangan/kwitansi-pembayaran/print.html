@@ -8,13 +8,17 @@
     .printStyle-box .note {
         font-size: 8pt;
     }
+    .print-kwitansi-bayar{
+        padding: 0 !important;
+    }
     /*@page {
         size: 21cm 14.8cm;
         margin: 0.5cm;
     }*/
     @media print {
         body{
-            font-family: "Sans Serif", "Times New Roman", Georgia, Serif;
+            /*font-family: "Sans Serif", "Times New Roman", Georgia, Serif;*/
+            font-family: Serif;
             letter-spacing: 0.1cm;
             font-size:6pt !important;
             /*line-height:9pt !important;*/
@@ -25,16 +29,24 @@
         }
         .print-kwitansi-bayar{
             float: left;
-            width: 20.1cm;
-            /*height: 14cm;*/
+            width: 20.5cm;
             margin:10px !important;
             font-size:9pt;
-            /*line-height:9pt;*/
-            padding: 0 20px !important;
         }
         .print-kwitansi-bayar table td {
             padding: 0 2px 0 2px !important;
             font-size: 6pt !important;
+        }
+        td.address{
+            padding-top: 20px;
+        }
+        td.address > p{
+            margin : 0;
+            line-height: 8pt;
+        }
+        .logo > img {
+            width: 40px !important;
+            margin: 2px;
         }
         .title h2{
             font-size : 14pt;
@@ -65,10 +77,15 @@
                     <tr class="top">
                         <td colspan="2">
                             <table>
-                                <tr>
+                                <tr style="border-bottom : 2px solid #000000;">
+                                    <td class="logo" style="width: 52px;"><img src="img/logo_50x60.jpg"></td>
+                                    <td class="address" style="text-align : left;width: 300px">
+                                        <p style="margin-top: 5px; !important"><strong>{{sekolahProfil.nama_sekolah}}</strong></p>
+                                        <p>{{sekolahProfil.alamat}}</p>
+                                    </td>
                                     <td class="title" style="text-align : center;">
                                         <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
-                                        <h1 style="font-size: 18pt;
+                                        <h1 style="font-size: 14pt;
                                                     margin: 0;
                                                     line-height: 20pt;
                                                     text-align: right;
@@ -76,7 +93,7 @@
                                     </td>
                                 </tr>
                                 <tr class="information">
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         <table>
                                             <tr>
                                                 <td> </td>
@@ -86,7 +103,6 @@
                                     </td>
                                 </tr>
                             </table>
-                            <hr/>
                         </td>
                     </tr>
                 </table>
@@ -100,34 +116,35 @@
                         <td>Untuk Pembayaran dengan perincian sebagai berikut :</td>
                     </tr>
                 </table>
-                <table>
-                    <tr class="item" ng-repeat="row in rowDetail track by row.id">
-                        <td style="width : 150px;">{{row.rincian}}</td>
-                        <td style="width : 10px">:</td>
-                        <td style="text-align : right;">{{row.jumlah | number:0}}</td>
-                    </tr>
-                    <tr class="total">
-                        <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
-                    </tr>
-                    <tr class="total">
-                        <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;background-color: #eee;"><b>{{rowTerbilang}}</b></td>
-                    </tr>
-                </table>
+                <div class="rows" style="height: 125px;">
+                    <table>
+                        <tr class="item" ng-repeat="row in rowDetail track by row.id">
+                            <td style="width : 150px;">{{row.rincian}}</td>
+                            <td style="width : 10px">:</td>
+                            <td style="text-align : right;">{{row.jumlah | number:0}}</td>
+                        </tr>
+                        <tr class="total">
+                            <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
+                        </tr>
+                        <tr class="total">
+                            <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;background-color: #eee;"><b>{{rowTerbilang}}</b></td>
+                        </tr>
+                    </table>
+                </div>
                 <table>
                     <tr class="information">
                         <td colspan="2">
                             <table>
                                 <tr>
-                                    <td style="height: 2.5cm !important;border : solid 1px #eee;width : 65%;font-size : 10pt;">
-                                        <p ng-bind-html="rowHeader.keterangan"></p>
+                                    <td style="width : 65%;font-size : 10pt;">
+                                        <p style="height: 1.5cm !important;border : solid 1px #eee;padding: 2pt;" ng-bind-html="rowHeader.keterangan"></p>
                                     </td>
                                     <td>
                                         Depok, {{tanggal}}<br>
                                         <br>
-                                        <br/>
-                                        <span class="profil-name">{{profil.fullname}}</span><br/>
-                                        ----------------------<br/>
-                                        <span class="profil-jabatan">{{titleadmin}}</span>
+                                        <span class="profil-name" style="margin: 0 !important">{{profil.fullname}}</span><br/>
+                                        <span style="margin: 0 !important">----------------------</span><br/>
+                                        <span class="profil-jabatan" style="margin: 0 !important">{{titleadmin}}</span>
                                     </td>
                                 </tr>
                             </table>
