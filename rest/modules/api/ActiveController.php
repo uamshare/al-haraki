@@ -61,6 +61,12 @@ class ActiveController extends \yii\rest\ActiveController
             'scenario' => $this->createScenario,
         ];
 
+        $parentActions['delete'] = [
+            'class' => 'rest\modules\api\actions\DeleteAction',
+            'modelClass' => $this->modelClass,
+            'checkAccess' => [$this, 'checkAccess']
+        ];
+
         // var_dump($parentActions);exit();
 
         $response = Yii::$app->response;
