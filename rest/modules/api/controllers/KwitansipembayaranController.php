@@ -26,10 +26,11 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
-                       ->select('h.*,s.nama_siswa,s.nis')
+                       ->select('h.*,s.nama_siswa,sr.kelasid,s.nis,k.kelas,k.nama_kelas')
                        ->from('kwitansi_pembayaran_h h')
                        ->leftJoin('siswa_rombel sr', 'sr.`id` = `h`.`idrombel`')
                        ->leftJoin('siswa s', 's.`id` = sr.`siswaid`')
+                       ->leftJoin('kelas k', 'sr.`kelasid` = `k`.`id`')
                        ->with('details')
                        ->where('1=1')
                        ->orderBy(['h.tahun_ajaran_id' => SORT_DESC,'no_kwitansi' => SORT_DESC])

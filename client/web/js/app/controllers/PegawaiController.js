@@ -194,20 +194,15 @@ define(['app'], function (app) {
 
             $scope.profilAvatar = ($scope.form.avatar == '') ? BASEURL + 'img/profil/user-default.png' : $scope.form.avatar;
             $scope.onSaveClick = function(event){
-                // if($scope.form.kelas == '' || $scope.form.kelas == null){
-                //     toastr.warning('Kelas tidak boleh kosong.', 'Warning');
-                //     return false;
-                // }
+                if($scope.form.nik == '' || $scope.form.nik == null){
+                    toastr.warning('NIK tidak boleh kosong.', 'Warning');
+                    return false;
+                }
 
-                // if($scope.form.nama_kelas == '' || $scope.form.nama_kelas == null){
-                //     toastr.warning('Nama Kelas tidak boleh kosong.', 'Warning');
-                //     return false;
-                // }
-
-                // if($scope.form.sekolahid == '' || $scope.form.sekolahid == null){
-                //     toastr.warning('Sekolah tidak boleh kosong.', 'Warning');
-                //     return false;
-                // }
+                if($scope.form.nama_pegawai == '' || $scope.form.nama_pegawai == null){
+                    toastr.warning('Nama Karyawan tidak boleh kosong.', 'Warning');
+                    return false;
+                }
 
                 function successHandle(result){
                     if(result.success){

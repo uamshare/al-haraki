@@ -429,6 +429,13 @@ define(['app'], function (app) {
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();
                     $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
+                    if($scope.rowHeader.month != null && $scope.rowHeader.month != 'null'){
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.month));
+                    }else if($scope.rowHeader.bulan != null && $scope.rowHeader.bulan != 'null'){
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.bulan));
+                    }else{
+                    	$scope.bulanTagihan = '';
+                    }
 
 			        ngDialog.open({
 			            template: $scope.viewdir + 'print.html',

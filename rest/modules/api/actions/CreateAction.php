@@ -42,25 +42,37 @@ class CreateAction extends \yii\rest\Action
 
 
         $post = Yii::$app->getRequest()->getBodyParams();
-        // if(!isset($post[$model->formName()])){
-        //     throw new \yii\web\HttpException('404','Root Property not set.');
-        // }
-
-        // $post[$model->formName()] = json_decode($post[$model->formName()], true);
-        // $post[$model->formName()] = $post;
-        // var_dump($post);exit(); 
-
         $model->load($post, '');
         // var_dump(get_object_vars($model));exit(); 
-
-        if ($model->save()) {
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(201);
-            $id = implode(',', array_values($model->getPrimaryKey(true)));
-            $response->getHeaders()->set('Location', Url::toRoute([$this->viewAction, 'id' => $id], true));
-        } elseif (!$model->hasErrors()) {
-            throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+        try{
+            $model->save();
+            Yii::$app->getResponse()->setStatusCode(201);
+            return ['message' => 'data is deleted'];
+        } catch(\Exception $e) {
+            if($e->errorInfo){
+                switch($e->errorInfo[1]){
+                    case 1062 :
+                        \Yii::$app->getResponse()->setStatusCode(500);
+                        return ['message' => 'Terjadi duplikasi data, silahkan hubungi administrator', 'errorInfo' => $e->errorInfo];
+                        break;
+                    default :
+                        throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+                        break;
+                }
+                return $e->errorInfo;
+            }else{
+                throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+            }
         }
+
+        // if ($model->save()) {
+        //     $response = Yii::$app->getResponse();
+        //     $response->setStatusCode(201);
+        //     $id = implode(',', array_values($model->getPrimaryKey(true)));
+        //     $response->getHeaders()->set('Location', Url::toRoute([$this->viewAction, 'id' => $id], true));
+        // } elseif (!$model->hasErrors()) {
+        //     throw new ServerErrorHttpException('Failed to create the object for unknown reason.');
+        // }
 
         return $model;
     }

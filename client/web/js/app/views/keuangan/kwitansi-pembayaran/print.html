@@ -10,17 +10,25 @@
     }
     .print-kwitansi-bayar{
         padding: 0 !important;
+        border: none !important;
     }
-    /*@page {
-        size: 21cm 14.8cm;
-        margin: 0.5cm;
-    }*/
+    .logo > img {
+        width: 80px !important;
+        height: 96px !important;
+        margin: 2px;
+    }
+    tr.heading,
+    td.terbilang{
+        background-color: #eeeeee !important;
+        -webkit-print-color-adjust: exact;
+    }
     @media print {
         body{
             /*font-family: "Sans Serif", "Times New Roman", Georgia, Serif;*/
             font-family: Serif;
             letter-spacing: 0.1cm;
             font-size:6pt !important;
+            -webkit-print-color-adjust: exact;
             /*line-height:9pt !important;*/
         }
         @page {
@@ -29,9 +37,10 @@
         }
         .print-kwitansi-bayar{
             float: left;
-            width: 20.5cm;
+            width: 19.5cm;
             margin:10px !important;
             font-size:9pt;
+            border: none !important;
         }
         .print-kwitansi-bayar table td {
             padding: 0 2px 0 2px !important;
@@ -44,8 +53,14 @@
             margin : 0;
             line-height: 8pt;
         }
+        tr.heading,
+        td.terbilang{
+            background-color: #eeeeee !important;
+            -webkit-print-color-adjust: exact;
+        }
         .logo > img {
-            width: 40px !important;
+            width: 80px !important;
+            height: 48px !important;
             margin: 2px;
         }
         .title h2{
@@ -78,7 +93,7 @@
                         <td colspan="2">
                             <table>
                                 <tr style="border-bottom : 2px solid #000000;">
-                                    <td class="logo" style="width: 52px;"><img src="img/logo_50x60.jpg"></td>
+                                    <td class="logo" style="width: 125px;text-align: left;"><img src="img/logo_50x60.jpg"></td>
                                     <td class="address" style="text-align : left;width: 300px">
                                         <p style="margin-top: 5px; !important"><strong>{{sekolahProfil.nama_sekolah}}</strong></p>
                                         <p>{{sekolahProfil.alamat}}</p>
@@ -92,7 +107,7 @@
                                                     font-weight: bold;">BUKTI PENERIMAAN</h1>
                                     </td>
                                 </tr>
-                                <tr class="information">
+                                <!-- <tr class="information">
                                     <td colspan="3">
                                         <table>
                                             <tr>
@@ -101,14 +116,29 @@
                                             </tr>
                                         </table>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </table>
                         </td>
                     </tr>
                 </table>
                 <table>
                     <tr class="item">
-                        <td style="width : 150px;font-size: 8pt;">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_pembayar}}</td>
+                        <td style="width : 150px;">Terima dari</td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 150px;">{{rowHeader.nama_pembayar}}</td>
+
+                        <td style="width : 150px;"><strong>Nomor</strong></td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 10px"><strong>{{rowHeader.no_kwitansi}}</strong></td>
+                    </tr>
+                    <tr class="item">
+                        <td>Kelas</td>
+                        <td>:</td>
+                        <td>{{rowHeader.kelas}} - {{rowHeader.nama_kelas}}</td>
+
+                        <td>Bulan</td>
+                        <td>:</td>
+                        <td>{{bulanTagihan}}</td>
                     </tr>
                 </table>
                 <table>
@@ -127,7 +157,9 @@
                             <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
                         </tr>
                         <tr class="total">
-                            <td><b>Terbilang</b></td><td>:</td><td style="text-align : left;background-color: #eee;"><b>{{rowTerbilang}}</b></td>
+                            <td><b>Terbilang</b></td>
+                            <td>:</td>
+                            <td class="terbilang"><b>{{rowTerbilang}}</b></td>
                         </tr>
                     </table>
                 </div>
@@ -142,8 +174,10 @@
                                     <td>
                                         Depok, {{tanggal}}<br>
                                         <br>
-                                        <span class="profil-name" style="margin: 0 !important">{{profil.fullname}}</span><br/>
-                                        <span style="margin: 0 !important">----------------------</span><br/>
+                                        <span class="profil-name" 
+                                            style="margin: 0 !important">{{profil.fullname}}</span><br/>
+                                        <span 
+                                        style="margin: 0 !important; line-height: 6pt;">----------------------</span><br/>
                                         <span class="profil-jabatan" style="margin: 0 !important">{{titleadmin}}</span>
                                     </td>
                                 </tr>
