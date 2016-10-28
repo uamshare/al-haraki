@@ -84,11 +84,15 @@ define(['app'], function (app) {
 				cfpLoadingBar.start();
 				$resourceApi.delete($id)
 				.then(function (result) {
-	                if(result.success){
-	                	toastr.success('Data telah berhasil dihapus.', 'Success');
-					}
+					if(result.success){
+                        toastr.success('Data telah dihapus', 'Success');
+                        get(1,$CONST_VAR.pageSize);
+                    }else{
+                        toastr.error('Data gagal dihapus. ' + result.message, 'Error');
+                        cfpLoadingBar.complete();
+                    }
 					cfpLoadingBar.complete();
-					get(1,$CONST_VAR.pageSize);
+					
 	            }, errorHandle);
 			}
 

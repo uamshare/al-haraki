@@ -1,8 +1,6 @@
 <?php
 /**
- * Yii form widget.
- *
- * This is the JavaScript widget used by the yii\widgets\ActiveForm widget.
+ * Base Model for app
  *
  * @author Uam <uamshare@gmail.com>
  * @since 1.0
@@ -15,16 +13,11 @@ use yii\db\Query;
 class AppActiveRecord extends \yii\db\ActiveRecord
 {
     protected $isAutoSaveLog = false;
+    protected $tempAttributes;
 
-	public function beforeSave($insert){
+    public function beforeSave($insert){
         if(parent::beforeSave($insert)){
             if($this->isAutoSaveLog){
-                $user = \Yii::$app->user;
-                $request = Yii::$app->getRequest();
-
-                $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
-                $sekolahid = $request->getQueryParam('sekolahid', $sekolahid);
-                $this->saveLogs(null, $sekolahid);
             }
             return true;
         } else {
@@ -32,20 +25,35 @@ class AppActiveRecord extends \yii\db\ActiveRecord
         }
     }
 
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+        if($this->isAutoSaveLog){
+            $user = \Yii::$app->user;
+            $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
+            $sekolahid = \Yii::$app->getRequest()->getQueryParam('sekolahid', $sekolahid);
+            $this->saveLogs($changedAttributes, $sekolahid);
+        }
+    }
+
     public function beforeDelete()
     {
         if (parent::beforeDelete()) {
             if($this->isAutoSaveLog){
-                $user = \Yii::$app->user;
-                $request = Yii::$app->getRequest();
-
-                $sekolahid = (isset($user->sekolahid) && $user->sekolahid > 0) ? $user->sekolahid : 1;
-                $sekolahid = $request->getQueryParam('sekolahid', $sekolahid);
-                $this->saveLogs($this->attributes, $sekolahid);
+                $this->tempAttributes = $this->attributes;
             }
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::beforeDelete();
+        if($this->isAutoSaveLog){
+            $sekolahid = (isset(\Yii::$app->user->sekolahid) && \Yii::$app->user->sekolahid > 0) ? $user->sekolahid : 1;
+            $sekolahid = \Yii::$app->getRequest()->getQueryParam('sekolahid', $sekolahid);
+            $this->saveLogs($this->tempAttributes, $sekolahid);
         }
     }
 
@@ -56,8 +64,8 @@ class AppActiveRecord extends \yii\db\ActiveRecord
         $logs->tablename = $this->tableName();
         $dirty_attributes = (is_null($dirtyAttributes)) ? $this->dirtyAttributes : $dirtyAttributes;
 
-        $date = date('Y-m-d H:i:s');
 
+        $date = date('Y-m-d H:i:s');
         if($dirty_attributes){
 
             $dirty_attributes['created_at'] = $date;
@@ -71,8 +79,11 @@ class AppActiveRecord extends \yii\db\ActiveRecord
             $_sekolahid = $request->getQueryParam('sekolahid', null);
             $logs->sekolahid = (!is_null($sekolahid) ? $sekolahid : $_sekolahid);
 
-            if(!$logs->save()){
-                var_dump($logs->getErrors());
+            $logsave = $logs->save();
+            if(!$logsave){
+                \Yii::error($this->tempLogs->getErrors(), 'database');
+            }else{
+                // Yii::trace('save log success');
             }
         }
     }

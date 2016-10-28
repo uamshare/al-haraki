@@ -31,11 +31,25 @@ class DeleteAction extends \yii\rest\Action
             call_user_func($this->checkAccess, $this->id, $model);
         }
 
-        if ($model->delete() === false) {
-            throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+        try{
+            $model->delete();
+            Yii::$app->getResponse()->setStatusCode(200);
+            return ['message' => 'data is deleted'];
+        } catch(\Exception $e) {
+            if($e->errorInfo){
+                switch($e->errorInfo[1]){
+                    case 1451 :
+                        \Yii::$app->getResponse()->setStatusCode(500);
+                        return ['message' => 'Sudah ada transaksi yang terhubung dengan data ini, silahkan hubungi administrator', 'errorInfo' => $e->errorInfo];
+                        break;
+                    default :
+                        throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+                        break;
+                }
+                return $e->errorInfo;
+            }else{
+                throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+            }
         }
-
-        Yii::$app->getResponse()->setStatusCode(200);
-        return ['message' => 'data is deleted'];
     }
 }
