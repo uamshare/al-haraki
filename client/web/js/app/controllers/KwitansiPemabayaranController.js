@@ -412,6 +412,9 @@ define(['app'], function (app) {
 			})
 			.then(function (result) {
 	            if(result.success){
+	            	if(typeof rowdata.nama_kelas == 'undefined'){
+	            		rowdata.nama_kelas = $scope.rombel_typehead.kelas
+	            	}
 	            	$scope.rowHeader = rowdata;
 	            	$scope.rowHeader.keterangan = $scope.rowHeader.keterangan.replace(/(?:\r\n|\r|\n)/g, '<br />');
 	            	$scope.rowDetail = result.rows;
@@ -430,9 +433,9 @@ define(['app'], function (app) {
                             date.getFullYear();
                     $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
                     if($scope.rowHeader.month != null && $scope.rowHeader.month != 'null'){
-                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.month));
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.month) - 1);
                     }else if($scope.rowHeader.bulan != null && $scope.rowHeader.bulan != 'null'){
-                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.bulan));
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.bulan) - 1);
                     }else{
                     	$scope.bulanTagihan = '';
                     }

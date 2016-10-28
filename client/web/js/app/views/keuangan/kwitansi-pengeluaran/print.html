@@ -57,6 +57,7 @@
         td.terbilang{
             background-color: #eeeeee !important;
             -webkit-print-color-adjust: exact;
+            font-style: italic;
         }
         .logo > img {
             width: 80px !important;
@@ -71,6 +72,9 @@
            clear: both;
            position: relative;
            /*page-break-after: auto;*/
+        }
+        .rows{
+            height: 135px;
         }
     }
 </style>
@@ -93,10 +97,10 @@
                         <td colspan="2">
                             <table>
                                 <tr style="border-bottom : 2px solid #000000;">
-                                    <td class="logo" style="width: 125px;text-align: left;"><img src="img/logo_50x60.jpg"></td>
+                                    <td class="logo" style="height: 50px !important;width: 125px;text-align: left;"></td></td>
                                     <td class="address" style="text-align : left;width: 300px">
-                                        <p style="margin-top: 5px; !important"><strong>{{sekolahProfil.nama_sekolah}}</strong></p>
-                                        <p>{{sekolahProfil.alamat}}</p>
+                                        <p style="margin-top: 5px; !important"><strong></strong></p>
+                                        <p></p>
                                     </td>
                                     <td class="title" style="text-align : center;">
                                         <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
@@ -107,7 +111,7 @@
                                                     font-weight: bold;">BUKTI PENGELUARAN</h1>
                                     </td>
                                 </tr>
-                                <tr class="information">
+                                <!-- <tr class="information">
                                     <td colspan="3">
                                         <table>
                                             <tr>
@@ -116,14 +120,29 @@
                                             </tr>
                                         </table>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </table>
                         </td>
                     </tr>
                 </table>
                 <table>
                     <tr class="item">
-                        <td style="width : 150px">Terima dari</td><td style="width : 10px">:</td><td>{{rowHeader.nama_penerima}}</td>
+                        <td style="width : 100px">Diberikan kepada</td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 300px;">{{rowHeader.nama_penerima}}</td>
+
+                        <td style="width : 50px;"><strong>Nomor</strong></td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 10px"><strong>{{rowHeader.no_kwitansi}}</strong></td>
+                    </tr>
+                    <tr class="item">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                        <td>Tanggal</td>
+                        <td>:</td>
+                        <td>{{rowHeader.tgl_kwitansi}}</td>
                     </tr>
                 </table>
                 <table>
@@ -131,20 +150,24 @@
                         <td>Untuk pengeluaran dengan perincian sebagai berikut :</td>
                     </tr>
                 </table>
-                <div class="rows" style="height: 125px;">
-                    <table >
+                <div class="rows">
+                    <table>
                         <tr class="item" ng-repeat="row in rowDetail track by row.id">
-                            <td style="width : 150px">{{row.rincian}}</td>
-                            <td style="width : 10px">:</td>
-                            <td style="text-align : right;">{{row.jumlah | number:0}}</td>
+                            <td width="2">{{$index + 1}}.</td>
+                            <td colspan="2" style="text-align: left;">{{row.rincian}}</td>
+                            <td width="2">:</td>
+                            <td style="text-align : right; width : 100px;">{{row.jumlah | number:0}}</td>
                         </tr>
                         <tr class="total">
-                            <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
-                        </tr>
-                        <tr class="total">
-                            <td><b>Terbilang</b></td>
+                            <td width="10"></td>
+                            <td width="90"></td>
+                            <td style="text-align: right;"><b>Total</b></td>
                             <td>:</td>
-                            <td class="terbilang"><b>{{rowTerbilang}}</b></td>
+                            <td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
+                        </tr>
+                        <tr class="total">
+                            <td colspan="2" width="75"><b>Terbilang</b></td>
+                            <td colspan="3" style="text-align : left; font-style: italic;" class="terbilang">{{rowTerbilang}}</td>
                         </tr>
                     </table>
                 </div>
@@ -157,10 +180,10 @@
                                         <p style="height: 1.5cm !important;border : solid 1px #eee;padding: 2pt;" ng-bind-html="rowHeader.keterangan"></p>
                                     </td>
                                     <td>
-                                        Depok, {{tanggal}}<br>
-                                        <br>
-                                        <span class="profil-name" style="margin: 0 !important">{{profil.fullname}}</span><br/>
-                                        <span style="margin: 0 !important">----------------------</span><br/>
+                                        Depok, {{tanggal}}<br><br>
+                                        <label 
+                                            class="profil-name ng-binding" 
+                                            style="border-bottom: 0.5px solid;width: 100px !important;font-weight: normal;">admin</label><br/>
                                         <span class="profil-jabatan" style="margin: 0 !important">{{titleadmin}}</span>
                                     </td>
                                 </tr>

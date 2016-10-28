@@ -11,7 +11,10 @@
 			<div class="col-lg-4">
 				<div class="form-group">
 					<label>Kelas</label>
-					<select name="kelasid" class="form-control" 
+					<select 
+						id="elmkelas"
+						name="kelasid" 
+						class="form-control" 
 						ng-model="kelas.selected"
 						required="Silahkan pilih kelas"
 						ng-change="onSearchClick($event)"
