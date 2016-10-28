@@ -378,6 +378,14 @@ define(['app'], function (app) {
 			}
 		}
 
+		function getKelasSelected(){
+			for(var idx in $scope.kelas.options){
+				if($scope.kelas.options[idx].id == $scope.kelas.selected){
+					return $scope.kelas.options[idx];
+				}
+			}
+		}
+
 		$scope.gridAction = {
 			onPrintClick : function(rowdata){
 				var date = new Date();
@@ -390,8 +398,7 @@ define(['app'], function (app) {
 							$scope.row.ekskul;
 				}
 				$scope.profil = authService.getProfile();
-				// $scope.monthPrint = date.getMonth();
-				// $scope.monthYear = date.getFullYear();
+				$scope.kelasCur = getKelasSelected();
 				$scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();
@@ -428,6 +435,7 @@ define(['app'], function (app) {
 				}
 
 				$scope.profil = authService.getProfile();
+				$scope.kelasCur = getKelasSelected();
 				$scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();

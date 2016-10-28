@@ -430,9 +430,9 @@ define(['app'], function (app) {
                             date.getFullYear();
                     $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
                     if($scope.rowHeader.month != null && $scope.rowHeader.month != 'null'){
-                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.month));
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.month) - 1);
                     }else if($scope.rowHeader.bulan != null && $scope.rowHeader.bulan != 'null'){
-                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.bulan));
+                    	$scope.bulanTagihan = helperService.getMonthName(parseInt($scope.rowHeader.bulan) - 1);
                     }else{
                     	$scope.bulanTagihan = '';
                     }
