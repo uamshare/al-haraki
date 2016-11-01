@@ -49,7 +49,7 @@ class AppActiveRecord extends \yii\db\ActiveRecord
 
     public function afterDelete()
     {
-        parent::beforeDelete();
+        parent::afterDelete();
         if($this->isAutoSaveLog){
             $sekolahid = (isset(\Yii::$app->user->sekolahid) && \Yii::$app->user->sekolahid > 0) ? $user->sekolahid : 1;
             $sekolahid = \Yii::$app->getRequest()->getQueryParam('sekolahid', $sekolahid);
