@@ -284,7 +284,9 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
                                     return [
                                         'data' => $model,
                                         'scenario' => 'confirm_delete_keep',
-                                        'message' => 'data is deleted'
+                                        'message' => 'data is deleted',
+                                        'errorInfo' => $e,
+                                        'result' => $del
                                     ];
                                 }else{
                                     Yii::$app->getResponse()->setStatusCode(422, 'Data Validation Failed.');
