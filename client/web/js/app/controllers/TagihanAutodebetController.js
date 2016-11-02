@@ -658,7 +658,7 @@ define(['app'], function (app) {
                                     no_transaksi : xlsdata[nis].no_transaksi,
                                     nis : xlsdata[nis].nis,
                                     nisn : xlsdata[nis].nisn,
-                                    nama_siswa : xlsdata[nis].nama_siswa,
+                                    nama_siswa : rowdata[nis].nama_siswa,
                                     spp : xlsdata[nis].spp,
                                     komite_sekolah : xlsdata[nis].komite_sekolah,
                                     catering : xlsdata[nis].catering,
@@ -701,7 +701,7 @@ define(['app'], function (app) {
                             XLSdata = ep.selectSheet("Konten").readAll();
                         var num = 1;
                         var nodata = true;
-                        var rows = [],
+                        var rows = {},
                             paramsRombel = [];
 
                         for(var idx in XLSdata){
