@@ -412,11 +412,12 @@ define(['app'], function (app) {
 			})
 			.then(function (result) {
 	            if(result.success){
-	            	if (typeof rowdata.nama_kelas == 'undefined') {
+	            	if (typeof rowdata.nama_kelas == 'undefined' && typeof $scope.rombel_typehead != 'undefined') {
 	            		var splitKelas = $scope.rombel_typehead.kelas.split(" - ");
 	            		rowdata.kelas = splitKelas[0];
 	            		rowdata.nama_kelas = splitKelas[1];
 	            	}
+			console.log(rowdata);
 	            	$scope.rowHeader = rowdata;
 	            	$scope.rowHeader.keterangan = $scope.rowHeader.keterangan.replace(/(?:\r\n|\r|\n)/g, '<br />');
 	            	$scope.rowDetail = result.rows;
