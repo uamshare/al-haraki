@@ -35,6 +35,27 @@ define(['app'], function (app) {
             }
         }
 
+        factory.monthShort = function(){
+            return {
+                options: [
+                    {id: 1, name: 'Jan'},
+                    {id: 2, name: 'Feb'},
+                    {id: 3, name: 'Mar'},
+                    {id: 4, name: 'Apr'},
+                    {id: 5, name: 'Mei'},
+                    {id: 6, name: 'Jun'},
+                    {id: 7, name: 'Jul'},
+                    {id: 8, name: 'Agu'},
+                    {id: 9, name: 'Sep'},
+                    {id: 10, name: 'Okt'},
+                    {id: 11, name: 'Nov'},
+                    {id: 12, name: 'Des'}
+                ],
+                selected: null,
+                year : null
+            }
+        }
+
         factory.date = function(date){
             if(typeof date == 'undefined'){
                 date = new Date();
@@ -49,6 +70,11 @@ define(['app'], function (app) {
         factory.getMonthName = function(id){
             return factory.month().options[id].name
         }
+
+        factory.getMonthNameShort = function(id){
+            return factory.monthShort().options[id].name
+        }
+
         factory.getMonthId = function(id){
             return factory.month().options[id].id
         }

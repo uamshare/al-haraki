@@ -83,29 +83,51 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
+        
 
         if($form['sumber_kwitansi'] == 1){
-            $pembayaran = [
-                'idrombel' => $form['idrombel'],
-                'spp_debet' => 0,
-                'komite_sekolah_debet' => 0,
-                'catering_debet' => 0,
-                'keb_siswa_debet' => 0,
-                'ekskul_debet' => 0,
-                'bulan' => $form['month'],
-                'tahun' => $form['year'],
-                'tahun_ajaran' => isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id,
-                'no_ref' => $form['no_kwitansi'],
-                'ket_ref' => $form['keterangan'],
-                'created_at' => isset($form['created_at']) ? $form['created_at'] : $date,   
-                'updated_at' => $date
-            ];
+            $bulanTagihan = $form['month']; //explode(',', $form['month']);
+            $pembayaran = [];
+            $tahunAjaran = \rest\models\TahunAjaran::getActive();
+            foreach ($bulanTagihan as $bln) {
+                if($bln >= 7 && $bln <= 12 ){
+                    $year = $tahunAjaran->tahun_awal;
+                }else{
+                    $year = $tahunAjaran->tahun_akhir;
+                }
+                
+                $outtp = \rest\models\TagihanPembayaran::find()
+                                                        ->where([
+                                                            'idrombel' => $form['idrombel'],
+                                                            'bulan' => $bln,
+                                                            'tahun' => $year
+                                                        ])
+                                                        ->groupBy('idrombel')
+                                                        ->One();
+                $pembayaran[] = [
+                    'idrombel' => $form['idrombel'],
+                    'spp_debet' => ($outtp) ? ($outtp->spp_kredit - $outtp->spp_debet) : 0,
+                    'komite_sekolah_debet' => ($outtp) ? ($outtp->komite_sekolah_kredit - $outtp->komite_sekolah_debet) 
+                                                : 0,
+                    'catering_debet' => ($outtp) ? ($outtp->catering_kredit - $outtp->catering_debet) : 0,
+                    'keb_siswa_debet' => ($outtp) ? $outtp->keb_siswa_kredit : 0,
+                    'ekskul_debet' => ($outtp) ? $outtp->ekskul_kredit : 0,
+                    'bulan' => $bln,
+                    'tahun' => $year,
+                    'tahun_ajaran' => isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id,
+                    'no_ref' => $form['no_kwitansi'],
+                    'tgl_ref' => $form['tgl_kwitansi'],
+                    'ket_ref' => $form['keterangan'],
+                    'created_at' => isset($form['created_at']) ? $form['created_at'] : $date,   
+                    'updated_at' => $date
+                ];
+            }
+            
         }else{
             $pembayaran = false;
         }
 
         foreach($grid as $k => $rows){
-            
             if($rows['flag'] == '1'){
                 $attrvalue[] = [
                     'id'                    => isset($rows['id']) ? $rows['id'] : '', 
@@ -122,8 +144,32 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                 $flagdelete[] = $rows['id'];
             }
             
-            if($pembayaran && isset($pembayaran[$rows['kode'].'_debet'])){
-                $pembayaran[$rows['kode'].'_debet'] = ($rows['flag'] == 1) ? $rows['jumlah'] : 0;
+            if($pembayaran && $rows['flag'] == 1){
+                $jml = $rows['jumlah'];
+                $count = 1;
+                $pcount = count($pembayaran);
+                foreach ($pembayaran as $key => $value) {
+                    if(isset($pembayaran[$key][$rows['kode'].'_debet'])){
+
+                        if($count == $pcount){
+                            $pembayaran[$key][$rows['kode'].'_debet'] = $jml;
+                            break;
+                        }
+
+                        if(in_array($rows['kode'], ['spp','komite_sekolah','catering'])){ // Tagihan Bulanan
+                            if($pembayaran[$key][$rows['kode'].'_debet'] <= $jml){
+                                $jml = $jml - $pembayaran[$key][$rows['kode'].'_debet'];
+                            }else{
+                                $pembayaran[$key][$rows['kode'].'_debet'] = $jml;
+                            }
+                        }else{ // Tagihan Tahunan
+                            $pembayaran[$key][$rows['kode'].'_debet'] = $jml;
+                            break; // Exit loop, set value to first index
+                        }
+                        $count++;
+                    }
+                }
+                
             }
         }
 
@@ -134,19 +180,15 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         $form['created_at'] = isset($form['created_at']) ? $form['created_at'] : $date;
         $form['updated_at'] = $date;
 
-        unset($form['nama_siswa']);
-        unset($form['kelas']);
-        $form['bulan'] = $form['month'];
-        $form['tahun'] = $form['year'];
-        unset($form['month']);
-        unset($form['year']);
+        
 
         // Set posting value
         $postingValue = [
             'date'                 => $form['tgl_kwitansi'],
             'noref'                => $form['no_kwitansi'],        
             'value'                => $total,
-            'description'          => 'Kwitansi Pembayaran NO . ' . $form['no_kwitansi'],
+            'description'          => 'Kwitansi Pembayaran NO . ' . $form['no_kwitansi'] . 
+                                        ' Bulan ' . implode(",", $form['month']),
             'sekolahid'            => $form['sekolahid'],
             'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
             'fk_id'                => isset($form['idrombel']) ? $form['idrombel'] : substr($form['no_kwitansi'], -5),
@@ -155,6 +197,16 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'created_by'           => $form['created_by'],   
             'updated_by'           => $form['updated_by']
         ];
+
+        unset($form['nama_siswa']);
+        unset($form['kelas']);
+        $form['bulan'] = implode(",", $form['month']);
+        $form['tahun'] = $form['year'];
+        unset($form['month']);
+        unset($form['year']);
+
+        // return $pembayaran;
+        // var_dump($pembayaran);exit();
 
         $model = new $this->modelClass;
         $result = $model->saveAndPosting([
@@ -165,7 +217,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'postingValue' => $postingValue,
             'tagihanvalue' => $tagihanvalue
         ], $id);
-        
+
         if($result !== true){
             $this->response->setStatusCode(422, 'Data Validation Failed.');
         }else{
