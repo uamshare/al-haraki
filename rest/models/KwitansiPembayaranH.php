@@ -153,7 +153,9 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
             'tahun',
             'tahun_ajaran',
             'no_ref',
+            'tgl_ref',
             'ket_ref',
+            'created_at',
             'updated_at'
         ];
         try {
@@ -182,20 +184,25 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
             $savedD->execute();
 
             if($rowPembayaran != false){
-                if($id){
-                    $savedP = $DB->createCommand()->update(
-                        'tagihan_pembayaran',
-                        $rowPembayaran,
-                        ['no_ref' => $id]
-                    );
-                }else{
-                    $savedP = $DB->createCommand()->insert(
-                        'tagihan_pembayaran',
-                        $rowPembayaran
-                    );
-                }
+                // if($id){
+                //     $savedP = $DB->createCommand()->update(
+                //         'tagihan_pembayaran',
+                //         $rowPembayaran,
+                //         ['no_ref' => $id]
+                //     );
+                // }else{
+                //     $savedP = $DB->createCommand()->insert(
+                //         'tagihan_pembayaran',
+                //         $rowPembayaran
+                //     );
+                // }
                 
-                // $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
+                $savedP = $DB->createCommand()->batchInsert(
+                    'tagihan_pembayaran', 
+                    $columnP, 
+                    $rowPembayaran
+                );
+                $savedP->setSql($savedP->rawSql . ' ON DUPLICATE KEY UPDATE ' . $this->setOnDuplicateValue($columnP));
                 $savedP->execute();
                 // echo $savedD->rawSql;exit();
             }
