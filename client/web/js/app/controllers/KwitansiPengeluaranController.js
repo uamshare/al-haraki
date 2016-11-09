@@ -370,8 +370,8 @@ define(['app'], function (app) {
 				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
 				created_by : null,
 				updated_by : null,
-				created_at : date,
-				updated_at : date
+				created_at : null,
+				updated_at : null
 			};
 
 			$scope.gridDetailDirtyRows = [];
@@ -452,8 +452,8 @@ define(['app'], function (app) {
 				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
 				$scope.form.created_by = '';
 				$scope.form.updated_by = '';
-				$scope.form.created_at = date;
-				$scope.form.updated_at = date;
+				$scope.form.created_at = null;
+				$scope.form.updated_at = null;
 
 				$scope.gridDetail.data = [
 					{

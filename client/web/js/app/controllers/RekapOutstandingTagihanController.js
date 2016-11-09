@@ -82,8 +82,17 @@ define(['app'], function (app) {
                     grouping: { groupPriority: 1 }, 
                     sort: { priority: 1, direction: 'asc' }, 
                     width: '200',
+                    visible: false
                 },
-                { name: 'nama_siswa', displayName: 'Nama Siswa', width : '300',  enableCellEdit: false},
+                { 
+                    name: 'nama_siswa', 
+                    displayName: 'Nama Siswa', 
+                    width : '300',  
+                    enableCellEdit: false,
+                    cellTemplate: '<div class="ui-grid-cell-contents">'+
+                              '<div class="" ng-if="row.groupHeader">{{row.treeNode.aggregations[0].rendered}}</div>'+
+                              '<div ng-if="!row.groupHeader">{{grid.getCellValue(row, col)}}</div></div>'
+                },
                 { name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, width : '50',  enableCellEdit: false},
                 { 
                     name: 'spp', 
@@ -178,6 +187,9 @@ define(['app'], function (app) {
             showGridFooter: true,
             showColumnFooter: true,
             enableExpandAll  : true,
+
+            gridMenuShowHideColumns : false,
+            enableColumnMenus : false,
 
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;

@@ -226,7 +226,13 @@ class Cashflow extends \yii\db\ActiveRecord
         if($scope == 'month'){
             // var_dump(date('n', $dt) . '>' .  date('n', strtotime($res['start'])));
             $res['start'] = (date('n', $dt) > date('n', strtotime($res['start']))) ? $month['start'] : $res['start'];
-            $res['end'] = (date('n', $dt) < date('n', strtotime($res['end']))) ? $month['end'] : $res['end'];
+
+            if(date('n', $dt) == 12 && (date('n', $dt) > date('n', strtotime($res['end'])))){
+                $res['end'] = $month['end'];
+            }else{
+                $res['end'] = (date('n', $dt) < date('n', strtotime($res['end']))) ? $month['end'] : $res['end'];    
+            }
+            
         }
         
         // exit();

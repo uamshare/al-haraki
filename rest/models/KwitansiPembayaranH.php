@@ -197,6 +197,14 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
                 //     );
                 // }
                 
+                $deleteP = $DB->createCommand()->delete(
+                    'tagihan_pembayaran',
+                    'no_ref = :param1',
+                    ['param1' => $rowHeader['no_kwitansi']]
+                );
+                // echo $deleteP->rawSql;exit();
+                $deleteP->execute();
+
                 $savedP = $DB->createCommand()->batchInsert(
                     'tagihan_pembayaran', 
                     $columnP, 

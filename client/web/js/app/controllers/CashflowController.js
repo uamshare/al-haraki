@@ -203,6 +203,8 @@ define(['app'], function (app) {
                 $scope.filter.month = date.getMonth() + 1;
             }
 
+            $scope.monthBefore = helperService.getMonthName($scope.filter.month - 1).toUpperCase();
+
             $scope.onSearchClick = function(event){
                 if($scope.filter.month == '' || $scope.filter.month == null){
                     toastr.warning('Bulan tidak boleh kosong.', 'Warning');
@@ -213,6 +215,8 @@ define(['app'], function (app) {
                     toastr.warning('Tahun tidak boleh kosong.', 'Warning');
                     return false;
                 }
+
+                $scope.monthBefore = helperService.getMonthName($scope.filter.month - 2).toUpperCase();
                 get({
                     month : $scope.filter.month,
                     year : $scope.filter.year,
@@ -315,7 +319,7 @@ define(['app'], function (app) {
                 },
 
                 _title : 'Rekap Arus Kas ' + authService.getSekolahProfile().nama_sekolah,
-                _titleDate : 'PER - ' + helperService.getMonthName($scope.filter.month - 1) + ' ' + 
+                _titleDate : 'PER - DD ' + helperService.getMonthName($scope.filter.month - 1) + ' ' + 
                               $scope.filter.year,
             }
 
@@ -338,11 +342,13 @@ define(['app'], function (app) {
                         countweek = rangeWeek.length,
                         arr1 = [], arr2 = [], arr3=[];
 
+                    var headerTitle = helperService.getMonthName($scope.filter.month - 1) + ' ' + 
+                              $scope.filter.year
                     arr1 = [
                         {text: 'No', style: 'header', rowSpan: 3, alignment: 'center', margin: [0, 20, 0, 0]},
                         {text: 'Nama Akun', style:'header', rowSpan: 3, alignment: 'center', margin: [0, 20, 0, 0]},
                         {text: 'No Akun', style: 'header', rowSpan: 3, alignment: 'center', margin: [0, 20, 0, 0]},
-                        {text: 'September 2016', style: 'header', colSpan: countweek, alignment: 'center', margin: [0, 10, 0, 0]}
+                        {text: headerTitle, style: 'header', colSpan: countweek, alignment: 'center', margin: [0, 10, 0, 0]}
                     ];
                     arr2 = ['','',''];
                     arr3 = ['','',''];
@@ -453,7 +459,7 @@ define(['app'], function (app) {
                     index++;
                     var index5 = index;
                     rowbody[index5] = [
-                        {text: 'OUTSTANDING', style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
+                        {text: 'OUTSTANDING s/d ' + $scope.monthBefore, style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
                         '',
                         ''
                     ];
@@ -461,7 +467,7 @@ define(['app'], function (app) {
                     index++;
                     var index6 = index;
                     rowbody[index6] = [
-                        {text: 'SALDO', style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
+                        {text: 'SALDO ' + $scope.nama_sekolah, style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
                         '',
                         ''
                     ];
@@ -551,9 +557,10 @@ define(['app'], function (app) {
                     text: exportTo._title,
                     alignment: 'center'
                 });
-                content.push({
+                content.push({ 
                     margin: [0,0,0,10],
-                    text: exportTo._titleDate,
+                    text: 'PER - ' + helperService.getMonthName($scope.filter.month - 1) + ' ' + 
+                              $scope.filter.year,
                     alignment: 'center'
                 });
 
@@ -653,7 +660,8 @@ define(['app'], function (app) {
                 
                 $scope.templateExport = {
                     title : exportTo._title,
-                    titleDate : exportTo._titleDate,
+                    titleDate : 'PER - DD ' + helperService.getMonthName($scope.filter.month - 1) + ' ' + 
+                              $scope.filter.year,
                     table  : content,
                     summary : {
                         s_spp             : s_spp,

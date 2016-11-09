@@ -47,7 +47,7 @@ class CreateAction extends \yii\rest\Action
         try{
             $model->save();
             Yii::$app->getResponse()->setStatusCode(201);
-            return ['message' => 'data is deleted'];
+            return ['message' => 'data is save'];
         } catch(\Exception $e) {
             if($e->errorInfo){
                 switch($e->errorInfo[1]){

@@ -159,8 +159,6 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
                   a.`updated_at` 
                 FROM
                   `tagihan_pembayaran` a
-                LEFT JOIN kwitansi_pembayaran_h b ON TRIM(a.`no_ref`) = TRIM(b.`no_kwitansi`) $filter2
-                LEFT JOIN tagihan_autodebet_h c ON TRIM(a.`no_ref`) = TRIM(c.`no_transaksi`)
                 WHERE (a.bulan <> 0 AND a.bulan is not null) AND $filter
                 GROUP BY idrombel
                 ) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
@@ -175,19 +173,25 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
         }
         $sqlCustoms = "SELECT * FROM
               (SELECT    b.`id`
-                          , a.id AS `idrombel`
+                          , a.`id` AS `idrombel`
                           , a.`siswaid`
                           , s.`nama_siswa` 
                           , a.`kelasid`
-                          , k.kelas
-                          , k.nama_kelas
+                          , k.`kelas`
+                          , k.`nama_kelas`
                           , a.`tahun_ajaran_id`
+                          , (CASE
+                          WHEN SUBSTR(b.`no_kwitansi`,1,2) = '01' THEN 'KAS'
+                          WHEN SUBSTR(b.`no_kwitansi`,1,2) = '03' THEN 'BANK'
+                             END) AS reff
+                          , b.`no_kwitansi`
                           , b.`spp`
                           , b.`komite_sekolah`
                           , b.`catering`
                           , b.`keb_siswa`
                           , b.`ekskul`
                           , b.`bulan`
+                          , b.bulan_b
                           , b.`tahun`
                           , b.`keterangan`
                           , b.`created_at`
@@ -199,12 +203,14 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
                         (SELECT 
                           a.`id`,
                           a.`idrombel`,
-                          IFNULL(`spp_debet`,0) AS spp,
-                          IFNULL(`komite_sekolah_debet`,0) AS komite_sekolah,
-                          IFNULL(`catering_debet`,0) AS catering,
-                          IFNULL(`keb_siswa_debet`,0) AS keb_siswa,
-                          IFNULL(`ekskul_debet`,0) AS ekskul,
+                          b.`no_kwitansi`,
+                          SUM(IFNULL(`spp_debet`,0)) AS spp,
+                          SUM(IFNULL(`komite_sekolah_debet`,0)) AS komite_sekolah,
+                          SUM(IFNULL(`catering_debet`,0)) AS catering,
+                          SUM(IFNULL(`keb_siswa_debet`,0)) AS keb_siswa,
+                          SUM(IFNULL(`ekskul_debet`,0)) AS ekskul,
                           a.`bulan`,
+                          b.bulan AS bulan_b,
                           a.`tahun`,
                           a.`tahun_ajaran`,
                           a.`no_ref`,
@@ -213,12 +219,13 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
                           a.`created_at`,
                           a.`updated_at` 
                         FROM `tagihan_pembayaran` a
-                        INNER JOIN (SELECT idrombel,kp.`no_kwitansi`,kp.`tgl_kwitansi` FROM kwitansi_pembayaran_h kp
-                          UNION ALL 
-                          SELECT idrombel,h.no_transaksi,h.tgl_transaksi FROM tagihan_autodebet_h h
-                          INNER JOIN tagihan_autodebet_d d ON h.no_transaksi = d.no_transaksi) 
+                        INNER JOIN (SELECT idrombel,kp.`no_kwitansi`,kp.`tgl_kwitansi`,kp.`bulan` FROM kwitansi_pembayaran_h kp
+                            UNION ALL 
+                            SELECT idrombel,h.no_transaksi,h.tgl_transaksi,h.`bulan` FROM tagihan_autodebet_h h
+                            INNER JOIN tagihan_autodebet_d d ON h.no_transaksi = d.no_transaksi) 
                           b ON a.`no_ref` = b.`no_kwitansi` AND a.`idrombel`=b.idrombel
-                        WHERE $filter) b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
+                        WHERE $filter GROUP BY b.no_kwitansi, b.idrombel) 
+                        b ON a.`id` = b.`idrombel`) AS q_info_tagihan ";
         return $sqlCustoms;
     }
 
@@ -246,7 +253,8 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
             $param1 = date('m', strtotime($date_end)) + (12 * date('Y', strtotime($date_end)));
             $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
             $filter2 = " AND DATE_FORMAT(b.`tgl_kwitansi`,'%Y-%m-%d') <= :param2 ";
-            $bound = [':param1' => $param1, ':param2' => $date_end];
+            // $bound = [':param1' => $param1, ':param2' => $date_end];
+            $bound = [':param1' => $param1];
         }else{
             $param1 = $month + (12 * $year);
             $filter = '(a.bulan + (12 * a.tahun)) <= :param1';
@@ -392,6 +400,10 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
 
         if($tahun_ajaran_id){
             $where .= ' AND tahun_ajaran_id ' . $this->where($tahun_ajaran_id);
+        }
+
+        if($reff){
+            $where .= ' AND SUBSTR(no_kwitansi,1,2) ' . $this->where($reff);
         }
 
         if($query){

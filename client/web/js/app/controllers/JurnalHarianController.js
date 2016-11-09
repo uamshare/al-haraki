@@ -275,8 +275,8 @@ define(['app'], function (app) {
 				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
 				created_by : null,
 				updated_by : null,
-				created_at : date,
-				updated_at : date
+				created_at : null,
+				updated_at : null
 			};
 
 			$scope.gridDetailDirtyRows = [];
@@ -410,8 +410,8 @@ define(['app'], function (app) {
 				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
 				$scope.form.created_by = '';
 				$scope.form.updated_by = '';
-				$scope.form.created_at = date;
-				$scope.form.updated_at = date;
+				$scope.form.created_at = null;
+				$scope.form.updated_at = null;
 
 				$scope.gridDetail.data = [
 					{
@@ -519,9 +519,9 @@ define(['app'], function (app) {
 					return false;
 				}
 
-				var debetsum = $scope.gridApi.grid.columns[6].getAggregationValue();
-				var kreditsum = $scope.gridApi.grid.columns[7].getAggregationValue();
-
+				var debetsum = $scope.gridApi.grid.columns[7].getAggregationValue();
+				var kreditsum = $scope.gridApi.grid.columns[8].getAggregationValue();
+				
 				if(debetsum == 0 && kreditsum == 0){
 					toastr.warning('Debet / Kredit belum diisi.', 'Warning');
 					return false;

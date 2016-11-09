@@ -396,29 +396,48 @@ define(['app'], function (app) {
                 bulan : '',
                 tahun : '',
                 tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
-                created_at : date,
-                updated_at : date,
+                created_at : null,
+                updated_at : null,
                 created_by : '',
                 updated_by : ''
             };
 
             $scope.gridDetailDirtyRows = [];
-            var columnDetailActionTpl =     '<div class="col-action">' + 
-                                            '<a href="" ng-click="grid.appScope.onDeleteDetailClick(row.entity)" >' + 
-                                                '<span class="badge bg-red"><i class="fa fa-trash"></i></span>' + 
-                                            '</a>' +
-                                        '</div>';
+            var validIconTpl =  '<div class="col-action ui-grid-cell-contents">' + 
+                                    '<i ng-show="!row.groupHeader && row.entity.invalid" class="fa fa-warning" color="red"></i>' +
+                                    '<i ng-show="!row.groupHeader && !row.entity.invalid" class="fa fa-check-square" color="green"></i>' +            
+                                '</div>';
+
+            var rowTemplate = function() {
+            return '<div ng-class="{invalid: row.entity.invalid}" ' +
+                'style="cursor: pointer" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" ' +
+                'class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader}" ui-grid-cell></div>';
+            };
+
+            // $scope.onClick1 = row => console.log(row.treeNode.aggregations[0]);
+
             $scope.gridDetail = { 
                 enableMinHeightCheck : true,
                 minRowsToShow : 25,
                 enableGridMenu: false,
                 // enableSelectAll: true,
-                enableFiltering: false,
+                enableFiltering: true,
                 enableCellEditOnFocus: true,
                 showGridFooter: true,
                 showColumnFooter: true,
+                rowTemplate: rowTemplate(),
                 columnDefs : [
                     { name: 'index', displayName : 'No', width : '50', enableFiltering : false , visible: false, enableCellEdit: false},
+                    { 
+                        name: 'index', 
+                        displayName : '', 
+                        width : '50', 
+                        enableFiltering : false , 
+                        visible: true, 
+                        enableCellEdit: false,
+                        cellTemplate : validIconTpl,
+                        cellClass: 'grid-align-center',
+                    },
                     { name: 'id', displayName: 'Id', visible: false, width : '50',  enableCellEdit: false},
                     { name: 'idrombel', displayName: 'IdRombel', visible: false, width : '50',  enableCellEdit: false},
                     { name: 'kelasid', displayName: 'KelasId', visible: false, width : '50',  enableCellEdit: false},
@@ -427,12 +446,19 @@ define(['app'], function (app) {
                         displayName: 'Kelas',
                         grouping: { groupPriority: 1 }, 
                         sort: { priority: 1, direction: 'asc' }, 
-                        width: '175',
+                        visible: false,
+                        width: '175'
                     },
                     { name: 'no_transaksi', displayName: 'No Transaksi', visible: false, width : '120',  enableCellEdit: false},
-                    { name: 'nis', displayName: 'NIS', width : '120', visible: false, enableCellEdit: false},
+                    { 
+                        name: 'nis', displayName: 'NIS', width : '120', visible: true, enableCellEdit: false,
+                        cellTemplate: '<div class="ui-grid-cell-contents">'+
+                              '<div class="" ng-if="row.groupHeader">{{row.treeNode.aggregations[0].rendered}}</div>'+
+                              '<div ng-if="!row.groupHeader">{{grid.getCellValue(row, col)}}</div></div>'
+                    },
                     { name: 'nisn', displayName: 'NISN', width : '120', visible: false, enableCellEdit: false},
-                    { name: 'nama_siswa', displayName: 'Nama Siswa', width : '300', enableCellEdit: false},
+                    { name: 'nama_siswa', displayName: 'Nama Siswa (System)', width : '300', enableCellEdit: false},
+                    { name: 'nama_siswa_xls', displayName: 'Nama Siswa (XLSX)', width : '300', enableCellEdit: false},
                     { 
                         name: 'spp', 
                         displayName: 'SPP', 
@@ -526,8 +552,13 @@ define(['app'], function (app) {
                     { name: 'no_rekening', displayName: 'NO Rek', width : '150', enableCellEdit: false},
                     { name: 'nama_no_rekening', displayName: 'Atas Nama', width : '150', enableCellEdit: false},
                     { name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
-                    { name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
+                    { name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
+                    { name: 'invalid', displayName: 'Invalid', visible: false, width : '100',  enableCellEdit: false}
                 ],
+
+                gridMenuShowHideColumns : false,
+                enableColumnMenus : false,
+
                 onRegisterApi: function(gridApi){
                     $scope.gridApi = gridApi;
                     // gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
@@ -552,8 +583,8 @@ define(['app'], function (app) {
                 $scope.form.bulan = helperService.getMonthId(date.getMonth());
                 $scope.form.tahun = date.getFullYear();
                 $scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
-                $scope.form.created_at = date;
-                $scope.form.updated_at = date;
+                $scope.form.created_at = null;
+                $scope.form.updated_at = null;
                 $scope.form.created_by = '',
                 $scope.form.updated_by = ''
 
@@ -597,6 +628,7 @@ define(['app'], function (app) {
                             result.rows[index]["ekskul"] = helperService.parseInt(result.rows[index]["ekskul"]);
                             result.rows[index]["total"] = helperService.parseInt(result.rows[index]["total"]);
 
+                            result.rows[index]["invalid"] = (result.rows[index]["nama_siswa"] != result.rows[index]["nama_siswa_xls"]);
                             result.rows[index]["nama_kelas"] = result.rows[index]["kelas"] + ' - ' + result.rows[index]["nama_kelas"];
 
                         });
@@ -635,6 +667,7 @@ define(['app'], function (app) {
                 }, errorHandle);
             }
 
+            $scope.xlsDataValid = true;
             function mergeXlsdataAndRombel(params, xlsdata){
                 params['sekolahid'] = authService.getSekolahProfile().sekolahid;
                 params['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
@@ -647,9 +680,13 @@ define(['app'], function (app) {
                         for(var idx in result.rows){
                             rowdata[result.rows[idx].nis] = result.rows[idx];
                         }
+
                         for(var nis in xlsdata){
                             if(typeof rowdata[nis] !='undefined' && rowdata[nis] != null && rowdata[nis] != ''){
                                 // rowdata[result.rows[idx].nis] = result.rows[idx];
+                                if(rowdata[nis].nama_siswa != xlsdata[nis].nama_siswa){
+                                    $scope.xlsDataValid = false;
+                                }
                                 $scope.gridDetail.data.push({
                                     index : xlsdata[nis].index,
                                     idrombel : rowdata[nis].id,
@@ -659,13 +696,16 @@ define(['app'], function (app) {
                                     nis : xlsdata[nis].nis,
                                     nisn : xlsdata[nis].nisn,
                                     nama_siswa : rowdata[nis].nama_siswa,
+                                    nama_siswa_xls : xlsdata[nis].nama_siswa,
                                     spp : xlsdata[nis].spp,
                                     komite_sekolah : xlsdata[nis].komite_sekolah,
                                     catering : xlsdata[nis].catering,
                                     keb_siswa : xlsdata[nis].keb_siswa,
                                     ekskul : xlsdata[nis].ekskul,
-                                    total : xlsdata[nis].total
+                                    total : xlsdata[nis].total,
+                                    invalid : (rowdata[nis].nama_siswa != xlsdata[nis].nama_siswa)
                                 });
+
                             }else{
                                 toastr.warning('NIS ' + nis + ' tidak ditemukan.', 'Warning');
                             }
@@ -684,7 +724,7 @@ define(['app'], function (app) {
                     "flashPath":"/js/excelplus/2.4/swfobject/",
                     "labelButton":"Open an Excel file"
                 }, function(c){
-                    console.log(c);
+                    // console.log(c);
                     try {
                         var SheetNames = ep.getSheetNames();
                         if(SheetNames.indexOf("Header") < 0 && SheetNames.indexOf("header") < 0){
@@ -764,6 +804,12 @@ define(['app'], function (app) {
 
             $scope.isView = false;
             $scope.onSaveClick = function(event){
+
+                if(!$scope.xlsDataValid){
+                    toastr.warning('Data tidak valid, silahkan perbaiki dan upload ulang.', 'Warning');
+                    return false;
+                }
+
                 if($scope.form.no_transaksi == '' || $scope.form.no_transaksi == null){
                     toastr.warning('No Transaksi tidak boleh kosong.', 'Warning');
                     return false;
@@ -789,6 +835,8 @@ define(['app'], function (app) {
                     toastr.warning('Rincian Autodebet kosong.', 'Warning');
                     return false;
                 }
+
+                // return;
 
                 var params = {
                     form : $scope.form,
