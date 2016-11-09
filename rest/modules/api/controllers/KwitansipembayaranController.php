@@ -97,12 +97,37 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                 }
                 
                 $outtp = \rest\models\TagihanPembayaran::find()
+                                                        ->select([
+                                                            '`id`',
+                                                            '`idrombel`',
+                                                            'SUM(`spp_debet`) AS `spp_debet`',
+                                                            'SUM(`spp_kredit`) AS `spp_kredit`',
+                                                            'SUM(`komite_sekolah_debet`) AS `komite_sekolah_debet`',
+                                                            'SUM(`komite_sekolah_kredit`) AS `komite_sekolah_kredit`',
+                                                            'SUM(`catering_debet`) AS `catering_debet`',
+                                                            'SUM(`catering_kredit`) AS `catering_kredit`',
+                                                            'SUM(`keb_siswa_debet`) AS `keb_siswa_debet`',
+                                                            'SUM(`keb_siswa_kredit`) AS `keb_siswa_kredit`',
+                                                            'SUM(`ekskul_debet`) AS `ekskul_debet`',
+                                                            'SUM(`ekskul_kredit`) AS `ekskul_kredit`',
+                                                            '`bulan`',
+                                                            '`tahun`',
+                                                            '`tahun_ajaran`',
+                                                            '`no_ref`',
+                                                            '`ket_ref`',
+                                                            '`keterangan`',
+                                                            '`created_at`',
+                                                            '`updated_at`',
+                                                            '`tgl_ref`'
+                                                        ])
                                                         ->where([
                                                             'idrombel' => $form['idrombel'],
                                                             'bulan' => $bln,
                                                             'tahun' => $year
                                                         ])
+                                                        ->andWhere(['<>','no_ref', $form['no_kwitansi']])
                                                         ->groupBy('idrombel')
+                // echo $outtp->createCommand()->rawSql;exit();
                                                         ->One();
                 $pembayaran[] = [
                     'idrombel' => $form['idrombel'],
@@ -200,6 +225,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
 
         unset($form['nama_siswa']);
         unset($form['kelas']);
+        unset($form['nama_kelas']);
         $form['bulan'] = implode(",", $form['month']);
         $form['tahun'] = $form['year'];
         unset($form['month']);

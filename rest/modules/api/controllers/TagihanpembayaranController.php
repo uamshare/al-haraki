@@ -51,7 +51,8 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
             'year' => $request->getQueryParam('year', false),
             'date_start' => $request->getQueryParam('date_start', false),
             'date_end' => $request->getQueryParam('date_end', false),
-            'status' => $request->getQueryParam('status', 'all')
+            'status' => $request->getQueryParam('status', 'all'), // If status = 1 only show not null data
+            'reff' => $request->getQueryParam('reff', false)
         ]);
     }
 

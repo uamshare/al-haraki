@@ -81,9 +81,24 @@ define(['app'], function (app) {
                     name: 'nama_kelas', 
                     grouping: { groupPriority: 1 }, 
                     sort: { priority: 1, direction: 'asc' }, 
+                    visible: false,
                     width: '200',
                 },
-                { name: 'nama_siswa', displayName: 'Nama Siswa', width : '300',  enableCellEdit: false},
+                { 
+                    name: 'nama_siswa', 
+                    displayName: 'Nama Siswa', 
+                    width : '300',  
+                    enableCellEdit: false,
+                    cellTemplate: '<div class="ui-grid-cell-contents">'+
+                              '<div class="" ng-if="row.groupHeader">{{row.treeNode.aggregations[0].rendered}}</div>'+
+                              '<div ng-if="!row.groupHeader">{{grid.getCellValue(row, col)}}</div></div>'
+                },
+                { 
+                    name: 'bulan_b', 
+                    displayName: 'Bulan', 
+                    visible: true,
+                    width: '120',
+                },
                 { name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, width : '50',  enableCellEdit: false},
                 { 
                     name: 'spp', 
@@ -160,7 +175,8 @@ define(['app'], function (app) {
                 },
                 { name: 'keterangan', displayName: 'Keterangan', minWidth: 100},
                 { name: 'created_at', displayName: 'Created At', visible: false, width : '100',  enableCellEdit: false},
-                { name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
+                { name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false},
+                { name: 'reff', displayName: 'Reff', visible: true, width : '75',  enableCellEdit: false}
             ]
         };
 
@@ -177,6 +193,11 @@ define(['app'], function (app) {
 
             showGridFooter: true,
             showColumnFooter: true,
+
+            // groupingShowAggregationMenu: false,
+            gridMenuShowHideColumns : false,
+            // enableGroupHeaderSelection : false,
+            enableColumnMenus : false,
 
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
@@ -212,6 +233,16 @@ define(['app'], function (app) {
 			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
 			                result.rows[index]["nama_kelas"] = result.rows[index]["kelas"] + ' - ' + result.rows[index]["nama_kelas"];
 			                
+                            var blnTagihan = result.rows[index]["bulan_b"].split(',');
+                            if(blnTagihan && blnTagihan.length == 1){
+                                result.rows[index]["bulan_b"] = helperService.getMonthName(parseInt(blnTagihan[0]) - 1);
+                            }else if(blnTagihan && blnTagihan.length > 1){
+                                result.rows[index]["bulan_b"] = helperService.getMonthNameShort(parseInt(blnTagihan[0]) - 1) + ' s/d ' +
+                                                        helperService.getMonthNameShort(parseInt(blnTagihan[blnTagihan.length - 1]) - 1);
+                            }else{  
+                                result.rows[index]["bulan_b"] = '';
+                            }
+
 			                $scope.grid.data[index] = result.rows[index];
 			                nodata = false;
 						}
@@ -270,10 +301,13 @@ define(['app'], function (app) {
                 return false;
             }
             
+            // console.log($scope.filter.reff);
+            
 			getData({
     			'page' : 1,
 				'per-page' : 0,
 				'kelasid' : $scope.filter.kelas.toString(),
+                'reff' : $scope.filter.reff,
 				// 'month' : $scope.filter.month,
 				// 'year' : $scope.filter.year,
                 'date_start' : $scope.filter.date_start,
@@ -474,7 +508,7 @@ define(['app'], function (app) {
                         rowbody.push([
                             no.toString(), 
                             rowdata.nama_siswa,
-                            '', 
+                            rowdata.bulan_b, 
                             {text: spp, alignment: 'right'},
                             {text: komite_sekolah, alignment: 'right'},
                             {text: catering, alignment: 'right'},
@@ -678,7 +712,7 @@ define(['app'], function (app) {
                         rowbody.push({
                             index : no.toString(),
                             nama_siswa : rowdata.nama_siswa,
-                            bulan : '',
+                            bulan : rowdata.bulan_b,
                             spp : spp,
                             komite_sekolah : komite_sekolah,
                             catering : catering,

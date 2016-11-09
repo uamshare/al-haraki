@@ -387,6 +387,7 @@ define(['app'], function (app) {
 		}
 
     	var addEditController = function(){
+    		// console.log(date)
     		$scope.month = helperService.month().options;
 	    	$scope.form = {
 				no_kwitansi : '',
@@ -402,8 +403,8 @@ define(['app'], function (app) {
 				year : '',
 				created_by : null,
 				updated_by : null,
-				created_at : date,
-				updated_at : date
+				created_at : null,
+				updated_at : null
 			};
 
 			$scope.rombel;

@@ -18,25 +18,6 @@ class JurnalharianController extends \rest\modules\api\ActiveController
         return $actions;
     }
 
-    // public function behaviors()
-    // {
-    //     $behaviors = parent::behaviors();
-    //     return array_merge($behaviors, 
-    //         [
-    //             'verbFilter' => [
-    //                 'class' => \yii\filters\VerbFilter::className(),
-    //                 'actions' => [
-    //                     'index'  => ['get'],
-    //                     'newnotransaksi'   => ['get'],
-    //                     'create' => ['put', 'post'],
-    //                     'findbyno' => ['get'],
-    //                     'delete' => ['delete'],
-    //                 ],
-    //             ],
-    //         ]
-    //     );
-    // }
-    
     public function actionIndex(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();

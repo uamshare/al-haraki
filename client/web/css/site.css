@@ -161,3 +161,7 @@ input[type=radio].custome1 + .lbl {
   color: #3c8dbc;
   text-decoration: underline;
 }
+
+.ui-grid-row .invalid {
+  background-color: #f7c3c3 !important;
+}

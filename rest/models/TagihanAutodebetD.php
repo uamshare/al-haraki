@@ -163,7 +163,8 @@ class TagihanAutodebetD extends \yii\db\ActiveRecord
             a.`idrombel`,
             a.`nis`,
             a.`nisn`,
-            a.`nama_siswa`,
+            a.`nama_siswa` as nama_siswa_xls,
+            s.`nama_siswa` as nama_siswa,
             k.`id` AS kelasid,
             k.`kelas`,
             k.`nama_kelas`,
@@ -179,6 +180,7 @@ class TagihanAutodebetD extends \yii\db\ActiveRecord
             a.`updated_at` 
           FROM `tagihan_autodebet_d` a
           INNER JOIN siswa_rombel sr ON a.`idrombel` = sr.`id`
+          INNER JOIN siswa s ON sr.`siswaid` = s.`id`
           INNER JOIN kelas k ON sr.`kelasid` = k.`id` $where";
 
         $connection = $this->getDb();
