@@ -180,6 +180,10 @@ define(['app'], function (app) {
                 return kaLimat + "Rupiah";
         }
 
+        factory.trim = function(str){
+            return str.replace(/ /g, '');
+        }
+
         return factory;
     };
 

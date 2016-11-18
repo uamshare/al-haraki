@@ -678,13 +678,14 @@ define(['app'], function (app) {
                         var rowdata = {}; //result.rows;
                         $scope.gridDetail.data = [];
                         for(var idx in result.rows){
-                            rowdata[result.rows[idx].nis] = result.rows[idx];
+                            var resultNIS = helperService.trim(result.rows[idx].nis);
+                            rowdata[resultNIS] = result.rows[idx];
                         }
 
                         for(var nis in xlsdata){
                             if(typeof rowdata[nis] !='undefined' && rowdata[nis] != null && rowdata[nis] != ''){
                                 // rowdata[result.rows[idx].nis] = result.rows[idx];
-                                if(rowdata[nis].nama_siswa != xlsdata[nis].nama_siswa){
+                                if(helperService.trim(rowdata[nis].nama_siswa) != helperService.trim(xlsdata[nis].nama_siswa)){
                                     $scope.xlsDataValid = false;
                                 }
                                 $scope.gridDetail.data.push({
@@ -703,9 +704,8 @@ define(['app'], function (app) {
                                     keb_siswa : xlsdata[nis].keb_siswa,
                                     ekskul : xlsdata[nis].ekskul,
                                     total : xlsdata[nis].total,
-                                    invalid : (rowdata[nis].nama_siswa != xlsdata[nis].nama_siswa)
+                                    invalid : (helperService.trim(rowdata[nis].nama_siswa) != helperService.trim(xlsdata[nis].nama_siswa))
                                 });
-
                             }else{
                                 toastr.warning('NIS ' + nis + ' tidak ditemukan.', 'Warning');
                             }
@@ -758,7 +758,7 @@ define(['app'], function (app) {
                                 rows[XLSdata[idx][1]] = {
                                         index : num,
                                         no_transaksi : $scope.form.no_transaksi,
-                                        nis : XLSdata[idx][1],
+                                        nis : helperService.trim(XLSdata[idx][1]),
                                         nisn : XLSdata[idx][2],
                                         nama_siswa : XLSdata[idx][3],
                                         spp : xls_spp,
@@ -768,7 +768,7 @@ define(['app'], function (app) {
                                         ekskul : xls_ekskul,
                                         total : checkZeroData
                                 }
-                                paramsRombel.push(XLSdata[idx][1]);
+                                paramsRombel.push(helperService.trim(XLSdata[idx][1]));
                                 num++;
                             }
                         }

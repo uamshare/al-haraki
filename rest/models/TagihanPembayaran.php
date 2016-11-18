@@ -265,7 +265,7 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
         $sqlCustoms = $this->queryOutstanding($filter, $filter2, $status);
 
         $connection = $this->getDb(); //Yii::$app->getDb();
-        $customeQuery = $connection->createCommand($sqlCustoms . $where, $bound);
+        $customeQuery = $connection->createCommand($sqlCustoms . $where . ' ORDER BY kelasid, nama_siswa', $bound);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
@@ -382,7 +382,7 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
         $sqlCustoms = $this->queryOutstanding($filter);
 
         $connection = $this->getDb(); //Yii::$app->getDb();
-        $customeQuery = $connection->createCommand($sqlCustoms . $where, [':param1' => $month, ':param2' => $year]);
+        $customeQuery = $connection->createCommand($sqlCustoms . $where . ' ORDER BY kelasid, nama_siswa', [':param1' => $month, ':param2' => $year]);
         // var_dump($customeQuery->rawSql);exit();
         return $customeQuery->query();
     }
