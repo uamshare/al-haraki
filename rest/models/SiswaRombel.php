@@ -162,7 +162,7 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
         }
 
         if($sekolahid){
-            $where .= ' AND b.sekolahid ' . $this->where($sekolahid);
+            $where .= ' AND c.sekolahid ' . $this->where($sekolahid);
         }
 
         if($query){
@@ -190,7 +190,7 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             FROM siswa_rombel a
             INNER JOIN siswa b ON a.`siswaid` = b.`id`
             INNER JOIN kelas c ON a.`kelasid` = c.`id` $where
-            ORDER BY b.`sekolahid`, a.`kelasid`, b.`nis`";
+            ORDER BY c.`sekolahid`, a.`kelasid`, b.`nis`";
 
         $conn = $this->getDb();
         $customeQuery = $conn->createCommand($sqlCustoms);
