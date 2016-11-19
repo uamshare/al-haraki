@@ -194,7 +194,7 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
 
         $conn = $this->getDb();
         $customeQuery = $conn->createCommand($sqlCustoms);
-        // var_dump($customeQuery->rawSql);exit();
+        var_dump($customeQuery->rawSql);exit();
         return $customeQuery->queryAll();
     }
 
