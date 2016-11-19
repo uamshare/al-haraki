@@ -43,7 +43,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
                                 'a.`kelasid`',
                                 'c.kelas',
                                 'c.`nama_kelas`',
-                                'b.`sekolahid`',
+                                'c.`sekolahid`',
                                 'a.`tahun_ajaran_id`',
                                 'a.`created_at`',
                                 'a.`updated_at`'
@@ -54,7 +54,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
                            ->where('1=1')
                            ->asArray();
             if($sekolahid){
-                $query->andWhere(['b.sekolahid' => $sekolahid]);
+                $query->andWhere(['c.sekolahid' => $sekolahid]);
             }
             if($kelasid){
                 $query->andWhere(['a.kelasid' => $kelasid]);
@@ -64,7 +64,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             }
 
             $query->orderBy([
-                'b.`sekolahid`' => SORT_ASC,
+                'c.`sekolahid`' => SORT_ASC,
                 'a.`kelasid`' => SORT_ASC, 
                 'b.`nama_siswa`' => SORT_ASC, 
                 'b.`nis`' => SORT_ASC
