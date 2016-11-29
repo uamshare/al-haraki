@@ -109,7 +109,7 @@ class Cashflow extends \yii\db\ActiveRecord
                             INNER JOIN mcoah h ON h.`mcoahno` = d.`mcoahno`
                             INNER JOIN siswa_rombel sr ON sr.`id` = a.`fk_id`
                             WHERE a.`tahun_ajaran_id` = :tahun_ajaran_id
-                                AND a.sekolahid = 1  
+                                AND a.sekolahid = :sekolahid 
                                 AND d.`mcoadno` = '110201'
                                 AND MONTH(rgldt) = :month
                             GROUP BY a.sekolahid,a.mcoadno,sr.`kelasid`

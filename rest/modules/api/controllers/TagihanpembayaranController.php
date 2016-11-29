@@ -60,6 +60,25 @@ class TagihanpembayaranController extends \rest\modules\api\ActiveController //\
      * Get List input Info Tagihan
      *
      */
+    public function actionList(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $scenario = $request->getQueryParam('scenario', false);
+
+        if($scenario == '1'){ // List pembayaran siswa
+            return $model->getSummaryByRombel([
+                'tahun_ajaran_id' => $request->getQueryParam('tahun_ajaran_id', false),
+                'idrombel' => $request->getQueryParam('idrombel', false),
+                'sekolahid' => $request->getQueryParam('sekolahid', false)
+            ]);
+        }
+        
+    }
+
+    /**
+     * Get List input Info Tagihan
+     *
+     */
     public function actionSummaryouts(){
         $model = new $this->modelClass();
         $request = Yii::$app->getRequest();

@@ -11,7 +11,7 @@ define(['app'], function (app) {
         '$routeParams', 
         '$http', 
         '$log', 
-        // 'ngDialog',
+        'ngDialog',
         'cfpLoadingBar',
         '$timeout',
         'uiGridConstants',
@@ -31,7 +31,7 @@ define(['app'], function (app) {
         $routeParams, 
         $http, 
         $log, 
-        // ngDialog,
+        ngDialog,
         cfpLoadingBar,
         $timeout,
         uiGridConstants,  
@@ -89,9 +89,10 @@ define(['app'], function (app) {
                     displayName: 'Nama Siswa', 
                     width : '300',  
                     enableCellEdit: false,
-                    cellTemplate: '<div class="ui-grid-cell-contents">'+
-                              '<div class="" ng-if="row.groupHeader">{{row.treeNode.aggregations[0].rendered}}</div>'+
-                              '<div ng-if="!row.groupHeader">{{grid.getCellValue(row, col)}}</div></div>'
+                    cellTemplate: '<div class="" ng-if="row.groupHeader">{{row.treeNode.aggregations[0].rendered}}</div>'+
+                              '<div ng-if="!row.groupHeader" class="ui-grid-cell-contents ng-binding ng-scope">' +
+                              '<a href="" ng-click="grid.appScope.onSiswaClick(row.entity)" class="column-link">{{row.entity.nama_siswa}}</a>' +
+                              '</div>'
                 },
                 { 
                     name: 'bulan_b', 
@@ -280,6 +281,32 @@ define(['app'], function (app) {
                 'per-page' : 0
             });
 		}	
+
+        $scope.onSiswaClick = function(entity, namakelas){
+            var paramdata = [];
+            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
+            paramdata['idrombel'] = entity.idrombel;
+            cfpLoadingBar.start();
+            $resourceApi.getListByIdRombel(paramdata)
+            .then(function (result) {
+                if(result.success){
+                    for(var i in result.rows){
+                        result.rows[i]['index'] = parseInt(i) + 1;
+                        result.rows[i]['bulan'] = helperService.getMonthName(parseInt(result.rows[i]['bulan']) - 1);
+                    }
+                    $scope.rows = result.rows;
+                    $scope.dataEntity = entity;
+                }
+                cfpLoadingBar.complete();
+            }, errorHandle);
+
+            ngDialog.open({
+                template: $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/' + 'grid_bayar.html',
+                className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
+                scope: $scope
+            });
+        }
 
 		$scope.onSearchClick = function(event){
 			if($scope.filter.kelas.length <= 0){

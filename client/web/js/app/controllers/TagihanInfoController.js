@@ -68,7 +68,16 @@ define(['app'], function (app) {
 				{ name: 'idrombel', displayName: 'Id Rombel', visible: false, width : '50',  enableCellEdit: false},
 				{ name: 'siswaid', displayName: 'SiswaId', visible: false, width : '50',  enableCellEdit: false},
 				{ name: 'kelasid', displayName: 'KelasId', visible: false, width : '50',  enableCellEdit: false},
-				{ name: 'nama_siswa', displayName: 'Nama Siswa', width : '300',  enableCellEdit: false},
+				// { name: 'nama_siswa', displayName: 'Nama Siswa', width : '300',  enableCellEdit: false},
+				{ 
+                    name: 'nama_siswa', 
+                    displayName: 'Nama Siswa', 
+                    width : '300',  
+                    enableCellEdit: false,
+                    cellTemplate: '<div class="ui-grid-cell-contents ng-binding ng-scope">' +
+                              '<a href="" ng-click="grid.appScope.onSiswaClick(row.entity)" class="column-link">{{row.entity.nama_siswa}}</a>' +
+                              '</div>'
+                },
 				{ name: 'tahun_ajaran_id', displayName: 'Tahun Ajaran', visible: false, width : '50',  enableCellEdit: false},
 				{ 
 					name: 'spp', 
@@ -362,6 +371,32 @@ define(['app'], function (app) {
             }, errorHandle);
 		}
 
+		$scope.onSiswaClick = function(entity, namakelas){
+            var paramdata = [];
+            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
+            paramdata['idrombel'] = entity.idrombel;
+            cfpLoadingBar.start();
+            $resourceApi.getListByIdRombel(paramdata)
+            .then(function (result) {
+                if(result.success){
+                    for(var i in result.rows){
+                        result.rows[i]['index'] = parseInt(i) + 1;
+                        result.rows[i]['bulan'] = helperService.getMonthName(parseInt(result.rows[i]['bulan']) - 1);
+                    }
+                    $scope.rows = result.rows;
+                    $scope.dataEntity = entity;
+                }
+                cfpLoadingBar.complete();
+            }, errorHandle);
+
+            ngDialog.open({
+                template: $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/' + 'grid_bayar.html',
+                className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
+                scope: $scope
+            });
+        }
+        
 		$scope.toggleSelectAll = function(checked) {	
 	        for (var i = 0; i < $scope.grid.data.length; i++) {
 	            $scope.grid.data[i].isCheck = checked;

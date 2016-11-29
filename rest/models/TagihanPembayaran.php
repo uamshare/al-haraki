@@ -122,6 +122,8 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
               (SELECT    b.`id`
                   , a.id AS `idrombel`
                   , a.`siswaid`
+                  , s.`nis`
+                  , s.`nisn`
                   , s.`nama_siswa` 
                   , a.`kelasid`
                   , k.kelas
@@ -175,6 +177,8 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
               (SELECT    b.`id`
                           , a.`id` AS `idrombel`
                           , a.`siswaid`
+                          , s.`nis`
+                          , s.`nisn`
                           , s.`nama_siswa` 
                           , a.`kelasid`
                           , k.`kelas`
@@ -421,6 +425,52 @@ class TagihanPembayaran extends \rest\models\AppActiveRecord // \yii\db\ActiveRe
         return $customeQuery->query();
     }
 
+    public function getSummaryByRombel($param){
+        extract($param);
+        $sqlCustoms = "SELECT 
+              :idrombel AS id_rombel,
+              a.`month` AS bulan,
+              p.`no_ref`,
+              p.`tgl_ref`,
+              p.type_b,
+              p.`spp`,
+              p.`komite_sekolah`,
+              p.`catering`,
+              p.`keb_siswa`,
+              p.`ekskul`,
+              p.`tahun`,
+              p.`tahun_ajaran`
+            FROM `opt_months` a
+            LEFT JOIN (SELECT 
+              p.`id`,
+              p.`idrombel`,
+              p.`no_ref`,
+              p.`tgl_ref`,
+              (CASE 
+                WHEN SUBSTR(no_ref,1,2) = '01' THEN 'KAS'
+                WHEN SUBSTR(no_ref,1,2) = '03' THEN 'BANK'
+              END) AS type_b,
+              p.`spp_debet` AS spp,
+              p.`komite_sekolah_debet` AS komite_sekolah,
+              p.`catering_debet` AS catering,
+              p.`keb_siswa_debet` AS keb_siswa,
+              p.`ekskul_debet` AS ekskul,
+              p.`bulan`,
+              p.`tahun`,
+              p.`tahun_ajaran`
+              FROM `tagihan_pembayaran` p
+              WHERE SUBSTR(no_ref,1,2) IN ('01','03') AND p.idrombel=:idrombel
+              AND `tahun_ajaran` = :tahunAjaran) p ON a.`month` = p.`bulan`";
+        $where = "";
+        $orders = " ORDER BY a.`order` ASC";
+        $conn = $this->getDb();
+        $customeQuery = $conn->createCommand(
+            $sqlCustoms . $where . $orders, 
+            [':idrombel' => $idrombel, ':tahunAjaran' => $tahun_ajaran_id]
+        );
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->query();
+    }
 
     /**
      * Save tagihan info into outstanding pembayaran

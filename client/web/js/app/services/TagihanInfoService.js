@@ -25,6 +25,19 @@ define(['app'], function (app) {
         };
 
         /**
+         * Get list Outstanding
+         *
+         */
+        factory.getListByIdRombel = function(paramdata) {
+            paramdata['scenario'] = 1;
+            return $http.get(serviceBase + 'tagihanpembayarans/list',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
+        /**
          * Get list Pembayaran
          *
          */

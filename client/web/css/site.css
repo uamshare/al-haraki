@@ -159,7 +159,7 @@ input[type=radio].custome1 + .lbl {
 
 .ui-grid-cell-contents a.column-link:hover{
   color: #3c8dbc;
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 
 .ui-grid-row .invalid {
