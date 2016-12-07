@@ -82,6 +82,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         $tagihanvalue = [];
         extract($post);
         $date = date('Y-m-d H:i:s');
+
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         
 
@@ -276,6 +277,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
      *
      */
     public function actionNewnokwitansi(){
+        $date = date('Y-m-d H:i:s');
         $model = new $this->modelClass();
         // $sekolahid = 2;
         $request = Yii::$app->getRequest();

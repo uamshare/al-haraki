@@ -559,7 +559,6 @@ define(['services/routeResolver'], function () {
                 cfpLoadingBar.complete();
                 $rootScope.fakeIntro = false;
             });
-
         }
     ]);
 
