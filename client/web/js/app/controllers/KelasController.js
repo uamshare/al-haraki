@@ -40,6 +40,7 @@ define(['app'], function (app) {
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'master/kelas/';
         var $resourceApi = KelasService;
+        var date = helperService.dateTimeZone();
         //========================Grid Config =======================
 
         function errorHandle(error){
@@ -443,24 +444,10 @@ define(['app'], function (app) {
                     SiswaRombelService.delete(id)
                     .then(function(result){
                         if(result.success){
-                            // if(result.rows.scenario == 'confirm_delete_keep'){
-                            //     $scope.formEdit.id = parseInt(rowdata.id);
-                            //     $scope.formEdit.siswaid = parseInt(rowdata.siswaid);
-                            //     $scope.formEdit.nama_siswa = rowdata.nama_siswa;
-                            //     $scope.formEdit.kelasid = parseInt(rowdata.kelasid);
-                            //     ngDialog.open({
-                            //         template: $scope.viewdir + 'confirm_delete_form.html',
-                            //         className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
-                            //         scope: $scope,
-                            //         width: '100%',
-                            //         height: '100%'
-                            //     });
-                            // }else{
-                                toastr.success('Data telah dihapus', 'Success');
-                                getSiswa({
-                                    kelasid : $routeParams.id
-                                });
-                            // }
+                            toastr.success('Data telah dihapus', 'Success');
+                            getSiswa({
+                                kelasid : $routeParams.id
+                            });
                             cfpLoadingBar.complete();
                         }else{
                             toastr.error('Data gagal dihapus.' + result.message, 'Error');
@@ -503,7 +490,7 @@ define(['app'], function (app) {
                 },
                 xls : function(griddata){
                     function download(id){
-                        var dt = new Date();
+                        var dt = helperService.dateTimeZone();
                         var day = dt.getDate();
                         var month = dt.getMonth() + 1;
                         var year = dt.getFullYear();

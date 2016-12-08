@@ -42,7 +42,7 @@ define(['app'], function (app) {
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'akuntansi/cashflow/';
         var $resourceApi = CashflowService;
-        var date = new Date();
+        var date = helperService.dateTimeZone();
         //========================Grid Config =======================
         function errorHandle(error){
             var msg = error.data.name;
@@ -288,7 +288,7 @@ define(['app'], function (app) {
                 },
                 xls : function(griddata){
                     function download(id){
-                        var dt = new Date();
+                        var dt = helperService.dateTimeZone();
                         var day = dt.getDate();
                         var month = dt.getMonth() + 1;
                         var year = dt.getFullYear();

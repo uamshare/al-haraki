@@ -37,7 +37,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'pengaturan/sekolah/';
     	var $resourceApi = SekolahService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
     	//========================Grid Config =======================
 
 		function errorHandle(error){

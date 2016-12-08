@@ -45,7 +45,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/info-tagihan/';
     	var $resourceApi = TagihanInfoService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
 		var sekolahProfil = authService.getSekolahProfile();
     	/******************* GRID CONFIG **********************************/
     	// $scope.$broadcast('redirectToLogin', null);
@@ -423,7 +423,7 @@ define(['app'], function (app) {
 
 		$scope.gridAction = {
 			onPrintClick : function(rowdata){
-				var date = new Date();
+				var date = helperService.dateTimeZone();
 				$scope.row = rowdata;
 				$scope.row.total = function(){
 					return  $scope.row.spp + 
@@ -448,7 +448,7 @@ define(['app'], function (app) {
 		        });
 			},
 			onPrintSelectedClick : function(event){
-				var date = new Date();
+				var date = helperService.dateTimeZone();
 				$scope.rows = [];
 				var index = 0,
 					isEmptyCheck = true;

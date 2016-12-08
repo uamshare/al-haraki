@@ -38,7 +38,7 @@ define(['app'], function (app) {
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'akuntansi/rgl/';
         var $resourceApi = RglService;
-        var date = new Date();
+        var date = helperService.dateTimeZone();
         //========================Grid Config =======================
         function errorHandle(error){
             var msg = error.data.name;
@@ -213,7 +213,7 @@ define(['app'], function (app) {
             }
 
             $scope.onPrintClick = function(rowdata){
-                var date = new Date();
+                var date = helperService.dateTimeZone();
                 cfpLoadingBar.start();
                 $resourceApi.getDetail({
                     no_kwitansi : rowdata.no_kwitansi

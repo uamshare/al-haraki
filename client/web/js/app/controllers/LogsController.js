@@ -39,7 +39,7 @@ define(['app'], function (app) {
     {
         $scope.viewdir = $CONST_VAR.viewsDirectory + 'logs/';
         var $resourceApi = LogsService;
-        var date = new Date();
+        var date = helperService.dateTimeZone();
         //========================Grid Config =======================
         function errorHandle(error){
             var msg = error.data.name;

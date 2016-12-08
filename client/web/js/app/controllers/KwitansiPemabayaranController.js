@@ -43,7 +43,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/';
     	var $resourceApi = kwitansiPemabayaranService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone(); //new Date();
 
     	function errorHandle(error){
 			var msg = error.data.name;
@@ -322,7 +322,7 @@ define(['app'], function (app) {
 		}
 
 		function printClick(rowdata){
-			var date = new Date();
+			var date = helperService.dateTimeZone();
 			cfpLoadingBar.start();
 			$resourceApi.getDetail({
 				no_kwitansi : rowdata.no_kwitansi

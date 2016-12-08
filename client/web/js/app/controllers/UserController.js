@@ -52,7 +52,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'pengaturan/user/';
     	var $resourceApi = UserService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
     	//========================Grid Config =======================
 
 		function errorHandle(error){

@@ -41,7 +41,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'akuntansi/jurnal-harian/';
     	var $resourceApi = jurnalHarianService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
 
     	function errorHandle(error){
 			var msg = error.data.name;
@@ -229,7 +229,7 @@ define(['app'], function (app) {
 			}
 
 			$scope.onPrintClick = function(rowdata){
-				var date = new Date();
+				var date = helperService.dateTimeZone();
 				cfpLoadingBar.start();
 				$resourceApi.getDetail({
 					tjmhno : rowdata.tjmhno

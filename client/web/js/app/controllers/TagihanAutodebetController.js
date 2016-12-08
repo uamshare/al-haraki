@@ -43,7 +43,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/rekonsiliasi-autodebet/';
     	var $resourceApi = tagihanAutodebetService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
 
         function errorHandle(error){
             var msg = (typeof error.data.message != 'undefined') ? error.data.message : error.data.name;
@@ -349,7 +349,7 @@ define(['app'], function (app) {
             }
 
             $scope.onPrintClick = function(rowdata){
-                var date = new Date();
+                var date = helperService.dateTimeZone();
                 cfpLoadingBar.start();
                 $resourceApi.getDetail({
                     no_kwitansi : rowdata.no_kwitansi

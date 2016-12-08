@@ -56,6 +56,15 @@ define(['app'], function (app) {
             }
         }
 
+        factory.dateTimeZone = function(timezone){
+            if(typeof timezone == 'undefined'){
+                timezone = 'Asia/Jakarta';
+            }
+
+            var dt = new Date().toLocaleString('fullwide', { timeZone: timezone });
+            return new Date(dt);
+        }
+
         factory.date = function(date){
             if(typeof date == 'undefined'){
                 date = new Date();
@@ -64,7 +73,6 @@ define(['app'], function (app) {
                 firstDay : new Date(date.getFullYear(), date.getMonth(), 1),
                 lastDay : new Date(date.getFullYear(), date.getMonth() + 1, 0)
             }
-            
         }
 
         factory.getMonthName = function(id){

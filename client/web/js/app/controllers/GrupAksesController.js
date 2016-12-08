@@ -42,7 +42,7 @@ define(['app'], function (app) {
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'pengaturan/grup-akses/';
     	var $resourceApi = GrupAksesService;
-    	var date = new Date();
+    	var date = helperService.dateTimeZone();
     	//========================Grid Config =======================
 
     	
