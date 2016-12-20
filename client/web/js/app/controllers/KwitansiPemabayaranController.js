@@ -282,7 +282,8 @@ define(['app'], function (app) {
 					page : 1,
 					'per-page' : $scope.grid.virtualizationThreshold,
 					date_start : $scope.filter.date_start,
-					date_end : $scope.filter.date_end
+					date_end : $scope.filter.date_end,
+					sumber_kwitansi : $scope.filter.sumber_kwitansi
 				});
 			}
 			

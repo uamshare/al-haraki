@@ -47,6 +47,7 @@
 		                   		 	id="nik" 
 		                   		 	name="nik" 
 		                   		 	placeholders="NIK"
+		                   		 	ng-maxlength="15"
 		                   		 	required>
 				                    <span class="errorMessage" ng-show="FormInput.nik.$touched && FormInput.nik.$invalid">
 				                        NIK tidak boleh kosong
@@ -56,7 +57,14 @@
 	                	<div class="form-group">
 	                  		<label for="nisn" class="col-sm-4 control-label">NUPTK</label>
 	                 		<div class="col-sm-8">
-		                    	<input type="text" ng-model="form.nuptk" class="form-control" id="nuptk" name="nuptk" placeholders="NUPTK">
+		                    	<input 
+		                    		type="text" 
+		                    		ng-model="form.nuptk" 
+		                    		class="form-control" 
+		                    		id="nuptk" 
+		                    		name="nuptk"
+		                    		ng-maxlength="15"
+		                    		placeholders="NUPTK">
 		                 	</div>
 	                	</div>
 	               		<div class="form-group">
@@ -102,7 +110,10 @@
 	                	<div class="form-group">
 	                  		<label for="namaSiswa" class="col-sm-4 control-label">Golongan Darah</label>
 	                 	 	<div class="col-sm-8">
-	                    		<input type="text" ng-model="form.gol_darah" class="form-control" id="gol_darah" name="gol_darah" placeholders="Golongan Darah">
+	                    		<input type="text" ng-model="form.gol_darah" 
+	                    			ng-maxlength="3"
+	                    			class="form-control" id="gol_darah" 
+	                    			name="gol_darah" placeholders="Golongan Darah">
 	                  		</div>
 	                	</div>
 	                	<div class="form-group">
@@ -154,7 +165,9 @@
 	                  		</div>
 	                	</div>
 	                	<div class="form-group">
-	                  		<label for="namaSiswa" class="col-sm-4 control-label">Pendidikan Terakhir</label>
+	                  		<label for="namaSiswa" 
+	                  			ng-maxlength="5"
+	                  			class="col-sm-4 control-label">Pendidikan Terakhir</label>
 	                 	 	<div class="col-sm-8">
 	                    		<input type="text" ng-model="form.pendidikan_terakhir" class="form-control" id="pendidikan_terakhir" name="pendidikan_terakhir" placeholders="Pendidikan Terakhir">
 	                  		</div>

@@ -133,7 +133,7 @@ class Sekolah extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             'nama_sekolah' => $self->nama,
             'alamat' => $self->alamat,
             'tingkatan' => $self->tingkatan,
-            'kepala_sekolah' => $self->kepalaSekolah->nama_pegawai,
+            'kepala_sekolah' => ($self->kepalaSekolah) ? $self->kepalaSekolah->nama_pegawai : '',
             'tahun_ajaran_id' => $tahunAjaran->id,
             'tahun_ajaran' => $tahunAjaran->tahun_ajaran,
             'tahun_awal' => $tahunAjaran->tahun_awal,

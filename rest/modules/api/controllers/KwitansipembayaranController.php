@@ -23,6 +23,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         $request = Yii::$app->getRequest();
         $date_start = $request->getQueryParam('date_start', false);
         $date_end = $request->getQueryParam('date_end', false);
+        $sumber_kwitansi = $request->getQueryParam('sumber_kwitansi', 'all');
         $sekolahid = $request->getQueryParam('sekolahid', false);
 
         $query = $model->find()
@@ -40,6 +41,9 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         }
         if($date_start && $date_end){
             $query->andWhere(['between','tgl_kwitansi', $date_start, $date_end]);
+        }
+        if($sumber_kwitansi != 'all'){
+            $query->andWhere(['sumber_kwitansi' => $sumber_kwitansi]);
         }
         return $this->prepareDataProvider($query);
     }

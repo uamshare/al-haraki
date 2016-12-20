@@ -211,7 +211,10 @@ define(['app'], function (app) {
                         cfpLoadingBar.complete();
                         $location.path( "/master/karyawan/");
                     }else{
-                        toastr.error('Data gagal tersimpan.' + result.message, 'Error');
+                        if(typeof result[0] != 'undefined'){
+                            result.message = result[0].message;
+                        }
+                        toastr.error('Data gagal tersimpan. ' + result.message, 'Error');
                         cfpLoadingBar.complete();
                     }
                 }
