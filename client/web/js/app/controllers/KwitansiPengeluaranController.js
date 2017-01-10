@@ -569,7 +569,8 @@ define(['app'], function (app) {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
-
+				params.form.tgl_kwitansi = helperService.dateToString(params.form.tgl_kwitansi);
+				
 				function success(result){
 					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');

@@ -536,6 +536,7 @@ define(['app'], function (app) {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
+				params.form.tjmhdt = helperService.dateToString(params.form.tjmhdt);
 				
 				function success(result){
 					if(result.success){

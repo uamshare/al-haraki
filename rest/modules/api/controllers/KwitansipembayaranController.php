@@ -89,6 +89,8 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
 
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         
+        // $_tgl_kwitansi = explode('T', $form['tgl_kwitansi']);
+        // $form['tgl_kwitansi'] = $_tgl_kwitansi[0];
 
         if($form['sumber_kwitansi'] == 1){
             $bulanTagihan = $form['month']; //explode(',', $form['month']);

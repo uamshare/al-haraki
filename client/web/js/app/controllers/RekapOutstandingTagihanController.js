@@ -332,11 +332,11 @@ define(['app'], function (app) {
             $scope.grid.data = [];
         }
 
-        $scope.onBulanChange = function(){
-            $scope.filter.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
-                                    (date.getFullYear() + 1) : date.getFullYear();
-            // $scope.onSearchClick();
-        }
+        // $scope.onBulanChange = function(){
+        //     $scope.filter.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
+        //                             (date.getFullYear() + 1) : date.getFullYear();
+        //     // $scope.onSearchClick();
+        // }
 
         $scope.j_direktur = "Dir. Pendidikan SIT Al Haraki";
         $scope.nama_direktur = "Susi P. Krisnawan, S.H";

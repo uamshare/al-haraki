@@ -79,6 +79,9 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         $date = date('Y-m-d H:i:s');
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
+        // $_tgl_kwitansi = explode('T', $form['tgl_kwitansi']);
+        // $form['tgl_kwitansi'] = $_tgl_kwitansi[0];
+        
         foreach($grid as $k => $rows){
             $model = new $this->modelClass;
             

@@ -81,6 +81,9 @@ class JurnalharianController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
 
+        // $_tgl = explode('T', $form['tjmhdt']);
+        // $form['tjmhdt'] = $_tgl[0];
+        
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;

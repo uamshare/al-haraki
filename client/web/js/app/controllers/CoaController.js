@@ -14,7 +14,8 @@ define(['app'], function (app) {
     		toastr,
     		cfpLoadingBar,
     		uiGridConstants,
-    		COAService
+    		COAService,
+    		helperService
     	) {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'akuntansi/coa/';
     	var $resourceApi = COAService;

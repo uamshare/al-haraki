@@ -80,6 +80,9 @@ class TagihanautodebetController extends \rest\modules\api\ActiveController
         $date = date('Y-m-d H:i:s');
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
+        // $_tgl = explode('T', $form['tgl_transaksi']);
+        // $form['tgl_transaksi'] = $_tgl[0];
+
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = (isset($form['created_by']) && !empty($form['created_by'])) ? 

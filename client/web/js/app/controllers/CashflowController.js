@@ -204,6 +204,7 @@ define(['app'], function (app) {
             }
 
             $scope.monthBefore = helperService.getMonthName($scope.filter.month - 1).toUpperCase();
+            $scope.yearBefore = helperService.getYearByMonth($scope.filter.month - 1);
 
             $scope.onSearchClick = function(event){
                 if($scope.filter.month == '' || $scope.filter.month == null){
@@ -217,6 +218,7 @@ define(['app'], function (app) {
                 }
 
                 $scope.monthBefore = helperService.getMonthName($scope.filter.month - 2).toUpperCase();
+                $scope.yearBefore = helperService.getYearByMonth($scope.filter.month - 2)();
                 get({
                     month : $scope.filter.month,
                     year : $scope.filter.year,
@@ -225,9 +227,11 @@ define(['app'], function (app) {
             }
 
             $scope.onBulanChange = function(event){
-                $scope.filter.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
-                                        (date.getFullYear() + 1) : date.getFullYear();
+                // $scope.filter.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
+                //                         (date.getFullYear() + 1) : date.getFullYear();
                 // $scope.onSearchClick();
+                $scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
+                                        (authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
             }
 
             var exportTo = {
@@ -459,7 +463,7 @@ define(['app'], function (app) {
                     index++;
                     var index5 = index;
                     rowbody[index5] = [
-                        {text: 'OUTSTANDING s/d ' + $scope.monthBefore, style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
+                        {text: 'OUTSTANDING s/d ' + $scope.monthBefore + ' ' + $scope.yearBefore, style: 'headerSum', colSpan : (countweek + 3), alignment: 'left'},
                         '',
                         ''
                     ];

@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$http', '$rootScope'];
+    var injectParams = ['$http', '$rootScope','authService'];
 
-    var helperService = function ($http, $rootScope) {
+    var helperService = function ($http, $rootScope, authService) {
         var serviceBase = BASEAPIURL,
             factory = {
                 loginPath: 'auths/login',
@@ -56,12 +56,12 @@ define(['app'], function (app) {
             }
         }
 
-        factory.dateTimeZone = function(timezone){
+        factory.dateTimeZone = function(date, timezone){
             if(typeof timezone == 'undefined'){
                 timezone = 'Asia/Jakarta';
             }
 
-            var dt = new Date().toLocaleString('fullwide', { timeZone: timezone });
+            var dt = (typeof date != 'undefined') ? date : new Date().toLocaleString('fullwide', { timeZone: timezone });
             return new Date(dt);
         }
 
@@ -76,7 +76,16 @@ define(['app'], function (app) {
         }
 
         factory.getMonthName = function(id){
+            if(id == -1) id =11;
             return factory.month().options[id].name
+        }
+
+        factory.getYearByMonth = function(id){
+            if(id == -1 || id > 5){
+                return authService.getSekolahProfile().tahun_awal;
+            }else{
+                return authService.getSekolahProfile().tahun_akhir;
+            }
         }
 
         factory.getMonthNameShort = function(id){
@@ -190,6 +199,12 @@ define(['app'], function (app) {
 
         factory.trim = function(str){
             return str.replace(/ /g, '');
+        }
+
+        factory.dateToString = function(date, delimeter){
+            delimeter = (typeof delimeter == 'undefined') ? '/' : delimeter;
+            var date = factory.dateTimeZone(date);
+            return date.getFullYear()  + delimeter + (date.getMonth() + 1) + delimeter + date.getDate();
         }
 
         return factory;

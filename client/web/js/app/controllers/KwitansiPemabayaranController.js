@@ -18,7 +18,8 @@ define(['app'], function (app) {
     		'kwitansiPemabayaranService',
     		'SiswaRombelService',
     		'TagihanInfoService',
-    		'authService'
+    		'authService',
+    		'$filter'
     	];
 
     var KwitansiPemabayaranController = function (
@@ -38,7 +39,8 @@ define(['app'], function (app) {
 		kwitansiPemabayaranService,
 		SiswaRombelService,
 		TagihanInfoService,
-		authService
+		authService,
+		$filter
 	) 
     {
     	$scope.viewdir = $CONST_VAR.viewsDirectory + 'keuangan/kwitansi-pembayaran/';
@@ -489,7 +491,8 @@ define(['app'], function (app) {
 			});
 
 			function reset(){
-				$scope.form.tgl_kwitansi = date;
+				$scope.form.tgl_kwitansi = date;//helperService.dateToString(date);
+				$scope.dateTest = date.toLocaleString();
 				$scope.form.nama_pembayar = '';
 				$scope.form.idrombel = '';
 				$scope.form.keterangan = '';
@@ -716,9 +719,11 @@ define(['app'], function (app) {
 			$scope.onChangeDateTrans = function(sumber_kwitansi){
 				var d = new Date($scope.form.tgl_kwitansi);
 				var selectmonth = d.getMonth() + 1;
+
 				if(sumber_kwitansi =='1'){
+					// console.log(authService.getSekolahProfile().tahun_awal);
 					$scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
-										(date.getFullYear() + 1) : date.getFullYear();
+										(authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
 					getInfoTagihan();
 				}else{
 					$scope.gridDetail.data = [
@@ -745,23 +750,20 @@ define(['app'], function (app) {
 					return false;
 				}
 
-				// if($scope.form.nama_pembayar == '' || $scope.form.nama_pembayar == null){
-				// 	toastr.warning('Nama Pembayar tidak boleh kosong.', 'Warning');
-				// 	return false;
-				// }
-
 				if($scope.gridDetailDirtyRows.length <= 0){
 					toastr.warning('Rincian kwitansi belum diisi.', 'Warning');
 					return false;
 				}
-
+				
 				// console.log($scope.gridDetailDirtyRows);return;
 				$scope.form.nama_pembayar = $scope.form.nama_siswa;
-				// console.log($scope.form);return;
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
+
+				params.form.tgl_kwitansi = helperService.dateToString(params.form.tgl_kwitansi);
+
 				cfpLoadingBar.start();
 
 				function success(result){
@@ -827,8 +829,10 @@ define(['app'], function (app) {
 			$scope.onSKSelect = function(value){
 				$scope.form.sumber_kwitansi = value;
 				if(value =='1'){
-					$scope.form.year = ($scope.form.month >= 1 &&  $scope.form.month <= 6) ? 
-										(date.getFullYear() + 1) : date.getFullYear();
+					// $scope.form.year = ($scope.form.month >= 1 &&  $scope.form.month <= 6) ? 
+					// 					(date.getFullYear() + 1) : date.getFullYear();
+					$scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
+                                        (authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
 					getInfoTagihan();
 				}else{
 					$scope.gridDetail.data = [

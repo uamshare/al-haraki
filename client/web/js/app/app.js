@@ -90,6 +90,7 @@ define(['services/routeResolver'], function () {
 
             angular.extend($datepickerProvider.defaults, {
                 dateFormat: 'dd/MM/yyyy',
+                timezone: '+0700',
                 startWeek: 1
             });
 

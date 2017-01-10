@@ -843,6 +843,8 @@ define(['app'], function (app) {
                     grid : $scope.gridDetailDirtyRows
                 }
 
+                params.form.tgl_transaksi = helperService.dateToString(params.form.tgl_transaksi);
+                
                 function success(result){
                     if(result.success){
                         toastr.success('Data telah tersimpan', 'Success');
@@ -882,10 +884,10 @@ define(['app'], function (app) {
                 }
             }
 
-            $scope.onBulanChange = function(){
-                $scope.form.tahun = ($scope.form.bulan >= 1 &&  $scope.form.bulan <= 6) ? 
-                                        (date.getFullYear() + 1) : date.getFullYear();
-            }
+            // $scope.onBulanChange = function(){
+            //     $scope.form.tahun = ($scope.form.bulan >= 1 &&  $scope.form.bulan <= 6) ? 
+            //                             (date.getFullYear() + 1) : date.getFullYear();
+            // }
         }
 
         var controller;

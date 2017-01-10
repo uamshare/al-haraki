@@ -291,7 +291,9 @@ define(['app'], function (app) {
 					if($routeParams.idkelas){
 						// $scope.kelas.selected = $routeParams.idkelas;
 						$scope.month_start.selected = $routeParams.month;
-			            $scope.month_start.year = sekolahProfil.tahun_awal;
+			            // $scope.month_start.year = sekolahProfil.tahun_awal;
+			            $scope.month_start.year = ($scope.month_start.selected >= 1 &&  $scope.month_start.selected <= 6) ? 
+									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
 			            $scope.month_end.selected = 6;
 			            $scope.month_end.year = sekolahProfil.tahun_akhir;
 					}else{
