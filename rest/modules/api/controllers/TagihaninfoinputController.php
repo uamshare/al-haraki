@@ -113,7 +113,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
                     'keb_siswa_kredit'      => $row['keb_siswa'],
                     'ekskul_kredit'         => $row['ekskul'],  
                     'bulan'                 => 7, 
-                    'tahun'                 => $post['year_start'],
+                    'tahun'                 => $post['year_awal'], //$post['year_start'],
                     'tahun_ajaran'          => $post['tahun_ajaran_id'],    
                     'no_ref'                => 't_info_2_' . $post['tahun_ajaran_id'],  
                     'ket_ref'               => 'Tagihan Info Tahunan idrombel = ' . $row['idrombel'],

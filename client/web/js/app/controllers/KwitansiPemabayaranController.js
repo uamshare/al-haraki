@@ -825,28 +825,6 @@ define(['app'], function (app) {
 					getInfoTagihan();
 				}
 			}
-
-			$scope.onSKSelect = function(value){
-				$scope.form.sumber_kwitansi = value;
-				if(value =='1'){
-					// $scope.form.year = ($scope.form.month >= 1 &&  $scope.form.month <= 6) ? 
-					// 					(date.getFullYear() + 1) : date.getFullYear();
-					$scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
-                                        (authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
-					getInfoTagihan();
-				}else{
-					$scope.gridDetail.data = [
-						{
-							index : 1,
-							kode : '',
-							no_kwitansi : $scope.form.no_kwitansi,
-							rincian : '',
-							jumlah : 0,
-							flag : 1
-						}
-					]
-				}
-			}
     	}
 
     	var controller;

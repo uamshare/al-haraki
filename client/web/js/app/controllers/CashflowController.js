@@ -230,7 +230,7 @@ define(['app'], function (app) {
                 // $scope.filter.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
                 //                         (date.getFullYear() + 1) : date.getFullYear();
                 // $scope.onSearchClick();
-                $scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
+                $scope.form.year = ($scope.filter.month >= 1 &&  $scope.filter.month <= 6) ? 
                                         (authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
             }
 

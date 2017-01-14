@@ -354,6 +354,8 @@ define(['app'], function (app) {
 		 */
 		function saveAll(params){
         	cfpLoadingBar.start();
+        	params['year_awal'] = authService.getSekolahProfile().tahun_awal;
+        	params['year_akhir'] = authService.getSekolahProfile().tahun_akhir;
 			$resourceApi.insert(params)
 			.then(function (result) {
                 if(result.success){
