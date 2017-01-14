@@ -171,7 +171,7 @@ class TagihaninfoinputController extends \rest\modules\api\ActiveController //\y
         $i = (int)$month_start + ((int)$year_start * 12);
         $count = (int)$month_end + ((int)$year_end * 12);
         $month = (int)$month_start;
-        $year = (int)$year_start;
+        $year = (int)$year_awal;
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
 
         if($month > 0 && $month < 13){

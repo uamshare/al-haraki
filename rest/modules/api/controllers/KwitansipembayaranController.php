@@ -43,8 +43,13 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             $query->andWhere(['between','tgl_kwitansi', $date_start, $date_end]);
         }
         if($sumber_kwitansi != 'all'){
-            $query->andWhere(['sumber_kwitansi' => $sumber_kwitansi]);
+            if($sumber_kwitansi == '0'){
+                $query->andWhere(['<>','sumber_kwitansi','1']);
+            }else{
+                $query->andWhere(['sumber_kwitansi' => $sumber_kwitansi]);
+            }
         }
+        // echo $query->createCommand()->rawSql;exit();
         return $this->prepareDataProvider($query);
     }
 
