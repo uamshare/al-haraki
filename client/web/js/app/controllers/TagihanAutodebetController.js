@@ -884,10 +884,10 @@ define(['app'], function (app) {
                 }
             }
 
-            // $scope.onBulanChange = function(){
-            //     $scope.form.tahun = ($scope.form.bulan >= 1 &&  $scope.form.bulan <= 6) ? 
-            //                             (date.getFullYear() + 1) : date.getFullYear();
-            // }
+            $scope.onBulanChange = function(){
+                $scope.form.tahun = ($scope.form.bulan >= 1 &&  $scope.form.bulan <= 6) ? 
+                                        (authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
+            }
         }
 
         var controller;
