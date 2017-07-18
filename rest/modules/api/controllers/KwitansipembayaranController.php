@@ -92,6 +92,10 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
 
+        $modelK = new $this->modelClass();
+        $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+        $form['no_kwitansi'] = $modelK->getNewNOKwitansi(date('y'), $form['sekolahid']);
+
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         
         // $_tgl_kwitansi = explode('T', $form['tgl_kwitansi']);
@@ -167,7 +171,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         foreach($grid as $k => $rows){
             if($rows['flag'] == '1'){
                 $attrvalue[] = [
-                    'id'                    => isset($rows['id']) ? $rows['id'] : '', 
+                    'id'                    => isset($rows['id']) ? $rows['id'] : null, 
                     'no_kwitansi'           => isset($form['no_kwitansi']) ? $form['no_kwitansi'] : null,
                     'kode'                  => isset($rows['kode']) ? $rows['kode'] : null,        
                     'rincian'               => isset($rows['rincian']) ? $rows['rincian'] : null,
@@ -210,7 +214,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             }
         }
 
-        $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+        
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
         $form['updated_by'] = \Yii::$app->user->getId();
@@ -261,7 +265,8 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         }else{
             $this->response->setStatusCode(201, 'Created.');
         }
-        return $result;
+        // return $result;
+        return $form['no_kwitansi'];
     }
 
     public function actionDelete($id){

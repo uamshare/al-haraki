@@ -171,10 +171,12 @@
 		</div>
 		<div class="box-tools pull-right">
 			<a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+				ng-show="ActionBtn.cancel"
 				data-original-title="Reset Data">
 				<i class="fa fa-refresh"></i> Batal
 			</a>
 			<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
+				ng-show="ActionBtn.save"
 				data-original-title="Simpan Data">
 				<i class="fa fa-save"></i> Simpan
 			</a>

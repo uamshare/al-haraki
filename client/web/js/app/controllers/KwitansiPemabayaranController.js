@@ -418,6 +418,11 @@ define(['app'], function (app) {
 				select : ''
 			};
 
+			$scope.ActionBtn = {
+				cancel : true,
+				save : true	
+			}
+
 			$scope.gridDetailDirtyRows = [];
 			var columnDetailActionTpl = 	'<div class="col-action">' + 
 		    								'<a href="" ng-click="grid.appScope.onDeleteDetailClick(row.entity)" >' + 
@@ -515,6 +520,11 @@ define(['app'], function (app) {
 						flag : 1
 					}
 				]
+
+				$scope.ActionBtn = {
+					cancel : true,
+					save : true	
+				}
 			}
 
 			function refreshNo(paramdata){
@@ -769,6 +779,11 @@ define(['app'], function (app) {
 				function success(result){
 					if(result.success){
 						toastr.success('Data telah tersimpan', 'Success');
+						$scope.form.no_kwitansi = result.rows;
+						$scope.ActionBtn = {
+							cancel : false,
+							save : false	
+						}
 						printClick($scope.form);
 						// reset();
 						// refreshNo();
