@@ -17,6 +17,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         unset($actions['index']);
         unset($actions['create']);
         unset($actions['delete']);
+        unset($actions['update']);
         return $actions;
     }
 
@@ -61,7 +62,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
     public function actionUpdate($id){
         $post = Yii::$app->getRequest()->getBodyParams();
         if($post){
-            return $this->saveAndPosting($post);
+            return $this->saveAndPosting($post, $id);
         }else{
             $this->response->setStatusCode(400, 'Data is empty.');
             return [
@@ -70,7 +71,8 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         }
     }
 
-    private function saveAndPosting($post){
+    private function saveAndPosting($post, $id = false){
+
         $this->response = Yii::$app->getResponse();
         $attrvalue = [];
         $flagdelete = [];
@@ -81,13 +83,18 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
 
         // $_tgl_kwitansi = explode('T', $form['tgl_kwitansi']);
         // $form['tgl_kwitansi'] = $_tgl_kwitansi[0];
-        
+        $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+        if($id == false){
+            $modelK = new $this->modelClass();
+            $form['no_kwitansi'] = $modelK->getNewNOKwitansi(date('y'), $form['sekolahid']);
+        }  
+
         foreach($grid as $k => $rows){
             $model = new $this->modelClass;
             
             if($rows['flag'] == '1'){
                 $attrvalue[] = [
-                    'id'                    => isset($rows['id']) ? $rows['id'] : '', 
+                    'id'                    => isset($rows['id']) ? $rows['id'] : null, 
                     'no_kwitansi'           => isset($form['no_kwitansi']) ? $form['no_kwitansi'] : null,
                     'kode'                  => isset($rows['kode']) ? $rows['kode'] : null,        
                     'rincian'               => isset($rows['rincian']) ? $rows['rincian'] : null,
@@ -103,7 +110,7 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
             }
         }
 
-        $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+        
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
         $form['updated_by'] = \Yii::$app->user->getId();
@@ -137,7 +144,8 @@ class KwitansipengeluaranController extends \rest\modules\api\ActiveController
         }else{
             $this->response->setStatusCode(201, 'Created.');
         }
-        return $result;
+        // return $result;
+        return $form['no_kwitansi'];
     }
 
     public function actionDelete($id){

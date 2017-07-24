@@ -55,7 +55,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
     public function actionUpdate($id){
         $post = Yii::$app->getRequest()->getBodyParams();
         if($post){
-            return $this->saveAndPosting($post);
+            return $this->saveAndPosting($post, $id);
         }else{
             $this->response->setStatusCode(400, 'Data is empty.');
             return [
@@ -68,7 +68,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
      * Get List input Info Tagihan
      *
      */
-    public function saveAndPosting($post){
+    public function saveAndPosting($post, $id = false){
         $this->response = Yii::$app->getResponse();
         $post = Yii::$app->getRequest()->getBodyParams();
         
@@ -83,8 +83,13 @@ class JurnalharianController extends \rest\modules\api\ActiveController
 
         // $_tgl = explode('T', $form['tjmhdt']);
         // $form['tjmhdt'] = $_tgl[0];
-        
+
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
+        if($id == false){
+            $modelK = new $this->modelClass();
+            $form['tjmhno'] = $modelK->getNewNOKwitansi(date('y'), $form['sekolahid']);
+        } 
+        
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = (isset($form['created_by']) && !empty($form['created_by'])) ? 
@@ -99,7 +104,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
             
             if($rows['flag'] == '1'){
                 $attrvalue[] = [
-                    'tjmdid'                => isset($rows['tjmdid']) ? $rows['tjmdid'] : '', 
+                    'tjmdid'                => isset($rows['tjmdid']) ? $rows['tjmdid'] : null, 
                     'tjmhno'                => isset($form['tjmhno']) ? $form['tjmhno'] : null,
                     'tjmddesc'              => isset($rows['tjmddesc']) ? $rows['tjmddesc'] : null,        
                     'mcoadno'               => isset($rows['mcoadno']) ? $rows['mcoadno'] : null,
@@ -150,7 +155,7 @@ class JurnalharianController extends \rest\modules\api\ActiveController
         }else{
             $this->response->setStatusCode(201, 'Created.');
         }
-        return $result;
+        return $form['tjmhno']; //$result;
     }
 
     public function actionDelete($id){

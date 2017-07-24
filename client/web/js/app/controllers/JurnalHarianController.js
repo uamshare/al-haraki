@@ -279,6 +279,11 @@ define(['app'], function (app) {
 				updated_at : null
 			};
 
+			$scope.ActionBtn = {
+				cancel : true,
+				save : true	
+			}
+
 			$scope.gridDetailDirtyRows = [];
 			var columnDetailActionTpl = 	'<div class="col-action">' + 
 		    								'<a href="" ng-click="grid.appScope.onDeleteDetailClick(row.entity)" >' + 
@@ -422,7 +427,11 @@ define(['app'], function (app) {
 						jumlah : 0,
 						flag : 1
 					}
-				]
+				];
+				$scope.ActionBtn = {
+					cancel : true,
+					save : true	
+				};
 			}
 
 			function refreshNo(){

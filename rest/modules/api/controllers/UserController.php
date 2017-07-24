@@ -100,7 +100,13 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
 
         $post = Yii::$app->getRequest()->getBodyParams();
         $post['auth_key'] = Yii::$app->getSecurity()->generateRandomString();
-        $post['password_hash'] = $model->password_hash;
+        if(isset($post['password_hash']) && !empty($post['password_hash']) 
+            &&  $post['password_hash'] !='null')
+        {
+            $post['password_hash'] = Yii::$app->security->generatePasswordHash($post['password_hash']);
+        }else{
+            $post['password_hash'] = $model->password_hash;
+        }
         $post['pegawai_id'] = (isset($post['pegawai_id'])) ? (int)$post['pegawai_id'] : null;
         $post['sekolahid'] = (isset($post['sekolahid'])) ? (int)$post['sekolahid'] : null;
 
@@ -111,7 +117,7 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
         }else{
-            if($post['role']){
+            if(isset($post['role']) && $post['role']){
                 $this->AssignRole($model->id, $post['role']);
             }
         }

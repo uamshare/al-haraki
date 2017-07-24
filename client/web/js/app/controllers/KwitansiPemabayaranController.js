@@ -519,12 +519,12 @@ define(['app'], function (app) {
 						jumlah : 0,
 						flag : 1
 					}
-				]
+				];
 
 				$scope.ActionBtn = {
 					cancel : true,
 					save : true	
-				}
+				};
 			}
 
 			function refreshNo(paramdata){

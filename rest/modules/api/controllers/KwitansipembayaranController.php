@@ -92,9 +92,13 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
 
-        $modelK = new $this->modelClass();
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
-        $form['no_kwitansi'] = $modelK->getNewNOKwitansi(date('y'), $form['sekolahid']);
+        
+        if($id == false){
+            $modelK = new $this->modelClass();
+            $form['no_kwitansi'] = $modelK->getNewNOKwitansi(date('y'), $form['sekolahid']);
+        }        
+        
 
         $TahunAjaran = \rest\models\TahunAjaran::findOne(['aktif' => '1']);
         

@@ -373,6 +373,39 @@ define(['app'], function (app) {
 			$scope.onResetClick = function(event){
 				$location.path( "/pengaturan/user/");
 			}
+
+			function resetPassword(user){
+				function success(result){
+					if(result.success){
+						toastr.success('Data telah tersimpan', 'Success');
+						$location.path( "/pengaturan/user/");
+						cfpLoadingBar.complete();
+
+					}else{
+						toastr.error('Data gagal tersimpan. ' + result.message, 'Error');
+						cfpLoadingBar.complete();
+					}
+				}
+
+				cfpLoadingBar.start();
+				$resourceApi.update(user)
+				.then(success, errorHandle);
+			}
+
+			$scope.onResetPasswordClick = function(event){
+				var pass = window.prompt("Masukan kata sandi ", "12345678");
+
+				if (pass != null) {
+				    var user = {
+				    	id : $scope.form.id,
+				    	pegawai_id : $scope.form.pegawai_id,
+				    	sekolahid : $scope.form.sekolahid,
+				    	password_hash : pass
+				    }
+				    console.log(user);
+				    resetPassword(user);
+				}
+			}
         }
 
         var profileController = function(){
