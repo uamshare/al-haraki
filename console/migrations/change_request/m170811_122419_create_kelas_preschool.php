@@ -43,7 +43,7 @@ class m170811_122419_create_kelas_preschool extends Migration
 
         if (in_array('kelas', $tables))  { 
             if ($dbType == "mysql") {
-                $this->execute("update sekolah set nama='TPA',tingkatan='SD' where id=3");
+                $this->execute("update sekolah set nama='TPA AL Haraki',tingkatan='SD' where id=3");
                 $this->execute("alter table sekolah change column 
                                     tingkatan tingkatan enum('SD','SMP','SMA') default null");
             }

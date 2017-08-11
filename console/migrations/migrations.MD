@@ -8,7 +8,7 @@ yii migrate/create create_opt_months_table --fields="month:integer,order:integer
 
 yii migrate/create alter_bulan_column_to_kwitansi_pembayaran_h_table --fields="bulan:string(35)" --migrationPath=@console/migrations/fixbug
 
-./yii migrate --migrationPath=@console/migrations/fixbug
+./yii migrate/new --migrationPath=@console/migrations/fixbug
 
 ./yii migrate/create create_kelas_preschool --migrationPath=@console/migrations/change_request
 
