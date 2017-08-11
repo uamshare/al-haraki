@@ -22,7 +22,8 @@ define(['app'], function (app) {
                 isAuthValid : '__is_auth_valid__',
                 accessToken : '__access_token__',
                 userProfile : '__user_profile__',
-                sekolahProfile : '__sekolah_profile__'
+                sekolahProfile : '__sekolah_profile__',
+                sekolahList : '__sekolah_list__'
             }
 
             /*
@@ -133,6 +134,13 @@ define(['app'], function (app) {
             return JSON.parse(session.get('sekolahProfile'));
         };
 
+        factory.getSekolahList = function() {
+            var session = new factory.session();
+            // return JSON.parse(sessionStorage.getItem('sekolah_profile'));
+
+            return JSON.parse(session.get('sekolahList'));
+        };
+
         factory.changeSekolahId = function(id) {
             return $http.get(serviceBase + 'sekolahs/profile/' + id).then(function (results) {
                 if(results.data.success){
@@ -164,6 +172,9 @@ define(['app'], function (app) {
                     session.set('accessToken', data.__accessToken);
                     session.set('userProfile', JSON.stringify(data.__user_profile));
                     session.set('sekolahProfile', JSON.stringify(data.__sekolah_profile));
+                    session.set('sekolahList', JSON.stringify(data.__sekolah_list));
+
+                    console.log(session.get('sekolahList'));
 
                     $rootScope.$broadcast('loginStatusChanged', loggedIn);
                 }

@@ -36,3 +36,4 @@ phpunit.phar
 /client/assets/AppAsset.php
 /rest/web/uploads
 /client/views/layouts/main.php
+/client/web/plugins-ori

@@ -52,13 +52,21 @@ define(['app'], function (app) {
 
         function getSekolahProfile(){
             $scope.sekolahProfile = authService.getSekolahProfile();
+            // console.log($scope.sekolahProfile.sekolahid);
             $scope.sekolahid_selected = $scope.sekolahProfile.sekolahid;
+        }
+        function getSekolahList(callback){
+            $scope.sekolahList = authService.getSekolahList();
+            callback();
         }
 
         function initLogin(){
             getMenuPrivileges();
             getUserProfile();
-            getSekolahProfile();
+            getSekolahList(function(){
+                getSekolahProfile();
+            });
+            // console.log('initLogin');
         }
 
         function setLoginLogoutText(loggedIn) {
@@ -155,10 +163,14 @@ define(['app'], function (app) {
 
         $scope.$on('$viewContentLoaded', function(){
             // getMenuPrivileges();
+            // setLoginLogoutText();
+            console.log('viewContentLoaded');
         });
 
         $timeout(function() {
             // getMenuPrivileges();
+            // getSekolahProfile();
+            $scope.onSekolahidChange();
         }, 1000);
 
     };

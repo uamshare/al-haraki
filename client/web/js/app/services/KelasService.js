@@ -25,6 +25,12 @@ define(['app'], function (app) {
             });
         };
 
+        factory.getGroupKelas = function() {
+            return $http.get(serviceBase + 'kelas?scenario=1',{}).then(function (results) {
+                return results.data;
+            });
+        };
+
         factory.insert = function (params) {
             return $http.post(serviceBase + 'kelas', params).then(function (results) {
                 return results.data;

@@ -52,6 +52,7 @@ define(['app'], function (app) {
 
 
     	var gridOptions = {
+    		data: 'myData',
     		columnDefs : [
     			// { 
     			// 	name: 'isCheck', 
@@ -96,8 +97,6 @@ define(['app'], function (app) {
 				{ name: 'updated_at', displayName: 'Updated At', visible: false, width : '100',  enableCellEdit: false}
 			]
     	};
-
-    	
 
     	if($routeParams.idkelas){
     	}else{
@@ -231,8 +230,11 @@ define(['app'], function (app) {
 			                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
 			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
 			            })
-			            $scope.gridEdit.data = result.rows;
+			            // $scope.gridEdit.data = result.rows;
+			            $scope.myData = result.rows;
                 	}else{
+                		$scope.gridEdit.data = [];
+                		$scope.gridApi.core.refresh();
                 		toastr.info('Data kosong', 'Info');
                 	}
 					
@@ -260,7 +262,10 @@ define(['app'], function (app) {
 			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
 			            })
 			            $scope.grid.data = result.rows;
+			            // $scope.myData = result.rows;
 			        }else{
+			        	$scope.gridEdit.data = [];
+			        	$scope.gridApi.core.refresh();
 			        	toastr.info('Data kosong', 'Info');
 			        }
 				}
@@ -313,7 +318,7 @@ define(['app'], function (app) {
 			PengaturanService.get(params)
 			.then(function (result) {
 	            if(result.success){
-					if(result.success){
+					if(result.rows.length > 0){
 						$scope.settings.pid = result.rows[0].pid;
 						$scope.settings.pjudul = result.rows[0].pjudul;
 						$scope.settings.pdeskripsi = result.rows[0].pdeskripsi;

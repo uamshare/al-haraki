@@ -87,10 +87,12 @@
                             <label class="col-xs-4 col-md-3 control-label">Akses Sekolah</label>
                             <div class="col-xs-8 col-md-9">
                                 <select name="sekolahid" class="form-control" 
-                                    ng-model="form.sekolahid" >
-                                    <option value="0">0 - All</option>
-                                    <option value="1">1 - SDIT AL Haraki</option>
-                                    <option value="2">2 - SMPIT AL Haraki</option>
+                                    ng-model="form.sekolahid"
+                                    ng-options="i.id as (i.id + ' - ' + i.nama) for i in sekolahList">
+                                    <!-- <option value="0">0 - All</option> -->
+                                    <option></option>
+                                    <!-- <option value="1">1 - SDIT AL Haraki</option>
+                                    <option value="2">2 - SMPIT AL Haraki</option> -->
                                 </select>
                             </div>
                         </div>

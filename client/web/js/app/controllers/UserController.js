@@ -234,7 +234,7 @@ define(['app'], function (app) {
 						$scope.form.email = rowdata.email;
 						$scope.form.pegawai_id = rowdata.pegawai_id;
 						$scope.form.role = rowdata.role;
-						$scope.form.sekolahid = rowdata.sekolahid;
+						$scope.form.sekolahid = parseInt(rowdata.sekolahid);
 						$scope.form.created_at = rowdata.created_at;
 						$scope.form.updated_at = rowdata.updated_at;
 
@@ -311,8 +311,23 @@ define(['app'], function (app) {
 		        });
 			}
 			
+			$scope.sekolahList = [];
+			function getSekolahList(){
+				var sekolahList = authService.getSekolahList();
+				$scope.sekolahList.push({
+					id : 0,
+					nama : 'All'
+				});
+				for(var x in sekolahList){
+					$scope.sekolahList.push({
+						id : sekolahList[x].id,
+						nama : sekolahList[x].nama,
+					});
+				}
+			}
+
 			this.init = function(){
-				
+				getSekolahList();
 				if($routeParams.id){
 					$scope.isEdit = true;
 	                getById($routeParams.id);

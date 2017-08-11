@@ -13,7 +13,7 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
     public function actions()
     {
         $actions = parent::actions();
-        // unset($actions['index']);
+        unset($actions['index']);
         unset($actions['view']);
         return $actions;
     }
@@ -31,6 +31,33 @@ class PegawaiController extends \rest\modules\api\ActiveController //\yii\rest\A
                 ],
             ]
         );
+    }
+
+    public function actionIndex(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $sekolahid = $request->getQueryParam('sekolahid', false);
+        $scenario = $request->getQueryParam('scenario', false);
+
+        $query = $model->find()
+                       ->where('1=1')
+                       ->asArray();
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
+        }
+
+        $query->orderBy([
+            '`sekolahid`' => SORT_ASC,
+            '`nama_pegawai`' => SORT_ASC, 
+            '`nik`' => SORT_ASC
+        ]);
+        
+        if($scenario){
+
+        }
+
+        // var_dump($query->createCommand()->rawSql);exit();
+        return $this->prepareDataProvider($query);
     }
 
     /**

@@ -22,6 +22,75 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
         );
     }
 
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index']);
+        unset($actions['view']);
+        return $actions;
+    }
+
+    public function actionIndex(){
+        
+        $scenario = Yii::$app->getRequest()->getQueryParam('scenario', false);
+        switch ($scenario) {
+            case '1': // Get Group Kelas
+                $query = $this->findGroupSekolah();
+                break;
+
+            default:
+                $query = $this->findBySekolah();
+                break;
+        }
+
+        // var_dump($query->createCommand()->rawSql);exit();
+        return $this->prepareDataProvider($query);
+    }
+
+    private function findBySekolah(){
+        $model = new $this->modelClass();
+        $request = Yii::$app->getRequest();
+        $sekolahid = $request->getQueryParam('sekolahid', false);
+
+        $query = $model->find()
+                       ->where('1=1')
+                       ->asArray();
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
+        }
+
+        $query->orderBy([
+            '`sekolahid`' => SORT_ASC,
+            '`nama_kelas`' => SORT_ASC,
+        ]);
+
+        return $query;
+    }
+
+    private function findGroupSekolah(){
+        $model = new $this->modelClass();
+        $sekolahid = Yii::$app->getRequest()->getQueryParam('sekolahid', false);
+
+        $query = $model->find()
+                        ->select([
+                            'id','group_kelas',
+                        ])
+                        ->where('group_kelas iS NOT NULL')
+                        ->asArray();
+        if($sekolahid){
+            $query->andWhere(['sekolahid' => $sekolahid]);
+        }
+
+
+        $query->orderBy([
+            '`sekolahid`' => SORT_ASC,
+            '`nama_kelas`' => SORT_ASC,
+        ]);
+        $query->groupBy('group_kelas');
+
+        return $query;
+    }
+
     /**
      * Get List input Info Tagihan
      *

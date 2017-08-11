@@ -60,6 +60,7 @@ class UserController extends \rest\modules\api\ActiveController // \yii\rest\Act
                                 (int)$post['pegawai_id'] : null;
         $post['sekolahid'] = (isset($post['sekolahid'])) ? (int)$post['sekolahid'] : null;
 
+        $post['access_token'] = "";
         $model->load($post, '');
         $save = $model->save();
         if ($save) {

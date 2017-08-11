@@ -26,8 +26,8 @@
 				    	<form class="form-horizontal form-custome">
 				      		<div class="col-xs-12 col-md-6">
 				      			<div class="form-group">
-			                  		<label for="kelas" class="col-sm-3 control-label">Kelas</label>
-			                  		<div class="col-xs-12 col-md-4">
+			                  		<label for="kelas" class="col-xs-12 col-md-3 control-label">Kelas</label>
+			                  		<div class="col-xs-12 col-md-3">
 			                  			<input type="hidden" class="form-control" name="id" ng-model="form.id">
 			                  			<select 
 			                  				name="kelas" 
@@ -38,6 +38,16 @@
 											Kelas - {{kelas}}
 											</option>
 										</select>
+			                  		</div>
+			                  		<label for="kelas" class="col-xs-12 col-md-1 control-label">Grup</label>
+			                  		<div class="col-xs-12 col-md-5">
+			                  			<!-- <input type="text" class="form-control" name="group_kelas" ng-model="form.group_kelas"> -->
+										<input type="text" class="form-control input-sm"
+		                                    bs-typeahead 
+		                                    ng-model="form.group_kelas"
+		                                    bs-options="rl for rl in groupKelas"
+		                                    data-animation="am-flip-x"
+		                                    placeholder="Grup Kelas">
 			                  		</div>
 			                	</div>
 			                	<div class="form-group">

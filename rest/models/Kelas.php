@@ -53,6 +53,7 @@ class Kelas extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
             [['kelas', 'sekolahid'], 'required'],
             [['kelas', 'sekolahid'], 'integer'],
             [['created_at'], 'safe'],
+            [['group_kelas'], 'string', 'max' => 50],
             [['nama_kelas'], 'string', 'max' => 50],
             [['sekolahid'], 'exist', 'skipOnError' => true, 'targetClass' => Sekolah::className(), 'targetAttribute' => ['sekolahid' => 'id']],
         ];
@@ -66,6 +67,7 @@ class Kelas extends \rest\models\AppActiveRecord // \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'kelas' => Yii::t('app', 'Kelas'),
+            'group_kelas' => Yii::t('app', 'Grup Kelas'),
             'nama_kelas' => Yii::t('app', 'Nama Kelas'),
             'sekolahid' => Yii::t('app', 'Sekolahid'),
             'created_at' => Yii::t('app', 'Created At'),

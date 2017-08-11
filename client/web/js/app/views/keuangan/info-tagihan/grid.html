@@ -34,7 +34,9 @@
 	<div class="box-body">
 		<div class="row">
 			<div class="col-xs-12">
-				<div id="grid1" ui-grid="grid" 
+				<p ng-if="noData">You haven't any data to be displayed .</p>
+				<div id="grid1" ui-grid="grid"
+					ng-if="!noData"
 					ui-grid-resize-columns 
 		            ui-grid-selection 
 		            ui-grid-cellNav

@@ -18,9 +18,13 @@ use yii\helpers\Html;
             <span ng-hide="profile.sekolahid == 0">{{sekolahProfile.nama_sekolah}}</span>
             <select ng-hide="profile.sekolahid != 0" name="sekolahid" class="form-control" 
                 ng-model="sekolahid_selected" 
-                ng-change="onSekolahidChange(sekolahid_selected)" >
-                <option value="1">1 - SDIT AL Haraki</option>
-                <option value="2">2 - SMPIT AL Haraki</option>
+                ng-change="onSekolahidChange(sekolahid_selected)"
+                ng-options="i.id as (i.id + ' - ' + i.nama) for i in sekolahList">
+                <!-- <option value="1">1 - SDIT AL Haraki</option>
+                <option value="2">2 - SMPIT AL Haraki</option> -->
+                <option></option>
+                <!-- <option ng-repeat="list in sekolahList"
+                        value="{{list.id}}">{{list.id}} - {{list.nama}} {{sekolahid_selected}}</option> -->
             </select>
         </div>
         

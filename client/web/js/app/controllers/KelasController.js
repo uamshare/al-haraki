@@ -49,25 +49,48 @@ define(['app'], function (app) {
         }
 
         var indexController = function(){
-            var grid = {
-                columnDefs : [
-                    { name: 'index', displayName : 'No', width : '50', visible: false, enableFiltering : false ,  enableCellEdit: false},
-                    { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
-                    { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
-                    {
-                        name: 'kelasRender',
-                        displayName: 'Kelas',
-                        grouping: { groupPriority: 1 },
-                        sort: { priority: 1, direction: 'asc' },
-                        width: '200',
-                    },
-                    { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, enableCellEdit: false},
-                    { name: 'siswacount', displayName: 'Jml Siswa', width : '120', visible: true, enableCellEdit: false},
-                    { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
-                    { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
-                    { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
-                ]
+            if(authService.getSekolahProfile().sekolahid != 3){
+                var grid = {
+                    columnDefs : [
+                        { name: 'index', displayName : 'No', width : '50', visible: false, enableFiltering : false ,  enableCellEdit: false},
+                        { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
+                        { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
+                        {
+                            name: 'kelasRender',
+                            displayName: 'Kelas',
+                            grouping: { groupPriority: 1 },
+                            sort: { priority: 1, direction: 'asc' },
+                            width: '200',
+                        },
+                        { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, enableCellEdit: false},
+                        { name: 'siswacount', displayName: 'Jml Siswa', width : '120', visible: true, enableCellEdit: false},
+                        { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
+                        { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
+                        { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
+                    ]
+                }
+            }else{
+                var grid = {
+                    columnDefs : [
+                        { name: 'index', displayName : 'No', width : '50', visible: false, enableFiltering : false ,  enableCellEdit: false},
+                        { name: 'id', displayName: 'ID', visible: false, width : '50' ,  enableCellEdit: false},
+                        { name: 'kelas', displayName: 'Kelas', visible: false, width : '75',  enableCellEdit: false},
+                        {
+                            name: 'groupKelasRender',
+                            displayName: 'Group',
+                            grouping: { groupPriority: 1 },
+                            sort: { priority: 1, direction: 'asc' },
+                            width: '200',
+                        },
+                        { name: 'nama_kelas', displayName: 'Nama Kelas', visible: true, enableCellEdit: false},
+                        { name: 'siswacount', displayName: 'Jml Siswa', width : '120', visible: true, enableCellEdit: false},
+                        { name: 'sekolahid', displayName: 'Sekolah', visible: false, width : '75',  enableCellEdit: false},
+                        { name: 'created_at', displayName: 'Created At', visible: false, width : '75',  enableCellEdit: false},
+                        { name: 'updated_at', displayName: 'Updated At', visible: false, width : '75',  enableCellEdit: false}
+                    ]
+                }
             }
+            
             var columnActionTpl =   '<div class="col-action" ng-show="row.entity.id">' +
                                         '<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' +
                                             '<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' +
@@ -115,6 +138,7 @@ define(['app'], function (app) {
                             var romnum = (paramdata.page > 1) ? (((paramdata.page - 1) * $scope.grid.pageSize) + index + 1) : (index + 1);
                             result.rows[index]["index"] = romnum;
                             result.rows[index]["kelasRender"] = 'Kelas - ' + result.rows[index].kelas;
+                            result.rows[index]["groupKelasRender"] = result.rows[index].group_kelas;
                             result.rows[index]["siswacount"] = result.rows[index].siswacount + ' Siswa';
                         })
                         $scope.grid.data = result.rows;
@@ -282,25 +306,40 @@ define(['app'], function (app) {
             $scope.form = {
                 id : '',
                 kelas : '',
+                group_kelas : '',
                 nama_kelas : '',
                 sekolahid : authService.getSekolahProfile().sekolahid,
                 created_at : '',
                 updated_at : ''
             }
 
-            $scope.kelasList = [1,2,3,4,5,6,7,8,9];
+            $scope.kelasList = [0,1,2,3,4,5,6,7,8,9,10,11,12];
             $scope.kelas = [];
-            $scope.sekolah = [
-                {id : '1', nama : 'SDIT'},
-                {id : '2', nama : 'SMPIT'}
+            $scope.groupKelas = [
+                'Daycare','KB'
             ];
-
+            // $scope.sekolah = [
+            //     {id : '1', nama : 'SDIT'},
+            //     {id : '2', nama : 'SMPIT'}
+            // ];
+            $scope.sekolah = authService.getSekolahList();
             function getkelas(params){
                 KelasService.getList(params)
                 .then(function (result) {
                     if(result.success){
-                        if(result.success){
-                            $scope.kelas = result.rows;
+                        $scope.kelas = result.rows;
+                    }   
+                }, function(error){
+                    toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+                });
+            }
+            function getGroup(){
+                KelasService.getGroupKelas()
+                .then(function (result) {
+                    if(result.success){
+                        $scope.groupKelas = [];
+                        for(var x in result.rows){
+                            $scope.groupKelas.push(result.rows[x].group_kelas);
                         }
                     }   
                 }, function(error){
@@ -311,6 +350,7 @@ define(['app'], function (app) {
             function reset(){
                 $scope.form.id = '';
                 $scope.form.kelas = '';
+                $scope.form.group_kelas = '';
                 $scope.form.nama_kelas = '';
                 $scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
             }
@@ -337,7 +377,7 @@ define(['app'], function (app) {
             }
 
             $scope.onSaveClick = function(event){
-                if($scope.form.kelas == '' || $scope.form.kelas == null){
+                if(($scope.form.kelas == '' || $scope.form.kelas == null) && $scope.form.kelas != 0){
                     toastr.warning('Kelas tidak boleh kosong.', 'Warning');
                     return false;
                 }
@@ -475,6 +515,7 @@ define(['app'], function (app) {
                     if(result.success){
                         $scope.form.id = result.rows.id;
                         $scope.form.kelas = result.rows.kelas;
+                        $scope.form.group_kelas = result.rows.group_kelas;
                         $scope.form.nama_kelas = result.rows.nama_kelas;
                         $scope.form.sekolahid = result.rows.sekolahid;
                         $scope.form.created_at = result.rows.created_at;
@@ -521,7 +562,9 @@ define(['app'], function (app) {
             }
 
             this.init = function(){
+                // $scope.sekolah = authService.getSekolahList();
                 $scope.form.sekolahid = authService.getSekolahProfile().sekolahid.toString();
+                getGroup();
                 if($routeParams.id || $location.$$url == '/master/kelas/view'){
                     initEdit($routeParams.id);
                     getSiswa({

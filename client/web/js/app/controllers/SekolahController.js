@@ -76,6 +76,7 @@ define(['app'], function (app) {
                 	width: 120,
 					editDropdownValueLabel: 'name', 
 					editDropdownOptionsArray: [
+						{ id: 'PRESCHOOL', name: 'PRESCHOOL' },
 						{ id: 'SD', name: 'SD' },
 						{ id: 'SMP', name: 'SMP' },
 						{ id: 'SMA', name: 'SMA' }

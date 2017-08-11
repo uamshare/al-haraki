@@ -5,9 +5,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$http', '$q'];
+    var injectParams = ['$http', '$q','authService'];
 
-    var SiswaService = function ($http, $q) {
+    var SiswaService = function ($http, $q, authService) {
         var serviceBase = BASEAPIURL,
             factory = {};
 
@@ -63,7 +63,8 @@ define(['app'], function (app) {
         }
 
         function buildPagingUri(pageIndex, pageSize) {
-            var uri = '?page=' + pageIndex + '&per-page=' + pageSize;
+            var sekolahid = authService.getSekolahProfile().sekolahid;
+            var uri = '?page=' + pageIndex + '&per-page=' + pageSize + '&sekolahid=' + sekolahid;
             return uri;
         }
 
