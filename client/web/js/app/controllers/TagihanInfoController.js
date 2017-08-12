@@ -220,6 +220,7 @@ define(['app'], function (app) {
 			.then(function (result) {
                 if(result.success){
                 	if(result.rows.length > 0){
+			            $scope.gridEdit.data = [];
                 		angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
@@ -230,8 +231,7 @@ define(['app'], function (app) {
 			                result.rows[index]["keb_siswa"] = parseInt(result.rows[index]["keb_siswa"]);
 			                result.rows[index]["ekskul"] = parseInt(result.rows[index]["ekskul"]);
 			            })
-			            // $scope.gridEdit.data = result.rows;
-			            $scope.myData = result.rows;
+			            $scope.gridEdit.data = result.rows;
                 	}else{
                 		$scope.gridEdit.data = [];
                 		$scope.gridApi.core.refresh();
@@ -251,6 +251,7 @@ define(['app'], function (app) {
 			.then(function (result) {
                 if(result.success){
                 	if(result.rows.length > 0){
+                		$scope.grid.data = [];
 						angular.forEach(result.rows, function(dt, index) {
 							var romnum = index + 1;
 			                result.rows[index]["index"] = romnum;
@@ -264,7 +265,7 @@ define(['app'], function (app) {
 			            $scope.grid.data = result.rows;
 			            // $scope.myData = result.rows;
 			        }else{
-			        	$scope.gridEdit.data = [];
+			        	$scope.grid.data = [];
 			        	$scope.gridApi.core.refresh();
 			        	toastr.info('Data kosong', 'Info');
 			        }
