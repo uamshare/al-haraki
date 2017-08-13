@@ -137,6 +137,9 @@ define(['app'], function (app) {
 					var msg = 'rows changed ' + rows.length;
 					$log.log(rows);
 				});
+				$scope.gridApi.grid.registerDataChangeCallback(function(e) {
+                    setGridToContentXLS(gridApi);
+                });
 		    }
 		};
 
@@ -748,6 +751,102 @@ define(['app'], function (app) {
         		getNotes();
         	}
 		}
+
+		$scope.onExport = function(type){
+            if($scope.grid.data.length <= 0){
+                toastr.warning('Rekap data masih kosong.', 'Warning');
+                return false;
+            }
+
+            exportTo[type]($scope.gridApi);  
+        }
+
+        var exportTo = {
+            xls : function(gridApi){
+                function download(id){
+                    var dt = helperService.dateTimeZone();
+                    var day = dt.getDate();
+                    var month = dt.getMonth() + 1;
+                    var year = dt.getFullYear();
+                    var hour = dt.getHours();
+                    var mins = dt.getMinutes();
+                    var postfix = year.toString() + month.toString() + day.toString() + '-' + hour.toString() + mins.toString();
+
+                    var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+                    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+
+                    var table = document.getElementById(id);
+                    console.log(table);
+                    var ctx = { worksheet : name || 'info_tagihan ' + postfix, table : table.innerHTML }
+                    
+                    var a = document.createElement('a');
+                    a.href = uri + base64(format(template, ctx));
+                    a.download = 'info_tagihan' + postfix + '.xls';
+                    a.click();
+                    // return false;
+                }
+                return download('print-rekap');
+            },
+
+            _title : 'Info Tagihan ' + authService.getSekolahProfile().nama_sekolah,
+            _titleDate : helperService.formatDateID(date),
+        }
+
+        function setGridToContentXLS(gridApi){
+            var rows = gridApi.grid.rows,
+                rdate = helperService.formatDateID(date);
+
+            function formatValueNumber(val){
+                if((typeof val !='undefined' && parseInt(val))){
+                    return parseInt(val); //$filter('number')(val, 0);
+                }
+
+                return 0;
+            }
+
+            function setTableData(obj){
+                var rowdata,
+                rowbody = [];
+                var _sum_spp = 0, _sum_komite_sekolah = 0, _sum_catering = 0, _sum_keb_siswa = 0, _sum_ekskul = 0;
+
+                // Set Body Table
+                for(var idx in rows){
+                    rowdata = rows[idx].entity;
+
+                    var no = parseInt(idx) + 1;
+                    rowbody.push({
+                        index : no.toString(),
+                        nama_siswa : rowdata.nama_siswa,
+                        spp : formatValueNumber(rowdata.spp),
+                        komite_sekolah : formatValueNumber(rowdata.komite_sekolah),
+                        catering : formatValueNumber(rowdata.catering),
+                        keb_siswa : formatValueNumber(rowdata.keb_siswa),
+                        ekskul : formatValueNumber(rowdata.ekskul),
+                    });
+                    _sum_spp += formatValueNumber(rowdata.spp);
+                    _sum_komite_sekolah += formatValueNumber(rowdata.komite_sekolah);
+                    _sum_catering += formatValueNumber(rowdata.catering);
+                    _sum_keb_siswa += formatValueNumber(rowdata.keb_siswa);
+                    _sum_ekskul += formatValueNumber(rowdata.ekskul);
+                }
+                return {
+                    rows : rowbody,
+                    sum_spp : _sum_spp,
+                    sum_komite_sekolah : _sum_komite_sekolah,
+                    sum_keb_siswa : _sum_keb_siswa,
+                    sum_catering : _sum_catering,
+                    sum_ekskul : _sum_ekskul
+                };
+            }
+
+            $scope.templateExport = {
+                title : exportTo._title,
+                titleDate : exportTo._titleDate,
+                table  : setTableData(rows),
+            }
+        }
 
 		$scope.$on('$viewContentLoaded', function(){
 			// init();

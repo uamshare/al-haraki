@@ -1,0 +1,56 @@
+<div id="print-rekap" ng-hide="true">
+	<style type="text/css">
+		.table>caption+thead>tr:first-child>td, 
+		.table>caption+thead>tr:first-child>th, 
+		.table>colgroup+thead>tr:first-child>td, 
+		.table>colgroup+thead>tr:first-child>th, 
+		.table>thead:first-child>tr:first-child>td, 
+		.table>thead:first-child>tr:first-child>th {
+		    border-top: 1px solid #111;
+		}
+		.table-bordered>tbody>tr>td, 
+		.table-bordered>tbody>tr>th, 
+		.table-bordered>tfoot>tr>td, 
+		.table-bordered>tfoot>tr>th, 
+		.table-bordered>thead>tr>td, 
+		.table-bordered>thead>tr>th {
+		    border: 1px solid #111;
+		}
+	</style>
+	<div class="printStyle-box">
+		<h2>{{templateExport.title}}</h2>
+		<h2>{{templateExport.titleDate}}</h2>
+	</div>
+	<br>
+	<!-- <h3 class="title-table">TITLE</h3> -->
+    <table border="1" class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>No</th>
+    			<th>No Kwitansi</th>
+    			<th>Tgl Kwitansi</th>
+    			<th>Nama Siswa</th>
+    			<th>Keterangan</th>
+    			<th>Total</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="(key, row) in $parent.templateExport.table.rows">
+    			<td>{{row.index}}</td>
+    			<td>{{row.no_kwitansi}}</td>
+    			<td>{{row.tgl_kwitansi}}</td>
+    			<td>{{row.nama_siswa}}</td>
+    			<td>{{row.keterangan}}</td>
+    			<td style="text-align : right;">{{row.total}}</td>
+    		</tr>
+    	</tbody>
+    	<tfoot>
+    		<tr>
+    			<th colspan="5">Total</th>
+    			<th style="text-align : right;">{{$parent.templateExport.table.total}}</th>
+    		</tr>
+    	</tfoot>
+    </table>
+	<br/>
+	<br/>
+</div>

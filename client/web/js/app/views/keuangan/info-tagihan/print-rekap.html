@@ -1,0 +1,62 @@
+<div id="print-rekap" ng-hide="true">
+	<style type="text/css">
+		.table>caption+thead>tr:first-child>td, 
+		.table>caption+thead>tr:first-child>th, 
+		.table>colgroup+thead>tr:first-child>td, 
+		.table>colgroup+thead>tr:first-child>th, 
+		.table>thead:first-child>tr:first-child>td, 
+		.table>thead:first-child>tr:first-child>th {
+		    border-top: 1px solid #111;
+		}
+		.table-bordered>tbody>tr>td, 
+		.table-bordered>tbody>tr>th, 
+		.table-bordered>tfoot>tr>td, 
+		.table-bordered>tfoot>tr>th, 
+		.table-bordered>thead>tr>td, 
+		.table-bordered>thead>tr>th {
+		    border: 1px solid #111;
+		}
+	</style>
+	<div class="printStyle-box">
+		<h2>{{templateExport.title}}</h2>
+		<h2>{{templateExport.titleDate}}</h2>
+	</div>
+	<br>
+	<!-- <h3 class="title-table">TITLE</h3> -->
+    <table border="1" class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<th>No</th>
+    			<th>Nama Siswa</th>
+    			<th>SPP</th>
+    			<th>Komite Sekolah</th>
+    			<th>Catering</th>
+    			<th>Keb. Siswa</th>
+                <th>Ekskul</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="(key, row) in $parent.templateExport.table.rows">
+    			<td>{{row.index}}</td>
+    			<td>{{row.nama_siswa}}</td>
+    			<td style="text-align : right;">{{row.spp}}</td>
+                <td style="text-align : right;">{{row.komite_sekolah}}</td>
+                <td style="text-align : right;">{{row.catering}}</td>
+                <td style="text-align : right;">{{row.keb_siswa}}</td>
+                <td style="text-align : right;">{{row.ekskul}}</td>
+    		</tr>
+    	</tbody>
+    	<tfoot>
+    		<tr>
+    			<th colspan="2">Total</th>
+    			<th style="text-align : right;">{{$parent.templateExport.table.sum_spp}}</th>
+                <th style="text-align : right;">{{$parent.templateExport.table.sum_komite_sekolah}}</th>
+                <th style="text-align : right;">{{$parent.templateExport.table.sum_catering}}</th>
+                <th style="text-align : right;">{{$parent.templateExport.table.sum_keb_siswa}}</th>
+                <th style="text-align : right;">{{$parent.templateExport.table.sum_ekskul}}</th>
+    		</tr>
+    	</tfoot>
+    </table>
+	<br/>
+	<br/>
+</div>

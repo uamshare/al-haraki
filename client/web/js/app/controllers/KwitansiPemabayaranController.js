@@ -123,6 +123,28 @@ define(['app'], function (app) {
 				showColumnFooter: true,
 				expandableRowTemplate: '<div ui-grid="row.entity.subGridOptions" style="height:{{(row.entity.subGridOptions.data.length * 30) + 50}}px"></div>',
     			expandableRowHeight: 150,
+
+    			onRegisterApi: function(gridApi){
+	                $scope.gridApi = gridApi;
+					gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+						$scope.grid.pageNumber = newPage;
+						$scope.grid.pageSize = pageSize;
+						$scope.grid.virtualizationThreshold = pageSize; 
+
+						get({
+							page : newPage,
+							'per-page' : $scope.grid.virtualizationThreshold,
+							date_start : $scope.filter.date_start,
+							date_end : $scope.filter.date_end
+						});
+					});
+					gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {               
+			            row.expandedRowHeight = (row.entity.subGridOptions.data.length * 30) + 51;
+			        });
+			        $scope.gridApi.grid.registerDataChangeCallback(function(e) {
+	                    setGridToContentXLS(gridApi);
+	                });
+	            }
 			};
 
 			$scope.filter = {
@@ -244,25 +266,6 @@ define(['app'], function (app) {
 				});
 			}
 
-			$scope.grid.onRegisterApi = function(gridApi){
-				$scope.gridApi = gridApi;
-				gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-					$scope.grid.pageNumber = newPage;
-					$scope.grid.pageSize = pageSize;
-					$scope.grid.virtualizationThreshold = pageSize; 
-
-					get({
-						page : newPage,
-						'per-page' : $scope.grid.virtualizationThreshold,
-						date_start : $scope.filter.date_start,
-						date_end : $scope.filter.date_end
-					});
-				});
-				gridApi.expandable.on.rowExpandedStateChanged($scope, function (row) {               
-		            row.expandedRowHeight = (row.entity.subGridOptions.data.length * 30) + 51;
-		        });
-		    }
-
 			$scope.onAddClick = function(event){
 				setFormCollapse(false);
 				setGridCollapse(true);
@@ -305,6 +308,93 @@ define(['app'], function (app) {
 				    deleteData(rowdata.no_kwitansi);
 				} 
 			}
+
+			$scope.onExport = function(type){
+	            if($scope.grid.data.length <= 0){
+	                toastr.warning('Rekap data masih kosong.', 'Warning');
+	                return false;
+	            }
+
+	            exportTo[type]($scope.gridApi);  
+	        }
+
+	        var exportTo = {
+	            xls : function(gridApi){
+	                function download(id){
+	                    var dt = helperService.dateTimeZone();
+	                    var day = dt.getDate();
+	                    var month = dt.getMonth() + 1;
+	                    var year = dt.getFullYear();
+	                    var hour = dt.getHours();
+	                    var mins = dt.getMinutes();
+	                    var postfix = year.toString() + month.toString() + day.toString() + '-' + hour.toString() + mins.toString();
+
+	                    var uri = 'data:application/vnd.ms-excel;base64,'
+	                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>'
+	                    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+	                    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+
+	                    var table = document.getElementById(id);
+	                    console.log(table);
+	                    var ctx = { worksheet : name || 'Rekap_Pembayaran ' + postfix, table : table.innerHTML }
+	                    
+	                    var a = document.createElement('a');
+	                    a.href = uri + base64(format(template, ctx));
+	                    a.download = 'rekap_pembayaran_' + postfix + '.xls';
+	                    a.click();
+	                    // return false;
+	                }
+	                return download('print-rekap');
+	            },
+
+	            _title : 'Rekap Pembayaran Kwitansi ' + authService.getSekolahProfile().nama_sekolah,
+	            _titleDate : 'PER - ' + helperService.formatDateID(date),
+	        }
+
+	        function setGridToContentXLS(gridApi){
+	            var rows = gridApi.grid.rows,
+	                rdate = 'PER - ' + helperService.formatDateID(date);
+
+	            function formatValueNumber(val){
+	                if((typeof val !='undefined' && parseInt(val))){
+	                    return parseInt(val); //$filter('number')(val, 0);
+	                }
+
+	                return '';
+	            }
+
+	            function setTableData(obj){
+	                var rowdata,
+	                rowbody = [];
+	                var granttotal = 0;
+
+	                // Set Body Table
+	                for(var idx in rows){
+	                    rowdata = rows[idx].entity;
+
+	                    var no = parseInt(idx) + 1;
+	                    rowbody.push({
+                            index : no.toString(),
+                            no_kwitansi : rowdata.no_kwitansi,
+                            tgl_kwitansi : rowdata.tgl_kwitansi,
+                            nama_siswa : rowdata.nama_siswa,
+                            keterangan : rowdata.keterangan,
+                            total : formatValueNumber(rowdata.total),
+                        });
+                        granttotal += formatValueNumber(rowdata.total);
+	                }
+	                return {
+	                    rows : rowbody,
+	                    total : granttotal
+	                };
+	            }
+
+	            $scope.templateExport = {
+	                title : exportTo._title,
+	                titleDate : exportTo._titleDate,
+	                table  : setTableData(rows),
+	            }
+	        }
     	}
 
     	function printElement(elem) {
