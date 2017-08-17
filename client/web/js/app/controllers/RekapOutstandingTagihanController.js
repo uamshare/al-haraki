@@ -204,7 +204,7 @@ define(['app'], function (app) {
         $scope.month = helperService.month().options;
 
         function getData(paramdata){
-            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
             cfpLoadingBar.start();
             $resourceApi.getList(paramdata)
             .then(function (result) {
@@ -267,7 +267,7 @@ define(['app'], function (app) {
 
         $scope.onSiswaClick = function(entity, namakelas){
             var paramdata = [];
-            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
             paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
             paramdata['idrombel'] = entity.idrombel;
             cfpLoadingBar.start();

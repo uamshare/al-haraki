@@ -23,7 +23,9 @@ define(['app'], function (app) {
                 accessToken : '__access_token__',
                 userProfile : '__user_profile__',
                 sekolahProfile : '__sekolah_profile__',
-                sekolahList : '__sekolah_list__'
+                sekolahList : '__sekolah_list__',
+                tahunList : '__tahun_list__',
+                tahunSelected : '__tahun_selected__'
             }
 
             /*
@@ -141,6 +143,27 @@ define(['app'], function (app) {
             return JSON.parse(session.get('sekolahList'));
         };
 
+        factory.getTahunList = function() {
+            var session = new factory.session();
+            return JSON.parse(session.get('tahunList'));
+        };
+
+        factory.getSelectedTahun = function() {
+            var session = new factory.session();
+            return JSON.parse(session.get('tahunSelected'));
+        };
+
+        factory.setSelectedTahun = function(tahunid) {
+            var session = new factory.session();
+            var tahunList = factory.getTahunList();
+            for(var x in tahunList){
+                if(tahunList[x].id == tahunid){
+                    session.set('tahunSelected', JSON.stringify(tahunList[x]));
+                    break;
+                }
+            }
+        };
+
         factory.changeSekolahId = function(id) {
             return $http.get(serviceBase + 'sekolahs/profile/' + id).then(function (results) {
                 if(results.data.success){
@@ -173,8 +196,11 @@ define(['app'], function (app) {
                     session.set('userProfile', JSON.stringify(data.__user_profile));
                     session.set('sekolahProfile', JSON.stringify(data.__sekolah_profile));
                     session.set('sekolahList', JSON.stringify(data.__sekolah_list));
+                    session.set('tahunList', JSON.stringify(data.__tahun_list));
+                    // session.set('tahunSelected', data.__sekolah_profile.tahun_ajaran_id);
+                    factory.setSelectedTahun(data.__sekolah_profile.tahun_ajaran_id);
 
-                    console.log(session.get('sekolahList'));
+                    // console.log(factory.getSelectedTahun());
 
                     $rootScope.$broadcast('loginStatusChanged', loggedIn);
                 }

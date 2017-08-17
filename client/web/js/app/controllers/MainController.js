@@ -115,7 +115,7 @@ define(['app'], function (app) {
         function init(){
             if($location.$$url == '/keuangan/dashboard'){
               getSummary({
-                  tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+                  tahun_ajaran_id : authService.getSelectedTahun().id,
                   date : date
               });
             }

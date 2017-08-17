@@ -272,7 +272,7 @@ define(['app'], function (app) {
 				tjmhdt : date,
 				tjmhdesc : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
-				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+				tahun_ajaran_id : authService.getSelectedTahun().id,
 				created_by : null,
 				updated_by : null,
 				created_at : null,
@@ -412,7 +412,7 @@ define(['app'], function (app) {
 				$scope.form.tjmhdt = date;
 				$scope.form.tjmhdesc = '';
 				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
-				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+				$scope.form.tahun_ajaran_id = authService.getSelectedTahun().id;
 				$scope.form.created_by = '';
 				$scope.form.updated_by = '';
 				$scope.form.created_at = null;

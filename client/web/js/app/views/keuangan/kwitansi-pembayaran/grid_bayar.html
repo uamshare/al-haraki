@@ -59,7 +59,11 @@
 					<td style="width: 120px;text-align: right;">{{row1.catering | number:0}}</td>
 					<td style="width: 120px;text-align: right;">{{row1.keb_siswa | number:0}}</td>
 					<td style="width: 120px;text-align: right;">{{row1.ekskul | number:0}}</td>
-					<td style="width: 75px">{{row1.type_b}}</td>
+					<td style="width: 75px">
+						<a href="" ng-click="onRefKwitansiClick($event, row1.no_ref)"
+							ng-if="row1.no_ref != '' && row1.no_ref !=null ">
+							{{row1.type_b}} ({{row1.no_ref}})</a>
+					</td>
 				</tr>
 			</tbody>
 			<tfoot></tfoot>

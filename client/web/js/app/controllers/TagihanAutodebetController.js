@@ -395,7 +395,7 @@ define(['app'], function (app) {
                 file_import : '',
                 bulan : '',
                 tahun : '',
-                tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+                tahun_ajaran_id : authService.getSelectedTahun().id,
                 created_at : null,
                 updated_at : null,
                 created_by : '',
@@ -582,7 +582,7 @@ define(['app'], function (app) {
                 $scope.form.file_import = '';
                 $scope.form.bulan = helperService.getMonthId(date.getMonth());
                 $scope.form.tahun = date.getFullYear();
-                $scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+                $scope.form.tahun_ajaran_id = authService.getSelectedTahun().id;
                 $scope.form.created_at = null;
                 $scope.form.updated_at = null;
                 $scope.form.created_by = '',
@@ -670,7 +670,7 @@ define(['app'], function (app) {
             $scope.xlsDataValid = true;
             function mergeXlsdataAndRombel(params, xlsdata){
                 params['sekolahid'] = authService.getSekolahProfile().sekolahid;
-                params['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+                params['tahun_ajaran_id'] = authService.getSelectedTahun().id;
                 cfpLoadingBar.start();
                 SiswaRombelService.getList(params)
                 .then(function (result) {

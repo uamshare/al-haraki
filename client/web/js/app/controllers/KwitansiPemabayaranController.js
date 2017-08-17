@@ -91,7 +91,7 @@ define(['app'], function (app) {
 		    								'<a href="" ng-click="grid.appScope.onPrintClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
 		    						  		'</a>&nbsp;' +
-		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+		    						  		'<a href="" ng-click="grid.appScope.onEditClick($event, row.entity)" >' + 
 		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
 		    						  		'</a>&nbsp;' +
 		    						  		'<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
@@ -298,8 +298,9 @@ define(['app'], function (app) {
 				reset();
 			}
 
-			$scope.onEditClick = function(rowdata){
-				$location.path( "/keuangan/kwitansi-pembayaran/edit/" + rowdata.no_kwitansi);
+			$scope.onEditClick = function(event,rowdata){
+				helperService.navigateTo(event, "/keuangan/kwitansi-pembayaran/edit/" + 
+											rowdata.no_kwitansi, rowdata.no_kwitansi);
 			}
 
 			$scope.onDeleteClick = function(rowdata){
@@ -488,7 +489,7 @@ define(['app'], function (app) {
 				nama_pembayar : '',
 				nama_siswa : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
-				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+				tahun_ajaran_id : authService.getSelectedTahun().id,
 				idrombel : '',
 				keterangan : '',
 				sumber_kwitansi : '',
@@ -592,7 +593,7 @@ define(['app'], function (app) {
 				$scope.form.idrombel = '';
 				$scope.form.keterangan = '';
 				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
-				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+				$scope.form.tahun_ajaran_id = authService.getSelectedTahun().id;
 				$scope.rombel_typehead.nis = '';
 				$scope.rombel_typehead.kelas = '';
 				$scope.rombel_typehead.select = '';
@@ -632,15 +633,16 @@ define(['app'], function (app) {
 			}
 
 			function getRombel(paramdata){
-				paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+				paramdata['tahun_ajaran_id'] = $scope.form.tahun_ajaran_id;
 				cfpLoadingBar.start();
 				SiswaRombelService.getList(paramdata)
 				.then(function (result) {
 		            if(result.success){
 			            $scope.rombel = result.rows;
-			            angular.forEach(result.rows, function(dt, index) {
-			                $scope.rombel_typehead.data[index] = dt.nama_siswa;
-			            })
+			            // angular.forEach(result.rows, function(dt, index) {
+			            //     $scope.rombel_typehead.data[index] = dt.nama_siswa;
+			            // })
+			            $scope.rombel_typehead.data = result.rows;
 			            if($routeParams.id){
 			            	var idx = -1;
 							if($scope.form.idrombel != null && $scope.form.idrombel != ''){
@@ -667,6 +669,24 @@ define(['app'], function (app) {
 							}
 							
 			            }
+					}
+					cfpLoadingBar.complete();
+		        }, function(error){
+		        	toastr.warning('Siswa tidak bisa dimuat.', 'Warning');
+		        	cfpLoadingBar.complete();
+		        });
+			}
+
+			function getRombelByQuery(query){
+				var paramdata = {};
+				paramdata['tahun_ajaran_id'] = $scope.form.tahun_ajaran_id;
+				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
+				paramdata['query'] = query;
+				cfpLoadingBar.start();
+				return SiswaRombelService.getListByQuery(paramdata)
+				.then(function (result) {
+		            if(result.success){
+			            return result.rows;
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){
@@ -802,7 +822,18 @@ define(['app'], function (app) {
 	            }, errorHandle);
 			}
 
+			function getTahunAjaranSelected(tahunAjaranId){
+	            var tahunList = authService.getTahunList();
+	            for(var x in tahunList){
+	                if(tahunList[x].id == tahunAjaranId){
+	                    return tahunList[x];
+	                }
+	            }
+	            return tahunList[0];
+			}
+
 			this.init = function(){
+				$scope.tahunList = authService.getTahunList();
 				if($routeParams.id){
 					$scope.isEdit = true;
 	                getById($routeParams.id);
@@ -816,14 +847,20 @@ define(['app'], function (app) {
 	            }
 			}
 
+			$scope.onTahunidChange = function(value){
+				console.log($scope.form.tahun_ajaran_id);
+	            // $scope.form.tahun_ajaran_id = value;
+	        }
+
 			$scope.onChangeDateTrans = function(sumber_kwitansi){
 				var d = new Date($scope.form.tgl_kwitansi);
 				var selectmonth = d.getMonth() + 1;
 
 				if(sumber_kwitansi =='1'){
 					// console.log(authService.getSekolahProfile().tahun_awal);
+					var tahunList = getTahunAjaranSelected($scope.form.tahun_ajaran_id);
 					$scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
-										(authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
+										(tahunList.tahun_akhir) : tahunList.tahun_awal;
 					getInfoTagihan();
 				}else{
 					$scope.gridDetail.data = [
@@ -920,16 +957,45 @@ define(['app'], function (app) {
 				reset();
 			}
 
-			$scope.onNamaChange = function(index){
-				var index = $scope.rombel_typehead.data.indexOf($scope.rombel_typehead.select);
-				$scope.rombel_typehead.nis = ($scope.rombel[index]) ? $scope.rombel[index].nis : '';
-				$scope.rombel_typehead.kelas = ($scope.rombel[index]) ? $scope.rombel[index].kelas + ' - ' + $scope.rombel[index].nama_kelas : '';
-				$scope.form.idrombel = ($scope.rombel[index]) ? $scope.rombel[index].id : '';
-				$scope.form.nama_siswa = $scope.rombel_typehead.select;
+			// $scope.onNamaChange = function(siswa){
+			// 	console.log(siswa);
+			// 	selectSiswa(value);
+
+			// 	// var index = $scope.rombel_typehead.data.indexOf($scope.rombel_typehead.select);
+			// 	// $scope.rombel_typehead.nis = ($scope.rombel[index]) ? $scope.rombel[index].nis : '';
+			// 	// $scope.rombel_typehead.kelas = ($scope.rombel[index]) ? $scope.rombel[index].kelas + ' - ' + $scope.rombel[index].nama_kelas : '';
+			// 	// $scope.form.idrombel = ($scope.rombel[index]) ? $scope.rombel[index].id : '';
+			// 	// $scope.form.nama_siswa = $scope.rombel_typehead.select;
+			// 	if($scope.form.sumber_kwitansi == '1'){
+			// 		getInfoTagihan();
+			// 	}
+			// }
+
+			function selectSiswa(siswa){
+				$scope.rombel_typehead.nis = siswa.nis;
+				$scope.rombel_typehead.kelas = siswa.kelas + ' - ' + siswa.nama_kelas;
+				$scope.form.idrombel = siswa.id;
+				$scope.form.nama_siswa = siswa.nama_siswa;
+				$scope.$apply();
 				if($scope.form.sumber_kwitansi == '1'){
 					getInfoTagihan();
 				}
 			}
+
+			$scope.$on('$typeahead.select', function(event, value, index, elem){
+		        // console.log(event); // event properties
+		        console.log(value); // value of select
+		        // console.log(index); // index of selected value in dropdown
+		        // console.log(elem.$id);  // properties of calling element ($id to get the id)
+		        selectSiswa(value);
+			});
+
+			$scope.remoteSourceTypeHead = function(value){
+				console.log(value);
+				return getRombelByQuery(value);
+			}
+
+			
     	}
 
     	var controller;

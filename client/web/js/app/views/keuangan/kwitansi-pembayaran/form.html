@@ -38,11 +38,12 @@
 						<div class="form-group">
 							<label class="col-xs-4 col-md-3 control-label">Nama Siswa</label>
 							<div class="col-xs-8 col-md-9">
+								<!-- bs-options="siswa as siswa.nama_siswa for siswa in rombel_typehead.data" -->
 								<input type="text" class="form-control input-sm"
+									id="siswa-selected"
 									bs-typeahead 
 									ng-model="rombel_typehead.select"
-									bs-options="siswa for siswa in rombel_typehead.data"
-									ng-blur = "onNamaChange(index)"
+									bs-options="siswa as siswa.nama_siswa for siswa in remoteSourceTypeHead($viewValue)"
 									data-animation="am-flip-x"
 									placeholder="Nama Siswa">
 								<input type="hidden" class="form-control input-sm" readonly="true" 
@@ -52,7 +53,7 @@
 						<div class="form-group">
 							<label class="col-xs-4 col-md-3 control-label">NIS</label>
 							<div class="col-xs-8 col-md-9">
-								<input readonly="" ng-model="rombel_typehead.nis" type="text" 
+								<input ng-model="rombel_typehead.nis" type="text" 
 									class="form-control input-sm" placeholder="NIS">
 							</div>
 						</div>
@@ -68,15 +69,7 @@
 				</div>
 				<div class="col-xs-12 col-md-6">
 	                <fieldset>
-	                	<!-- <legend>Wali murid dari : </legend> -->
 	                	<legend>&nbsp;</legend>
-						<!-- <div class="form-group">
-							<label class="col-xs-4 col-md-3 control-label">Nama Pembayar</label>
-							<div class="col-xs-8 col-md-9">
-								<input type="text" class="form-control input-sm" ng-model="form.nama_pembayar" 
-									placeholder="Nama Pembayar">
-							</div>
-						</div> -->
 						<div class="form-group">
 							<label class="col-xs-4 col-md-3 control-label">Keterangan</label>
 							<div class="col-xs-8 col-md-9">
@@ -84,7 +77,6 @@
 							</div>
 						</div>
 	                </fieldset>
-	                <!-- /.box-body -->
 				</div>
 				<div class="col-xs-12 col-md-12" style="margin-top : 20px">
 	                <fieldset>
@@ -107,37 +99,35 @@
 									</select>
 								</div>
 		                	</div>
-		                	<div class="col-xs-12 col-md-4" ng-show="form.sumber_kwitansi == 1">
+		                	<div class="col-xs-12 col-md-7" ng-show="form.sumber_kwitansi == 1">
 		                		<div class="input-group">
-									<div class="input-group-addon"><strong>Bulan</strong></div>
-									<!-- <select
-										ng-disabled="isEdit"
-										name="month" 
-										class="form-control" 
-										ng-model="form.month"
-										ng-change="onSKSelect(form.sumber_kwitansi)"
-									>
-										<option ng-repeat="blnP in month track by blnP.id" value="{{blnP.id}}">
-										{{blnP.name}}
-										</option>
-									</select> -->
-									<button type="button" 
-										class="btn btn-defaultv btn-flat" 
-										ng-model="form.month" 
-										data-multiple="1" 
-										data-animation="am-flip-x" 
-										bs-options="blnP.id as (blnP.name) for blnP in month" 
-										bs-select
-										placeholder="Pilih Bulan"
-										all-text="All"
-										all-none-buttons=true
-									> Action <span class="caret"></span>
-									</button>
-			  								
-									<!-- <div class="input-group-addon">
-										<input type="hidden" name="year_end" ng-model="form.year" />
-										{{form.year}}
-									</div> -->
+									<span class="input-group-addon"><strong>Bulan</strong></span>
+									<div class="input-group-btn">
+										<button type="button"
+											style="width: 100%" 
+											class="btn btn-defaultv btn-flat" 
+											ng-model="form.month" 
+											data-multiple="1" 
+											data-animation="am-flip-x" 
+											bs-options="blnP.id as (blnP.name) for blnP in month" 
+											bs-select
+											placeholder="Pilih Bulan"
+											all-text="All"
+											all-none-buttons=true
+										> Action
+										</button>
+									</div>
+								
+									<span class="input-group-addon"><strong>Tahun</strong></span>
+									<div class="input-group-btn">
+										<select class="form-control" 
+							                ng-model="form.tahun_ajaran_id" 
+							                ng-change="onTahunidChange(form.tahun_ajaran_id)"
+							                ng-options="i.id as (i.tahun_ajaran) for i in tahunList">
+							                <option></option>
+							            </select>
+									</div>
+									
 								</div>
 		                	</div>
 	                	</div>

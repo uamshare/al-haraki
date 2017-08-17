@@ -100,7 +100,7 @@ define(['app'], function (app) {
             $scope.nama_sekolah = authService.getSekolahProfile().nama_sekolah;
             function get(paramdata){
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
-                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+                paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
                 cfpLoadingBar.start();
                 $resourceApi.get(paramdata)
                 .then(function (result) {

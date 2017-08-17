@@ -205,7 +205,7 @@ define(['app'], function (app) {
 		$scope.month_start = helperService.month();
 		$scope.month_end = helperService.month();
 		$scope.jenis_tagihan = 1;
-		$scope.tahun_ajaran_id = sekolahProfil.tahun_ajaran_id;
+		$scope.tahun_ajaran_id = authService.getSelectedTahun().id;
 		$scope.tahun_ajaran_name = sekolahProfil.tahun_ajaran;
 		$scope.tahun_ajaran_list = [];
 		/*********************** Action ******************************/
@@ -217,7 +217,7 @@ define(['app'], function (app) {
 		}
 
 		function getDataInfo(paramdata){
-			paramdata['tahun_ajaran_id'] = sekolahProfil.tahun_ajaran_id;
+			paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
 			cfpLoadingBar.start();
 			$resourceApi.getListActive(paramdata)
 			.then(function (result) {
@@ -248,7 +248,7 @@ define(['app'], function (app) {
 		}
 
 		function getData(paramdata){
-			paramdata['tahun_ajaran_id'] = sekolahProfil.tahun_ajaran_id;
+			paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
 			cfpLoadingBar.start();
 			$resourceApi.getList(paramdata)
 			.then(function (result) {
@@ -300,14 +300,16 @@ define(['app'], function (app) {
 					if($routeParams.idkelas){
 						// $scope.kelas.selected = $routeParams.idkelas;
 						$scope.month_start.selected = $routeParams.month;
-			            // $scope.month_start.year = sekolahProfil.tahun_awal;
+			            // $scope.month_start.year = authService.getSelectedTahun().tahun_awal;
 			            $scope.month_start.year = ($scope.month_start.selected >= 1 &&  $scope.month_start.selected <= 6) ? 
-									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
+									(authService.getSelectedTahun().tahun_akhir) : authService.getSelectedTahun().tahun_awal;
 			            $scope.month_end.selected = 6;
-			            $scope.month_end.year = sekolahProfil.tahun_akhir;
+			            $scope.month_end.year = authService.getSelectedTahun().tahun_akhir;
 					}else{
 						$scope.month.selected = helperService.getMonthId(date.getMonth());
-						$scope.month.year = date.getFullYear();
+						// $scope.month.year = date.getFullYear();
+						$scope.month.year = ($scope.month_start.selected >= 1 &&  $scope.month_start.selected <= 6) ? 
+									(authService.getSelectedTahun().tahun_akhir) : authService.getSelectedTahun().tahun_awal;
 					}
 				}
 	        }, function(error){
@@ -386,7 +388,7 @@ define(['app'], function (app) {
 
 		$scope.onSiswaClick = function(entity, namakelas){
             var paramdata = [];
-            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
             paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
             paramdata['idrombel'] = entity.idrombel;
             cfpLoadingBar.start();
@@ -408,6 +410,13 @@ define(['app'], function (app) {
                 className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
                 scope: $scope
             });
+        }
+
+        $scope.onRefKwitansiClick = function(event,NoRef){
+            var url = $location.absUrl().split('#');
+                url = url[0] + '#' + "/keuangan/kwitansi-pembayaran/edit/" + NoRef;
+            var w =  window.open(url, 'ref-windows-' + NoRef); // in new tab
+            w.onload = function() { this.document.title += ' - ' + NoRef; }
         }
         
 		$scope.toggleSelectAll = function(checked) {	
@@ -513,7 +522,7 @@ define(['app'], function (app) {
 				return false;
 			}else{
 				$scope.month.year = ($scope.month.selected >= 1 &&  $scope.month.selected <= 6) ? 
-									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
+									(authService.getSelectedTahun().tahun_akhir) : authService.getSelectedTahun().tahun_awal;
 			}
 
 			getData({
@@ -713,9 +722,9 @@ define(['app'], function (app) {
 
 		$scope.onMonthChange = function(value){
 			$scope.month_start.year = ($scope.month_start.selected >= 1 &&  $scope.month_start.selected <= 6) ? 
-									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
+									(authService.getSelectedTahun().tahun_akhir) : authService.getSelectedTahun().tahun_awal;
 			$scope.month_end.year = ($scope.month_end.selected >= 1 &&  $scope.month_end.selected <= 6) ? 
-									(sekolahProfil.tahun_akhir) : sekolahProfil.tahun_awal;
+									(authService.getSelectedTahun().tahun_akhir) : authService.getSelectedTahun().tahun_awal;
 			// $scope.gridDirtyRows = $scope.gridEdit.data;
 			getDataInfo({
 				'kelasid' : $routeParams.idkelas,
@@ -739,7 +748,7 @@ define(['app'], function (app) {
 					'kelasid' : $routeParams.idkelas,
 					'jenis_tagihan' : $scope.jenis_tagihan,
 					'month_start' : $routeParams.month, //$scope.month_start.selected
-					'year_start' : sekolahProfil.tahun_awal
+					'year_start' : authService.getSelectedTahun().tahun_awal
         		});
         		$scope.gridEdit.columnDefs[10].visible = false;
 				$scope.gridEdit.columnDefs[11].visible = false;

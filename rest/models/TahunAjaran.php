@@ -65,4 +65,13 @@ class TahunAjaran extends \yii\db\ActiveRecord
                 ? static::find(['aktif' => '1'])->asArray()->one()
                 : static::findOne(['aktif' => '1' ]);
     }
+
+    public static function findList($asArray = false){
+        $query = static::find()
+                    ->where("id <= (select id from tahun_ajaran where aktif = '1')");
+
+        return ($asArray) 
+                ? $query->asArray()
+                : $query;
+    }
 }

@@ -527,7 +527,7 @@ define(['services/routeResolver'], function () {
                             //     $location.path( "/404");
                             //     break;
                         }
-                        console.log(rejection);
+                        // console.log(rejection);
                         return rejection;
                     }
                 };

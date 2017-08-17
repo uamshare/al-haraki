@@ -129,7 +129,7 @@ define(['app'], function (app) {
 
             $scope.getList = function (paramdata){
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
-                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+                paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
                 cfpLoadingBar.start();
                 $resourceApi.getList(paramdata)
                 .then(function (result) {
@@ -359,7 +359,7 @@ define(['app'], function (app) {
                 paramdata['page'] = 1;
                 paramdata['per-page'] = 0;
                 paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
-                paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+                paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
                 paramdata['scenario'] = '1' // include all siswa;
 
                 cfpLoadingBar.start();
@@ -423,7 +423,7 @@ define(['app'], function (app) {
                 nama_siswa : '',
                 kelasid : '',
                 sekolahid : authService.getSekolahProfile().sekolahid,
-                tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+                tahun_ajaran_id : authService.getSelectedTahun().id,
             }
 
             $scope.onEditClick = function(rowdata){
