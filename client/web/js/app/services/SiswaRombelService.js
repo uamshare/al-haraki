@@ -25,7 +25,7 @@ define(['app'], function (app) {
             });
         };
 
-        factory.getListByQuery = function(paramdata) {
+        factory.getListBySiswa = function(paramdata) {
             return $http.get(serviceBase + 'siswarombels/list',{
                 params : paramdata
             }).then(function (results) {

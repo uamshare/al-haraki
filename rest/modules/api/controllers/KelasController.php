@@ -26,7 +26,7 @@ class KelasController extends \rest\modules\api\ActiveController //\yii\rest\Act
     {
         $actions = parent::actions();
         unset($actions['index']);
-        unset($actions['view']);
+        // unset($actions['view']);
         return $actions;
     }
 

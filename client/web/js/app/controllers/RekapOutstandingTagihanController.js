@@ -291,6 +291,14 @@ define(['app'], function (app) {
             });
         }
 
+        $scope.onRefKwitansiClick = function(event,NoRef){
+            var url = $location.absUrl().split('#');
+                url = url[0] + '#' + "/keuangan/kwitansi-pembayaran/edit/" + NoRef;
+            var w =  window.open(url, 'ref-windows-' + NoRef); // in new tab
+            w.onload = function() { this.document.title += ' - ' + NoRef; }
+        }
+        
+
         $scope.onSearchClick = function(event){
             if($scope.filter.kelas.length <= 0){
                 toastr.warning('Kelas tidak boleh kosong.', 'Warning');

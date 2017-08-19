@@ -550,6 +550,7 @@ define(['services/routeResolver'], function () {
                     var loggedIn = (session.get('isAuthValid') == true) ? true : false;
                     if (!loggedIn) {
                         $rootScope.$evalAsync(function () {
+                            console.log('$rootScope.$evalAsync');
                             authService.redirectToLogin();
                         });
                     }

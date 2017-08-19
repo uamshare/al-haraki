@@ -1,0 +1,58 @@
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Pilih Kelas</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="alert alert-warning">
+				<p>{{form.nama_siswa}} belum memiliki kelas di tahun ajaran {{tahun_ajaran}}.</p>
+				<p>Silahkan pilih kelas sementara.</p>
+			</div>
+	    	<form class="form-horizontal form-custome">
+	      		<div class="col-xs-12 col-md-12">
+	      			<div class="form-group">
+                  		<label for="nama_siswa" class="col-sm-3 control-label">Nama Siswa</label>
+                 		<div class="col-xs-12 col-md-9">
+	                    	<input type="text" class="form-control" name="nama_siswa" readonly="" 
+	                    		ng-model="form.nama_siswa" placeholder="Nama Siswa">
+	                 	</div>
+                	</div>
+	      			<div class="form-group">
+                  		<label for="kelas" class="col-sm-3 control-label">Kelas</label>
+                  		<div class="col-xs-12 col-md-4">
+                  			<select class="form-control" 
+                  				name="kelasid"
+				                ng-model="form.kelasid" 
+				                ng-options="i.id as (i.kelas + ' - ' + i.nama_kelas) for i in kelasList">
+				                <option></option>
+				            </select>
+                  		</div>
+                	</div>
+                	
+	      	    </div>
+	    	</form><!--endform -->
+	  	</div><!-- /.row -->
+	</div>
+	<div class="box-footer">
+		<div class="box-tools pull-right">
+			<a href="" ng-click="onCancelKelasClick()" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Close Dialog">
+				<i class="fa fa-refresh"></i> Batal
+			</a>
+			<a href="" 
+				ng-if="form.kelasid != '' && form.kelasid != null"
+				ng-click="onSaveClick($event)" 
+				class="btn btn-success btn-sm btn-flat" 
+				data-toggle="tooltip"
+				data-original-title="Simpan Data">
+				<i class="fa fa-save"></i> Simpan
+			</a>
+		</div>
+	</div>
+</div>
+
+
