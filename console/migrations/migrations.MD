@@ -13,3 +13,5 @@ yii migrate/create alter_bulan_column_to_kwitansi_pembayaran_h_table --fields="b
 ./yii migrate/create create_kelas_preschool --migrationPath=@console/migrations/change_request
 
 ./yii migrate/new --migrationPath=@console/migrations/change_request
+
+./yii migrate/create update_tahun_ajaran --migrationPath=@console/migrations/change_request
