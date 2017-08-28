@@ -803,9 +803,16 @@ define(['app'], function (app) {
             _titleDate : helperService.formatDateID(date),
         }
 
+        $scope.templateExport = {
+            title : exportTo._title,
+            titleDate : exportTo._titleDate,
+            table  : {},
+        }
+
         function setGridToContentXLS(gridApi){
-            var rows = gridApi.grid.rows,
-                rdate = helperService.formatDateID(date);
+            // var rows = gridApi.grid.rows;
+            var rows = gridApi.core.getVisibleRows(gridApi.grid);
+            var rdate = helperService.formatDateID(date);
 
             function formatValueNumber(val){
                 if((typeof val !='undefined' && parseInt(val))){
@@ -821,8 +828,8 @@ define(['app'], function (app) {
                 var _sum_spp = 0, _sum_komite_sekolah = 0, _sum_catering = 0, _sum_keb_siswa = 0, _sum_ekskul = 0;
 
                 // Set Body Table
-                for(var idx in rows){
-                    rowdata = rows[idx].entity;
+                for(var idx in obj){
+                    rowdata = obj[idx].entity;
 
                     var no = parseInt(idx) + 1;
                     rowbody.push({
@@ -840,7 +847,7 @@ define(['app'], function (app) {
                     _sum_keb_siswa += formatValueNumber(rowdata.keb_siswa);
                     _sum_ekskul += formatValueNumber(rowdata.ekskul);
                 }
-                return {
+                $scope.templateExport.table = {
                     rows : rowbody,
                     sum_spp : _sum_spp,
                     sum_komite_sekolah : _sum_komite_sekolah,
@@ -850,11 +857,10 @@ define(['app'], function (app) {
                 };
             }
 
-            $scope.templateExport = {
-                title : exportTo._title,
-                titleDate : exportTo._titleDate,
-                table  : setTableData(rows),
-            }
+            $timeout(function () {
+			    setTableData(rows);
+			}, 300);
+            
         }
 
 		$scope.$on('$viewContentLoaded', function(){

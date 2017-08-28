@@ -284,7 +284,8 @@ define(['app'], function (app) {
 
         $scope.onSiswaClick = function(entity, namakelas){
             var paramdata = [];
-            paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
+            // paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
+            paramdata['tahun_ajaran_id'] = entity.tahun_ajaran_id;
             paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
             paramdata['idrombel'] = entity.idrombel;
             cfpLoadingBar.start();

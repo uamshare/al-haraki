@@ -354,27 +354,31 @@ define(['app'], function (app) {
 	            _titleDate : 'PER - ' + helperService.formatDateID(date),
 	        }
 
+	        $scope.templateExport = {
+                title : exportTo._title,
+                titleDate : exportTo._titleDate,
+                table  : {},
+            }
+
 	        function setGridToContentXLS(gridApi){
-	            var rows = gridApi.grid.rows,
-	                rdate = 'PER - ' + helperService.formatDateID(date);
+	            // var rows = gridApi.grid.rows;
+	            var rows = gridApi.core.getVisibleRows(gridApi.grid);
+	            var rdate = 'PER - ' + helperService.formatDateID(date);
 
 	            function formatValueNumber(val){
 	                if((typeof val !='undefined' && parseInt(val))){
 	                    return parseInt(val); //$filter('number')(val, 0);
 	                }
-
 	                return '';
 	            }
 
 	            function setTableData(obj){
-	                var rowdata,
-	                rowbody = [];
+	                var rowdata;
+	                var rowbody = [];
 	                var granttotal = 0;
-
 	                // Set Body Table
-	                for(var idx in rows){
-	                    rowdata = rows[idx].entity;
-
+	                for(var idx in obj){
+	                    rowdata = obj[idx].entity;
 	                    var no = parseInt(idx) + 1;
 	                    rowbody.push({
                             index : no.toString(),
@@ -386,17 +390,15 @@ define(['app'], function (app) {
                         });
                         granttotal += formatValueNumber(rowdata.total);
 	                }
-	                return {
+	                $scope.templateExport.table =  {
 	                    rows : rowbody,
 	                    total : granttotal
 	                };
 	            }
 
-	            $scope.templateExport = {
-	                title : exportTo._title,
-	                titleDate : exportTo._titleDate,
-	                table  : setTableData(rows),
-	            }
+	            $timeout(function () {
+				    setTableData(rows);
+				}, 300);
 	        }
     	}
 
