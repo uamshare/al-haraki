@@ -184,19 +184,6 @@ class KwitansiPembayaranH extends \rest\models\AppActiveRecord // \yii\db\Active
             $savedD->execute();
 
             if($rowPembayaran != false){
-                // if($id){
-                //     $savedP = $DB->createCommand()->update(
-                //         'tagihan_pembayaran',
-                //         $rowPembayaran,
-                //         ['no_ref' => $id]
-                //     );
-                // }else{
-                //     $savedP = $DB->createCommand()->insert(
-                //         'tagihan_pembayaran',
-                //         $rowPembayaran
-                //     );
-                // }
-                
                 $deleteP = $DB->createCommand()->delete(
                     'tagihan_pembayaran',
                     'no_ref = :param1',

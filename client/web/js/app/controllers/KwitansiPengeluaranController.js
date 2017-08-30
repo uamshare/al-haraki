@@ -338,15 +338,21 @@ define(['app'], function (app) {
 	            _titleDate : 'PER - ' + helperService.formatDateID(date),
 	        }
 
+	        $scope.templateExport = {
+                title : exportTo._title,
+                titleDate : exportTo._titleDate,
+                table  : {},
+            }
+
 	        function setGridToContentXLS(gridApi){
-	            var rows = gridApi.grid.rows,
-	                rdate = 'PER - ' + helperService.formatDateID(date);
+	        	// var rows = gridApi.grid.rows;
+	            var rows = gridApi.core.getVisibleRows(gridApi.grid);
+	            var rdate = 'PER - ' + helperService.formatDateID(date);
 
 	            function formatValueNumber(val){
 	                if((typeof val !='undefined' && parseInt(val))){
 	                    return parseInt(val); //$filter('number')(val, 0);
 	                }
-
 	                return '';
 	            }
 
@@ -356,8 +362,8 @@ define(['app'], function (app) {
 	                var granttotal = 0;
 
 	                // Set Body Table
-	                for(var idx in rows){
-	                    rowdata = rows[idx].entity;
+	                for(var idx in obj){
+	                    rowdata = obj[idx].entity;
 
 	                    var no = parseInt(idx) + 1;
 	                    rowbody.push({
@@ -370,17 +376,15 @@ define(['app'], function (app) {
                         });
                         granttotal += formatValueNumber(rowdata.total);
 	                }
-	                return {
+	                $scope.templateExport.table = {
 	                    rows : rowbody,
 	                    total : granttotal
 	                };
 	            }
 
-	            $scope.templateExport = {
-	                title : exportTo._title,
-	                titleDate : exportTo._titleDate,
-	                table  : setTableData(rows),
-	            }
+	            $timeout(function () {
+				    setTableData(rows);
+				}, 300);
 	        }
     	}
 
@@ -457,7 +461,7 @@ define(['app'], function (app) {
 				keterangan : '',
 				nik : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
-				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+				tahun_ajaran_id : authService.getSelectedTahun().id,
 				created_by : null,
 				updated_by : null,
 				created_at : null,
@@ -544,7 +548,7 @@ define(['app'], function (app) {
 				$scope.form.nik = '';
 				$scope.form.keterangan = '';
 				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
-				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+				$scope.form.tahun_ajaran_id = authService.getSelectedTahun().id;
 				$scope.form.created_by = '';
 				$scope.form.updated_by = '';
 				$scope.form.created_at = null;

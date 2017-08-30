@@ -69,6 +69,7 @@ class AuthController extends \rest\modules\api\ActiveController //\yii\rest\Acti
                 '__user_profile' => $user->profile,
                 '__sekolah_profile' => \rest\models\Sekolah::getProfile($sekolahid),
                 '__sekolah_list' => \rest\models\Sekolah::find()->All(),
+                '__tahun_list' => \rest\models\TahunAjaran::findList()->All(),
             ];
 
             $data = array_merge($data);

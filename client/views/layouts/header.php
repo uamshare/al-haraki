@@ -20,11 +20,15 @@ use yii\helpers\Html;
                 ng-model="sekolahid_selected" 
                 ng-change="onSekolahidChange(sekolahid_selected)"
                 ng-options="i.id as (i.id + ' - ' + i.nama) for i in sekolahList">
-                <!-- <option value="1">1 - SDIT AL Haraki</option>
-                <option value="2">2 - SMPIT AL Haraki</option> -->
                 <option></option>
-                <!-- <option ng-repeat="list in sekolahList"
-                        value="{{list.id}}">{{list.id}} - {{list.nama}} {{sekolahid_selected}}</option> -->
+            </select>
+        </div>
+        <div class="navbar-brand">
+            <select class="form-control" 
+                ng-model="tahunid_selected" 
+                ng-change="onTahunidChange(tahunid_selected)"
+                ng-options="i.id as (i.tahun_ajaran) for i in tahunList">
+                <option></option>
             </select>
         </div>
         

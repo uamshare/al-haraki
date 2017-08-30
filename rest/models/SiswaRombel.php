@@ -118,22 +118,31 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
         return $this->hasMany(TagihanPembayaran::className(), ['idrombel' => 'id']);
     }
 
-    private function where($data){
+    private function where($data, $operator = "="){
         $commaData = explode(",", $data);
-        $impl = array();
-        for($i=0; $i<count($commaData); $i++){
-            $impl[$i] = "'{$commaData[$i]}'";
-        }
+        if(count($commaData) > 1){
+            $impl = array();
+            for($i=0; $i<count($commaData); $i++){
+                $impl[$i] = "'{$commaData[$i]}'";
+            }
 
-        $implode = implode(",", $impl);
-
-        if(count($impl) > 1)
+            $implode = implode(",", $impl);
             return " IN ($implode) ";
-        else
-            return " = $implode";
+        }else{
+            $implode = $data;
+            switch ($operator) {
+                case 'like':
+                    return " LIKE '%$implode%'";
+                    break;
+                
+                default:
+                    return " $operator '$implode'";
+                    break;
+            }
+        }
     }
 
-    public function getList($params){
+    public function getList($params, $orderByString = "c.`sekolahid`, a.`kelasid`, b.`nis`"){
         extract($params);
         $where = 'WHERE 1=1';
 
@@ -146,7 +155,14 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
         }
 
         if($nama_siswa){
-            $where .= ' AND nama_siswa ' . $this->where($nama_siswa);
+            if(is_array($nama_siswa) && isset($nama_siswa[1])){
+                $where .= ' AND nama_siswa ' . $this->where($nama_siswa[0], $nama_siswa[1]);
+            }
+
+            if(is_string($nama_siswa)){
+                $where .= ' AND nama_siswa ' . $this->where($nama_siswa);
+            }
+            
         }
 
         if($kelas){
@@ -190,7 +206,51 @@ class SiswaRombel extends \rest\models\AppActiveRecord //\yii\db\ActiveRecord
             FROM siswa_rombel a
             INNER JOIN siswa b ON a.`siswaid` = b.`id`
             INNER JOIN kelas c ON a.`kelasid` = c.`id` $where
-            ORDER BY c.`sekolahid`, a.`kelasid`, b.`nis`";
+            ORDER BY $orderByString";
+
+        $conn = $this->getDb();
+        $customeQuery = $conn->createCommand($sqlCustoms);
+        // var_dump($customeQuery->rawSql);exit();
+        return $customeQuery->queryAll();
+    }
+
+    public function getListBySiswa($params, $orderByString = "c.`sekolahid`, a.`kelasid`, b.`nis`"){
+        extract($params);
+        $where = 'WHERE 1=1';
+
+        if($nama_siswa){
+            if(is_array($nama_siswa) && isset($nama_siswa[1])){
+                $where .= ' AND nama_siswa ' . $this->where($nama_siswa[0], $nama_siswa[1]);
+            }
+
+            if(is_string($nama_siswa)){
+                $where .= ' AND nama_siswa ' . $this->where($nama_siswa);
+            }
+            
+        }
+
+        if($sekolahid){
+            $where .= ' AND b.sekolahid ' . $this->where($sekolahid);
+        }
+
+        $sqlCustoms = "SELECT a.`id`,
+              b.id as `siswaid`,
+              b.`nis`,
+              b.`nisn`,
+              b.`nama_siswa`,
+              a.`kelasid`,
+              c.kelas,
+              c.`nama_kelas`,
+              b.`sekolahid`,
+              a.`tahun_ajaran_id`,
+              a.`created_at`,
+              a.`updated_at`
+            FROM siswa b
+            LEFT JOIN (select * from siswa_rombel where tahun_ajaran_id = $tahun_ajaran_id) a 
+                ON a.`siswaid` = b.`id`
+            LEFT JOIN kelas c ON a.`kelasid` = c.`id` 
+            $where
+            ORDER BY $orderByString";
 
         $conn = $this->getDb();
         $customeQuery = $conn->createCommand($sqlCustoms);

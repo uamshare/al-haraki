@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$http', '$rootScope','authService'];
+    var injectParams = ['$http', '$rootScope','authService', '$location'];
 
-    var helperService = function ($http, $rootScope, authService) {
+    var helperService = function ($http, $rootScope, authService, $location) {
         var serviceBase = BASEAPIURL,
             factory = {
                 loginPath: 'auths/login',
@@ -205,6 +205,17 @@ define(['app'], function (app) {
             delimeter = (typeof delimeter == 'undefined') ? '/' : delimeter;
             var date = factory.dateTimeZone(date);
             return date.getFullYear()  + delimeter + (date.getMonth() + 1) + delimeter + date.getDate();
+        }
+
+        factory.navigateTo = function(event, _url, title){
+            if(event.altKey){
+                var url = $location.absUrl().split('#');
+                    url = url[0] + '#' + _url;
+                var w =  window.open(url, 'ref-windows-' + title); // in new tab
+                w.onload = function() { this.document.title += ' - ' + title; }
+            }else{
+                $location.path( _url);
+            }
         }
 
         return factory;

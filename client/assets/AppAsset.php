@@ -36,8 +36,12 @@ class AppAsset extends AssetBundle
         'plugins/angular-cookies/angular-cookies.min.js',
         'plugins/angular-toastr/angular-toastr.tpls.min.js',
         'plugins/angular-sanitize/angular-sanitize.min.js',
+
         'plugins/angular-strap/dist/angular-strap.min.js',
         'plugins/angular-strap/dist/angular-strap.tpl.min.js',
+        // 'http://mgcrea.github.io/angular-strap/dist/angular-strap.min.js',
+        // 'http://mgcrea.github.io/angular-strap/dist/angular-strap.tpl.min.js',
+
         'plugins/angular-loading-bar-master/loading-bar.min.js',
 
         // 'plugins/chartjs/Chart.min.js',

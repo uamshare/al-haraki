@@ -92,6 +92,10 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
 
+        if(!isset($form['idrombel']) || empty($form['idrombel'])){
+            $form['idrombel'] = $this->addNewRombel($form['siswaid'], $form['kelasid'], $form['tahun_ajaran_id']);
+        }
+
         $form['sekolahid'] = isset($form['sekolahid']) ? $form['sekolahid'] : 0;
         
         if($id == false){
@@ -108,7 +112,9 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         if($form['sumber_kwitansi'] == 1){
             $bulanTagihan = $form['month']; //explode(',', $form['month']);
             $pembayaran = [];
-            $tahunAjaran = \rest\models\TahunAjaran::getActive();
+            // $tahunAjaran = \rest\models\TahunAjaran::getActive();
+            $tahunAjaran = \rest\models\TahunAjaran::getById($form['tahun_ajaran_id']);
+            
             foreach ($bulanTagihan as $bln) {
                 if($bln >= 7 && $bln <= 12 ){
                     $year = $tahunAjaran->tahun_awal;
@@ -117,38 +123,39 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                 }
                 
                 $outtp = \rest\models\TagihanPembayaran::find()
-                                                        ->select([
-                                                            '`id`',
-                                                            '`idrombel`',
-                                                            'SUM(`spp_debet`) AS `spp_debet`',
-                                                            'SUM(`spp_kredit`) AS `spp_kredit`',
-                                                            'SUM(`komite_sekolah_debet`) AS `komite_sekolah_debet`',
-                                                            'SUM(`komite_sekolah_kredit`) AS `komite_sekolah_kredit`',
-                                                            'SUM(`catering_debet`) AS `catering_debet`',
-                                                            'SUM(`catering_kredit`) AS `catering_kredit`',
-                                                            'SUM(`keb_siswa_debet`) AS `keb_siswa_debet`',
-                                                            'SUM(`keb_siswa_kredit`) AS `keb_siswa_kredit`',
-                                                            'SUM(`ekskul_debet`) AS `ekskul_debet`',
-                                                            'SUM(`ekskul_kredit`) AS `ekskul_kredit`',
-                                                            '`bulan`',
-                                                            '`tahun`',
-                                                            '`tahun_ajaran`',
-                                                            '`no_ref`',
-                                                            '`ket_ref`',
-                                                            '`keterangan`',
-                                                            '`created_at`',
-                                                            '`updated_at`',
-                                                            '`tgl_ref`'
-                                                        ])
-                                                        ->where([
-                                                            'idrombel' => $form['idrombel'],
-                                                            'bulan' => $bln,
-                                                            'tahun' => $year
-                                                        ])
-                                                        ->andWhere(['<>','no_ref', $form['no_kwitansi']])
-                                                        ->groupBy('idrombel')
+                        ->select([
+                            '`id`',
+                            '`idrombel`',
+                            'SUM(`spp_debet`) AS `spp_debet`',
+                            'SUM(`spp_kredit`) AS `spp_kredit`',
+                            'SUM(`komite_sekolah_debet`) AS `komite_sekolah_debet`',
+                            'SUM(`komite_sekolah_kredit`) AS `komite_sekolah_kredit`',
+                            'SUM(`catering_debet`) AS `catering_debet`',
+                            'SUM(`catering_kredit`) AS `catering_kredit`',
+                            'SUM(`keb_siswa_debet`) AS `keb_siswa_debet`',
+                            'SUM(`keb_siswa_kredit`) AS `keb_siswa_kredit`',
+                            'SUM(`ekskul_debet`) AS `ekskul_debet`',
+                            'SUM(`ekskul_kredit`) AS `ekskul_kredit`',
+                            '`bulan`',
+                            '`tahun`',
+                            '`tahun_ajaran`',
+                            '`no_ref`',
+                            '`ket_ref`',
+                            '`keterangan`',
+                            '`created_at`',
+                            '`updated_at`',
+                            '`tgl_ref`'
+                        ])
+                        ->where([
+                            'idrombel' => $form['idrombel'],
+                            'bulan' => $bln,
+                            'tahun' => $year
+                        ])
+                        ->andWhere(['<>','no_ref', $form['no_kwitansi']])
+                        ->groupBy('idrombel')
                 // echo $outtp->createCommand()->rawSql;exit();
-                                                        ->One();
+                        ->One();
+
                 $pembayaran[] = [
                     'idrombel' => $form['idrombel'],
                     'spp_debet' => ($outtp) ? ($outtp->spp_kredit - $outtp->spp_debet) : 0,
@@ -214,18 +221,14 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                         $count++;
                     }
                 }
-                
             }
         }
-
         
         $form['tahun_ajaran_id'] = isset($form['tahun_ajaran_id']) ? $form['tahun_ajaran_id'] : $TahunAjaran->id;
         $form['created_by'] = isset($form['created_by']) ? $form['created_by'] : \Yii::$app->user->getId();
         $form['updated_by'] = \Yii::$app->user->getId();
         $form['created_at'] = isset($form['created_at']) ? $form['created_at'] : $date;
         $form['updated_at'] = $date;
-
-        
 
         // Set posting value
         $postingValue = [
@@ -236,6 +239,8 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
                                         ' Bulan ' . implode(",", $form['month']),
             'sekolahid'            => $form['sekolahid'],
             'tahun_ajaran_id'      => $form['tahun_ajaran_id'],
+            'tahun_ajaran_id_old'  => isset($form['tahun_ajaran_id_old']) ? 
+                                            $form['tahun_ajaran_id_old'] : $form['tahun_ajaran_id'],
             'fk_id'                => isset($form['idrombel']) ? $form['idrombel'] : substr($form['no_kwitansi'], -5),
             'created_at'           => $form['created_at'],   
             'updated_at'           => $form['updated_at'],
@@ -243,16 +248,26 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
             'updated_by'           => $form['updated_by']
         ];
 
+        unset($form['siswaid']);
         unset($form['nama_siswa']);
         unset($form['kelas']);
+        unset($form['kelasid']);
         unset($form['nama_kelas']);
+        unset($form['tahun_ajaran_id_old']);
         $form['bulan'] = implode(",", $form['month']);
         $form['tahun'] = $form['year'];
         unset($form['month']);
         unset($form['year']);
 
-        // return $pembayaran;
-        // var_dump($pembayaran);exit();
+        // var_dump([
+        //     'rowHeader' => $form,
+        //     'rowDetail' => $attrvalue,
+        //     'rowDetailDel' => $flagdelete,
+        //     'rowPembayaran' => $pembayaran,
+        //     'postingValue' => $postingValue,
+        //     'tagihanvalue' => $tagihanvalue
+        // ]);
+        // exit();
 
         $model = new $this->modelClass;
         $result = $model->saveAndPosting([
@@ -271,6 +286,27 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         }
         // return $result;
         return $form['no_kwitansi'];
+    }
+
+    private function addNewRombel($siswaid, $kelasid, $tahunAjaranId){
+        $rombel = \rest\models\SiswaRombel::find()
+                    ->where("siswaid = '$siswaid' AND kelasid = '$kelasid' AND tahun_ajaran_id = $tahunAjaranId")
+                    ->one();
+        if(!$rombel){
+            $rombel = new \rest\models\SiswaRombel();
+        }
+        
+        $rombel->siswaid = $siswaid;
+        $rombel->kelasid = $kelasid;
+        $rombel->tahun_ajaran_id = $tahunAjaranId;
+
+        if($rombel->save()){
+            return $rombel->id;
+        }else{
+            \Yii::error( $rombel->getErrors(), $category = 'database' );
+        }
+
+        return null;
     }
 
     public function actionDelete($id){

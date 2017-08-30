@@ -19,6 +19,7 @@ define(['app'], function (app) {
     		'SiswaRombelService',
     		'TagihanInfoService',
     		'authService',
+    		'KelasService',
     		'$filter'
     	];
 
@@ -40,6 +41,7 @@ define(['app'], function (app) {
 		SiswaRombelService,
 		TagihanInfoService,
 		authService,
+		KelasService,
 		$filter
 	) 
     {
@@ -91,7 +93,7 @@ define(['app'], function (app) {
 		    								'<a href="" ng-click="grid.appScope.onPrintClick(row.entity)" >' + 
 		    						  			'<span class="badge bg-orange"><i class="fa fa-print"></i></span>' + 
 		    						  		'</a>&nbsp;' +
-		    						  		'<a href="" ng-click="grid.appScope.onEditClick(row.entity)" >' + 
+		    						  		'<a href="" ng-click="grid.appScope.onEditClick($event, row.entity)" >' + 
 		    						  			'<span class="badge bg-blue"><i class="fa fa-edit"></i></span>' + 
 		    						  		'</a>&nbsp;' +
 		    						  		'<a href="" ng-click="grid.appScope.onDeleteClick(row.entity)" >' + 
@@ -298,8 +300,9 @@ define(['app'], function (app) {
 				reset();
 			}
 
-			$scope.onEditClick = function(rowdata){
-				$location.path( "/keuangan/kwitansi-pembayaran/edit/" + rowdata.no_kwitansi);
+			$scope.onEditClick = function(event,rowdata){
+				helperService.navigateTo(event, "/keuangan/kwitansi-pembayaran/edit/" + 
+											rowdata.no_kwitansi, rowdata.no_kwitansi);
 			}
 
 			$scope.onDeleteClick = function(rowdata){
@@ -335,7 +338,7 @@ define(['app'], function (app) {
 	                    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
 
 	                    var table = document.getElementById(id);
-	                    console.log(table);
+	                    // console.log(table);
 	                    var ctx = { worksheet : name || 'Rekap_Pembayaran ' + postfix, table : table.innerHTML }
 	                    
 	                    var a = document.createElement('a');
@@ -351,27 +354,31 @@ define(['app'], function (app) {
 	            _titleDate : 'PER - ' + helperService.formatDateID(date),
 	        }
 
+	        $scope.templateExport = {
+                title : exportTo._title,
+                titleDate : exportTo._titleDate,
+                table  : {},
+            }
+
 	        function setGridToContentXLS(gridApi){
-	            var rows = gridApi.grid.rows,
-	                rdate = 'PER - ' + helperService.formatDateID(date);
+	            // var rows = gridApi.grid.rows;
+	            var rows = gridApi.core.getVisibleRows(gridApi.grid);
+	            var rdate = 'PER - ' + helperService.formatDateID(date);
 
 	            function formatValueNumber(val){
 	                if((typeof val !='undefined' && parseInt(val))){
 	                    return parseInt(val); //$filter('number')(val, 0);
 	                }
-
 	                return '';
 	            }
 
 	            function setTableData(obj){
-	                var rowdata,
-	                rowbody = [];
+	                var rowdata;
+	                var rowbody = [];
 	                var granttotal = 0;
-
 	                // Set Body Table
-	                for(var idx in rows){
-	                    rowdata = rows[idx].entity;
-
+	                for(var idx in obj){
+	                    rowdata = obj[idx].entity;
 	                    var no = parseInt(idx) + 1;
 	                    rowbody.push({
                             index : no.toString(),
@@ -383,17 +390,15 @@ define(['app'], function (app) {
                         });
                         granttotal += formatValueNumber(rowdata.total);
 	                }
-	                return {
+	                $scope.templateExport.table =  {
 	                    rows : rowbody,
 	                    total : granttotal
 	                };
 	            }
 
-	            $scope.templateExport = {
-	                title : exportTo._title,
-	                titleDate : exportTo._titleDate,
-	                table  : setTableData(rows),
-	            }
+	            $timeout(function () {
+				    setTableData(rows);
+				}, 300);
 	        }
     	}
 
@@ -486,9 +491,11 @@ define(['app'], function (app) {
 				no_kwitansi : '',
 				tgl_kwitansi : '',
 				nama_pembayar : '',
+				siswaid : '',
+				kelasid : '',
 				nama_siswa : '',
 				sekolahid : authService.getSekolahProfile().sekolahid,
-				tahun_ajaran_id : authService.getSekolahProfile().tahun_ajaran_id,
+				tahun_ajaran_id : authService.getSelectedTahun().id,
 				idrombel : '',
 				keterangan : '',
 				sumber_kwitansi : '',
@@ -592,7 +599,7 @@ define(['app'], function (app) {
 				$scope.form.idrombel = '';
 				$scope.form.keterangan = '';
 				$scope.form.sekolahid = authService.getSekolahProfile().sekolahid;
-				$scope.form.tahun_ajaran_id = authService.getSekolahProfile().tahun_ajaran_id;
+				$scope.form.tahun_ajaran_id = authService.getSelectedTahun().id;
 				$scope.rombel_typehead.nis = '';
 				$scope.rombel_typehead.kelas = '';
 				$scope.rombel_typehead.select = '';
@@ -631,42 +638,22 @@ define(['app'], function (app) {
 		        });
 			}
 
-			function getRombel(paramdata){
-				paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+			function getRombelBySiswa(namaSiswa, callback){
+				var paramdata = {};
+				paramdata['tahun_ajaran_id'] = $scope.form.tahun_ajaran_id;
+				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
+				paramdata['nama_siswa'] = namaSiswa;
+				paramdata['scenario'] = 2;
+
 				cfpLoadingBar.start();
-				SiswaRombelService.getList(paramdata)
+				return SiswaRombelService.getListBySiswa(paramdata)
 				.then(function (result) {
 		            if(result.success){
-			            $scope.rombel = result.rows;
-			            angular.forEach(result.rows, function(dt, index) {
-			                $scope.rombel_typehead.data[index] = dt.nama_siswa;
-			            })
-			            if($routeParams.id){
-			            	var idx = -1;
-							if($scope.form.idrombel != null && $scope.form.idrombel != ''){
-								for(var x in $scope.rombel){
-									idx = parseInt(x);
-									if($scope.rombel[idx].id == $scope.form.idrombel){
-										break;
-									}
-								}
-							}else{
-								console.log('idrombel : ' + $scope.form.idrombel);
-							}
-
-							$scope.rombel_typehead.select = (idx == -1) ? '' : $scope.rombel_typehead.data[idx];
-							$scope.rombel_typehead.nis = (idx == -1) ? '' : $scope.rombel[idx].nis;
-							$scope.rombel_typehead.kelas = (idx == -1) ? '' : $scope.rombel[idx].kelas + ' - ' + $scope.rombel[idx].nama_kelas;
-
-							$scope.form.nama_siswa = $scope.rombel_typehead.select;
-							if($scope.form.nama_pembayar == ''){
-								$scope.form.nama_pembayar = $scope.rombel_typehead.select;
-							}else if($scope.form.nama_siswa == ''){
-								$scope.form.nama_siswa = $scope.form.nama_pembayar;
-								$scope.rombel_typehead.select = $scope.form.nama_pembayar;
-							}
-							
-			            }
+		            	$scope.rombel_typehead.data = result.rows;
+		            	if(typeof callback == 'function' && result.rows.length > 0){
+		            		callback(result.rows[0])
+		            	}
+			            return result.rows;
 					}
 					cfpLoadingBar.complete();
 		        }, function(error){
@@ -688,7 +675,7 @@ define(['app'], function (app) {
 			}
 
 			function getInfoTagihan(){
-				if($scope.form.idrombel == '' || $scope.form.idrombel == null){
+				if($scope.form.nama_siswa == '' || $scope.form.nama_siswa == null){
 					toastr.warning('Nama siswa belum diisi.', 'Warning');
 					return false;
 				}
@@ -778,10 +765,12 @@ define(['app'], function (app) {
 						$scope.form.no_kwitansi = rowdata.no_kwitansi;
 						$scope.form.tgl_kwitansi = rowdata.tgl_kwitansi;
 						$scope.form.nama_pembayar = rowdata.nama_pembayar;
+						
 						$scope.form.idrombel = rowdata.idrombel;
 						$scope.form.keterangan = rowdata.keterangan;
 						$scope.form.sekolahid = rowdata.sekolahid;
 						$scope.form.tahun_ajaran_id = rowdata.tahun_ajaran_id;
+						$scope.form.tahun_ajaran_id_old = rowdata.tahun_ajaran_id;
 						$scope.form.sumber_kwitansi = rowdata.sumber_kwitansi;
 						$scope.form.month = rowdata.bulan.split(',');
 						for(var idx in $scope.form.month){
@@ -790,11 +779,15 @@ define(['app'], function (app) {
 						$scope.form.year = rowdata.tahun;
 						$scope.form.created_by = rowdata.created_by;
 						$scope.form.created_at = rowdata.created_at;
-						
 
-						getRombel({
-							sekolahid : authService.getSekolahProfile().sekolahid
-						});
+						// getRombel({
+						// 	sekolahid : authService.getSekolahProfile().sekolahid
+						// });
+						$scope.remoteSourceTypeHead($scope.form.nama_pembayar, function(siswa){
+							$scope.form.nama_siswa = rowdata.nama_pembayar;
+							$scope.rombel_typehead.select = $scope.form.nama_siswa
+			            	selectSiswa(siswa);
+			            });
 						
 						getRowDetailByNo(rowdata.no_kwitansi);
 					}
@@ -802,7 +795,60 @@ define(['app'], function (app) {
 	            }, errorHandle);
 			}
 
+			function getTahunAjaranSelected(tahunAjaranId){
+	            var tahunList = authService.getTahunList();
+	            for(var x in tahunList){
+	                if(tahunList[x].id == tahunAjaranId){
+	                    return tahunList[x];
+	                }
+	            }
+	            return tahunList[0];
+			}
+
+			function getKelasSelected(kelasid){
+	            var kelaslist = $scope.kelasList;
+	            for(var x in kelaslist){
+	                if(kelaslist[x].id == kelasid){
+	                    return kelaslist[x];
+	                }
+	            }
+	            return null;
+			}
+
+			function selectSiswa(siswa, loadInfo = false){
+				$scope.rombel_typehead.nis = (siswa.nis == null) ? '' : siswa.nis;
+				if(siswa.kelas != null){
+					$scope.rombel_typehead.kelas = siswa.kelas + ' - ' + siswa.nama_kelas;
+				}else{
+					$scope.rombel_typehead.kelas = '';
+				}
+				
+				$scope.form.idrombel = siswa.id;
+				$scope.form.siswaid = siswa.siswaid;
+				$scope.form.nama_siswa = (siswa.nama_siswa == null) ? '' : siswa.nama_siswa;
+				if($scope.form.sumber_kwitansi == '1' && loadInfo){
+					getInfoTagihan();
+				}
+			}
+
+			function getkelas(params){
+                KelasService.getList(params)
+                .then(function (result) {
+                    if(result.success){
+                        $scope.kelasList = result.rows;
+                    }   
+                }, function(error){
+                    toastr.warning('Kelas tidak bisa dimuat. Silahkan klik tombol tambah', 'Warning');
+                });
+            }
+
 			this.init = function(){
+				$scope.tahunList = authService.getTahunList();
+				getkelas({
+                    page : 1,
+                    "per-page" : 0,
+                    sekolahid : authService.getSekolahProfile().sekolahid
+                });
 				if($routeParams.id){
 					$scope.isEdit = true;
 	                getById($routeParams.id);
@@ -810,11 +856,60 @@ define(['app'], function (app) {
 	            	$scope.isEdit = false;
 	                refreshNo();
 					reset();
-					getRombel({
-						sekolahid : authService.getSekolahProfile().sekolahid
-					});
+					// getRombel({
+					// 	sekolahid : authService.getSekolahProfile().sekolahid
+					// });
 	            }
 			}
+
+			$scope.onChoseKelasClick = function(){
+				var tahunList = getTahunAjaranSelected($scope.form.tahun_ajaran_id);
+				$scope.tahun_ajaran = tahunList.tahun_ajaran;
+                ngDialog.open({
+                    template: $scope.viewdir + 'form_kelas.html',
+                    className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-50',
+                    scope: $scope,
+                    width: '100%',
+                    height: '100%'
+                });
+                // $scope.formEdit.kelasid = rowdata.kelasid;
+            }
+
+            $scope.onCancelKelasClick = function(){
+                $scope.form.kelasid = '';
+                ngDialog.close();
+            }
+
+			/**
+			 * 
+			 * @param object event properties
+		     * @param mixed value of select
+		     * @param int index of selected value in dropdown
+		     * @param object properties of calling element ($id to get the id)
+		     */
+			$scope.$on('$typeahead.select', function(event, value, index, elem){
+		        if($scope.form.nama_siswa != value.nama_siswa){
+		        	selectSiswa(value, true);
+		        	$scope.$apply();
+		        }
+		        
+			});
+			
+			$scope.remoteSourceTypeHead = function(value, callback){
+				if(value && value.length >= 3){
+					return getRombelBySiswa(value, callback);
+				}
+				return null;
+			}
+
+			$scope.onTahunidChange = function(value){
+	            if($scope.form.nama_siswa != '' && $scope.form.nama_siswa != null){
+	            	$scope.remoteSourceTypeHead($scope.form.nama_siswa, function(siswa){
+		            	selectSiswa(siswa);
+						$scope.form.year = date.getFullYear();
+		            });
+	            }
+	        }
 
 			$scope.onChangeDateTrans = function(sumber_kwitansi){
 				var d = new Date($scope.form.tgl_kwitansi);
@@ -822,8 +917,9 @@ define(['app'], function (app) {
 
 				if(sumber_kwitansi =='1'){
 					// console.log(authService.getSekolahProfile().tahun_awal);
+					var tahunList = getTahunAjaranSelected($scope.form.tahun_ajaran_id);
 					$scope.form.year = (selectmonth >= 1 &&  selectmonth <= 6) ? 
-										(authService.getSekolahProfile().tahun_akhir) : authService.getSekolahProfile().tahun_awal;
+										(tahunList.tahun_akhir) : tahunList.tahun_awal;
 					getInfoTagihan();
 				}else{
 					$scope.gridDetail.data = [
@@ -855,6 +951,23 @@ define(['app'], function (app) {
 					return false;
 				}
 				
+				if((typeof $scope.form.idrombel == 'undefined'
+					|| $scope.form.idrombel == null 
+					|| $scope.form.idrombel == '') && 
+					(typeof $scope.form.kelasid == 'undefined'
+					|| $scope.form.kelasid == null 
+					|| $scope.form.kelasid == '')
+				){
+					$scope.onChoseKelasClick();
+					return;
+				}
+				ngDialog.close();
+				var kelasSelected = getKelasSelected($scope.form.kelasid);
+				if(kelasSelected != null){
+					$scope.rombel_typehead.kelas = kelasSelected.kelas + ' - ' + kelasSelected.nama_kelas;
+				}else{
+					$scope.rombel_typehead.kelas = '';
+				}
 				// console.log($scope.gridDetailDirtyRows);return;
 				$scope.form.nama_pembayar = $scope.form.nama_siswa;
 				var params = {
@@ -918,17 +1031,6 @@ define(['app'], function (app) {
 			$scope.onAddClick = function(){
 				refreshNo();
 				reset();
-			}
-
-			$scope.onNamaChange = function(index){
-				var index = $scope.rombel_typehead.data.indexOf($scope.rombel_typehead.select);
-				$scope.rombel_typehead.nis = ($scope.rombel[index]) ? $scope.rombel[index].nis : '';
-				$scope.rombel_typehead.kelas = ($scope.rombel[index]) ? $scope.rombel[index].kelas + ' - ' + $scope.rombel[index].nama_kelas : '';
-				$scope.form.idrombel = ($scope.rombel[index]) ? $scope.rombel[index].id : '';
-				$scope.form.nama_siswa = $scope.rombel_typehead.select;
-				if($scope.form.sumber_kwitansi == '1'){
-					getInfoTagihan();
-				}
 			}
     	}
 

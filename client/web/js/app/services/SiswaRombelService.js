@@ -25,6 +25,14 @@ define(['app'], function (app) {
             });
         };
 
+        factory.getListBySiswa = function(paramdata) {
+            return $http.get(serviceBase + 'siswarombels/list',{
+                params : paramdata
+            }).then(function (results) {
+                return results.data;
+            });
+        };
+
         factory.insert = function (params) {
             return $http.post(serviceBase + 'siswarombels', params).then(function (results) {
                 return results.data;

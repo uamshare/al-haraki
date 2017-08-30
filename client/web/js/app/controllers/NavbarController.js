@@ -25,15 +25,10 @@ define(['app'], function (app) {
             var session = new authService.session();
             var isAuthenticated = (session.get('isAuthValid') == true) ? true : false;
             
-            // var isAuthenticated = sessionStorage.getItem('isAuthValid'); //authService.user.isAuthenticated;
             if (isAuthenticated) { //logout 
                 authService.logout().then(function () {
-                    // $location.path('/#');
-                    // return true;
                     redirectToLogin();
                 });
-                // $location.path('/');
-                // redirectToLogin();
             }
         };
 
@@ -54,9 +49,15 @@ define(['app'], function (app) {
             $scope.sekolahProfile = authService.getSekolahProfile();
             // console.log($scope.sekolahProfile.sekolahid);
             $scope.sekolahid_selected = $scope.sekolahProfile.sekolahid;
+            $scope.tahunid_selected = authService.getSelectedTahun().id; //$scope.sekolahProfile.tahun_ajaran_id;
         }
         function getSekolahList(callback){
             $scope.sekolahList = authService.getSekolahList();
+            callback();
+        }
+
+        function getTahunList(callback){
+            $scope.tahunList = authService.getTahunList();
             callback();
         }
 
@@ -64,9 +65,10 @@ define(['app'], function (app) {
             getMenuPrivileges();
             getUserProfile();
             getSekolahList(function(){
-                getSekolahProfile();
+                getTahunList(function(){
+                    getSekolahProfile();
+                });
             });
-            // console.log('initLogin');
         }
 
         function setLoginLogoutText(loggedIn) {
@@ -96,7 +98,6 @@ define(['app'], function (app) {
                         }
                     }
                 }
-                
                 // cfpLoadingBar.complete();
             }, errorHandle);
         }
@@ -112,6 +113,12 @@ define(['app'], function (app) {
                 }
                 cfpLoadingBar.complete();
             }, errorHandle);
+        }
+
+        $scope.onTahunidChange = function(value){
+            authService.setSelectedTahun(value);
+            console.log(authService.getSelectedTahun());
+            $route.reload();
         }
         
         $scope.$on('loginStatusChanged', function (brodcastname, loggedIn) {

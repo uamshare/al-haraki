@@ -186,11 +186,13 @@ class Rgl extends \yii\db\ActiveRecord
             $postingvalue[] = $kredit4;
         }
         
+        $tahun_ajaran_id_old = isset($values['tahun_ajaran_id_old']) ? 
+                                $values['tahun_ajaran_id_old'] : $values['tahun_ajaran_id'];
         return [
             'unposting' => $this->unposting($DB, [
                 'noref' => $values['noref'],
                 'sekolahid' => $values['sekolahid'],
-                'tahun_ajaran_id' => $values['tahun_ajaran_id']
+                'tahun_ajaran_id' => $tahun_ajaran_id_old
             ]),
             'posting' => $this->posting($DB, $postingvalue)
         ];

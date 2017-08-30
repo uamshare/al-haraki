@@ -23,7 +23,9 @@ define(['app'], function (app) {
                 accessToken : '__access_token__',
                 userProfile : '__user_profile__',
                 sekolahProfile : '__sekolah_profile__',
-                sekolahList : '__sekolah_list__'
+                sekolahList : '__sekolah_list__',
+                tahunList : '__tahun_list__',
+                tahunSelected : '__tahun_selected__'
             }
 
             /*
@@ -135,10 +137,33 @@ define(['app'], function (app) {
         };
 
         factory.getSekolahList = function() {
-            var session = new factory.session();
-            // return JSON.parse(sessionStorage.getItem('sekolah_profile'));
+            // var session = new factory.session();
+            // return JSON.parse(session.get('sekolahList'));
 
-            return JSON.parse(session.get('sekolahList'));
+            return JSON.parse(localStorage.getItem('sekolahList'));
+        };
+
+        factory.getTahunList = function() {
+            // var session = new factory.session();
+            // return JSON.parse(session.get('tahunList'));
+
+            return JSON.parse(localStorage.getItem('tahunList'));
+        };
+
+        factory.getSelectedTahun = function() {
+            var session = new factory.session();
+            return JSON.parse(session.get('tahunSelected'));
+        };
+
+        factory.setSelectedTahun = function(tahunid) {
+            var session = new factory.session();
+            var tahunList = factory.getTahunList();
+            for(var x in tahunList){
+                if(tahunList[x].id == tahunid){
+                    session.set('tahunSelected', JSON.stringify(tahunList[x]));
+                    break;
+                }
+            }
         };
 
         factory.changeSekolahId = function(id) {
@@ -160,9 +185,11 @@ define(['app'], function (app) {
             factory.user.isAuthenticated = loggedIn;
             // localStorage.setItem('isAuthValid', loggedIn);
             var session = new factory.session();
+
             if(loggedIn){
                 // sessionStorage.setItem('isAuthValid', loggedIn);
                 session.set('isAuthValid', loggedIn);
+                // console.log('isAuthValid : ' + session.get('isAuthValid'));
 
                 if(typeof data != 'undefined'){
                     // sessionStorage.setItem('accessToken', data.__accessToken);
@@ -172,15 +199,22 @@ define(['app'], function (app) {
                     session.set('accessToken', data.__accessToken);
                     session.set('userProfile', JSON.stringify(data.__user_profile));
                     session.set('sekolahProfile', JSON.stringify(data.__sekolah_profile));
-                    session.set('sekolahList', JSON.stringify(data.__sekolah_list));
 
-                    console.log(session.get('sekolahList'));
+                    // session.set('sekolahList', JSON.stringify(data.__sekolah_list));
+                    // session.set('tahunList', JSON.stringify(data.__tahun_list));
+                    localStorage.setItem('sekolahList', JSON.stringify(data.__sekolah_list));
+                    localStorage.setItem('tahunList', JSON.stringify(data.__tahun_list));
+
+                    factory.setSelectedTahun(data.__sekolah_profile.tahun_ajaran_id);
+
+                    // console.log(factory.getSelectedTahun());
 
                     $rootScope.$broadcast('loginStatusChanged', loggedIn);
                 }
             }else{
                 sessionStorage.clear();
                 session.clear();
+                localStorage.clear();
             }
             $rootScope.$broadcast('loginStatusChanged', loggedIn);
         }

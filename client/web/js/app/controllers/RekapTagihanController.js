@@ -284,7 +284,8 @@ define(['app'], function (app) {
 
         $scope.onSiswaClick = function(entity, namakelas){
             var paramdata = [];
-            paramdata['tahun_ajaran_id'] = authService.getSekolahProfile().tahun_ajaran_id;
+            // paramdata['tahun_ajaran_id'] = authService.getSelectedTahun().id;
+            paramdata['tahun_ajaran_id'] = entity.tahun_ajaran_id;
             paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
             paramdata['idrombel'] = entity.idrombel;
             cfpLoadingBar.start();
@@ -306,6 +307,13 @@ define(['app'], function (app) {
                 className: 'ngdialog-theme-flat dialog-custom1 dialog-gray custom-width-75',
                 scope: $scope
             });
+        }
+
+        $scope.onRefKwitansiClick = function(event,NoRef){
+            var url = $location.absUrl().split('#');
+                url = url[0] + '#' + "/keuangan/kwitansi-pembayaran/edit/" + NoRef;
+            var w =  window.open(url, 'ref-windows-' + NoRef); // in new tab
+            w.onload = function() { this.document.title += ' - ' + NoRef; }
         }
 
 		$scope.onSearchClick = function(event){
