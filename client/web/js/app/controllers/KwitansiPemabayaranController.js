@@ -815,7 +815,8 @@ define(['app'], function (app) {
 	            return null;
 			}
 
-			function selectSiswa(siswa, loadInfo = false){
+			function selectSiswa(siswa, loadInfo){
+				if(typeof loadInfo == 'undefinde')loadInfo = false;
 				$scope.rombel_typehead.nis = (siswa.nis == null) ? '' : siswa.nis;
 				if(siswa.kelas != null){
 					$scope.rombel_typehead.kelas = siswa.kelas + ' - ' + siswa.nama_kelas;

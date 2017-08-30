@@ -61,8 +61,11 @@ define(['app'], function (app) {
                 timezone = 'Asia/Jakarta';
             }
 
-            var dt = (typeof date != 'undefined') ? date : new Date().toLocaleString('fullwide', { timeZone: timezone });
-            return new Date(dt);
+            var dt = (typeof date != 'undefined') ? date : new Date().toLocaleString('id-ID', { timeZone: timezone });
+            // console.log(Date.parse(dt));
+            // console.log(dt);
+            // return new Date(dt);
+            return new Date();
         }
 
         factory.date = function(date){
@@ -76,7 +79,13 @@ define(['app'], function (app) {
         }
 
         factory.getMonthName = function(id){
-            if(id == -1) id =11;
+            if(id == -1) id = 11;
+            if(id == null || id == '' || isNaN(id)){
+                id = 11
+            }else{
+                // console.log(id);
+            }
+            
             return factory.month().options[id].name
         }
 
