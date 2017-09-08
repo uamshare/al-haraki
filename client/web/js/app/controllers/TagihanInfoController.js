@@ -459,7 +459,19 @@ define(['app'], function (app) {
 				$scope.tanggal  = date.getDate() + ' ' + 
                             helperService.getMonthName(date.getMonth()) + ' ' + 
                             date.getFullYear();
-				$scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
+
+                switch(authService.getSekolahProfile().sekolahid) {
+				    case 1:
+				        $scope.titleadmin = 'Admin SDIT';
+				        break;
+				    case 2:
+				        $scope.titleadmin = 'Admin SMPIT';
+				        break;
+				    default:
+				        $scope.titleadmin = 'Admin ' + authService.getSekolahProfile().nama_sekolah;
+				}
+
+				// $scope.titleadmin = (authService.getSekolahProfile().sekolahid == 1) ? 'Admin SDIT' : 'Admin SMPIT';
 				var notes = $scope.settings.pdeskripsi;
 				$scope.notesPrint = notes.replace("[month]", $scope.month.options[ $scope.month.selected - 1 ].name)
 									.replace("[year]", $scope.month.year);
