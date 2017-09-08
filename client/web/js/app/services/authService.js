@@ -189,7 +189,7 @@ define(['app'], function (app) {
             if(loggedIn){
                 // sessionStorage.setItem('isAuthValid', loggedIn);
                 session.set('isAuthValid', loggedIn);
-                console.log('isAuthValid : ' + session.get('isAuthValid'));
+                // console.log('isAuthValid : ' + session.get('isAuthValid'));
 
                 if(typeof data != 'undefined'){
                     // sessionStorage.setItem('accessToken', data.__accessToken);
@@ -207,7 +207,7 @@ define(['app'], function (app) {
 
                     factory.setSelectedTahun(data.__sekolah_profile.tahun_ajaran_id);
 
-                    console.log(factory.getSelectedTahun());
+                    // console.log(factory.getSelectedTahun());
 
                     $rootScope.$broadcast('loginStatusChanged', loggedIn);
                 }

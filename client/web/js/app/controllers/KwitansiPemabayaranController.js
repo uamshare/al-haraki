@@ -815,7 +815,8 @@ define(['app'], function (app) {
 	            return null;
 			}
 
-			function selectSiswa(siswa, loadInfo = false){
+			function selectSiswa(siswa, loadInfo){
+				if(typeof loadInfo == 'undefinde')loadInfo = false;
 				$scope.rombel_typehead.nis = (siswa.nis == null) ? '' : siswa.nis;
 				if(siswa.kelas != null){
 					$scope.rombel_typehead.kelas = siswa.kelas + ' - ' + siswa.nama_kelas;
@@ -951,6 +952,7 @@ define(['app'], function (app) {
 					return false;
 				}
 				
+				var kelas_value_befor = $scope.rombel_typehead.kelas;
 				if((typeof $scope.form.idrombel == 'undefined'
 					|| $scope.form.idrombel == null 
 					|| $scope.form.idrombel == '') && 
@@ -961,12 +963,14 @@ define(['app'], function (app) {
 					$scope.onChoseKelasClick();
 					return;
 				}
+
 				ngDialog.close();
+
 				var kelasSelected = getKelasSelected($scope.form.kelasid);
 				if(kelasSelected != null){
 					$scope.rombel_typehead.kelas = kelasSelected.kelas + ' - ' + kelasSelected.nama_kelas;
 				}else{
-					$scope.rombel_typehead.kelas = '';
+					$scope.rombel_typehead.kelas = kelas_value_befor;
 				}
 				// console.log($scope.gridDetailDirtyRows);return;
 				$scope.form.nama_pembayar = $scope.form.nama_siswa;
