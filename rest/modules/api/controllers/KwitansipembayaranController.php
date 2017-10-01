@@ -92,7 +92,7 @@ class KwitansipembayaranController extends \rest\modules\api\ActiveController
         extract($post);
         $date = date('Y-m-d H:i:s');
 
-        if(!isset($form['idrombel']) || empty($form['idrombel'])){
+        if( (!isset($form['idrombel']) || empty($form['idrombel'])) && $form['sumber_kwitansi'] == 1) {
             $form['idrombel'] = $this->addNewRombel($form['siswaid'], $form['kelasid'], $form['tahun_ajaran_id']);
         }
 
