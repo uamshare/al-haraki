@@ -639,6 +639,7 @@ define(['app'], function (app) {
 			}
 
 			function getRombelBySiswa(namaSiswa, callback){
+
 				var paramdata = {};
 				paramdata['tahun_ajaran_id'] = $scope.form.tahun_ajaran_id;
 				paramdata['sekolahid'] = authService.getSekolahProfile().sekolahid;
@@ -651,7 +652,9 @@ define(['app'], function (app) {
 		            if(result.success){
 		            	$scope.rombel_typehead.data = result.rows;
 		            	if(typeof callback == 'function' && result.rows.length > 0){
-		            		callback(result.rows[0])
+		            		callback(result.rows[0]);
+		            	}else if(typeof callback == 'function'){
+		            		callback("");
 		            	}
 			            return result.rows;
 					}
@@ -783,9 +786,10 @@ define(['app'], function (app) {
 						// getRombel({
 						// 	sekolahid : authService.getSekolahProfile().sekolahid
 						// });
+
 						$scope.remoteSourceTypeHead($scope.form.nama_pembayar, function(siswa){
 							$scope.form.nama_siswa = rowdata.nama_pembayar;
-							$scope.rombel_typehead.select = $scope.form.nama_siswa
+							$scope.rombel_typehead.select = $scope.form.nama_siswa;
 			            	selectSiswa(siswa);
 			            });
 						
@@ -916,6 +920,8 @@ define(['app'], function (app) {
 				var d = new Date($scope.form.tgl_kwitansi);
 				var selectmonth = d.getMonth() + 1;
 
+				$scope.gridDetailDirtyRows = [];
+
 				if(sumber_kwitansi =='1'){
 					// console.log(authService.getSekolahProfile().tahun_awal);
 					var tahunList = getTahunAjaranSelected($scope.form.tahun_ajaran_id);
@@ -960,8 +966,11 @@ define(['app'], function (app) {
 					|| $scope.form.kelasid == null 
 					|| $scope.form.kelasid == '')
 				){
-					$scope.onChoseKelasClick();
-					return;
+					if($scope.form.sumber_kwitansi == 1 || $scope.form.sumber_kwitansi == '1'){
+						$scope.onChoseKelasClick();
+						return;
+					}
+					
 				}
 
 				ngDialog.close();
@@ -972,13 +981,21 @@ define(['app'], function (app) {
 				}else{
 					$scope.rombel_typehead.kelas = kelas_value_befor;
 				}
+
 				// console.log($scope.gridDetailDirtyRows);return;
-				$scope.form.nama_pembayar = $scope.form.nama_siswa;
+				if(typeof $scope.form.nama_siswa !='undefined' && $scope.form.nama_siswa!=''){
+					$scope.form.nama_pembayar = $scope.form.nama_siswa;
+				}else{
+					$scope.form.nama_pembayar = $scope.rombel_typehead.select;
+				}
+				
 				var params = {
 					form : $scope.form,
 					grid : $scope.gridDetailDirtyRows
 				}
 
+				// console.log(params);
+				// return;
 				params.form.tgl_kwitansi = helperService.dateToString(params.form.tgl_kwitansi);
 
 				cfpLoadingBar.start();
