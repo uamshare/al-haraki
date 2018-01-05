@@ -6,7 +6,6 @@
     background-color: #EEE !important;
     background-size: 16px 16px !important;*/
 }
-
 .skin-blue .content-header {
     background: #FFFFFF;
 }
@@ -19,7 +18,6 @@
 .content-header>.breadcrumb {
     top: 0;
 }
-
 .box.box-no-margin {
     margin-bottom: 0 !important;
     border-radius: 0;
@@ -30,67 +28,61 @@
 .form-group {
     margin-bottom: 2px;
 }
-
 /*
  * override the default CSS as an example
  */
+
 #loading-bar {
     z-index: 99999;
 }
 #loading-bar .bar {
-  	background: #F39C12;
+    background: #F39C12;
 }
 #loading-bar-spinner {
-	margin : auto;
+    margin: auto;
 }
 #loading-bar-spinner .spinner-icon {
-  border-top-color:  #F39C12;
-  border-left-color: #F39C12;
+    border-top-color: #F39C12;
+    border-left-color: #F39C12;
 }
 #loading-bar .peg {
-  -moz-box-shadow: #F39C12 1px 0 6px 1px;
-  -ms-box-shadow: #F39C12 1px 0 6px 1px;
-  -webkit-box-shadow: #F39C12 1px 0 6px 10px;
-  box-shadow: #F39C12 1px 0 6px 1px;
+    -moz-box-shadow: #F39C12 1px 0 6px 1px;
+    -ms-box-shadow: #F39C12 1px 0 6px 1px;
+    -webkit-box-shadow: #F39C12 1px 0 6px 10px;
+    box-shadow: #F39C12 1px 0 6px 1px;
 }
-
-#container-login{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #D2D6DE;
-  top : 0;
-  left : 0;
-  z-index: 9999;
+#container-login {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #D2D6DE;
+    top: 0;
+    left: 0;
+    z-index: 9999;
 }
-@media (min-width: 768px){
-  .form-horizontal.form-custome .control-label {
-      padding-top: 7px;
-      margin-bottom: 0;
-      text-align: left;
-  }
+@media (min-width: 768px) {
+    .form-horizontal.form-custome .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: left;
+    }
 }
-
-.ui-grid-viewport.ng-isolate-scope{
-  background-color: #EEE;
+.ui-grid-viewport.ng-isolate-scope {
+    background-color: #EEE;
 }
-
-.errorMessage{
-  color: red;
+.errorMessage {
+    color: red;
 }
-
-.grid-align-right{
-  text-align: right;
+.grid-align-right {
+    text-align: right;
 }
-.grid-align-left{
-  text-align: left;
+.grid-align-left {
+    text-align: left;
 }
-.grid-align-center{
-  text-align: center;
+.grid-align-center {
+    text-align: center;
 }
-
-input[type=checkbox].custome1 + .lbl, 
-input[type=radio].custome1 + .lbl {
+input[type=checkbox].custome1+.lbl, input[type=radio].custome1+.lbl {
     position: relative;
     display: inline-block;
     margin: 0;
@@ -100,21 +92,18 @@ input[type=radio].custome1 + .lbl {
     font-weight: normal;
     cursor: pointer;
 }
-
 .ngdialog.ngdialog-theme-flat.custom-width-800 .ngdialog-content {
     width: 800px;
 }
 .ngdialog.ngdialog-theme-flat.custom-width-900 .ngdialog-content {
     width: 900px;
 }
-
 .ngdialog.ngdialog-theme-flat.custom-width-100 .ngdialog-content {
     width: 100%;
 }
 .ngdialog.ngdialog-theme-flat.custom-width-100 .ngdialog-content {
     width: 100%;
 }
-
 .ngdialog.ngdialog-theme-flat.custom-width-80 .ngdialog-content {
     width: 80%;
 }
@@ -131,37 +120,32 @@ input[type=radio].custome1 + .lbl {
     width: 21cm;
     height: 14.8cm;
 }
-
-.navbar-brand select{
+.navbar-brand select {
     margin-top: -8px;
     padding-left: 0;
 }
-
-.dialog-black .ngdialog-content{
+.dialog-black .ngdialog-content {
     background: #222D32 !important;
 }
-.dialog-gray .ngdialog-content{
+.dialog-gray .ngdialog-content {
     background: gray !important;
 }
-.dialog-custom1 .ngdialog-content{
-    /*position: absolute !important;
-    top : 0;*/
-    margin-top : -100px !important;
+.dialog-custom1 .ngdialog-content {
+    margin-top: -100px !important;
 }
-
-.print-container .box-header .btn-tool{
+.print-container .box-header .btn-tool {
     color: #FFFFFF !important;
 }
-
-.ui-grid-cell-contents a.column-link{
-  color: #555;
+.ui-grid-cell-contents a.column-link {
+    color: #555;
 }
-
-.ui-grid-cell-contents a.column-link:hover{
-  color: #3c8dbc;
-  text-decoration: underline !important;
+.ui-grid-cell-contents a.column-link:hover {
+    color: #3c8dbc;
+    text-decoration: underline !important;
 }
-
 .ui-grid-row .invalid {
-  background-color: #f7c3c3 !important;
+    background-color: #f7c3c3 !important;
+}
+.btn-select {
+    border: 1px solid #d2d6de;
 }

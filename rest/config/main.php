@@ -17,9 +17,9 @@ return [
         ]
     ],
     'components' => [
-        // 'cache' => [
-        //     'class' => 'yii\caching\FileCache',
-        // ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'formatter' => [
            'dateFormat' => 'Y-m-d',
            'datetimeFormat' => 'Y-m-d H:i:s',
