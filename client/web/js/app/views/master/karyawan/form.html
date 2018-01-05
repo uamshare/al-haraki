@@ -1,0 +1,349 @@
+<section class="content-header">
+      <h1>
+        Form Karyawan
+      	<small>Profile Karyaawan</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#/master/karyawan">Karyawan</a></li>
+        <li class="active">Form Karyawan</li>
+      </ol>
+</section>
+
+<section class="content">
+	<div class="row">
+		<form name="FormInput" class="form-horizontal form-custome">
+			<div class="col-md-3 col-xs-12">
+		        <!-- Profile Image -->
+		        <div class="box box-no-margin box-primary">
+		          <div class="box-body box-profile">
+		            <img class="profile-user-img img-responsive img-circle" 
+							ng-src="{{profilAvatar}}" alt="User profile picture">
+
+		            <h3 class="profile-username text-center">{{form.nama_pegawai}}</h3>
+
+		            <p class="text-muted text-center">{{form.nama_panggilan}}</p>
+		      		<br/>
+		            <a href="#" class="btn btn-primary btn-block"><b>Photo</b></a>
+		          </div> <!-- /.box-body -->
+		        </div><!-- /.box -->
+		    </div><!-- /.col -->
+			<div class="col-md-9 col-xs-12">
+				<div class="box box-no-margin box-primary box-solid">
+					<div class="box-header with-border">
+						<h3 class="box-title"><i class="fa fa-th-list"></i> Biodata</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>
+
+					<div class="box-body">
+						<div class="form-group">
+	                  		<label for="nis" class="col-sm-4 control-label">NIK</label>
+		                  	<div class="col-sm-8">
+		                   		 <input type="text" class="form-control" 
+		                   		 	ng-model="form.nik" 
+		                   		 	id="nik" 
+		                   		 	name="nik" 
+		                   		 	placeholders="NIK"
+		                   		 	ng-maxlength="15"
+		                   		 	required>
+				                    <span class="errorMessage" ng-show="FormInput.nik.$touched && FormInput.nik.$invalid">
+				                        NIK tidak boleh kosong
+				                    </span>
+		                  	</div>
+		                </div>
+	                	<div class="form-group">
+	                  		<label for="nisn" class="col-sm-4 control-label">NUPTK</label>
+	                 		<div class="col-sm-8">
+		                    	<input 
+		                    		type="text" 
+		                    		ng-model="form.nuptk" 
+		                    		class="form-control" 
+		                    		id="nuptk" 
+		                    		name="nuptk"
+		                    		ng-maxlength="15"
+		                    		placeholders="NUPTK">
+		                 	</div>
+	                	</div>
+	               		<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Nama Pegawai</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" 
+	                    			ng-model="form.nama_pegawai" 
+	                    			class="form-control" 
+	                    			id="namaPegawai" 
+	                    			name="nama_pegawai" 
+	                    			placeholders="Nama Pegawai"
+	                    			required>
+	                    			<span class="errorMessage" 
+	                    				ng-show="FormInput.nama_pegawai.$touched && FormInput.nama_pegawai.$invalid">
+				                        Nama Karyawan tidak boleh kosong
+				                    </span>
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Nama Panggilan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nama_panggilan" class="form-control" id="nama_panggilan" name="nama_panggilan" placeholders="Nama Panggilan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jenis Kelamin</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jk" class="form-control" id="jk" name="jk" placeholders="Jenis Kelamin">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Berat Badan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.berat" class="form-control" id="berat" name="berat" placeholders="Berat Badan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Tinggi Badan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.tinggi" class="form-control" id="tinggi" name="tinggi" placeholders="Tinggi Badan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Golongan Darah</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.gol_darah" 
+	                    			ng-maxlength="3"
+	                    			class="form-control" id="gol_darah" 
+	                    			name="gol_darah" placeholders="Golongan Darah">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Agama</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.agama" class="form-control" id="agama" name="agama" placeholders="Agama">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Tempat Lahir</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.tempat_lahir" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholders="Tempat Lahir">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Tanggal Lahir</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.tanggal_lahir" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholders="Tanggal Lahir">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Alamat KTP</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.alamat_ktp" class="form-control" id="alamat_ktp" name="alamat_ktp" placeholders="Alamat KTP">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Alamat Domisili</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.alamat_domisili" class="form-control" id="alamat_domisili" name="alamat_domisili" placeholders="Alamat Domisili">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Telepon</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.tlp" class="form-control" id="tlp" name="tlp" placeholders="Telepon">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">No. KTP</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.no_ktp" class="form-control" id="no_ktp" name="no_ktp" placeholders="No. KTP">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Status Rumah</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.status_rumah" class="form-control" id="status_rumah" name="status_rumah" placeholders="Status Rumah">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" 
+	                  			ng-maxlength="5"
+	                  			class="col-sm-4 control-label">Pendidikan Terakhir</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.pendidikan_terakhir" class="form-control" id="pendidikan_terakhir" name="pendidikan_terakhir" placeholders="Pendidikan Terakhir">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Kependidikan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.kependidikan" class="form-control" id="kependidikan" name="kependidikan" placeholders="Kependidikan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jurusan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jurusan" class="form-control" id="jurusan" name="jurusan" placeholders="Jurusan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">NIM Ijasah</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nim_ijasah" class="form-control" id="nim_ijasah" name="nim_ijasah" placeholders="NIM Ijasah">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">No. Sertifikat Sertifikasi</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.no_sertifikat_sertifikasi" class="form-control" id="no_sertifikat_sertifikasi" name="no_sertifikat_sertifikasi" placeholders="No. Sertifikat Sertifikasi">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">No. Peserta Sertifikasi</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.no_peserta_sertifikasi" class="form-control" id="no_peserta_sertifikasi" name="no_peserta_sertifikasi" placeholders="No. Peserta Sertifikasi">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Pengalaman Kerja</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.pengalaman_kerja" class="form-control" id="pengalaman_kerja" name="pengalaman_kerja" placeholders="Pengalaman Kerja">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Bahasa Dikuasai</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.bahasa_dikuasai" class="form-control" id="bahasa_dikuasai" name="bahasa_dikuasai" placeholders="Bahasa Dikuasai">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Kursus Pelatihan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.kursus_pelatihan" class="form-control" id="kursus_pelatihan" name="kursus_pelatihan" placeholders="Kursus Pelatihan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Riwayat Penyakit Khusus</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.riwayat_penyakit_khusus" class="form-control" id="riwayat_penyakit_khusus" name="riwayat_penyakit_khusus" placeholders="Riwayat Penyakit Khusus">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Riwayat Penyakit Khusus</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.riwayat_penyakit_khusus" class="form-control" id="riwayat_penyakit_khusus" name="riwayat_penyakit_khusus" placeholders="Riwayat Penyakit Khusus">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Status Pernikahan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.status_pernikahan" class="form-control" id="status_pernikahan" name="status_pernikahan" placeholders="Status Pernikahan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Nama Pasangan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nama_pasangan" class="form-control" id="nama_pasangan" name="nama_pasangan" placeholders="Nama Pasangan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Pekerjaan Pasangan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.pekerjaan_pasangan" class="form-control" id="pekerjaan_pasangan" name="pekerjaan_pasangan" placeholders="Pekerjaan Pasangan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jumlah Anak</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jumlah_anak" class="form-control" id="jumlah_anak" name="jumlah_anak" placeholders="Jumlah Anak">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Nama Ayah Kandung</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nama_ayah_kandung" class="form-control" id="nama_ayah_kandung" name="nama_ayah_kandung" placeholders="Nama Ayah Kandung">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Nama Ibu Kandung</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nama_ibu_kandung" class="form-control" id="nama_ibu_kandung" name="nama_ibu_kandung" placeholders="Nama Ibu Kandung">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jumlah Saudara</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jumlah_saudara" class="form-control" id="jumlah_saudara" name="jumlah_saudara" placeholders="Jumlah Saudara">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Tanggal Mulai Bertugas</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.tanggal_mulai_bertugas" class="form-control" id="tanggal_mulai_bertugas" name="tanggal_mulai_bertugas" placeholders="Tanggal Mulai Bertugas">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Status Kepegawaian</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.status_kepegawaian" class="form-control" id="status_kepegawaian" name="status_kepegawaian" placeholders="Status Kepegawaian">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jarak Dari Rumah</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jarak_dari_rumah" class="form-control" id="jarak_dari_rumah" name="jarak_dari_rumah" placeholders="Jarak Dari Rumah">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Transportasi</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.transportasi" class="form-control" id="transportasi" name="transportasi" placeholders="Transportasi">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Keterangan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.keterangan" class="form-control" id="keterangan" name="keterangan" placeholders="Keterangan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">No. BPJS Kesehatan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nomor_bpjs_kesehatan" class="form-control" id="nomor_bpjs_kesehatan" name="nomor_bpjs_kesehatan" placeholders="No. BPJS Kesehatan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">No. BPJS Ketenagakerjaan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.nomor_bpjs_ketenagakerjaan" class="form-control" id="nomor_bpjs_ketenagakerjaan" name="nomor_bpjs_ketenagakerjaan" placeholders="No. BPJS Ketenagakerjaan">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Ukuran Baju</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.ukuran_baju" class="form-control" id="ukuran_baju" name="ukuran_baju" placeholders="Ukuran Baju">
+	                  		</div>
+	                	</div>
+	                	<div class="form-group">
+	                  		<label for="namaSiswa" class="col-sm-4 control-label">Jabatan</label>
+	                 	 	<div class="col-sm-8">
+	                    		<input type="text" ng-model="form.jabatan" class="form-control" id="jabatan" name="jabatan" placeholders="Jabatan">
+	                  		</div>
+	                	</div>
+					</div>
+
+					<div class="box-footer">
+						<div class="box-tools pull-right">
+							<a href="#/master/karyawan" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+								data-original-title="Reset Data">
+								<i class="fa fa-refresh"></i> Batal
+							</a>
+							<a href="" ng-click="onSaveClick($event)" class="btn btn-success btn-sm btn-flat" data-toggle="tooltip"
+								data-original-title="Simpan Data">
+								<i class="fa fa-save"></i> Simpan
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+	    </form><!--endform -->
+  	</div><!-- /.row -->
+</section>

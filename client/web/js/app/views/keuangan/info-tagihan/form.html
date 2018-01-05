@@ -1,0 +1,86 @@
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-filter"></i> Form Filter</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="form-group">
+					<label>Kelas</label>
+					<select 
+						id="elmkelas"
+						name="kelasid" 
+						class="form-control" 
+						ng-model="kelas.selected"
+						required="Silahkan pilih kelas"
+						ng-change="onSearchClick($event)"
+					>
+						<option ng-repeat="item in kelas.options track by item.id" value="{{item.id}}">
+						{{item.kelas}} - {{item.nama_kelas}}
+						</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>Periode</label>
+					<div class="input-group">
+						<div class="input-group-addon">Bulan</div>
+						<select 
+							name="filter_bln" 
+							class="form-control" 
+							ng-model="month.selected"
+							ng-change="onSearchClick($event)"
+						>
+							<option ng-repeat="bln in month.options track by bln.id" value="{{bln.id}}">
+							{{bln.name}}
+							</option>
+						</select>
+						<div class="input-group-addon">Tahun</div>
+						<div class="input-group-addon">{{month.year}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-footer">
+		<div class="box-tools-left">
+			<a href="" ng-click="onSetInfoClick($event)" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Kelola Info Tagihan">
+				<i class="fa fa-cogs"></i> Kelola
+			</a>
+			<!-- <a href="#/keuangan/info-tagihan/log" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Log Data">
+				<i class="fa fa-history"></i> Log
+			</a> -->
+			<a href="" ng-click="gridAction.onPrintSelectedClick($event)" 
+					class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Cetak Info Tagihan">
+				<i class="fa fa-print"></i> Cetak
+			</a>
+			<div class="btn-group">
+				<button type="button" class="btn bg-gray btn-sm btn-flat">Export</button>
+				<button type="button" class="btn bg-gray btn-sm btn-flat dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<!-- <li><a href="#"><i class="fa fa-file-pdf-o"></i> PDF</a></li> -->
+					<li>
+					<a ng-click="onExport('xls')"
+					id="downloader" 
+					download="tagihan_pembayaran.xlsx">
+						<i class="fa fa-file-excel-o"></i> Excel
+					</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

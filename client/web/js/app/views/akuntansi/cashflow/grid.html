@@ -1,0 +1,136 @@
+<div id="cashflow-form" class="box box-no-margin box-primary box-solid">
+	<div class="box-footer with-border">
+		<div class="box-tools-left">
+			<div class="btn-group">
+			  <button type="button" class="btn bg-gray btn-sm btn-flat">Export</button>
+			  <button type="button" class="btn bg-gray btn-sm btn-flat dropdown-toggle" data-toggle="dropdown">
+			    <span class="caret"></span>
+			    <span class="sr-only">Toggle Dropdown</span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			    <li><a ng-click="onExport('pdf')"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+			    <li>
+			    	<a ng-click="onExport('xls')"
+			    		id="downloader" 
+			    		download="tagihan_pembayaran.xlsx">
+			    			<i class="fa fa-file-excel-o"></i> Excel
+			    	</a>
+			    </li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-plus-circle"></i> Arus Kas</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div id="print-cashflow" class="box-body">
+		<table id="grid-cashflow" class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr style="background-color: #CCC;">
+					<th rowspan="3" style="text-align : center;vertical-align : middle;" width="10"></th>
+					<th rowspan="3" style="text-align : center;vertical-align : middle;">Nama Akun</th>
+					<th rowspan="3" style="text-align : center;vertical-align : middle;">No Akun</th>
+					<th colspan="{{rangeWeek.length}}" style="text-align : center;">{{monthName}} {{filter.year}}</th>
+					<th width="120" rowspan="3" style="text-align : center;vertical-align : middle;">Total</th>
+				</tr>
+				<tr style="background-color: #CCC;" >
+					<th width="100" style="text-align : center" ng-repeat="range in rangeWeek">
+						Minggu {{$index + 1}}
+					</th>
+				</tr>
+				<tr style="background-color: #CCC;" >
+					<th width="100" style="text-align : center" ng-repeat="range in rangeWeek">
+						{{range.start.substr(-2)}} s/d {{range.end.substr(-2)}}
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="{{rangeWeek.length + 4}}"><strong>PENERIMAAN</strong></td>
+				</tr>
+				<tr ng-repeat="(key, row1) in data.penerimaan">
+					<td>{{row1.index}}</td>
+					<td>{{row1.name}}</td>
+					<td>{{row1.mcoadno}}</td>
+					<td style="text-align : right" ng-repeat="range in rangeWeek">
+						{{row1['saldo_w' + ($index + 1)] | number:0}}
+					</td>
+					<td style="text-align : right">{{row1.total | number:0}}</td>
+				</tr>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<td style="text-align : left"><strong>TOTAL PENERIMAAN</strong></td>
+					<th></th>
+					<th style="text-align : right" ng-repeat="range in rangeWeek">
+						{{data.sum.penerimaan['saldo_w' + ($index + 1)] | number:0}}
+					</th>
+					<th style="text-align : right">{{data.sum.penerimaan.total | number:0}}</th>
+				</tr>
+				<tr>
+					<td colspan="{{rangeWeek.length + 4}}"></td>
+				</tr>
+				<tr>
+					<td colspan="{{rangeWeek.length + 4}}"><strong>PENGELUARAN</strong></td>
+				</tr>
+				<tr ng-repeat="(key, row2) in data.pengeluaran">
+					<td>{{row2.index}}</td>
+					<td>{{row2.mcoadname}}</td>
+					<td>{{row2.mcoadno}}</td>
+					<td style="text-align : right" ng-repeat="range in rangeWeek">
+						{{row2['saldo_w' + ($index + 1)] | number:0}}
+					</td>
+					<td style="text-align : right">{{row2.total | number:0}}</td>
+				</tr>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<td style="text-align : left"><strong>TOTAL PENGELUARAN</strong></td>
+					<th></th>
+					<th style="text-align : right" ng-repeat="range in rangeWeek">
+						{{data.sum.pengeluaran['saldo_w' + ($index + 1)] | number:0}}
+					</th>
+					<th style="text-align : right">{{data.sum.pengeluaran.total | number:0}}</th>
+				</tr>
+				<tr>
+					<td colspan="{{rangeWeek.length + 4}}"></td>
+				</tr>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<th colspan="{{rangeWeek.length + 2}}"><strong>OUTSTANDING s/d {{monthBefore}} {{yearBefore}}</strong></th>
+					<!-- <th>{{data.outstanding[0].mcoahno}}</th> -->
+					<!-- <th style="text-align : right" ng-repeat="range in rangeWeek">
+						{{data.outstanding[0]['saldo_w' + ($index + 1)] | number:0}}
+					</th> -->
+					<th style="text-align : right">{{data.outstanding[0].total | number:0}}</th>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="{{rangeWeek.length + 4}}"></td>
+				</tr>
+				<tr style="background-color: #CCC;">
+					<th></th>
+					<td colspan="{{rangeWeek.length + 2}}" style="text-align : left">
+						<strong>SALDO {{nama_sekolah}}</strong>
+					</td>
+					<!-- <th></th>
+					<th style="text-align : right" ng-repeat="range in rangeWeek">
+						{{data.sum.footer['saldo_w' + ($index + 1)] | number:0}}
+					</th> -->
+					<th style="text-align : right">{{data.sum.footer.total | number:0}}</th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="box-footer">
+		<!-- <div class="box-tools pull-left">
+			<a href="#akuntansi/cashflow" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Rekap Buku Besar">
+				<i class="fa fa-th-list"></i> Rekap Data
+			</a>
+		</div> -->
+	</div>
+</div>

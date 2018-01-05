@@ -1,0 +1,47 @@
+<div id="user-form" class="box box-no-margin box-primary box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-plus-circle"></i> Form</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <form name="formUser" class="form-horizontal form-custome" novalidate>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 col-md-3 control-label">Tahun Ajaran</label>
+                        <div class="col-xs-8 col-md-9">
+                            <select name="tahun_ajaran_id" class="form-control" 
+                                ng-model="form.tahun_ajaran_id"
+                                ng-change="onTahunAjaranChange(form.tahun_ajaran_id)"
+                                required="Silahkan pilih tahun ajaran"
+                            >
+                                <option ng-repeat="item in tahunAjaran" value="{{item.id}}">
+                                {{item.tahun_ajaran}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-right">
+            <!-- <a href="" ng-click="onResetClick($event)" class="btn btn-danger btn-sm btn-flat" data-toggle="tooltip"
+                data-original-title="Reset Data">
+                <i class="fa fa-refresh"></i> Batal
+            </a> -->
+            <a href="" ng-click="onSaveClick($event)" 
+                class="btn btn-success btn-sm btn-flat" 
+                data-toggle="tooltip"
+                data-original-title="Simpan Data"
+                >
+                <i class="fa fa-save"></i> Simpan
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="box box-no-margin box-primary box-solid collapsed-box">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-cogs"></i> Note</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="form-group">
+            <label>Note :</label>
+            <wysiwyg-edit content="settings.pdeskripsi" config="editor.editorConfig"></wysiwyg-edit>
+            <label class="label bg-red">
+            	* keyword [month] & [year] akan di ubah sesuai bulan dan tahun sistem, harap tidak dilakukan perubahan jika tidak diperlukan.
+            </label>
+        </div>
+	</div>
+	<div class="box-footer">
+        <div class="box-tools pull-right">
+            <a href="" ng-click="onSetNoteClick()" class="btn btn-primary btn-sm btn-flat" >
+                <i class="fa fa-save"></i> Simpan
+            </a>
+        </div>
+    </div>
+</div>
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Grid</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-xs-12">
+				<p ng-if="noData">You haven't any data to be displayed .</p>
+				<div id="grid1" ui-grid="grid"
+					ng-if="!noData"
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-cellNav
+		            class="grid">
+		        </div>
+			</div>
+		</div>
+	</div>
+</div>

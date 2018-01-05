@@ -1,0 +1,102 @@
+<div id="print-oustanding" ng-hide="true">
+	<style type="text/css">
+		.table>caption+thead>tr:first-child>td, 
+		.table>caption+thead>tr:first-child>th, 
+		.table>colgroup+thead>tr:first-child>td, 
+		.table>colgroup+thead>tr:first-child>th, 
+		.table>thead:first-child>tr:first-child>td, 
+		.table>thead:first-child>tr:first-child>th {
+		    border-top: 1px solid #111;
+		}
+		.table-bordered>tbody>tr>td, 
+		.table-bordered>tbody>tr>th, 
+		.table-bordered>tfoot>tr>td, 
+		.table-bordered>tfoot>tr>th, 
+		.table-bordered>thead>tr>td, 
+		.table-bordered>thead>tr>th {
+		    border: 1px solid #111;
+		}
+	</style>
+	<div class="printStyle-box">
+		<h2>{{templateExport.title}}</h2>
+		<h2>{{templateExport.titleDate}}</h2>
+	</div>
+	<br>
+	<div class="row" ng-repeat="rowkelas in templateExport.table">
+	    <h3 class="title-table">{{rowkelas.title}}</h3>
+	    <table border="1" class="table table-bordered">
+	    	<thead>
+	    		<tr>
+	    			<th rowspan="2">NO</th>
+	    			<th rowspan="2">Nama Siswa</th>
+	    			<th colspan="7">{{$parent.templateExport.titleDate}}</th>
+	    		</tr>
+	    		<tr>
+	    			<th>Bulan</th>
+	    			<th>SPP</th>
+	    			<th>KS</th>
+	    			<th>Caterinig</th>
+	    			<th>Keb. Siswa</th>
+	    			<th>Ekskul</th>
+	    			<th>Keterangan</th>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    		<tr ng-repeat="(key, row) in rowkelas.data.rows">
+	    			<td>{{row.index}}</td>
+	    			<td>{{row.nama_siswa}}</td>
+	    			<td>{{row.bulan}}</td>
+	    			<td style="text-align : right;">{{row.spp}}</td>
+	    			<td style="text-align : right;">{{row.komite_sekolah}}</td>
+	    			<td style="text-align : right;">{{row.catering}}</td>
+	    			<td style="text-align : right;">{{row.keb_siswa}}</td>
+	    			<td style="text-align : right;">{{row.ekskul}}</td>
+	    			<td></td>
+	    		</tr>
+	    	</tbody>
+	    	<tfoot>
+	    		<tr>
+	    			<th colspan="3">Total</th>
+	    			<th>{{rowkelas.data.summary.sum_spp}}</th>
+	    			<th>{{rowkelas.data.summary.sum_komite_sekolah}}</th>
+	    			<th>{{rowkelas.data.summary.sum_catering}}</th>
+	    			<th>{{rowkelas.data.summary.sum_keb_siswa}}</th>
+	    			<th>{{rowkelas.data.summary.sum_ekskul}}</th>
+	    			<th></th>
+	    		</tr>
+	    	</tfoot>
+	    </table>
+	</div>
+	<br/>
+	<br/>
+	<div class="row">
+		<table border="1" class="table table-bordered">
+			<thead>
+				<tr>
+					<th style="text-align : left;">SPP</th>
+					<th style="text-align : right;">{{templateExport.summary.s_spp}}</th>
+				</tr>
+				<tr>
+					<th style="text-align : left;">KOMITE SEKOLAH</th>
+					<th style="text-align : right;">{{templateExport.summary.s_komite_sekolah}}</th>
+				</tr>
+				<tr>
+					<th style="text-align : left;">CATERING</th>
+					<th style="text-align : right;">{{templateExport.summary.s_catering}}</th>
+				</tr>
+				<tr>
+					<th style="text-align : left;">KEB. SISWA</th>
+					<th style="text-align : right;">{{templateExport.summary.s_keb_siswa}}</th>
+				</tr>
+				<tr>
+					<th style="text-align : left;">EKSKUL</th>
+					<th style="text-align : right;">{{templateExport.summary.s_ekskul}}</th>
+				</tr>
+				<tr>
+					<th style="text-align : left;">TOTAL</th>
+					<th style="text-align : right;">{{templateExport.summary.s_total}}</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>

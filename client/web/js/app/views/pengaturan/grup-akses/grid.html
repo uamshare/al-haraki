@@ -1,0 +1,34 @@
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-footer">
+		<div class="box-tools-left">
+			<a href="" ng-click="onAddClick($event)" class="btn btn-primary btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Tambah Data">
+				<i class="fa fa-plus-circle"></i> Tambah
+			</a>
+<!-- 			<a href="#/keuangan/info-tagihan/log" class="btn btn-default btn-sm btn-flat" data-toggle="tooltip"
+				data-original-title="Tambah Data">
+				<i class="fa fa-history"></i> Log
+			</a> -->
+		</div>
+	</div>
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Grid</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-xs-12 col-md-12">
+				<div id="grid1" ui-grid="grid" 
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-cellNav
+		            ui-grid-pagination
+		            class="grid">
+		        </div>
+			</div>
+		</div>
+	</div>
+</div>

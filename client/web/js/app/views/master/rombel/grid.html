@@ -1,0 +1,83 @@
+<div class="box box-no-margin box-primary box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title"><i class="fa fa-th-list"></i> Kelola Rombongan Belajar</h3>
+		<div class="box-tools pull-right">
+		<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+		</button>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-md-6 col-xs-12">
+				<div class="box-footer">
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<div class="form-group">
+		                  		<label>&nbsp;</label>
+		                  		<input type="hidden" name="filter1_tahun_ajaran" 
+											ng-model="filter1.tahun_ajaran" />
+		                  		<input class="form-control" type="text" disabled="" 
+										value="Rombongan Belajar Tahun {{filter.tahun_ajaran1.name}}" />
+		                	</div>
+						</div>
+					</div>
+				</div>
+				<div id="grid1" ui-grid="gridRombel1" 
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-cellNav
+		            ui-grid-grouping
+		            class="grid">
+		        </div>
+			</div>
+			<div class="col-md-1 col-xs-12">
+				<div class="box-footer"></div>
+				<a href="" 
+					ng-click="onMoveRombelClick('moveToRight')" 
+					class="btn btn-primary btn-sm btn-flat">
+					<i class="fa fa-arrow-right"></i>
+				</a>
+				<a href="" 
+					ng-click="onMoveRombelClick('moveToLeft')" 
+					class="btn btn-primary btn-sm btn-flat">
+					<i class="fa fa-arrow-left"></i>
+				</a>
+			</div>
+			<div class="col-md-5 col-xs-12">
+				<div class="box-footer">
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<div class="form-group">
+		                  		<label>Kelas</label>
+		                  		<div class="input-group">
+		                  			<select 
+		                  				name="filter2_kelas" 
+		                  				class="form-control" 
+		                  				ng-model="filter2.kelas"
+		                  				ng-change="onFilterChange(2)"
+		                  			>
+										<option ng-repeat="row in filter.kelas" value="{{row.id}}">
+										{{row.kelas}} - {{row.nama_kelas}}
+										</option>
+									</select>
+									<div class="input-group-addon">
+										<input type="hidden" name="filter2_tahun_ajaran" 
+											ng-model="filter2.tahun_ajaran" />
+										{{filter.tahun_ajaran2.name}}
+									</div>
+		                  		</div>
+		                  		
+		                	</div>
+						</div>
+					</div>
+				</div>
+				<div id="grid2" ui-grid="gridRombel2" 
+					ui-grid-resize-columns 
+		            ui-grid-selection 
+		            ui-grid-cellNav
+		            class="grid">
+		        </div>
+			</div>
+		</div>
+	</div>
+</div>

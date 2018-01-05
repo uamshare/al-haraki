@@ -1,0 +1,206 @@
+<style type="text/css">
+    .print-kwitansi-bayar hr {
+        margin-top: 0;
+        margin-bottom: 0;
+        border: 0;
+        border-top: 1.5px solid #000;
+    }
+    .printStyle-box .note {
+        font-size: 8pt;
+    }
+    .print-kwitansi-bayar{
+        padding: 0 !important;
+        border: none !important;
+    }
+    .logo > img {
+        width: 80px !important;
+        height: 96px !important;
+        margin: 2px;
+    }
+    tr.heading,
+    td.terbilang{
+        background-color: #eeeeee !important;
+        -webkit-print-color-adjust: exact;
+    }
+    @media print {
+        body{
+            /*font-family: "Sans Serif", "Times New Roman", Georgia, Serif;*/
+            font-family: Serif;
+            letter-spacing: 0.1cm;
+            font-size:6pt !important;
+            -webkit-print-color-adjust: exact;
+            /*line-height:9pt !important;*/
+        }
+        @page {
+            size: auto;
+            margin: 0.05cm;
+        }
+        .print-kwitansi-bayar{
+            float: left;
+            width: 19.5cm;
+            margin:10px !important;
+            font-size:9pt;
+            border: none !important;
+        }
+        .print-kwitansi-bayar table td {
+            padding: 0 2px 0 2px !important;
+            font-size: 6pt !important;
+        }
+        td.address{
+            padding-top: 20px;
+        }
+        td.address > p{
+            margin : 0;
+            line-height: 8pt;
+        }
+        tr.heading,
+        td.terbilang{
+            background-color: #eeeeee !important;
+            -webkit-print-color-adjust: exact;
+            font-style: italic;
+        }
+        .logo > img {
+            width: 80px !important;
+            height: 48px !important;
+            margin: 2px;
+        }
+        .title h2{
+            font-size : 14pt;
+            line-height: 12pt;
+        }
+        #footer {
+           clear: both;
+           position: relative;
+           /*page-break-after: auto;*/
+        }
+        .rows{
+            height: 135px;
+        }
+    }
+</style>
+<div class="box box-no-margin box-default box-solid print-container">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-print"></i> Print Area</h3>
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat btn-tool" ng-click="print('print-kwitansi-pembayaran')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="print-kwitansi-pembayaran" >
+            <div class="printStyle-box print-kwitansi-bayar">
+                <table cellpadding="0" cellspacing="0">
+                    <tr class="top">
+                        <td colspan="2">
+                            <table>
+                                <tr style="border-bottom : 2px solid #000000;">
+                                    <td class="logo" style="height: 50px !important;width: 125px;text-align: left;"></td>
+                                    <td class="address" style="text-align : left;width: 300px">
+                                        <p style="margin-top: 5px; !important"><strong></strong></p>
+                                        <p></p>
+                                    </td>
+                                    <td class="title" style="text-align : center;">
+                                        <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
+                                        <h1 style="font-size: 14pt;
+                                                    margin: 0;
+                                                    line-height: 20pt;
+                                                    text-align: right;
+                                                    font-weight: bold;">BUKTI PENERIMAAN</h1>
+                                    </td>
+                                </tr>
+                                <!-- <tr class="information">
+                                    <td colspan="3">
+                                        <table>
+                                            <tr>
+                                                <td> </td>
+                                                <td>Nomor : {{rowHeader.no_kwitansi}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr> -->
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr class="item">
+                        <td style="width : 75px;">Terima dari</td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 350px;">{{rowHeader.nama_pembayar}}</td>
+
+                        <td style="width : 50px;"><strong>Nomor</strong></td>
+                        <td style="width : 10px">:</td>
+                        <td style="width : 10px"><strong>{{rowHeader.no_kwitansi}}</strong></td>
+                    </tr>
+                    <tr class="item">
+                        <td>Kelas</td>
+                        <td>:</td>
+                        <td>{{rowHeader.kelas}} - {{rowHeader.nama_kelas}}</td>
+
+                        <td>Bulan</td>
+                        <td>:</td>
+                        <td>{{bulanTagihan}}</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr class="heading" style="background-color: #eee;">
+                        <td>Untuk Pembayaran dengan perincian sebagai berikut :</td>
+                    </tr>
+                </table>
+                <div class="rows">
+                    <table>
+                        <tr class="item" ng-repeat="row in rowDetail track by row.id">
+                            <td width="2">{{$index + 1}}.</td>
+                            <td colspan="2" style="text-align: left;">{{row.rincian}}</td>
+                            <td width="2">:</td>
+                            <td style="text-align : right; width : 150px;">{{row.jumlah | number:0}}</td>
+                        </tr>
+                        <tr class="total">
+                            <td width="10"></td>
+                            <td width="90"></td>
+                            <td style="text-align: right;"><b>Total</b></td>
+                            <td>:</td>
+                            <td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
+                        </tr>
+                        <tr class="total">
+                            <td colspan="2" width="75"><b>Terbilang</b></td>
+                            <td colspan="3" style="text-align : left; font-style: italic;" class="terbilang">{{rowTerbilang}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <table>
+                    <tr class="information">
+                        <td colspan="2">
+                            <table>
+                                <tr>
+                                    <td style="width : 65%;font-size : 10pt;">
+                                        <p style="height: 1.5cm !important;border : solid 1px #eee;padding: 2pt;" ng-bind-html="rowHeader.keterangan"></p>
+                                    </td>
+                                    <td>
+                                        Depok, {{tanggal}}<br><br>
+                                        <label 
+                                            class="profil-name ng-binding" 
+                                            style="border-bottom: 0.5px solid;min-width: 100px !important;font-weight: normal;">{{profil.fullname}}</label><br/>
+                                        <span class="profil-jabatan" style="margin: 0 !important">{{titleadmin}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="footer"></div>
+            <div style="display: block; page-break-after: always;"></div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat" ng-click="print('print-kwitansi-pembayaran')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+        </div>
+    </div>
+</div>

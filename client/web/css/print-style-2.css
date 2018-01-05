@@ -1,0 +1,108 @@
+@media screen {
+  #printSection {
+      display: none;
+  }
+}
+
+@media print {
+    @page {
+        margin-left: 3cm;
+    }
+    body * {
+        visibility:hidden;
+        position: absolute;
+    }
+
+    #printSection, #printSection * {
+        position: relative;
+        visibility:visible;
+        color : #000 !important;
+    }
+
+    /*#printSection {
+        position:absolute;
+        left:0;
+        top:0;
+    }*/
+}
+
+@media screen {
+    .printStyle-box{
+        margin:auto;
+    }
+}
+
+.printStyle-box{
+    /*max-width:800px;*/
+    /*margin:auto;*/
+    padding:30px;
+    border:1px solid #000;
+    box-shadow:0 0 10px rgba(0, 0, 0, .15);
+    font-size:12pt;
+    line-height:12pt;
+    font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+    color : #000;
+    background: #FFFFFF;
+}
+
+.printStyle-box table{
+    width:100%;
+    line-height:inherit;
+    text-align:left;
+}
+
+.printStyle-box table td{
+    padding:5px;
+    vertical-align:top;
+}
+
+.printStyle-box table tr td:nth-child(2){
+    text-align:right;
+}
+
+.printStyle-box table tr.top table td{
+    padding-bottom:0;
+}
+
+
+.printStyle-box table tr.top h2, 
+.printStyle-box table tr.top h4{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.printStyle-box table tr.top table td.title{
+    /*font-size:45px;*/
+    /*line-height:45px;*/
+    color : #000;
+}
+
+.printStyle-box table tr.information table td{
+    padding-bottom:0;
+}
+
+.printStyle-box table tr.heading td{
+    background:#eee;
+    border-bottom:1px solid #ddd;
+    font-weight:bold;
+}
+
+.printStyle-box table tr.details td{
+    padding-bottom:20px;
+}
+
+.printStyle-box table tr.item td{
+    border-bottom:1px solid #eee;
+}
+
+.printStyle-box table tr.item.last td{
+    border-bottom:none;
+}
+
+.printStyle-box table tr.total td:nth-child(2){
+    /*border-top:2px solid #eee;*/
+    font-weight:bold;
+}
+
+.printStyle-box .note{
+    font-size: 9pt;
+}

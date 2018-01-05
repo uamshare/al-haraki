@@ -1,0 +1,140 @@
+<style type="text/css">
+    .print-info-tagihan hr {
+        margin-top: 0;
+        margin-bottom: 0;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+    .printStyle-box .note {
+        font-size: 8pt;
+    }
+    @media print {
+        @page {
+            margin: 1cm 0.5cm 1cm 0.5cm;
+        }
+        /* 21.59 x 27.94 centimetres */
+        .print-info-tagihan{
+            float: left;
+            width: 9.25cm;
+            height: 13cm;
+            margin:10px !important;
+            padding:2px;
+            font-size:9pt;
+            line-height:9pt;
+        }
+        .title h2{
+            font-size : 14pt;
+            line-height: 12pt;
+        }
+        #footer {
+           clear: both;
+           position: relative;
+           /*page-break-after: auto;*/
+        }
+    }
+</style>
+<div class="box box-no-margin box-default box-solid print-container">
+    <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-print"></i> Print Area</h3>
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat btn-tool" ng-click="print('print-multiple-info-tagihan')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div id="print-multiple-info-tagihan">
+            <div ng-repeat="(key, row) in rows" >
+                <div class="printStyle-box print-info-tagihan">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="top">
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td class="title" style="text-align : center;">
+                                            <!-- <img src="http://nextstepwebs.com/images/logo.png" style="width:100%; max-width:300px;"> -->
+                                            <h2>Informasi Tagihan</h2>
+                                            <h4>Kelas {{kelasCur.kelas}} {{kelasCur.nama_kelas}}</h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr class="information">
+                            <td colspan="2">
+                                <table>
+                                    <tr><td>Nama</td><td>:</td><td>{{row.nama_siswa}}</td></tr>
+                                    <tr><td>Bulan</td><td>:</td>
+                                        <td>{{month.options[ month.selected - 1 ].name}} {{month.year}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr class="heading">
+                            <td>Yang harus dibayar : </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr class="item">
+                            <td>SPP</td><td>:</td><td style="text-align : right;">{{row.spp | number:0}}</td>
+                        </tr>
+                        <tr class="item">
+                            <td>KS</td><td>:</td><td style="text-align : right;">{{row.komite_sekolah | number:0}}</td>
+                        </tr>
+                        <tr class="item">
+                            <td>Catering</td><td>:</td><td style="text-align : right;">{{row.catering | number:0}}</td>
+                        </tr>
+                        <tr class="item">
+                            <td>Keb. Siswa</td><td>:</td><td style="text-align : right;">{{row.keb_siswa | number:0}}</td>
+                        </tr>
+                        <tr class="item">
+                            <td>Ekskul</td><td>:</td><td style="text-align : right;">{{row.ekskul | number:0}}</td>
+                        </tr>
+                        <tr class="total">
+                            <td><b>Total</b></td><td>:</td><td style="text-align : right;"><b>{{row.total | number:0}}</b></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <tr class="information">
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            Depok, {{tanggal}}<br>
+                                            <br>
+                                            <br/>
+                                            <br>
+                                            <br/>
+                                            <span class="profil-name">{{profil.fullname}}</span><br/>
+                                            -----------------------------<br/>
+                                            <span class="profil-jabatan">{{titleadmin}}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="note" ng-bind-html="notesPrint"></div>
+                </div>
+                <div id="footer" ng-show="($index + 1) % 4 == 0"></div>
+                <div ng-show="($index + 1) % 4 == 0" style="display: block; page-break-after: always;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="box-footer">
+        <div class="box-tools pull-right">
+            <a href="" class="btn btn-primary btn-sm btn-flat" ng-click="print('print-multiple-info-tagihan')" >
+                <i class="fa fa-print"></i> Cetak
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+<div class="row">
+	<div class="col-xs-12 col-md-6">
+		<!--
+		<div class="box box-primary box-solid">
+			<div class="box-header with-border">
+			  <h3 class="box-title">Outstanding Pembayaran SMPIT</h3>
+
+			  <div class="box-tools pull-right">
+			    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+			    </button>
+			  </div>
+			</div>
+			<div class="box-body">
+			  <div class="chart">
+			    <canvas 
+			    	class="chart chart-bar"
+			    	chart-dataset="datasets"
+    				>
+   				</canvas> 
+			  </div>
+			</div>
+		</div>
+		-->
+		<div class="box box-primary box-solid box-no-margin">
+			<div class="box-header">
+			  	<h3 class="box-title">Outstanding Pembayaran SMPIT</h3>
+			  	<div class="box-tools pull-right">
+				    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+				    	<i class="fa fa-minus"></i>
+				    </button>
+				</div>
+			</div>
+			<div class="box-body no-padding">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th style="width: 10px">#</th>
+							<th>Kelas</th>
+							<!-- <th>Oustanding</th> -->
+							<th>SPP</th>
+							<th>KS</th>
+							<th>Catering</th>
+							<th>Keb.Siswa</th>
+							<th>Ekskul</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in widget2.smpit">
+							<td>{{item.index}}.</td>
+							<td>Kelas - {{item.kelas}}</td>
+							<!-- <td>
+								<div class="progress progress-xs">
+								  	<div class="progress-bar progress-bar-danger" style="width: 90%"></div>
+								</div>
+							</td> -->
+							<td style="text-align : right;">
+								<span class="badge bg-blue">{{item.spp | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-blue">{{item.komite_sekolah | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-blue">{{item.catering | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-blue">{{item.keb_siswa | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-blue">{{item.ekskul | number:0}}</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6">
+		<!--
+		<div class="box box-danger box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title">Outstanding Pembayaran SDIT</h3>
+				<div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="chart"></div>
+			</div>
+		</div>
+		-->
+		<div class="box box-danger box-solid box-no-margin">
+			<div class="box-header">
+			  	<h3 class="box-title">Outstanding Pembayaran SDIT</h3>
+			  	<div class="box-tools pull-right">
+				    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+				    	<i class="fa fa-minus"></i>
+				    </button>
+				</div>
+			</div>
+			<div class="box-body no-padding">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th style="width: 10px">#</th>
+							<th>Kelas</th>
+							<!-- <th>Oustanding</th> -->
+							<th>SPP</th>
+							<th>KS</th>
+							<th>Catering</th>
+							<th>Keb.Siswa</th>
+							<th>Ekskul</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in widget2.sdit">
+							<td>{{item.index}}.</td>
+							<td>Kelas - {{item.kelas}}</td>
+							<!-- <td>
+								<div class="progress progress-xs">
+								  	<div class="progress-bar progress-bar-danger" style="width: 90%"></div>
+								</div>
+							</td> -->
+							<td style="text-align : right;">
+								<span class="badge bg-red">{{item.spp | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-red">{{item.komite_sekolah | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-red">{{item.catering | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-red">{{item.keb_siswa | number:0}}</span>
+							</td>
+							<td style="text-align : right;">
+								<span class="badge bg-red">{{item.ekskul | number:0}}</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
