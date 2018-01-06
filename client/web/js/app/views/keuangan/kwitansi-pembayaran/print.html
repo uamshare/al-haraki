@@ -25,11 +25,11 @@
     @media print {
         body{
             /*font-family: "Sans Serif", "Times New Roman", Georgia, Serif;*/
-            font-family: Serif;
-            letter-spacing: 0.1cm;
-            font-size:6pt !important;
+            font-family: "Sans Serif";
+           /* letter-spacing: 0.1cm;*/
+            font-size:12pt !important;
             -webkit-print-color-adjust: exact;
-            /*line-height:9pt !important;*/
+            line-height:9pt !important;
         }
         @page {
             size: auto;
@@ -147,7 +147,7 @@
                 </table>
                 <table>
                     <tr class="heading" style="background-color: #eee;">
-                        <td>Untuk Pembayaran dengan perincian sebagai berikut :</td>
+                        <td style="font-size: 10pt !important;">Untuk Pembayaran dengan perincian sebagai berikut :</td>
                     </tr>
                 </table>
                 <div class="rows">
@@ -166,8 +166,9 @@
                             <td style="text-align : right;"><b>{{rowPrintTotal() | number:0}}</b></td>
                         </tr>
                         <tr class="total">
-                            <td colspan="2" width="75"><b>Terbilang</b></td>
-                            <td colspan="3" style="text-align : left; font-style: italic;" class="terbilang">{{rowTerbilang}}</td>
+                            <td colspan="2" width="75" style="font-size: 10pt !important;"><b>Terbilang</b></td>
+                            <td colspan="3" style="font-size : 10pt !important;text-align : left; font-style: italic;" 
+                                  class="terbilang"><b>{{rowTerbilang}}</b></td>
                         </tr>
                     </table>
                 </div>
