@@ -44,6 +44,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
         $request = Yii::$app->getRequest();
         $sekolahid = $request->getQueryParam('sekolahid', false);
         $tahun_ajaran_id = $request->getQueryParam('tahun_ajaran_id', false);
+        $tahun_ajaran_id_new = $request->getQueryParam('tahun_ajaran_id_new', false);
         $kelasid = $request->getQueryParam('kelasid', false);
         $scenario = $request->getQueryParam('scenario', false);
         
@@ -77,6 +78,11 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             $query->andWhere(['a.tahun_ajaran_id' => $tahun_ajaran_id]);
         }
 
+        if(!$tahun_ajaran_id_new){
+            $profileSekolah = \rest\models\Sekolah::getProfile($sekolahid);
+            $tahun_ajaran_id_new = $profileSekolah['tahun_ajaran_id'];
+        }
+
         $query->orderBy([
             'c.`sekolahid`' => SORT_ASC,
             'a.`kelasid`' => SORT_ASC, 
@@ -84,9 +90,8 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             'b.`nis`' => SORT_ASC
         ]);
 
-        $profileSekolah = \rest\models\Sekolah::getProfile($sekolahid);
         if($scenario && $scenario == 'rombel_old'){
-            $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='" . $profileSekolah['tahun_ajaran_id'] 
+            $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='" . $tahun_ajaran_id_new 
                 . "') sr", 'a.siswaid = sr.`siswaid`')
                 ->andWhere(['IS', 'sr.`siswaid`', new \yii\db\Expression('Null')])
                 ->orderBy([

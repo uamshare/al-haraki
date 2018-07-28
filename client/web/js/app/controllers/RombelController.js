@@ -132,12 +132,13 @@ define(['app'], function (app) {
                 if(typeof prev == 'undefined') prev = false;
 
                 var awal,akhir;
+                var sekolahProfile = authService.getSelectedTahun(); // authService.getSekolahProfile()
                 if(prev){
-                    awal = parseInt(authService.getSekolahProfile().tahun_awal) - 1;
-                    akhir = parseInt(authService.getSekolahProfile().tahun_akhir) - 1;
+                    awal = parseInt(sekolahProfile.tahun_awal) - 1;
+                    akhir = parseInt(sekolahProfile.tahun_akhir) - 1;
                 }else{
-                    awal = parseInt(authService.getSekolahProfile().tahun_awal);
-                    akhir = parseInt(authService.getSekolahProfile().tahun_akhir);
+                    awal = parseInt(sekolahProfile.tahun_awal);
+                    akhir = parseInt(sekolahProfile.tahun_akhir);
                 }
                 return {
                     id : awal.toString() + akhir.toString().substr(-2),
@@ -180,6 +181,7 @@ define(['app'], function (app) {
 
                         getSiswaRombel({
                             tahun_ajaran_id : $scope.filter1.tahun_ajaran,
+                            tahun_ajaran_id_new : $scope.filter2.tahun_ajaran,
                             scenario : 'rombel_old'
                         }, 'gridRombel1');
                     }   
