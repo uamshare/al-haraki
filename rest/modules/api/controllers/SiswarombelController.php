@@ -83,8 +83,11 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             'b.`nama_siswa`' => SORT_ASC, 
             'b.`nis`' => SORT_ASC
         ]);
+
+        $profileSekolah = \rest\models\Sekolah::getProfile($sekolahid);
         if($scenario && $scenario == 'rombel_old'){
-            $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='201718') sr", 'a.siswaid = sr.`siswaid`')
+            $query->leftJoin("(SELECT siswaid FROM siswa_rombel WHERE `tahun_ajaran_id`='" . $profileSekolah['tahun_ajaran_id'] 
+                . "') sr", 'a.siswaid = sr.`siswaid`')
                 ->andWhere(['IS', 'sr.`siswaid`', new \yii\db\Expression('Null')])
                 ->orderBy([
                     '`sekolahid`' => SORT_ASC,
@@ -232,7 +235,7 @@ class SiswarombelController extends \rest\modules\api\ActiveController //\yii\re
             
             foreach($rombels as $k => $rows){
                 $attrvalue[] = [
-                    'id'                => '', //isset($rows['id']) ? $rows['id'] : '', 
+                    'id'                => null, //isset($rows['id']) ? $rows['id'] : '', 
                     'siswaid'           => isset($rows['siswaid']) ? $rows['siswaid'] : null,
                     'kelasid'           => isset($kelasid) ? $kelasid : null,        
                     'tahun_ajaran_id'   => isset($tahun_ajaran_id) ? $tahun_ajaran_id : null,
