@@ -954,8 +954,6 @@ define(['app'], function(app) {
                     form: $scope.form,
                     grid: $scope.gridDetailDirtyRows
                 }
-                console.log($scope.form.month);
-                return;
                 params.form.tgl_kwitansi = helperService.dateToString(params.form.tgl_kwitansi);
                 cfpLoadingBar.start();
 
